@@ -1,0 +1,131 @@
+<div class="premium-hero" style="--bg-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-align: {{ section.settings.text_alignment }};">
+  {%- if section.settings.bg_image != blank -%}
+    <img src="{{ section.settings.bg_image | img_url: 'master' }}" alt="{{ section.settings.bg_image.alt | default: 'Hero Image' }}" class="premium-hero__bg">
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'premium-hero__bg placeholder-svg' }}
+  {%- endif -%}
+  
+  <div class="premium-hero__overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: var(--bg-overlay-opacity);"></div>
+  
+  <div class="premium-hero__content-container">
+    <div class="premium-hero__content">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          
+          {%- when 'shield_logo' -%}
+            {%- if block.settings.logo_image != blank -%}
+              <img src="{{ block.settings.logo_image | img_url: '300x' }}" class="premium-hero__logo fade-up-anim" style="max-width: {{ block.settings.logo_width }}px; animation-delay: {{ forloop.index0 | times: 100 }}ms;" alt="Hero Crest" {{ block.shopify_attributes }}>
+            {%- else -%}
+              <!-- Fallback to a sleek CSS shield for the premium crest if no image uploaded -->
+              <div class="shield-container premium-hero__logo fade-up-anim" style="border-color: {{ block.settings.color }}; width: {{ block.settings.logo_width }}px; height: {{ block.settings.logo_width | times: 1.25 }}px; animation-delay: {{ forloop.index0 | times: 100 }}ms;" {{ block.shopify_attributes }}>
+                <h2 style="color: {{ block.settings.color }}; font-size: 1rem;">C.A.</h2>
+              </div>
+            {%- endif -%}
+            
+          {%- when 'heading' -%}
+            <h1 class="premium-hero__heading fade-up-anim" style="color: {{ block.settings.color }}; animation-delay: {{ forloop.index0 | times: 100 }}ms;" {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+            </h1>
+            
+          {%- when 'subheading' -%}
+            <p class="premium-hero__subheading fade-up-anim" style="color: {{ block.settings.color }}; animation-delay: {{ forloop.index0 | times: 100 }}ms;" {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+            </p>
+            
+          {%- when 'button' -%}
+            <a href="{{ block.settings.button_link }}" class="btn premium-hero__btn fade-up-anim" style="color: {{ block.settings.text_color }}; background-color: {{ block.settings.bg_color }}; border-color: {{ block.settings.border_color }}; animation-delay: {{ forloop.index0 | times: 100 }}ms;" {{ block.shopify_attributes }}>
+              {{ block.settings.button_label }}
+            </a>
+            
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Premium Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0, "max": 100, "step": 5, "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Content Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "shield_logo",
+      "name": "Crest / Small Logo",
+      "settings": [
+        { "type": "image_picker", "id": "logo_image", "label": "Logo Image" },
+        { "type": "range", "id": "logo_width", "min": 50, "max": 200, "step": 10, "unit": "px", "label": "Max Width", "default": 100 },
+        { "type": "color", "id": "color", "label": "Fallback Color", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Heading text", "default": "Cowgirl Armor" },
+        { "type": "color", "id": "color", "label": "Color", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "subheading",
+      "name": "Subheading",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Subheading text", "default": "Spiritual armor meets western heritage" },
+        { "type": "color", "id": "color", "label": "Color", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text", "id": "button_label", "label": "Button Label", "default": "Shop Now" },
+        { "type": "url", "id": "button_link", "label": "Button Link" },
+        { "type": "color", "id": "text_color", "label": "Text Color", "default": "#ffffff" },
+        { "type": "color", "id": "bg_color", "label": "Background Color", "default": "transparent" },
+        { "type": "color", "id": "border_color", "label": "Border Color", "default": "#ffffff" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Hero Banner",
+      "category": "Image",
+      "blocks": [
+        { "type": "shield_logo" },
+        { "type": "heading" },
+        { "type": "subheading" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}
