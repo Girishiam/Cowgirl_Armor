@@ -1,89 +1,171 @@
-<header class="site-header" style="background-color: {{ section.settings.header_bg }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
-  <div class="header__logo">
-    {%- if section.settings.logo != blank -%}
-      <a href="{{ routes.root_url }}">
-        <img src="{{ section.settings.logo | img_url: 'master' }}" alt="{{ shop.name }}" style="max-width: {{ section.settings.logo_width }}px;">
+<header
+  class="site-header"
+  style="background-color: {{ section.settings.header_bg }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="header__left">
+    <button class="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-drawer" aria-label="Open navigation">
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        role="presentation"
+        class="icon icon-hamburger"
+        viewBox="0 0 16 16"
+        width="24"
+        height="24"
+      >
+        <path d="M1 3.5h14M1 8h14M1 12.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="header__logo">
+      <a href="{{ routes.root_url }}" class="logo-link">
+        {%- if section.settings.logo != blank -%}
+          <img
+            src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}"
+            alt="{{ shop.name }}"
+            style="max-width: {{ section.settings.logo_width }}px; height: auto;"
+          >
+        {%- else -%}
+          <span class="logo-text" style="font-size: clamp(1.2rem, 3vw, 1.8rem);">{{ shop.name }}</span>
+        {%- endif -%}
       </a>
-    {%- else -%}
-      <a href="{{ routes.root_url }}" class="logo-text">{{ shop.name }}</a>
-    {%- endif -%}
+    </div>
   </div>
 
-  <nav class="site-nav">
+  <nav class="site-nav desktop-only">
     {%- if section.settings.menu != blank -%}
-      {%- for link in linklists[section.settings.menu].links -%}
-        {%- if link.links != blank -%}
-          <div class="site-nav__has-dropdown">
-            <a href="{{ link.url }}" class="site-nav__link">
-              {{ link.title }}
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6" class="icon-caret"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path></svg>
-            </a>
-            <ul class="site-nav__dropdown">
-              {%- for childlink in link.links -%}
-                <li>
-                  <a href="{{ childlink.url }}" class="site-nav__dropdown-link">{{ childlink.title }}</a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          </div>
-        {%- else -%}
-          <a href="{{ link.url }}" class="site-nav__link">{{ link.title }}</a>
-        {%- endif -%}
-      {%- endfor -%}
+      <ul class="site-nav__list">
+        {%- for link in linklists[section.settings.menu].links -%}
+          {%- if link.links != blank -%}
+            <li class="site-nav__item site-nav__item--has-dropdown">
+              <a href="{{ link.url }}" class="site-nav__link {% if link.active %}site-nav__link--active{% endif %}">
+                {{ link.title }}
+                <svg class="icon-caret" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+              <ul class="site-nav__dropdown">
+                {%- for childlink in link.links -%}
+                  <li>
+                    <a
+                      href="{{ childlink.url }}"
+                      class="site-nav__dropdown-link {% if childlink.active %}site-nav__dropdown-link--active{% endif %}"
+                    >
+                      {{ childlink.title }}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </li>
+          {%- else -%}
+            <li class="site-nav__item">
+              <a
+                href="{{ link.url }}"
+                class="site-nav__link {% if link.active %}site-nav__link--active{% endif %}"
+                {% if link.active %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{ link.title }}
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
     {%- endif -%}
   </nav>
 
-  <div class="header__actions">
-    {%- if section.settings.social_facebook_link != blank -%}
-      <a href="{{ section.settings.social_facebook_link }}" class="header__icon" target="_blank" aria-label="Facebook">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.04c-5.5 0-10 4.48-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.67c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10.05 10.05 0 008.44-9.9c0-5.54-4.5-10.02-10-10.02z"/></svg>
-      </a>
-    {%- endif -%}
-
-    {%- if section.settings.social_instagram_link != blank -%}
-      <a href="{{ section.settings.social_instagram_link }}" class="header__icon" target="_blank" aria-label="Instagram">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/></svg>
-      </a>
-    {%- endif -%}
+  <div class="header__right">
+    <div class="header__socials desktop-only">
+      {%- if section.settings.social_facebook_link != blank -%}
+        <a
+          href="{{ section.settings.social_facebook_link }}"
+          class="header__icon"
+          target="_blank"
+          aria-label="Facebook"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 2.04c-5.5 0-10 4.48-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.67c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10.05 10.05 0 008.44-9.9c0-5.54-4.5-10.02-10-10.02z"/>
+          </svg>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.social_instagram_link != blank -%}
+        <a
+          href="{{ section.settings.social_instagram_link }}"
+          class="header__icon"
+          target="_blank"
+          aria-label="Instagram"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
 
     <a href="{{ routes.cart_url }}" class="header__icon header__cart" aria-label="Cart">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-      <span class="cart-count">{{ cart.item_count }}</span>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+      </svg>
+      <span class="cart-text">{{ cart.item_count }}</span>
     </a>
 
     {%- if section.settings.button_label != blank -%}
-      <a href="{{ section.settings.button_link }}" class="btn header__btn" style="background-color: {{ section.settings.button_bg_color }}; color: {{ section.settings.button_text_color }}; border-color: {{ section.settings.button_border_color }};">
+      <a
+        href="{{ section.settings.button_link }}"
+        class="btn header__btn desktop-only"
+        style="background-color: {{ section.settings.button_bg_color }}; color: {{ section.settings.button_text_color }}; border-color: {{ section.settings.button_border_color }};"
+      >
         {{ section.settings.button_label }}
       </a>
     {%- endif -%}
   </div>
-
-  <button class="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-drawer" style="color: inherit;">
-    <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-hamburger" viewBox="0 0 16 16">
-      <path d="M1 3.5h14M1 8h14M1 12.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-  </button>
 </header>
 
 <div class="mobile-drawer" id="mobile-drawer">
-  <nav>
+  <nav class="mobile-drawer__nav">
     {%- if section.settings.menu != blank -%}
-      {%- for link in linklists[section.settings.menu].links -%}
-        <div class="mobile-drawer__item">
-          <a href="{{ link.url }}" style="display:block; margin-bottom: 0.5rem;">{{ link.title }}</a>
-          {%- if link.links != blank -%}
-            <ul style="list-style: none; padding-left: 1.5rem; margin-bottom: 1.5rem; font-size: 0.8em; opacity: 0.8;">
-              {%- for childlink in link.links -%}
-                <li>
-                  <a href="{{ childlink.url }}" style="display:block; margin: 0.5rem 0;">{{ childlink.title }}</a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </div>
-      {%- endfor -%}
+      <ul style="list-style: none; padding: 0; width: 100%;">
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li style="margin-bottom: 1.5rem; text-align: center;">
+            <a
+              href="{{ link.url }}"
+              style="font-size: 1.5rem; text-decoration: none; color: inherit; display: block; font-family: var(--font-heading);"
+            >
+              {{ link.title }}
+            </a>
+
+            {%- if link.links != blank -%}
+              <ul style="list-style: none; padding-top: 0.5rem; margin-bottom: 1rem;">
+                {%- for childlink in link.links -%}
+                  <li style="margin-bottom: 0.5rem;">
+                    <a
+                      href="{{ childlink.url }}"
+                      style="font-size: 1.1rem; text-decoration: none; color: inherit; opacity: 0.7; font-family: var(--font-body);"
+                    >
+                      {{ childlink.title }}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
     {%- endif -%}
   </nav>
+
+  {%- if section.settings.button_label != blank -%}
+    <div style="margin-top: 2rem; text-align: center;">
+      <a
+        href="{{ section.settings.button_link }}"
+        class="btn"
+        style="background-color: {{ section.settings.button_bg_color }}; color: {{ section.settings.button_text_color }}; border-color: {{ section.settings.button_border_color }};"
+      >
+        {{ section.settings.button_label }}
+      </a>
+    </div>
+  {%- endif -%}
 </div>
 
 {% schema %}
@@ -93,23 +175,32 @@
     {
       "type": "color",
       "id": "header_bg",
-      "label": "Header Background Color",
-      "default": "#e6e6e6"
+      "label": "Background Color",
+      "default": "#E2E2E2"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "min": 0, "max": 60, "step": 2, "unit": "px",
-      "label": "Top Padding", "default": 20
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 20
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "min": 0, "max": 60, "step": 2, "unit": "px",
-      "label": "Bottom Padding", "default": 20
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 20
     },
     {
-      "type": "header", "content": "Logo"
+      "type": "header",
+      "content": "Logo"
     },
     {
       "type": "image_picker",
@@ -120,11 +211,15 @@
       "type": "range",
       "id": "logo_width",
       "label": "Logo Max Width",
-      "min": 50, "max": 300, "step": 10, "unit": "px",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
       "default": 150
     },
     {
-      "type": "header", "content": "Navigation"
+      "type": "header",
+      "content": "Navigation"
     },
     {
       "type": "link_list",
@@ -133,8 +228,8 @@
       "default": "main-menu"
     },
     {
-      "type": "header", "content": "Social Links",
-      "info": "Display social media icons by adding URLs."
+      "type": "header",
+      "content": "Social Links"
     },
     {
       "type": "url",
@@ -147,7 +242,8 @@
       "label": "Instagram URL"
     },
     {
-      "type": "header", "content": "Call-to-Action Button"
+      "type": "header",
+      "content": "Call-to-Action Button"
     },
     {
       "type": "text",

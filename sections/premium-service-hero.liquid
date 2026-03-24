@@ -1,0 +1,250 @@
+<style>
+  .service-hero-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    color: {{ section.settings.text_color }};
+    display: flex;
+    justify-content: center;
+  }
+
+  .service-hero__container {
+    max-width: {{ section.settings.content_width }}px;
+    width: 100%;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Matches the left-aligned look in the screenshot */
+    gap: 2rem;
+  }
+
+  .service-hero__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    margin: 0;
+    color: inherit;
+    letter-spacing: -0.02em;
+  }
+
+  .service-hero__text {
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
+    line-height: 1.6;
+    margin: 0;
+    color: inherit;
+    opacity: 0.9;
+  }
+
+  .service-hero__text strong {
+    font-weight: 700;
+  }
+
+  .service-hero__image-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 1rem 0;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08); /* Premium soft shadow */
+    border-radius: var(--border-radius, 4px);
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+
+  .service-hero__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .service-hero__footer-text {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+    color: inherit;
+  }
+
+  /* Smooth load-in animation */
+  .fade-up-anim {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeUpAnim {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="service-hero-{{ section.id }}">
+  <div class="service-hero__container">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'heading' -%}
+          <h1
+            class="service-hero__heading fade-up-anim"
+            style="animation-delay: {{ forloop.index0 | times: 100 }}ms;"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.heading }}
+          </h1>
+
+        {%- when 'text' -%}
+          <div
+            class="service-hero__text fade-up-anim"
+            style="animation-delay: {{ forloop.index0 | times: 100 }}ms;"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.text }}
+          </div>
+
+        {%- when 'image' -%}
+          <div
+            class="service-hero__image-wrapper fade-up-anim"
+            style="animation-delay: {{ forloop.index0 | times: 100 }}ms;"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 1200 }}"
+                alt="{{ block.settings.image.alt | default: 'Service Invitation' | escape }}"
+                class="service-hero__image"
+                loading="eager"
+              >
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'service-hero__image placeholder-svg' }}
+            {%- endif -%}
+          </div>
+
+        {%- when 'footer_text' -%}
+          <p
+            class="service-hero__footer-text fade-up-anim"
+            style="animation-delay: {{ forloop.index0 | times: 100 }}ms;"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.text }}
+          </p>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Service Hero Banner",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#EBEBEB"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 600,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum Content Width",
+      "default": 800,
+      "info": "Keeps the text reading length comfortable."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Celebrating Oaklynn: Service Location & Directions"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Intro Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>As our community prepares to gather and honor the life of <strong>Oaklynn Rae Domer</strong>, we want to ensure everyone arrives safely to celebrate our favorite little cowgirl.</p>"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Invitation Image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Invitation / Card Image"
+        }
+      ]
+    },
+    {
+      "type": "footer_text",
+      "name": "Footer Instruction",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Instruction Text",
+          "default": "Please see details and a link to the PIN LOCATION BELOW"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Service Hero Banner",
+      "blocks": [{ "type": "heading" }, { "type": "text" }, { "type": "image" }, { "type": "footer_text" }]
+    }
+  ]
+}
+{% endschema %}

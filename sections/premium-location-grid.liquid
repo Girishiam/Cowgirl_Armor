@@ -1,0 +1,325 @@
+<style>
+  .location-grid-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .location-grid__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .location-grid__container {
+      grid-template-columns: 1fr 1.1fr;
+      gap: 5rem;
+      align-items: flex-start;
+    }
+  }
+
+  /* --- Column Layouts --- */
+  .location-grid__col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .location-grid__col {
+      gap: 3rem;
+    }
+  }
+
+  /* --- Image Styling --- */
+  .location-grid__image-wrapper {
+    width: 100%;
+    border-radius: var(--border-radius, 8px);
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06); /* Premium soft shadow */
+    background-color: rgba(0,0,0,0.03);
+  }
+
+  .location-grid__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .location-grid__image-wrapper:hover .location-grid__image {
+    transform: scale(1.02);
+  }
+
+  /* Specific Image Adjustments for Masonry Feel */
+  .image-portrait {
+    aspect-ratio: 4/5;
+  }
+
+  .image-mobile-map {
+    max-width: 80%; /* Make the second left image slightly narrower for asymmetry */
+  }
+
+  .image-square {
+    aspect-ratio: 1/1;
+    max-width: 90%;
+    margin-left: auto; /* Push right column images slightly right */
+  }
+
+  /* --- Text Content Styling --- */
+  .location-grid__text-content {
+    margin-bottom: 1rem;
+  }
+
+  .location-grid__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    line-height: 1.2;
+    margin: 0 0 1rem 0;
+    color: inherit;
+  }
+
+  .location-grid__address {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    font-weight: 500;
+  }
+
+  .location-grid__subheading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 1.8rem);
+    line-height: 1.2;
+    margin: 0 0 1.5rem 0;
+    color: inherit;
+  }
+
+  .location-grid__richtext {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.8;
+    opacity: 0.9;
+  }
+
+  /* Premium Unordered List Styling */
+  .location-grid__richtext ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1rem;
+  }
+
+  .location-grid__richtext li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .location-grid__richtext li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    opacity: 0.7;
+  }
+
+  .location-grid__richtext strong {
+    font-weight: 700;
+  }
+
+  /* Animations */
+  .fade-up-anim {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="location-grid-{{ section.id }}">
+  <div class="location-grid__container">
+    <div class="location-grid__col">
+      <div class="location-grid__image-wrapper image-portrait fade-up-anim">
+        {%- if section.settings.image_left_1 != blank -%}
+          <img
+            src="{{ section.settings.image_left_1 | image_url: width: 1000 }}"
+            alt="Portrait"
+            class="location-grid__image"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'location-grid__image placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      <div class="location-grid__image-wrapper image-mobile-map fade-up-anim" style="animation-delay: 150ms;">
+        {%- if section.settings.image_left_2 != blank -%}
+          <img
+            src="{{ section.settings.image_left_2 | image_url: width: 800 }}"
+            alt="Mobile Map"
+            class="location-grid__image"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'location-grid__image placeholder-svg' }}
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="location-grid__col">
+      <div class="location-grid__text-content fade-up-anim" style="animation-delay: 100ms;">
+        <h2 class="location-grid__heading">{{ section.settings.heading_1 }}</h2>
+        <div class="location-grid__address">{{ section.settings.address }}</div>
+
+        <h3 class="location-grid__subheading">{{ section.settings.heading_2 }}</h3>
+        <div class="location-grid__richtext">
+          {{ section.settings.navigation_tips }}
+        </div>
+      </div>
+
+      <div class="location-grid__image-wrapper image-square fade-up-anim" style="animation-delay: 200ms;">
+        {%- if section.settings.image_right_1 != blank -%}
+          <img
+            src="{{ section.settings.image_right_1 | image_url: width: 800 }}"
+            alt="Road Map"
+            class="location-grid__image"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'location-grid__image placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      <div class="location-grid__image-wrapper image-square fade-up-anim" style="animation-delay: 300ms;">
+        {%- if section.settings.image_right_2 != blank -%}
+          <img
+            src="{{ section.settings.image_right_2 | image_url: width: 800 }}"
+            alt="Satellite Map"
+            class="location-grid__image"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'location-grid__image placeholder-svg' }}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Location & Nav Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
+      "content": "Left Column Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_left_1",
+      "label": "Top Image (Portrait)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_left_2",
+      "label": "Bottom Image (Mobile Map)"
+    },
+    {
+      "type": "header",
+      "content": "Right Column Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Primary Heading",
+      "default": "Service Location"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address Details",
+      "default": "Double N Cowboy Church\n7202 State Highway 6, Dublin, TX 76446"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Secondary Heading",
+      "default": "Important Navigation Tips"
+    },
+    {
+      "type": "richtext",
+      "id": "navigation_tips",
+      "label": "Navigation Instructions",
+      "default": "<ul><li>Use the Direct Pin to navigate.</li><li>Look for the large church sign on the right.</li></ul>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right_1",
+      "label": "Middle Image (Road Map)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right_2",
+      "label": "Bottom Image (Satellite Map)"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Location & Nav Grid",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

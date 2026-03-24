@@ -1,36 +1,277 @@
-<footer class="site-footer" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 4rem 2rem; border-top: 1px solid {{ section.settings.border_color }};">
-  <div class="grid grid-3-col" style="max-width: 1200px; margin: 0 auto; gap: 3rem;">
+<style>
+  .site-footer-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: clamp(4rem, 8vw, 6rem) 2rem 3rem;
+    border-top: 1px solid {{ section.settings.border_color }};
+    font-family: var(--font-body);
+  }
+
+  .footer__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto 6rem;
+  }
+
+  .footer__block {
+    flex: 1 1 min(100%, 300px);
+  }
+
+  .footer__block--right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media screen and (min-width: 768px) {
+    .footer__block--right {
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  .footer__logo-link {
+    display: inline-block;
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    margin-bottom: 1.5rem;
+  }
+
+  .footer__logo-text {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .footer__logo-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .footer__subtext {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+
+  .footer__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .footer__nav-link {
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    font-size: 1rem;
+    position: relative;
+    padding-bottom: 2px;
+    border-bottom: 1px solid {{ section.settings.text_color }};
+    transition: opacity 0.3s ease;
+    display: inline-block;
+  }
+
+  .footer__nav-link:hover {
+    opacity: 0.6;
+  }
+
+  .footer__newsletter-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .footer__newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+  }
+
+  .footer__input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
+    padding: 0.8rem 0;
+    color: {{ section.settings.text_color }};
+    font-family: var(--font-body);
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.3s ease;
+  }
+
+  .footer__input:focus {
+    outline: none;
+    border-bottom-color: {{ section.settings.text_color }};
+  }
+
+  .footer__input::placeholder {
+    color: {{ section.settings.text_color }};
+    opacity: 0.5;
+  }
+
+  .footer__btn {
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid {{ section.settings.text_color }};
+    color: {{ section.settings.text_color }};
+    padding: 0.6rem 2rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .footer__btn:hover {
+    background: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 2rem;
+  }
+
+  .footer__copyright {
+    font-weight: bold;
+    font-size: 0.95rem;
+  }
+
+  .footer__socials {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer__social-link {
+    color: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+  }
+
+  .footer__social-link:hover {
+    opacity: 0.6;
+  }
+
+  .footer__social-link svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+</style>
+
+<footer class="site-footer-{{ section.id }}">
+  <div class="footer__top">
     {%- for block in section.blocks -%}
-      <div class="footer-block" {{ block.shopify_attributes }} style="margin-bottom: 2rem;">
-        <h4 style="margin-bottom: 1.5rem; color: {{ section.settings.text_color }};">{{ block.settings.title }}</h4>
-        
-        {%- case block.type -%}
-          {%- when 'link_list' -%}
-            <ul style="list-style: none; padding: 0;">
-              {%- for link in linklists[block.settings.menu].links -%}
-                <li style="margin-bottom: 0.5rem;"><a href="{{ link.url }}" style="color: {{ section.settings.text_color }}; text-decoration: none;">{{ link.title }}</a></li>
-              {%- endfor -%}
-            </ul>
-          {%- when 'text' -%}
-            <div style="opacity: 0.8;">{{ block.settings.text }}</div>
-        {%- endcase -%}
-      </div>
+      {%- case block.type -%}
+        {%- when 'brand_info' -%}
+          <div class="footer__block" {{ block.shopify_attributes }}>
+            <a href="{{ routes.root_url }}" class="footer__logo-link">
+              {%- if block.settings.logo != blank -%}
+                <img
+                  src="{{ block.settings.logo | image_url: width: block.settings.logo_width }}"
+                  alt="{{ shop.name }}"
+                  class="footer__logo-img"
+                  style="max-width: {{ block.settings.logo_width }}px;"
+                >
+              {%- else -%}
+                <h2 class="footer__logo-text">{{ shop.name }}</h2>
+              {%- endif -%}
+            </a>
+            {%- if block.settings.subtext != blank -%}
+              <div class="footer__subtext">
+                {{ block.settings.subtext }}
+              </div>
+            {%- endif -%}
+          </div>
+
+        {%- when 'newsletter' -%}
+          <div class="footer__block" {{ block.shopify_attributes }}>
+            {%- if block.settings.title != blank -%}
+              <h3 class="footer__newsletter-title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="footer__subtext" style="margin-bottom: 1.5rem;">{{ block.settings.text }}</p>
+            {%- endif -%}
+
+            {% form 'customer', class: 'footer__newsletter-form' %}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="email" name="contact[email]" class="footer__input" placeholder="Email Address" required>
+              <button type="submit" class="footer__btn">Subscribe</button>
+            {% endform %}
+          </div>
+
+        {%- when 'link_list' -%}
+          <div class="footer__block footer__block--right" {{ block.shopify_attributes }}>
+            {%- if block.settings.menu != blank -%}
+              <ul class="footer__nav-list">
+                {%- for link in linklists[block.settings.menu].links -%}
+                  <li>
+                    <a href="{{ link.url }}" class="footer__nav-link">{{ link.title }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+      {%- endcase -%}
     {%- endfor -%}
   </div>
-  <div style="text-align: center; margin-top: 4rem; opacity: 0.6; font-size: 0.8rem;">
-    &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. All rights reserved.
+
+  <div class="footer__bottom">
+    <div class="footer__copyright">&copy;All Rights Reserved by {{ shop.name }}</div>
+
+    <div class="footer__socials">
+      {%- if section.settings.social_facebook_link != blank -%}
+        <a
+          href="{{ section.settings.social_facebook_link }}"
+          class="footer__social-link"
+          target="_blank"
+          aria-label="Facebook"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2.04c-5.5 0-10 4.48-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.67c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10.05 10.05 0 008.44-9.9c0-5.54-4.5-10.02-10-10.02z"/>
+          </svg>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.social_instagram_link != blank -%}
+        <a
+          href="{{ section.settings.social_instagram_link }}"
+          class="footer__social-link"
+          target="_blank"
+          aria-label="Instagram"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
   </div>
 </footer>
 
 {% schema %}
 {
-  "name": "Footer",
+  "name": "Premium Footer",
   "settings": [
     {
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#E2E2E2"
+      "default": "#F4F4F4"
     },
     {
       "type": "color",
@@ -42,21 +283,57 @@
       "type": "color",
       "id": "border_color",
       "label": "Border Color",
-      "default": "#1A1A1A"
+      "default": "transparent"
+    },
+    {
+      "type": "header",
+      "content": "Social Links"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook_link",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram_link",
+      "label": "Instagram URL"
     }
   ],
   "max_blocks": 4,
   "blocks": [
     {
-      "type": "link_list",
-      "name": "Menu",
+      "type": "brand_info",
+      "name": "Brand Info",
+      "limit": 1,
       "settings": [
         {
-          "type": "text",
-          "id": "title",
-          "label": "Heading",
-          "default": "Quick Links"
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo Image"
         },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "min": 50,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "label": "Logo Width",
+          "default": 150
+        },
+        {
+          "type": "richtext",
+          "id": "subtext",
+          "label": "Subtext",
+          "default": "<p>Ephesians 6:14-17</p>"
+        }
+      ]
+    },
+    {
+      "type": "link_list",
+      "name": "Navigation Menu",
+      "settings": [
         {
           "type": "link_list",
           "id": "menu",
@@ -66,33 +343,30 @@
       ]
     },
     {
-      "type": "text",
-      "name": "Text",
+      "type": "newsletter",
+      "name": "Newsletter Form",
+      "limit": 1,
       "settings": [
         {
           "type": "text",
           "id": "title",
           "label": "Heading",
-          "default": "About Us"
+          "default": "Stay Connected"
         },
         {
-          "type": "richtext",
+          "type": "text",
           "id": "text",
-          "label": "Text",
-          "default": "<p>Dedicated to blending faith with frontier heritage.</p>"
+          "label": "Subtext",
+          "default": "Join our newsletter for updates."
         }
       ]
     }
   ],
-  "default": {
-    "blocks": [
-      {
-        "type": "text"
-      },
-      {
-        "type": "link_list"
-      }
-    ]
-  }
+  "presets": [
+    {
+      "name": "Premium Footer",
+      "blocks": [{ "type": "brand_info" }, { "type": "newsletter" }, { "type": "link_list" }]
+    }
+  ]
 }
 {% endschema %}

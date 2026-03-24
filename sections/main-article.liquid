@@ -1,0 +1,260 @@
+<style>
+  .premium-article-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .premium-article__header {
+    max-width: 1000px;
+    margin: 0 auto 3rem;
+    text-align: center;
+    padding: 0 2rem;
+  }
+
+  .premium-article__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: {{ section.settings.text_color }};
+  }
+
+  .premium-article__meta {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .premium-article__meta-separator {
+    margin: 0 0.5rem;
+  }
+
+  .premium-article__image-container {
+    max-width: 1000px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+  }
+
+  .premium-article__image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    display: block;
+  }
+
+  .premium-article__content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.8;
+  }
+
+  /* Rich Text Styling inside the Article */
+  .premium-article__content p {
+    margin-bottom: 2rem;
+  }
+
+  .premium-article__content h2,
+  .premium-article__content h3,
+  .premium-article__content h4 {
+    font-family: var(--font-heading);
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .premium-article__content img {
+    max-width: 100%;
+    height: auto;
+    margin: 2rem 0;
+  }
+
+  .premium-article__content a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .premium-article__content blockquote {
+    border-left: 2px solid {{ section.settings.text_color }};
+    padding-left: 1.5rem;
+    margin-left: 0;
+    font-style: italic;
+    font-size: 1.25rem;
+  }
+
+  /* Pagination (Previous / Next Article) */
+  .premium-article__pagination {
+    max-width: 1200px;
+    margin: 5rem auto 0;
+    padding: 3rem 2rem 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .article-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    font-family: var(--font-heading);
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    transition: opacity 0.3s ease;
+  }
+
+  .article-nav-link:hover {
+    opacity: 0.6;
+  }
+
+  .article-nav-link svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .article-nav-link--next {
+    margin-left: auto;
+    text-align: right;
+  }
+</style>
+
+<article class="premium-article-{{ section.id }}" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="premium-article__header fade-up-anim">
+    <h1 class="premium-article__title" itemprop="headline">{{ article.title }}</h1>
+
+    {%- if section.settings.show_date or section.settings.show_author -%}
+      <div class="premium-article__meta">
+        {%- if section.settings.show_date -%}
+          <span itemprop="datePublished">{{ article.published_at | time_tag: format: 'date' }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.show_date and section.settings.show_author -%}
+          <span class="premium-article__meta-separator">|</span>
+        {%- endif -%}
+
+        {%- if section.settings.show_author -%}
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span itemprop="name">{{ article.author }}</span>
+          </span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </header>
+
+  {%- if article.image and section.settings.show_featured_image -%}
+    <div class="premium-article__image-container fade-up-anim" style="animation-delay: 100ms;">
+      <img
+        src="{{ article.image | image_url: width: 1400 }}"
+        alt="{{ article.image.alt | escape }}"
+        class="premium-article__image"
+        itemprop="image"
+        loading="eager"
+      >
+    </div>
+  {%- endif -%}
+
+  <div class="premium-article__content fade-up-anim" style="animation-delay: 200ms;" itemprop="articleBody">
+    {{ article.content }}
+  </div>
+
+  {%- if section.settings.show_pagination -%}
+    {%- if blog.previous_article or blog.next_article -%}
+      <div class="premium-article__pagination">
+        {%- if blog.previous_article -%}
+          <a href="{{ blog.previous_article.url }}" class="article-nav-link article-nav-link--prev">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{{ blog.previous_article.title }}</span>
+          </a>
+        {%- else -%}
+          <div></div>
+        {%- endif -%}
+
+        {%- if blog.next_article -%}
+          <a href="{{ blog.next_article.url }}" class="article-nav-link article-nav-link--next">
+            <span>{{ blog.next_article.title }}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</article>
+
+{% schema %}
+{
+  "name": "Article Post",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "Show Featured Image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show Date",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show Author",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show Next/Previous Article Links",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

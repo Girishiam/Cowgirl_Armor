@@ -1,0 +1,364 @@
+<style>
+  .premium-contact-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  .premium-contact__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .premium-contact__container {
+      grid-template-columns: 1fr 1.5fr; /* 40% Left, 60% Right */
+      gap: 6rem;
+      align-items: flex-start;
+    }
+  }
+
+  /* --- Left Column: Heading --- */
+  .premium-contact__text-col {
+    position: sticky;
+    top: 120px;
+  }
+
+  .premium-contact__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    margin: 0;
+    color: inherit;
+    letter-spacing: -0.02em;
+  }
+
+  /* --- Right Column: Form --- */
+  .premium-contact__form-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .premium-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  /* Form Status Messages */
+  .premium-form__message {
+    padding: 1rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border-radius: var(--border-radius, 4px);
+    margin-bottom: 1rem;
+  }
+  .premium-form__message--success {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #27ae60;
+    border: 1px solid #27ae60;
+  }
+  .premium-form__message--error {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+    border: 1px solid #c0392b;
+  }
+
+  /* Input Styling */
+  .premium-form__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .premium-form__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .premium-form__field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .premium-form__label {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: inherit;
+    opacity: 0.9;
+  }
+
+  .premium-form__label span {
+    font-weight: normal;
+    opacity: 0.6;
+    margin-left: 0.25rem;
+  }
+
+  .premium-form__input,
+  .premium-form__textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    color: inherit;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    transition: border-color 0.3s ease;
+  }
+
+  .premium-form__textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .premium-form__input:focus,
+  .premium-form__textarea:focus {
+    outline: none;
+    border-bottom-color: {{ section.settings.text_color }};
+  }
+
+  /* Custom Checkbox */
+  .premium-form__checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    margin-top: -0.5rem;
+  }
+
+  .premium-form__checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(0,0,0,0.3);
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+  }
+
+  .premium-form__checkbox:checked {
+    border-color: {{ section.settings.text_color }};
+  }
+
+  .premium-form__checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .premium-form__checkbox-label {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: inherit;
+    opacity: 0.8;
+  }
+
+  /* Submit Button */
+  .premium-form__submit {
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid {{ section.settings.text_color }};
+    color: {{ section.settings.text_color }};
+    padding: 1rem 3rem;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+
+  .premium-form__submit:hover {
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+  }
+
+  .fade-up-anim {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>
+
+<div class="premium-contact-{{ section.id }}">
+  <div class="premium-contact__container">
+    <div class="premium-contact__text-col fade-up-anim">
+      <h2 class="premium-contact__heading">
+        {{ section.settings.heading }}
+      </h2>
+    </div>
+
+    <div class="premium-contact__form-col fade-up-anim" style="animation-delay: 200ms;">
+      {%- form 'contact', id: 'MemorialContactForm', class: 'premium-form' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
+            {{ section.settings.success_message }}
+          </div>
+        {%- elsif form.errors -%}
+          <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
+            Please adjust the following fields: {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="premium-form__row">
+          <div class="premium-form__field">
+            <label class="premium-form__label" for="ContactForm-first_name">First Name <span>(required)</span></label>
+            <input
+              type="text"
+              id="ContactForm-first_name"
+              class="premium-form__input"
+              name="contact[First Name]"
+              required
+              autocomplete="given-name"
+            >
+          </div>
+          <div class="premium-form__field">
+            <label class="premium-form__label" for="ContactForm-last_name">Last Name <span>(required)</span></label>
+            <input
+              type="text"
+              id="ContactForm-last_name"
+              class="premium-form__input"
+              name="contact[Last Name]"
+              required
+              autocomplete="family-name"
+            >
+          </div>
+        </div>
+
+        <div class="premium-form__field">
+          <label class="premium-form__label" for="ContactForm-email">Email <span>(required)</span></label>
+          <input
+            type="email"
+            id="ContactForm-email"
+            class="premium-form__input"
+            name="contact[email]"
+            required
+            autocomplete="email"
+            pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+          >
+        </div>
+
+        {%- if section.settings.show_checkbox -%}
+          <label class="premium-form__checkbox-wrapper">
+            <input
+              type="checkbox"
+              id="ContactForm-newsletter"
+              class="premium-form__checkbox"
+              name="contact[tags]"
+              value="newsletter, memorial_list"
+            >
+            <span class="premium-form__checkbox-label">{{ section.settings.checkbox_label }}</span>
+          </label>
+        {%- endif -%}
+
+        <div class="premium-form__field">
+          <label class="premium-form__label" for="ContactForm-body"
+            >Message and prayers to send to the family: <span>(required)</span></label
+          >
+          <textarea id="ContactForm-body" class="premium-form__textarea" name="contact[Message]" required></textarea>
+        </div>
+
+        <button type="submit" class="premium-form__submit">
+          {{ section.settings.button_label }}
+        </button>
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Memorial Contact Form",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Share your love and prayers to the Domer Family:"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_checkbox",
+      "label": "Show Newsletter/Updates Checkbox",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "checkbox_label",
+      "label": "Checkbox Label",
+      "default": "Sign up for news and updates"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Submit Button Label",
+      "default": "Submit"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "Thank you. Your message has been sent to the family."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Memorial Contact Form",
+      "category": "Form"
+    }
+  ]
+}
+{% endschema %}

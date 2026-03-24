@@ -1,0 +1,423 @@
+<style>
+  .multi-coll-stack-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .multi-coll-stack__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.stack_gap }}px; /* Controls spacing between the different collection rows */
+  }
+
+  .multi-coll-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- Row Header --- */
+  .multi-coll-row__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .multi-coll-row__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: {{ section.settings.text_color }};
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .multi-coll-row__shop-all {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid currentColor;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .multi-coll-row__shop-all:hover {
+    opacity: 0.6;
+  }
+
+  /* --- Product Grid --- */
+  .multi-coll-row__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .multi-coll-row__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* We use CSS variables to set dynamic desktop columns per block */
+  @media screen and (min-width: 1024px) {
+    .multi-coll-row__grid {
+      grid-template-columns: repeat(var(--desktop-cols), 1fr);
+      gap: 3rem 2rem;
+    }
+  }
+
+  /* --- Product Card (Inline Form) --- */
+  .premium-stacked-card {
+    display: flex;
+    flex-direction: column;
+    color: {{ section.settings.text_color }};
+    height: 100%;
+  }
+
+  .premium-stacked-card__link {
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .premium-stacked-card__image-wrapper {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.02);
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius, 0px);
+  }
+
+  .premium-stacked-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .premium-stacked-card:hover .premium-stacked-card__image {
+    transform: scale(1.03);
+  }
+
+  .premium-stacked-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-grow: 1;
+  }
+
+  .premium-stacked-card__title {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .premium-stacked-card__price {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    opacity: 0.8;
+  }
+
+  /* Inline Action Row */
+  .premium-stacked-card__action-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  .premium-stacked-card__qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(0,0,0,0.2);
+    width: 35%;
+  }
+
+  .premium-stacked-card__qty-btn {
+    background: transparent;
+    border: none;
+    width: 30%;
+    height: 100%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .premium-stacked-card__qty-input {
+    width: 40%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: inherit;
+    -moz-appearance: textfield;
+    padding: 0;
+  }
+
+  .premium-stacked-card__qty-input::-webkit-outer-spin-button,
+  .premium-stacked-card__qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .premium-stacked-card__add-btn {
+    flex-grow: 1;
+    background: transparent;
+    border: 1px solid {{ section.settings.text_color }};
+    color: {{ section.settings.text_color }};
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.8rem 0;
+  }
+
+  .premium-stacked-card__add-btn:hover:not([disabled]) {
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+  }
+
+  .premium-stacked-card__add-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+
+<div class="multi-coll-stack-{{ section.id }}">
+  <div class="multi-coll-stack__container">
+    {%- for block in section.blocks -%}
+      {%- assign target_collection = block.settings.collection -%}
+
+      <div
+        class="multi-coll-row fade-up-anim"
+        style="--desktop-cols: {{ block.settings.columns_desktop }}; animation-delay: {{ forloop.index0 | times: 150 }}ms;"
+        {{ block.shopify_attributes }}
+      >
+        <div class="multi-coll-row__header">
+          <h2 class="multi-coll-row__title">
+            {{ block.settings.title_override | default: target_collection.title | default: 'Featured Collection' }}
+          </h2>
+
+          {%- if block.settings.show_view_all and target_collection != blank -%}
+            <a href="{{ target_collection.url }}" class="multi-coll-row__shop-all"> Shop All </a>
+          {%- endif -%}
+        </div>
+
+        <div class="multi-coll-row__grid">
+          {%- for product in target_collection.products limit: block.settings.product_limit -%}
+            <div class="premium-stacked-card">
+              <a href="{{ product.url }}" class="premium-stacked-card__link">
+                <div class="premium-stacked-card__image-wrapper">
+                  {%- if product.featured_image != blank -%}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 600 }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      class="premium-stacked-card__image"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'premium-stacked-card__image placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+
+                <div class="premium-stacked-card__info">
+                  <h3 class="premium-stacked-card__title">{{ product.title }}</h3>
+                  <div class="premium-stacked-card__price">
+                    {%- if product.compare_at_price > product.price -%}
+                      <span style="text-decoration: line-through; opacity: 0.5; margin-right: 0.5rem;">
+                        {{- product.compare_at_price | money -}}
+                      </span>
+                    {%- endif -%}
+                    <span>{{ product.price | money }}</span>
+                  </div>
+                </div>
+              </a>
+
+              {%- form 'product', product, class: 'premium-stacked-card__action-row' -%}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+                <div class="premium-stacked-card__qty">
+                  <button
+                    type="button"
+                    class="premium-stacked-card__qty-btn"
+                    onclick="this.nextElementSibling.stepDown()"
+                  >
+                    −
+                  </button>
+                  <input type="number" name="quantity" class="premium-stacked-card__qty-input" value="1" min="1">
+                  <button
+                    type="button"
+                    class="premium-stacked-card__qty-btn"
+                    onclick="this.previousElementSibling.stepUp()"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  name="add"
+                  class="premium-stacked-card__add-btn"
+                  {% unless product.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {%- if product.available -%}
+                    Add to cart
+                  {%- else -%}
+                    Sold Out
+                  {%- endif -%}
+                </button>
+              {%- endform -%}
+            </div>
+
+          {%- else -%}
+            {%- for i in (1..block.settings.columns_desktop) -%}
+              <div class="premium-stacked-card">
+                <div class="premium-stacked-card__link">
+                  <div class="premium-stacked-card__image-wrapper">
+                    {{ 'product-' | append: i | placeholder_svg_tag: 'premium-stacked-card__image placeholder-svg' }}
+                  </div>
+                  <div class="premium-stacked-card__info">
+                    <h3 class="premium-stacked-card__title">Memorial Collection Item</h3>
+                    <div class="premium-stacked-card__price">$29.99</div>
+                  </div>
+                </div>
+                <div class="premium-stacked-card__action-row">
+                  <div class="premium-stacked-card__qty">
+                    <button type="button" class="premium-stacked-card__qty-btn">−</button>
+                    <input type="number" class="premium-stacked-card__qty-input" value="1">
+                    <button type="button" class="premium-stacked-card__qty-btn">+</button>
+                  </div>
+                  <button class="premium-stacked-card__add-btn" disabled>Add to cart</button>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Multi-Collection Stack",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "Spacing Between Collections",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_row",
+      "name": "Collection Row",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "text",
+          "id": "title_override",
+          "label": "Heading Override",
+          "info": "Leave blank to use the default collection title."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_view_all",
+          "label": "Show 'Shop All' link",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "columns_desktop",
+          "min": 2,
+          "max": 5,
+          "step": 1,
+          "label": "Columns on Desktop",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "product_limit",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "label": "Maximum products to show",
+          "default": 4
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi-Collection Stack",
+      "category": "Collection",
+      "blocks": [{ "type": "collection_row" }, { "type": "collection_row" }, { "type": "collection_row" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,53 +1,64 @@
-<div class="purpose-section" style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
-  <div class="grid grid-2-col" style="align-items: center;">
-    
-    <div class="purpose-content" style="order: {% if section.settings.image_position == 'left' %}2{% else %}1{% endif %};">
+<div
+  class="purpose-section"
+  style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="grid grid-2-col" style="align-items: center; gap: clamp(3rem, 6vw, 6rem);">
+    <div
+      class="purpose-content"
+      style="order: {% if section.settings.image_position == 'left' %}2{% else %}1{% endif %};"
+    >
       {%- for block in section.blocks -%}
         {%- case block.type -%}
-          
           {%- when 'heading' -%}
-            <h2 {{ block.shopify_attributes }} style="color: {{ block.settings.color }}; font-size: clamp(24px, 8vw, {{ block.settings.size }}px); margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};">
+            <h2
+              {{ block.shopify_attributes }}
+              style="color: {{ block.settings.color }}; font-size: clamp(32px, 5vw, {{ block.settings.size }}px); margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};"
+            >
               {{ block.settings.text }}
             </h2>
-            
+
           {%- when 'text' -%}
-            <div {{ block.shopify_attributes }} class="purpose-text" style="color: {{ block.settings.color }}; font-size: clamp(14px, 4vw, {{ block.settings.size }}px); margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};">
+            <div
+              {{ block.shopify_attributes }}
+              class="purpose-text"
+              style="color: {{ block.settings.color }}; font-size: clamp(14px, 2vw, {{ block.settings.size }}px); margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }}; max-width: 550px; line-height: 1.6;"
+            >
               {{ block.settings.text }}
             </div>
-            
+
           {%- when 'button' -%}
-            <div {{ block.shopify_attributes }} style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};">
-              <a href="{{ block.settings.button_link }}" class="btn" style="border-color: {{ block.settings.border_color }}; color: {{ block.settings.text_color }}; background-color: {{ block.settings.bg_color }};">
+            <div
+              {{ block.shopify_attributes }}
+              style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};"
+            >
+              <a
+                href="{{ block.settings.button_link }}"
+                class="btn"
+                style="border-color: {{ block.settings.border_color }}; color: {{ block.settings.text_color }}; background-color: {{ block.settings.bg_color }};"
+              >
                 {{ block.settings.button_label }}
               </a>
             </div>
-            
         {%- endcase -%}
       {%- endfor -%}
     </div>
-    
-    <div class="purpose-image" style="order: {% if section.settings.image_position == 'left' %}1{% else %}2{% endif %};">
-      {%- if section.settings.image_style == 'shield' -%}
-        <div class="shield-container" style="min-height: 400px; height: 100%; border-color: {{ section.settings.shield_border }}; border-width: {{ section.settings.shield_border_width }}px;">
-          {%- if section.settings.image != blank -%}
-            <img src="{{ section.settings.image | img_url: '600x' }}" alt="Purpose feature" style="max-width: 100%; height: auto; border-radius: {{ section.settings.image_radius }}px;">
-          {%- else -%}
-            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-          {%- endif -%}
-        </div>
+
+    <div
+      class="purpose-image"
+      style="order: {% if section.settings.image_position == 'left' %}1{% else %}2{% endif %}; display: flex; justify-content: center; align-items: center;"
+    >
+      {%- if section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 800 }}"
+          alt="{{ section.settings.image.alt | default: 'Our Purpose Image' }}"
+          style="max-width: 100%; height: auto; object-fit: contain;"
+        >
       {%- else -%}
-        <div style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 400px; background-color: rgba(0,0,0,0.05); border-radius: {{ section.settings.image_radius }}px;">
-          {%- if section.settings.image != blank -%}
-            <img src="{{ section.settings.image | img_url: '600x' }}" alt="Purpose feature" style="max-width: 100%; height: auto; border-radius: {{ section.settings.image_radius }}px;">
-          {%- else -%}
-            <div style="width: 100%; height: 100%; max-width: 400px;">
-              {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
-            </div>
-          {%- endif -%}
+        <div style="width: 100%; max-width: 500px; aspect-ratio: 4/5; background-color: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
         </div>
       {%- endif -%}
     </div>
-    
   </div>
 </div>
 
@@ -92,45 +103,9 @@
       "default": "right"
     },
     {
-      "type": "select",
-      "id": "image_style",
-      "label": "Image Container Style",
-      "options": [
-        { "value": "shield", "label": "Shield Outline" },
-        { "value": "standard", "label": "Standard Image" }
-      ],
-      "default": "shield"
-    },
-    {
-      "type": "color",
-      "id": "shield_border",
-      "label": "Shield Border Color",
-      "default": "#1A1A1A"
-    },
-    {
-      "type": "range",
-      "id": "shield_border_width",
-      "min": 1,
-      "max": 10,
-      "step": 1,
-      "unit": "px",
-      "label": "Shield Border Width",
-      "default": 1
-    },
-    {
       "type": "image_picker",
       "id": "image",
       "label": "Image"
-    },
-    {
-      "type": "range",
-      "id": "image_radius",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "label": "Image Border Radius",
-      "default": 0
     }
   ],
   "blocks": [
@@ -140,8 +115,26 @@
       "settings": [
         { "type": "text", "id": "text", "label": "Heading", "default": "Our Purpose" },
         { "type": "color", "id": "color", "label": "Text Color", "default": "#1A1A1A" },
-        { "type": "range", "id": "size", "min": 20, "max": 80, "step": 2, "unit": "px", "label": "Font Size", "default": 48 },
-        { "type": "range", "id": "margin_bottom", "min": 0, "max": 60, "step": 2, "unit": "px", "label": "Bottom Margin", "default": 24 },
+        {
+          "type": "range",
+          "id": "size",
+          "min": 20,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "label": "Font Size",
+          "default": 48
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom Margin",
+          "default": 24
+        },
         {
           "type": "select",
           "id": "align",
@@ -159,10 +152,33 @@
       "type": "text",
       "name": "Text Content",
       "settings": [
-        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>A mix of spiritual armor and western heritage. Uniting the essence of the frontier with the steadfastness of faith.</p>" },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>We want to build a community of women that can lean on one another and God's word throughout this journey in life! Cowgirl Armor is the idea that you are equipped with God's word and by staying true to that word you have everything you need to go into battle with everyday because you are equipped with the Cowgirl Armor of God! We want this community to be somewhere that you can find encouragement, reassurance and share your story with those in our Cowgirl Community!</p>"
+        },
         { "type": "color", "id": "color", "label": "Text Color", "default": "#1A1A1A" },
-        { "type": "range", "id": "size", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "Font Size", "default": 16 },
-        { "type": "range", "id": "margin_bottom", "min": 0, "max": 60, "step": 2, "unit": "px", "label": "Bottom Margin", "default": 32 },
+        {
+          "type": "range",
+          "id": "size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Font Size",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom Margin",
+          "default": 32
+        },
         {
           "type": "select",
           "id": "align",
@@ -180,12 +196,21 @@
       "type": "button",
       "name": "Button",
       "settings": [
-        { "type": "text", "id": "button_label", "label": "Button Label", "default": "Learn More" },
+        { "type": "text", "id": "button_label", "label": "Button Label", "default": "Our Inspiration" },
         { "type": "url", "id": "button_link", "label": "Button Link" },
         { "type": "color", "id": "text_color", "label": "Text Color", "default": "#1A1A1A" },
         { "type": "color", "id": "bg_color", "label": "Background Color", "default": "transparent" },
         { "type": "color", "id": "border_color", "label": "Border Color", "default": "#1A1A1A" },
-        { "type": "range", "id": "margin_bottom", "min": 0, "max": 60, "step": 2, "unit": "px", "label": "Bottom Margin", "default": 20 },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom Margin",
+          "default": 20
+        },
         {
           "type": "select",
           "id": "align",
@@ -204,11 +229,7 @@
     {
       "name": "Image with Text (Armor)",
       "category": "Image",
-      "blocks": [
-        { "type": "heading" },
-        { "type": "text" },
-        { "type": "button" }
-      ]
+      "blocks": [{ "type": "heading" }, { "type": "text" }, { "type": "button" }]
     }
   ]
 }

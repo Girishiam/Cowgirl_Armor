@@ -1,0 +1,185 @@
+<style>
+  .collection-hero-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    /* Premium proportions: scales between 300px and 500px based on screen height/width */
+    min-height: clamp(300px, 40vh, 500px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ section.settings.padding_top }}px 2rem {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .collection-hero__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+    /* Subtle zoom-out effect for a premium feel */
+    animation: bgSettle 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .collection-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  }
+
+  .collection-hero__content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 800px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .collection-hero__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.1;
+    color: inherit;
+    text-transform: uppercase;
+  }
+
+  .collection-hero__subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 400;
+    color: inherit;
+  }
+</style>
+
+<div class="collection-hero-{{ section.id }}">
+  {%- if section.settings.image != blank -%}
+    <img
+      src="{{ section.settings.image | image_url: width: 2000 }}"
+      alt="{{ section.settings.image.alt | default: collection.title | escape }}"
+      class="collection-hero__bg"
+    >
+  {%- else -%}
+    {{ 'lifestyle-2' | placeholder_svg_tag: 'collection-hero__bg placeholder-svg' }}
+  {%- endif -%}
+
+  <div class="collection-hero__overlay"></div>
+
+  <div class="collection-hero__content">
+    <h1 class="collection-hero__title fade-up-anim">
+      {%- if section.settings.title_override != blank -%}
+        {{ section.settings.title_override }}
+      {%- else -%}
+        {{ collection.title | default: page.title | default: 'All Products' }}
+      {%- endif -%}
+    </h1>
+
+    {%- assign subtitle = section.settings.subtitle_override | default: collection.description | strip_html -%}
+    {%- if subtitle != blank -%}
+      <p class="collection-hero__subtitle fade-up-anim" style="animation-delay: 150ms;">
+        {{ subtitle }}
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Premium Collection Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Content Overrides",
+      "info": "By default, this section uses the Collection Name and Description. Use these fields to override them."
+    },
+    {
+      "type": "text",
+      "id": "title_override",
+      "label": "Title Override"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_override",
+      "label": "Subtitle Override"
+    },
+    {
+      "type": "header",
+      "content": "Colors & Overlays"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fallback Background Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Collection Hero",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

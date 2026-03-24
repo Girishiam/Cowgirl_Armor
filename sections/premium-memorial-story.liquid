@@ -1,0 +1,307 @@
+<style>
+  .memorial-story-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    min-height: clamp(500px, 70vh, 800px);
+    display: flex;
+    align-items: center;
+    padding: {{ section.settings.padding_top }}px 2rem {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+    overflow: hidden;
+  }
+
+  /* Responsive content positioning */
+  .memorial-story-{{ section.id }} {
+    {% if section.settings.content_position == 'left' %}
+      justify-content: flex-start;
+    {% elsif section.settings.content_position == 'center' %}
+      justify-content: center;
+      text-align: center;
+    {% elsif section.settings.content_position == 'right' %}
+      justify-content: flex-end;
+      text-align: right;
+    {% endif %}
+  }
+
+  .memorial-story__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.image_position }};
+    z-index: 1;
+  }
+
+  .memorial-story__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  }
+
+  .memorial-story__container {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1400px; /* Matches your global max-width */
+    margin: 0 auto;
+    display: flex;
+
+    {% if section.settings.content_position == 'left' %}
+      justify-content: flex-start;
+    {% elsif section.settings.content_position == 'center' %}
+      justify-content: center;
+    {% elsif section.settings.content_position == 'right' %}
+      justify-content: flex-end;
+    {% endif %}
+  }
+
+  .memorial-story__content {
+    max-width: 750px; /* Keeps line lengths readable */
+    color: {{ section.settings.text_color }};
+  }
+
+  /* Typography Styling */
+  .memorial-story__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: inherit;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .memorial-story__text {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: inherit;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+
+  /* Rich Text Formatting (Lists and Paragraphs) */
+  .memorial-story__text p {
+    margin-bottom: 1.5rem;
+  }
+
+  .memorial-story__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .memorial-story__text strong {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .memorial-story__text ul {
+    list-style: none; /* Removes default bullets so emojis stand out */
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .memorial-story__text li {
+    margin-bottom: 0.8rem;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  /* Optional: Add a subtle text indent if using emojis as bullets */
+  .memorial-story__text li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: inherit;
+    opacity: 0.7;
+  }
+
+  /* If the merchant types emojis in the rich text editor, we hide the CSS bullet */
+  .memorial-story__text.has-emojis li::before {
+    display: none;
+  }
+  .memorial-story__text.has-emojis li {
+    padding-left: 0;
+  }
+
+  .fade-up-anim {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>
+
+<div class="memorial-story-{{ section.id }}">
+  {%- if section.settings.image != blank -%}
+    <img
+      src="{{ section.settings.image | image_url: width: 2400 }}"
+      alt="{{ section.settings.image.alt | default: 'Memorial Story Background' | escape }}"
+      class="memorial-story__bg"
+      loading="lazy"
+    >
+  {%- else -%}
+    {{ 'lifestyle-2' | placeholder_svg_tag: 'memorial-story__bg placeholder-svg' }}
+  {%- endif -%}
+
+  <div class="memorial-story__overlay"></div>
+
+  <div class="memorial-story__container">
+    <div class="memorial-story__content">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            <h2
+              class="memorial-story__heading fade-up-anim"
+              style="animation-delay: {{ forloop.index0 | times: 150 }}ms;"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.text }}
+            </h2>
+
+          {%- when 'text' -%}
+            <div
+              class="memorial-story__text {% if block.settings.hide_bullets %}has-emojis{% endif %} fade-up-anim"
+              style="animation-delay: {{ forloop.index0 | times: 150 }}ms;"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.text }}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Memorial Story Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Focal Point",
+      "options": [
+        { "value": "top center", "label": "Top" },
+        { "value": "center center", "label": "Center" },
+        { "value": "bottom center", "label": "Bottom" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Desktop Content Position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Colors & Overlays"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fallback Background Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Heading",
+          "default": "Be The Light Pink Memorial Cap | #LoveLikeOaklynn"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Story Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Share the story and where the proceeds are going. Use bullet points for clear readability.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_bullets",
+          "label": "Hide default bullet points",
+          "info": "Check this if you are using Emojis (like 💕) as your bullet points in the text above.",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Memorial Story Banner",
+      "blocks": [{ "type": "heading" }, { "type": "text" }]
+    }
+  ]
+}
+{% endschema %}

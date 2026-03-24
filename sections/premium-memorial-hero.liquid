@@ -1,0 +1,184 @@
+<style>
+  .memorial-hero-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    /* Tall, cinematic height for desktop, slightly shorter for mobile */
+    min-height: clamp(500px, 80vh, 800px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Pushes content to the bottom */
+    padding: 2rem;
+    overflow: hidden;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  @media screen and (min-width: 768px) {
+    .memorial-hero-{{ section.id }} {
+      padding: 4rem; /* More breathing room on desktop */
+    }
+  }
+
+  .memorial-hero__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+    /* Subtle premium load-in zoom */
+    animation: bgSettle 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .memorial-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    /* Gradient that is darker at the bottom where the text sits */
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 40%,
+      {{ section.settings.overlay_color | color_modify: 'alpha', section.settings.overlay_opacity | divided_by: 100.0 }} 100%
+    );
+  }
+
+  .memorial-hero__content {
+    position: relative;
+    z-index: 3;
+    max-width: 800px;
+    width: 100%;
+    color: {{ section.settings.text_color }};
+  }
+
+  .memorial-hero__title {
+    font-family: var(--font-heading);
+    /* Fluid typography that scales beautifully */
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.1;
+    color: inherit;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2); /* Extra legibility */
+  }
+
+  .memorial-hero__subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: inherit;
+    opacity: 0.9;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+
+  /* Fade up animation for the text */
+  .fade-up-text {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeUpAnim {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="memorial-hero-{{ section.id }}">
+  {%- if section.settings.image != blank -%}
+    <img
+      src="{{ section.settings.image | image_url: width: 2400 }}"
+      alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+      class="memorial-hero__bg"
+      loading="eager"
+    >
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'memorial-hero__bg placeholder-svg' }}
+  {%- endif -%}
+
+  <div class="memorial-hero__overlay"></div>
+
+  <div class="memorial-hero__content">
+    {%- if section.settings.title != blank -%}
+      <h1 class="memorial-hero__title fade-up-text" style="animation-delay: 200ms;">
+        {{ section.settings.title }}
+      </h1>
+    {%- endif -%}
+
+    {%- if section.settings.subtitle != blank -%}
+      <p class="memorial-hero__subtitle fade-up-text" style="animation-delay: 400ms;">
+        {{ section.settings.subtitle }}
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Memorial Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Oaklynn Rae Domer"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "#LoveLikeOaklynn"
+    },
+    {
+      "type": "header",
+      "content": "Colors & Overlays"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fallback Background Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Bottom Overlay Gradient Color",
+      "default": "#000000",
+      "info": "Creates a gradient at the bottom to make text readable."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Maximum Overlay Opacity",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Memorial Hero Banner",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
