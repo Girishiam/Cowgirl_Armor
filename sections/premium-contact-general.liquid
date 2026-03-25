@@ -266,7 +266,7 @@
 
         <div class="premium-form__row">
           <div class="premium-form__field">
-            <label class="premium-form__label" for="GeneralForm-first_name">First Name <span>(required)</span></label>
+            <label class="premium-form__label" for="GeneralForm-first_name">{{ section.settings.label_first_name | default: 'First Name' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
             <input
               type="text"
               id="GeneralForm-first_name"
@@ -277,7 +277,7 @@
             >
           </div>
           <div class="premium-form__field">
-            <label class="premium-form__label" for="GeneralForm-last_name">Last Name <span>(required)</span></label>
+            <label class="premium-form__label" for="GeneralForm-last_name">{{ section.settings.label_last_name | default: 'Last Name' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
             <input
               type="text"
               id="GeneralForm-last_name"
@@ -290,7 +290,7 @@
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="GeneralForm-email">Email <span>(required)</span></label>
+          <label class="premium-form__label" for="GeneralForm-email">{{ section.settings.label_email | default: 'Email' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
           <input
             type="email"
             id="GeneralForm-email"
@@ -315,12 +315,12 @@
         {%- endif -%}
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="GeneralForm-subject">Subject <span>(required)</span></label>
+          <label class="premium-form__label" for="GeneralForm-subject">{{ section.settings.label_subject | default: 'Subject' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
           <input type="text" id="GeneralForm-subject" class="premium-form__input" name="contact[Subject]" required>
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="GeneralForm-body">Message <span>(required)</span></label>
+          <label class="premium-form__label" for="GeneralForm-body">{{ section.settings.label_message | default: 'Message' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
           <textarea id="GeneralForm-body" class="premium-form__textarea" name="contact[Message]" required></textarea>
         </div>
 
@@ -383,6 +383,42 @@
       "id": "checkbox_label",
       "label": "Checkbox Label",
       "default": "Sign up for news and updates"
+    },
+    {
+      "type": "text",
+      "id": "label_first_name",
+      "label": "First Name Label",
+      "default": "First Name"
+    },
+    {
+      "type": "text",
+      "id": "label_last_name",
+      "label": "Last Name Label",
+      "default": "Last Name"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email Label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "label_subject",
+      "label": "Subject Label",
+      "default": "Subject"
+    },
+    {
+      "type": "text",
+      "id": "label_message",
+      "label": "Message Label",
+      "default": "Message"
+    },
+    {
+      "type": "text",
+      "id": "label_required",
+      "label": "Required Text",
+      "default": "(required)"
     },
     {
       "type": "text",

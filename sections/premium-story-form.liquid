@@ -243,7 +243,7 @@
 
         <div class="premium-form__row">
           <div class="premium-form__field">
-            <label class="premium-form__label" for="StoryForm-first_name">First Name <span>(required)</span></label>
+            <label class="premium-form__label" for="StoryForm-first_name">{{ section.settings.label_first_name | default: 'First Name' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
             <input
               type="text"
               id="StoryForm-first_name"
@@ -254,7 +254,7 @@
             >
           </div>
           <div class="premium-form__field">
-            <label class="premium-form__label" for="StoryForm-last_name">Last Name</label>
+            <label class="premium-form__label" for="StoryForm-last_name">{{ section.settings.label_last_name | default: 'Last Name' }}</label>
             <input
               type="text"
               id="StoryForm-last_name"
@@ -266,7 +266,7 @@
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="StoryForm-email">Email <span>(required)</span></label>
+          <label class="premium-form__label" for="StoryForm-email">{{ section.settings.label_email | default: 'Email' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
           <input
             type="email"
             id="StoryForm-email"
@@ -278,7 +278,7 @@
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="StoryForm-story">Your Cowgirl Story: <span>(required)</span></label>
+          <label class="premium-form__label" for="StoryForm-story">{{ section.settings.label_story | default: 'Your Cowgirl Story:' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
           <textarea
             id="StoryForm-story"
             class="premium-form__textarea"
@@ -289,8 +289,8 @@
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label">Can we share this on our Cowgirl Stories? <span>(required)</span></label>
-          <div class="premium-form__subtext">If always anonymous, please note that in the message above.</div>
+          <label class="premium-form__label">{{ section.settings.label_permission | default: 'Can we share this on our Cowgirl Stories?' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
+          <div class="premium-form__subtext">{{ section.settings.subtext_permission | default: 'If always anonymous, please note that in the message above.' }}</div>
 
           <div class="premium-form__radio-group">
             <input
@@ -298,25 +298,25 @@
               id="StoryForm-permission-yes"
               class="premium-form__radio-input"
               name="contact[Permission to Share]"
-              value="Yes"
+              value="{{ section.settings.label_yes | default: 'Yes' }}"
               required
             >
-            <label for="StoryForm-permission-yes" class="premium-form__radio-label">Yes</label>
+            <label for="StoryForm-permission-yes" class="premium-form__radio-label">{{ section.settings.label_yes | default: 'Yes' }}</label>
 
             <input
               type="radio"
               id="StoryForm-permission-no"
               class="premium-form__radio-input"
               name="contact[Permission to Share]"
-              value="No"
+              value="{{ section.settings.label_no | default: 'No' }}"
               required
             >
-            <label for="StoryForm-permission-no" class="premium-form__radio-label">No</label>
+            <label for="StoryForm-permission-no" class="premium-form__radio-label">{{ section.settings.label_no | default: 'No' }}</label>
           </div>
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="StoryForm-prayer">How can we be praying for you?</label>
+          <label class="premium-form__label" for="StoryForm-prayer">{{ section.settings.label_prayer | default: 'How can we be praying for you?' }}</label>
           <input type="text" id="StoryForm-prayer" class="premium-form__input" name="contact[Prayer Request]">
         </div>
 
@@ -367,6 +367,70 @@
       "id": "success_message",
       "label": "Success Message",
       "default": "Thank you for sharing your story with us!"
+    },
+    {
+      "type": "header",
+      "content": "Form Labels"
+    },
+    {
+      "type": "text",
+      "id": "label_first_name",
+      "label": "First Name Label",
+      "default": "First Name"
+    },
+    {
+      "type": "text",
+      "id": "label_last_name",
+      "label": "Last Name Label",
+      "default": "Last Name"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email Label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "label_story",
+      "label": "Story Label",
+      "default": "Your Cowgirl Story:"
+    },
+    {
+      "type": "text",
+      "id": "label_permission",
+      "label": "Permission Label",
+      "default": "Can we share this on our Cowgirl Stories?"
+    },
+    {
+      "type": "text",
+      "id": "subtext_permission",
+      "label": "Permission Subtext",
+      "default": "If always anonymous, please note that in the message above."
+    },
+    {
+      "type": "text",
+      "id": "label_yes",
+      "label": "Yes Option",
+      "default": "Yes"
+    },
+    {
+      "type": "text",
+      "id": "label_no",
+      "label": "No Option",
+      "default": "No"
+    },
+    {
+      "type": "text",
+      "id": "label_prayer",
+      "label": "Prayer Label",
+      "default": "How can we be praying for you?"
+    },
+    {
+      "type": "text",
+      "id": "label_required",
+      "label": "Required text",
+      "default": "(required)"
     },
     {
       "type": "header",

@@ -27,14 +27,33 @@
             </div>
 
           {%- when 'button' -%}
+            <style>
+              .purpose-btn-{{ block.id }} {
+                border: 1px solid {{ block.settings.border_color }};
+                color: {{ block.settings.text_color }};
+                background-color: {{ block.settings.bg_color }};
+                font-family: var(--font-body);
+                font-weight: 500;
+                font-size: 1.1rem;
+                padding: 0.8rem 2rem;
+                letter-spacing: 0.02em;
+                display: inline-block;
+                text-decoration: none;
+                border-radius: 0;
+                transition: all 0.3s ease;
+              }
+              .purpose-btn-{{ block.id }}:hover {
+                background-color: {{ block.settings.text_color }} !important;
+                color: #ffffff !important;
+              }
+            </style>
             <div
               {{ block.shopify_attributes }}
               style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};"
             >
               <a
                 href="{{ block.settings.button_link }}"
-                class="btn"
-                style="border-color: {{ block.settings.border_color }}; color: {{ block.settings.text_color }}; background-color: {{ block.settings.bg_color }};"
+                class="btn purpose-btn-{{ block.id }}"
               >
                 {{ block.settings.button_label }}
               </a>

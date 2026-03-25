@@ -219,6 +219,19 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  .fade-up-anim {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeUpAnim {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 
 <div class="premium-coll-{{ section.id }}">
@@ -241,7 +254,7 @@
           href="{{ section.settings.collection.url | default: routes.all_products_collection_url }}"
           class="premium-coll__shop-all"
         >
-          Shop All
+          {{ section.settings.shop_all_text | default: 'Shop All' | escape }}
         </a>
       {%- endif -%}
     </div>
@@ -294,9 +307,9 @@
               {% endunless %}
             >
               {%- if product.available -%}
-                Add to cart
+                {{ section.settings.button_add_to_cart | default: 'Add to cart' | escape }}
               {%- else -%}
-                Sold Out
+                {{ section.settings.button_sold_out | default: 'Sold Out' | escape }}
               {%- endif -%}
             </button>
           {%- endform -%}
@@ -347,6 +360,12 @@
       "id": "show_view_all",
       "label": "Show 'Shop All' button",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "shop_all_text",
+      "label": "'Shop All' Button Text",
+      "default": "Shop All"
     },
     {
       "type": "range",
@@ -439,6 +458,22 @@
       "unit": "px",
       "label": "Bottom Padding",
       "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Product Card Texts"
+    },
+    {
+      "type": "text",
+      "id": "button_add_to_cart",
+      "label": "Add to Cart Text",
+      "default": "Add to cart"
+    },
+    {
+      "type": "text",
+      "id": "button_sold_out",
+      "label": "Sold Out Text",
+      "default": "Sold Out"
     }
   ],
   "presets": [

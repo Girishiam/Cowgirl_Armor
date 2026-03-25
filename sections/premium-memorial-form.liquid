@@ -195,6 +195,13 @@
     transform: translateY(20px);
     animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
+  @keyframes fadeUpAnim {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 
 <div class="premium-contact-{{ section.id }}">
@@ -219,7 +226,7 @@
 
         <div class="premium-form__row">
           <div class="premium-form__field">
-            <label class="premium-form__label" for="ContactForm-first_name">First Name <span>(required)</span></label>
+            <label class="premium-form__label" for="ContactForm-first_name">{{ section.settings.label_first_name | default: 'First Name' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
             <input
               type="text"
               id="ContactForm-first_name"
@@ -230,7 +237,7 @@
             >
           </div>
           <div class="premium-form__field">
-            <label class="premium-form__label" for="ContactForm-last_name">Last Name <span>(required)</span></label>
+            <label class="premium-form__label" for="ContactForm-last_name">{{ section.settings.label_last_name | default: 'Last Name' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
             <input
               type="text"
               id="ContactForm-last_name"
@@ -243,7 +250,7 @@
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="ContactForm-email">Email <span>(required)</span></label>
+          <label class="premium-form__label" for="ContactForm-email">{{ section.settings.label_email | default: 'Email' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
           <input
             type="email"
             id="ContactForm-email"
@@ -270,7 +277,7 @@
 
         <div class="premium-form__field">
           <label class="premium-form__label" for="ContactForm-body"
-            >Message and prayers to send to the family: <span>(required)</span></label
+            >{{ section.settings.label_message | default: 'Message and prayers to send to the family:' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label
           >
           <textarea id="ContactForm-body" class="premium-form__textarea" name="contact[Message]" required></textarea>
         </div>
@@ -316,6 +323,36 @@
       "id": "checkbox_label",
       "label": "Checkbox Label",
       "default": "Sign up for news and updates"
+    },
+    {
+      "type": "text",
+      "id": "label_first_name",
+      "label": "First Name Label",
+      "default": "First Name"
+    },
+    {
+      "type": "text",
+      "id": "label_last_name",
+      "label": "Last Name Label",
+      "default": "Last Name"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email Label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "label_message",
+      "label": "Message Label",
+      "default": "Message and prayers to send to the family:"
+    },
+    {
+      "type": "text",
+      "id": "label_required",
+      "label": "Required Text",
+      "default": "(required)"
     },
     {
       "type": "text",

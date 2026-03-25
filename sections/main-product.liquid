@@ -164,13 +164,13 @@
 <div class="premium-pdp-{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
   {%- if section.settings.show_breadcrumbs -%}
     <nav class="premium-pdp__breadcrumb" aria-label="breadcrumbs">
-      <a href="{{ routes.root_url }}">Home</a>
+      <a href="{{ routes.root_url }}">{{ section.settings.breadcrumb_home_text | default: 'Home' | escape }}</a>
       <span aria-hidden="true"> / </span>
       {%- if collection -%}
         <a href="{{ collection.url }}">{{ collection.title }}</a>
         <span aria-hidden="true"> / </span>
       {%- else -%}
-        <a href="{{ routes.all_products_collection_url }}">All Products</a>
+        <a href="{{ routes.all_products_collection_url }}">{{ section.settings.breadcrumb_all_text | default: 'All Products' | escape }}</a>
         <span aria-hidden="true"> / </span>
       {%- endif -%}
       <span>{{ product.title }}</span>
@@ -241,9 +241,9 @@
                     {% endunless %}
                   >
                     {%- if product.available -%}
-                      Add to Cart
+                      {{ block.settings.button_add_to_cart | default: 'Add to Cart' | escape }}
                     {%- else -%}
-                      Sold Out
+                      {{ block.settings.button_sold_out | default: 'Sold Out' | escape }}
                     {%- endif -%}
                   </button>
 
@@ -280,6 +280,18 @@
       "id": "show_breadcrumbs",
       "label": "Show Breadcrumbs",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_home_text",
+      "label": "Breadcrumbs 'Home' Text",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_all_text",
+      "label": "Breadcrumbs 'All Products' Text",
+      "default": "All Products"
     },
     {
       "type": "range",
@@ -328,6 +340,18 @@
           "id": "show_dynamic_checkout",
           "label": "Show dynamic checkout buttons",
           "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_add_to_cart",
+          "label": "Add to Cart Text",
+          "default": "Add to Cart"
+        },
+        {
+          "type": "text",
+          "id": "button_sold_out",
+          "label": "Sold Out Text",
+          "default": "Sold Out"
         }
       ]
     }

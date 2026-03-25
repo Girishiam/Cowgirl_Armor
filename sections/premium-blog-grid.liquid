@@ -94,6 +94,19 @@
     text-underline-offset: 4px;
     margin-top: auto;
   }
+
+  .fade-up-anim {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeUpAnim {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 
 <div class="premium-blog-{{ section.id }}">
@@ -104,7 +117,7 @@
   {% paginate blog.articles by section.settings.articles_per_page %}
     <div class="premium-blog__grid">
       {%- for article in blog.articles -%}
-        <a href="{{ article.url }}" class="premium-article-card">
+        <a href="{{ article.url }}" class="premium-article-card fade-up-anim" style="animation-delay: {{ forloop.index0 | times: 100 }}ms;">
           <div class="premium-article-card__image-wrapper">
             {%- if article.image -%}
               <img
@@ -132,7 +145,7 @@
 
           <h2 class="premium-article-card__title">{{ article.title }}</h2>
 
-          <span class="premium-article-card__read-more">Read More</span>
+          <span class="premium-article-card__read-more">{{ section.settings.read_more_text | default: 'Read More' | escape }}</span>
         </a>
       {%- endfor -%}
     </div>
@@ -180,6 +193,12 @@
         { "value": "4 / 5", "label": "Portrait (4:5)" }
       ],
       "default": "3 / 2"
+    },
+    {
+      "type": "text",
+      "id": "read_more_text",
+      "label": "Read More Button Text",
+      "default": "Read More"
     },
     {
       "type": "checkbox",

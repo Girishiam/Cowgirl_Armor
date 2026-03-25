@@ -30,17 +30,13 @@
   }
 
   .newsletter-heading-{{ section.id }} {
-    font-size: clamp(2rem, 5vw, 4rem);
+    font-size: clamp(1.8rem, 4vw, 3rem);
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     color: {{ section.settings.text_color }};
-    display: inline-block;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.8);
-    padding: 0.5rem 1rem;
-    border-left: 4px solid #1a365d; /* Dark blue accent line */
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .premium-form-group {
@@ -66,11 +62,13 @@
 
   .premium-label {
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 0.5rem;
     font-family: var(--font-body);
-    font-weight: bold;
+    font-weight: 600;
     color: {{ section.settings.text_color }};
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
   .premium-input {
@@ -78,21 +76,22 @@
     padding: 0.8rem 0;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(0,0,0,0.4);
     color: {{ section.settings.text_color }};
     font-family: var(--font-body);
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, padding-left 0.3s ease;
   }
 
   .premium-input:focus {
     outline: none;
     border-bottom-color: {{ section.settings.text_color }};
+    border-bottom-width: 2px;
   }
 
   .premium-input::placeholder {
-    color: rgba(0,0,0,0.5);
-    font-size: 0.85rem;
+    color: rgba(0,0,0,0.6);
+    font-size: 0.9rem;
   }
 
   .premium-checkbox-container {
@@ -131,26 +130,30 @@
   }
 
   .premium-submit-btn {
-    background-color: transparent;
-    color: {{ section.settings.text_color }};
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
     border: 1px solid {{ section.settings.text_color }};
-    padding: 0.8rem 2.5rem;
-    font-family: var(--font-body);
+    padding: 1rem 3rem;
+    font-family: var(--font-heading);
     font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-top: 1rem;
   }
 
   .premium-submit-btn:hover {
-    background-color: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
+    background-color: transparent;
+    color: {{ section.settings.text_color }};
   }
+
 </style>
 
 <div class="newsletter-section-{{ section.id }}">
   <div class="newsletter-overlay-{{ section.id }}"></div>
 
-  <div class="newsletter-content-{{ section.id }}">
+  <div class="newsletter-content-{{ section.id }} fade-up-anim">
     {%- if section.settings.title != blank -%}
       <h2 class="newsletter-heading-{{ section.id }}">{{ section.settings.title }}</h2>
     {%- endif -%}
@@ -168,14 +171,14 @@
       {%- endif -%}
 
       <div class="premium-form-group">
-        <label class="premium-label">Name</label>
+        <label class="premium-label">{{ section.settings.label_name | default: 'Name' }}</label>
         <div class="premium-form-row">
           <div class="premium-input-container">
             <input
               type="text"
               name="contact[first_name]"
               class="premium-input"
-              placeholder="First Name (required)"
+              placeholder="{{ section.settings.placeholder_first_name | default: 'First Name (required)' | escape }}"
               required
             >
           </div>
@@ -184,7 +187,7 @@
               type="text"
               name="contact[last_name]"
               class="premium-input"
-              placeholder="Last Name (required)"
+              placeholder="{{ section.settings.placeholder_last_name | default: 'Last Name (required)' | escape }}"
               required
             >
           </div>
@@ -193,9 +196,9 @@
 
       <div class="premium-form-group">
         <label class="premium-label"
-          >Email <span style="font-weight: normal; font-size: 0.85rem;">(required)</span></label
+          >{{ section.settings.label_email | default: 'Email' }} <span style="font-weight: normal; font-size: 0.85rem;">{{ section.settings.label_required | default: '(required)' }}</span></label
         >
-        <input type="email" name="contact[email]" class="premium-input" placeholder="" required>
+        <input type="email" name="contact[email]" class="premium-input" placeholder="{{ section.settings.placeholder_email | escape }}" required>
       </div>
 
       <label class="premium-checkbox-container">
@@ -245,6 +248,46 @@
     },
     {
       "type": "header",
+      "content": "Form Labels & Placeholders"
+    },
+    {
+      "type": "text",
+      "id": "label_name",
+      "label": "Name Label",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_first_name",
+      "label": "First Name Placeholder",
+      "default": "First Name (required)"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_last_name",
+      "label": "Last Name Placeholder",
+      "default": "Last Name (required)"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email Label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_email",
+      "label": "Email Placeholder",
+      "default": "Email Address"
+    },
+    {
+      "type": "text",
+      "id": "label_required",
+      "label": "Required Indicator",
+      "default": "(required)"
+    },
+    {
+      "type": "header",
       "content": "Colors"
     },
     {
@@ -273,7 +316,7 @@
       "max": 100,
       "step": 5,
       "unit": "%",
-      "default": 30
+      "default": 85
     }
   ],
   "presets": [

@@ -172,6 +172,19 @@
     height: 20px;
     fill: currentColor;
   }
+
+  .fade-up-anim {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeUpAnim {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 
 <footer class="site-footer-{{ section.id }}">
@@ -179,7 +192,7 @@
     {%- for block in section.blocks -%}
       {%- case block.type -%}
         {%- when 'brand_info' -%}
-          <div class="footer__block" {{ block.shopify_attributes }}>
+          <div class="footer__block fade-up-anim" style="animation-delay: {{ forloop.index0 | times: 100 }}ms;" {{ block.shopify_attributes }}>
             <a href="{{ routes.root_url }}" class="footer__logo-link">
               {%- if block.settings.logo != blank -%}
                 <img
@@ -200,7 +213,7 @@
           </div>
 
         {%- when 'newsletter' -%}
-          <div class="footer__block" {{ block.shopify_attributes }}>
+          <div class="footer__block fade-up-anim" style="animation-delay: {{ forloop.index0 | times: 100 }}ms;" {{ block.shopify_attributes }}>
             {%- if block.settings.title != blank -%}
               <h3 class="footer__newsletter-title">{{ block.settings.title }}</h3>
             {%- endif -%}
@@ -210,13 +223,13 @@
 
             {% form 'customer', class: 'footer__newsletter-form' %}
               <input type="hidden" name="contact[tags]" value="newsletter">
-              <input type="email" name="contact[email]" class="footer__input" placeholder="Email Address" required>
-              <button type="submit" class="footer__btn">Subscribe</button>
+              <input type="email" name="contact[email]" class="footer__input" placeholder="{{ block.settings.email_placeholder | default: 'Email Address' | escape }}" required>
+              <button type="submit" class="footer__btn">{{ block.settings.button_label | default: 'Subscribe' | escape }}</button>
             {% endform %}
           </div>
 
         {%- when 'link_list' -%}
-          <div class="footer__block footer__block--right" {{ block.shopify_attributes }}>
+          <div class="footer__block footer__block--right fade-up-anim" style="animation-delay: {{ forloop.index0 | times: 100 }}ms;" {{ block.shopify_attributes }}>
             {%- if block.settings.menu != blank -%}
               <ul class="footer__nav-list">
                 {%- for link in linklists[block.settings.menu].links -%}
@@ -231,8 +244,8 @@
     {%- endfor -%}
   </div>
 
-  <div class="footer__bottom">
-    <div class="footer__copyright">&copy;All Rights Reserved by {{ shop.name }}</div>
+  <div class="footer__bottom fade-up-anim" style="animation-delay: 400ms;">
+    <div class="footer__copyright">&copy;{{ section.settings.copyright_text | default: 'All Rights Reserved by' }} {{ shop.name }}</div>
 
     <div class="footer__socials">
       {%- if section.settings.social_facebook_link != blank -%}
@@ -284,6 +297,12 @@
       "id": "border_color",
       "label": "Border Color",
       "default": "transparent"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": "All Rights Reserved by"
     },
     {
       "type": "header",
@@ -358,6 +377,18 @@
           "id": "text",
           "label": "Subtext",
           "default": "Join our newsletter for updates."
+        },
+        {
+          "type": "text",
+          "id": "email_placeholder",
+          "label": "Email Placeholder",
+          "default": "Email Address"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Subscribe"
         }
       ]
     }

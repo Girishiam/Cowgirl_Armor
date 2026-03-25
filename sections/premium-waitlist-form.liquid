@@ -223,13 +223,13 @@
           </div>
         {%- elsif form.errors -%}
           <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
-            Please adjust the following fields: {{ form.errors | default_errors }}
+            {{ section.settings.error_message_prefix }} {{ form.errors | default_errors }}
           </div>
         {%- endif -%}
 
         <div class="premium-form__row">
           <div class="premium-form__field">
-            <label class="premium-form__label" for="WaitlistForm-first_name">First Name <span>(required)</span></label>
+            <label class="premium-form__label" for="WaitlistForm-first_name">{{ section.settings.first_name_label }} {%- if section.settings.required_text != blank -%}<span>{{ section.settings.required_text }}</span>{%- endif -%}</label>
             <input
               type="text"
               id="WaitlistForm-first_name"
@@ -240,7 +240,7 @@
             >
           </div>
           <div class="premium-form__field">
-            <label class="premium-form__label" for="WaitlistForm-last_name">Last Name</label>
+            <label class="premium-form__label" for="WaitlistForm-last_name">{{ section.settings.last_name_label }}</label>
             <input
               type="text"
               id="WaitlistForm-last_name"
@@ -252,7 +252,7 @@
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="WaitlistForm-email">Email <span>(required)</span></label>
+          <label class="premium-form__label" for="WaitlistForm-email">{{ section.settings.email_label }} {%- if section.settings.required_text != blank -%}<span>{{ section.settings.required_text }}</span>{%- endif -%}</label>
           <input
             type="email"
             id="WaitlistForm-email"
@@ -265,7 +265,7 @@
         </div>
 
         <div class="premium-form__field">
-          <label class="premium-form__label" for="WaitlistForm-phone">Phone <span>(required)</span></label>
+          <label class="premium-form__label" for="WaitlistForm-phone">{{ section.settings.phone_label }} {%- if section.settings.required_text != blank -%}<span>{{ section.settings.required_text }}</span>{%- endif -%}</label>
           <div class="premium-form__phone-group">
             <select class="premium-form__country-code" name="contact[country_code]" aria-label="Country Code">
               <option value="US">United States (+1)</option>
@@ -280,7 +280,7 @@
               name="contact[phone]"
               required
               autocomplete="tel"
-              placeholder="(555) 000-0000"
+              placeholder="{{ section.settings.phone_placeholder }}"
             >
           </div>
         </div>
@@ -332,6 +332,52 @@
       "id": "success_message",
       "label": "Success Message",
       "default": "You're on the list! Keep an eye on your inbox."
+    },
+    {
+      "type": "text",
+      "id": "error_message_prefix",
+      "label": "Error Message Prefix",
+      "default": "Please adjust the following fields:"
+    },
+    {
+      "type": "header",
+      "content": "Form Text & Labels"
+    },
+    {
+      "type": "text",
+      "id": "first_name_label",
+      "label": "First Name Label",
+      "default": "First Name"
+    },
+    {
+      "type": "text",
+      "id": "last_name_label",
+      "label": "Last Name Label",
+      "default": "Last Name"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email Label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Phone Label",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Phone Placeholder",
+      "default": "(555) 000-0000"
+    },
+    {
+      "type": "text",
+      "id": "required_text",
+      "label": "Required Field Text",
+      "default": "(required)"
     },
     {
       "type": "header",
