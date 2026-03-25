@@ -1,26 +1,72 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
-      "type": "hero"
+      "type": "hero",
+      "settings": {
+        "hero_height": 90,
+        "bg_color": "#d9d9d9",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0,
+        "center_image": "shopify://shop_images/IMG_1760_1.png",
+        "image_width": 1000
+      }
     },
     "purpose": {
       "type": "purpose",
       "blocks": {
         "heading": {
-          "type": "heading"
+          "type": "heading",
+          "settings": {
+            "text": "Our Purpose",
+            "color": "#1a1a1a",
+            "size": 48,
+            "margin_bottom": 24,
+            "align": "left"
+          }
         },
         "text": {
-          "type": "text"
+          "type": "text",
+          "settings": {
+            "text": "<p>We want to build a community of women that can lean on one another and God's word throughout this journey in life! Cowgirl Armor is the idea that you are equipped with God's word and by staying true to that word you have everything you need to go into battle with everyday because you are equipped with the Cowgirl Armor of God! We want this community to be somewhere that you can find encouragement, reassurance and share your story with those in our Cowgirl Community!</p>",
+            "color": "#1a1a1a",
+            "size": 16,
+            "margin_bottom": 32,
+            "align": "left"
+          }
         },
         "button": {
-          "type": "button"
+          "type": "button",
+          "settings": {
+            "button_label": "Our Inspiration",
+            "button_link": "",
+            "text_color": "#1a1a1a",
+            "bg_color": "rgba(0,0,0,0)",
+            "border_color": "#1a1a1a",
+            "margin_bottom": 20,
+            "align": "left"
+          }
         }
       },
       "block_order": [
         "heading",
         "text",
         "button"
-      ]
+      ],
+      "settings": {
+        "bg_color": "rgba(0,0,0,0)",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "image_position": "right"
+      }
     },
     "icon_grid": {
       "type": "icon-grid",
@@ -28,19 +74,19 @@
         "item1": {
           "type": "card",
           "settings": {
-            "title": "Sword of the Spirit"
+            "card_bg": "#8ba4ac"
           }
         },
         "item2": {
           "type": "card",
           "settings": {
-            "title": "Shield of Faith"
+            "card_bg": "#8ba4ac"
           }
         },
         "item3": {
           "type": "card",
           "settings": {
-            "title": "Armor of God"
+            "card_bg": "#8ba4ac"
           }
         }
       },
@@ -48,10 +94,33 @@
         "item1",
         "item2",
         "item3"
-      ]
+      ],
+      "settings": {
+        "bg_color": "rgba(0,0,0,0)",
+        "padding_top": 40,
+        "padding_bottom": 80,
+        "grid_gap": 20,
+        "columns_desktop": 3
+      }
     },
     "newsletter": {
-      "type": "newsletter"
+      "type": "newsletter",
+      "settings": {
+        "title": "Join The Cowgirl Army",
+        "checkbox_text": "Sign up for news and updates",
+        "button_label": "Submit",
+        "success_message": "Welcome to the Cowgirl Army!",
+        "label_name": "Name",
+        "placeholder_first_name": "First Name (required)",
+        "placeholder_last_name": "Last Name (required)",
+        "label_email": "Email",
+        "placeholder_email": "Email Address",
+        "label_required": "(required)",
+        "bg_color": "#e2e2e2",
+        "text_color": "#1a1a1a",
+        "overlay_color": "#ffffff",
+        "overlay_opacity": 85
+      }
     }
   },
   "order": [
