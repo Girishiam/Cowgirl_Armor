@@ -1,23 +1,7 @@
 {
   "sections": {
     "hero": {
-      "type": "hero",
-      "blocks": {
-        "shield": {
-          "type": "shield_logo"
-        },
-        "subheading": {
-          "type": "subheading"
-        },
-        "button": {
-          "type": "button"
-        }
-      },
-      "block_order": [
-        "shield",
-        "subheading",
-        "button"
-      ]
+      "type": "hero"
     },
     "purpose": {
       "type": "purpose",

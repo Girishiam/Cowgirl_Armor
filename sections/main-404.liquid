@@ -1,0 +1,24 @@
+<div class="template-404 page-width page-margin center">
+  <p>{{ 'general.404.subtext_html' | t }}</p>
+  <h1 class="title">
+    {{ 'general.404.title' | t }}
+  </h1>
+  <a href="{{ routes.all_products_collection_url }}" class="button">
+    Continue Shopping
+  </a>
+</div>
+
+<style>
+  .template-404 {
+    text-align: center;
+    padding: 100px 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Main 404",
+  "tag": "section",
+  "class": "section"
+}
+{% endschema %}

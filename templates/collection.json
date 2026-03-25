@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "main": {
+      "type": "premium-collection-grid"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
