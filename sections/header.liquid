@@ -195,8 +195,9 @@
   .header__right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: {{ section.settings.social_gap }}px;
-    flex-shrink: 0;
+    flex: 1;
   }
   .header__icon {
     display: inline-flex;
@@ -509,7 +510,7 @@
   <div class="header__inner">
 
     <!-- Left: Hamburger + Logo -->
-    <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:0.75rem;flex:1;">
       <button class="mobile-menu-btn"
               aria-expanded="false"
               aria-controls="mobile-drawer"
@@ -585,7 +586,7 @@
     {%- endif -%}
 
     <!-- Right: Icons + CTA -->
-    <div class="header__right">
+    <div class="header__right" style="flex:1;justify-content:flex-end;">
       {%- if section.settings.show_search -%}
         <button class="header__icon header__search-toggle"
                 aria-label="Search"
@@ -742,111 +743,120 @@
 </div>
 
 <script>
-(function() {
-  // ── Sticky header ────────────────────────────────────────
-  const header = document.getElementById('site-header');
-  const announcement = document.querySelector('.announcement-bar');
+document.addEventListener('DOMContentLoaded', function() {
+
+  // ── Sticky header ──────────────────────────────────────
+  var header = document.getElementById('site-header');
+  var announcement = document.querySelector('.announcement-bar');
 
   function setHeights() {
-    const aH = announcement ? announcement.offsetHeight : 0;
-    const hH = header ? header.offsetHeight : 0;
+    var aH = announcement ? announcement.offsetHeight : 0;
+    var hH = header ? header.offsetHeight : 0;
     document.documentElement.style.setProperty('--announcement-height', aH + 'px');
     document.documentElement.style.setProperty('--nav-total-height', (aH + hH) + 'px');
   }
   setHeights();
   window.addEventListener('resize', setHeights, { passive: true });
+  window.addEventListener('load', setHeights);
 
   {%- if section.settings.enable_sticky -%}
-  let lastY = 0;
   window.addEventListener('scroll', function() {
-    const y = window.scrollY;
-    if (y > {{ section.settings.sticky_threshold }}) {
+    if (!header) return;
+    if (window.scrollY > {{ section.settings.sticky_threshold }}) {
       header.classList.add('is-sticky');
     } else {
       header.classList.remove('is-sticky');
     }
-    lastY = y;
   }, { passive: true });
   {%- endif -%}
 
-  // ── Mobile drawer ────────────────────────────────────────
-  const menuBtn   = document.querySelector('.mobile-menu-btn');
-  const drawer    = document.getElementById('mobile-drawer');
-  const closeBtn  = document.querySelector('.mobile-drawer__close');
-  const overlay   = document.getElementById('drawer-overlay');
+  // ── Mobile drawer ──────────────────────────────────────
+  var menuBtn  = document.querySelector('.mobile-menu-btn');
+  var drawer   = document.getElementById('mobile-drawer');
+  var closeBtn = document.querySelector('.mobile-drawer__close');
+  var overlay  = document.getElementById('drawer-overlay');
 
   function openDrawer() {
+    if (!drawer) return;
     drawer.classList.add('mobile-drawer--active');
     drawer.setAttribute('aria-hidden', 'false');
-    overlay.classList.add('active');
+    if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
-    menuBtn && menuBtn.setAttribute('aria-expanded', 'true');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
   }
+
   function closeDrawer() {
+    if (!drawer) return;
     drawer.classList.remove('mobile-drawer--active');
     drawer.setAttribute('aria-hidden', 'true');
-    overlay.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
-    menuBtn && menuBtn.setAttribute('aria-expanded', 'false');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
   }
 
-  menuBtn  && menuBtn.addEventListener('click', openDrawer);
-  closeBtn && closeBtn.addEventListener('click', closeDrawer);
-  overlay  && overlay.addEventListener('click', closeDrawer);
+  if (menuBtn)  menuBtn.addEventListener('click', openDrawer);
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+  if (overlay)  overlay.addEventListener('click', closeDrawer);
+
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeDrawer();
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('mobile-drawer--active')) {
+      closeDrawer();
+    }
   });
 
-  // ── Drawer accordion ─────────────────────────────────────
-  document.querySelectorAll('.drawer-accordion__toggle').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      const expanded = this.getAttribute('aria-expanded') === 'true';
-      const body = this.nextElementSibling;
-      this.setAttribute('aria-expanded', !expanded);
-      body.classList.toggle('open', !expanded);
+  // ── Drawer accordion ────────────────────────────────────
+  if (drawer) {
+    drawer.querySelectorAll('.drawer-accordion__toggle').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var body = this.nextElementSibling;
+        this.setAttribute('aria-expanded', String(!expanded));
+        if (body) body.classList.toggle('open', !expanded);
+      });
     });
-  });
+  }
 
   // ── Search overlay ───────────────────────────────────────
   {%- if section.settings.show_search -%}
-  const searchToggle = document.querySelector('[data-search-toggle]');
-  const searchOverlay = document.getElementById('search-overlay');
-  const searchClose   = document.querySelector('.search-overlay__close');
-  const searchInput   = document.querySelector('.search-input');
+  var searchToggle  = document.querySelector('[data-search-toggle]');
+  var searchOverlay = document.getElementById('search-overlay');
+  var searchClose   = document.querySelector('.search-overlay__close');
+  var searchInput   = document.querySelector('.search-input');
 
   function openSearch() {
+    if (!searchOverlay) return;
     searchOverlay.classList.add('is-open');
     searchOverlay.setAttribute('aria-hidden', 'false');
-    setTimeout(function() { searchInput && searchInput.focus(); }, 50);
+    setTimeout(function() { if (searchInput) searchInput.focus(); }, 50);
   }
   function closeSearch() {
+    if (!searchOverlay) return;
     searchOverlay.classList.remove('is-open');
     searchOverlay.setAttribute('aria-hidden', 'true');
   }
 
-  searchToggle && searchToggle.addEventListener('click', openSearch);
-  searchClose  && searchClose.addEventListener('click', closeSearch);
-  searchOverlay && searchOverlay.addEventListener('click', function(e) {
+  if (searchToggle)  searchToggle.addEventListener('click', openSearch);
+  if (searchClose)   searchClose.addEventListener('click', closeSearch);
+  if (searchOverlay) searchOverlay.addEventListener('click', function(e) {
     if (e.target === searchOverlay) closeSearch();
   });
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && searchOverlay.classList.contains('is-open')) closeSearch();
+    if (e.key === 'Escape' && searchOverlay && searchOverlay.classList.contains('is-open')) closeSearch();
   });
   {%- endif -%}
 
   // ── Cart count ───────────────────────────────────────────
-  const cartCount = document.querySelector('.cart-count');
+  var cartCount = document.querySelector('.cart-count');
   if (cartCount) {
     document.addEventListener('cart:updated', function(e) {
-      const n = e.detail && e.detail.item_count || 0;
+      var n = (e.detail && e.detail.item_count) || 0;
       cartCount.textContent = n;
-      n === 0 ? cartCount.setAttribute('hidden','') : cartCount.removeAttribute('hidden');
+      if (n === 0) { cartCount.setAttribute('hidden', ''); }
+      else { cartCount.removeAttribute('hidden'); }
     });
   }
 
-  // ── Recalc after fonts/images load ───────────────────────
-  window.addEventListener('load', setHeights);
-})();
+});
 </script>
 
 {% schema %}
