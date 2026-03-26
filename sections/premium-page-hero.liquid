@@ -13,7 +13,7 @@
   }
 
   .page-hero__logo {
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -27,6 +27,7 @@
   }
 
   .page-hero__title {
+    max-width: {{ section.settings.logo_width }}px;
     width: 100%;
     text-align: {{ section.settings.text_align }};
     font-size: clamp(2.5rem, 6vw, 4rem);
@@ -74,7 +75,10 @@
     {
       "type": "range",
       "id": "logo_width",
-      "min": 100, "max": 600, "step": 10, "unit": "px",
+      "min": 100,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
       "label": "Logo Max Width",
       "default": 350
     },
@@ -93,11 +97,28 @@
         { "value": "center", "label": "Center" },
         { "value": "right", "label": "Right" }
       ],
-      "default": "left"
+      "default": "center"
     },
     {
-      "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Top Padding", "default": 80 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Bottom Padding", "default": 60 }
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 60
+    }
   ],
   "presets": [
     {
