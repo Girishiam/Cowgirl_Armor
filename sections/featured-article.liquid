@@ -1,0 +1,20 @@
+{% assign blog = blogs[section.settings.blog] %}
+{% assign article = blog.articles.first %}
+
+<div class="featured-article">
+  <div class="featured-article__image">
+    <a href="{{ article.url }}">
+      <img src="{{ article.image | image_url: width: 1000 }}" alt="{{ article.title }}">
+    </a>
+  </div>
+
+  <div class="featured-article__content">
+    <span class="featured-article__tag">{{ blog.title }}</span>
+    <p class="featured-article__date">{{ article.published_at | date: "%m/%d/%y" }}</p>
+    <h2 class="featured-article__title">
+      <a href="{{ article.url }}">{{ article.title }}</a>
+    </h2>
+    <p class="featured-article__excerpt">{{ article.excerpt | strip_html | truncate: 120 }}</p>
+    <a href="{{ article.url }}" class="featured-article__btn">Read More →</a>
+  </div>
+</div>
