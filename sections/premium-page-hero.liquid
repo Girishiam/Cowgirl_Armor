@@ -1,261 +1,77 @@
 <style>
   .page-hero-{{ section.id }} {
-    --section-padding-top: {{ section.settings.padding_top }}px;
-    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
-    --section-bg-color: {{ section.settings.bg_color }};
-    --section-text-color: {{ section.settings.text_color }};
-    --logo-margin: {{ section.settings.logo_margin_bottom }}px;
-    --title-margin: {{ section.settings.title_margin_bottom }}px;
-    --subtitle-margin: {{ section.settings.subtitle_margin_top }}px;
-    --max-width: {{ section.settings.max_width }}px;
-
-    padding-top: var(--section-padding-top);
-    padding-bottom: var(--section-padding-bottom);
-    background-color: var(--section-bg-color);
-    position: relative;
-    overflow: hidden;
-  }
-
-  {%- if section.settings.bg_image != blank -%}
-  .page-hero-{{ section.id }}::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
     width: 100%;
-    height: 100%;
-    background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
-    background-size: cover;
-    background-position: {{ section.settings.bg_image_position }};
-    opacity: {{ section.settings.bg_image_opacity | divided_by: 100.0 }};
-    z-index: 0;
   }
-  {%- endif -%}
-
-  {%- if section.settings.enable_gradient_overlay -%}
-  .page-hero-{{ section.id }}::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      {{ section.settings.gradient_angle }}deg,
-      {{ section.settings.gradient_color_1 }} 0%,
-      {{ section.settings.gradient_color_2 }} 100%
-    );
-    opacity: {{ section.settings.gradient_opacity | divided_by: 100.0 }};
-    z-index: 1;
-  }
-  {%- endif -%}
 
   .page-hero__inner {
-    position: relative;
-    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
     display: flex;
     flex-direction: column;
-    align-items: {{ section.settings.content_alignment }};
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding-left: {{ section.settings.padding_horizontal_mobile }}px;
-    padding-right: {{ section.settings.padding_horizontal_mobile }}px;
-  }
-
-  @media screen and (min-width: 768px) {
-    .page-hero__inner {
-      padding-left: {{ section.settings.padding_horizontal_tablet }}px;
-      padding-right: {{ section.settings.padding_horizontal_tablet }}px;
-    }
-  }
-
-  @media screen and (min-width: 1024px) {
-    .page-hero__inner {
-      padding-left: {{ section.settings.padding_horizontal }}px;
-      padding-right: {{ section.settings.padding_horizontal }}px;
-    }
-  }
-
-  .page-hero__breadcrumb {
-    font-size: {{ section.settings.breadcrumb_font_size }}px;
-    color: var(--section-text-color);
-    opacity: {{ section.settings.breadcrumb_opacity | divided_by: 100.0 }};
-    margin-bottom: {{ section.settings.breadcrumb_margin }}px;
-    text-transform: {{ section.settings.breadcrumb_text_transform }};
-    letter-spacing: {{ section.settings.breadcrumb_letter_spacing }}px;
-    font-weight: {{ section.settings.breadcrumb_font_weight }};
-  }
-
-  .page-hero__breadcrumb a {
-    color: inherit;
-    text-decoration: none;
-    transition: opacity {{ section.settings.hover_transition_duration }}ms ease;
-  }
-
-  .page-hero__breadcrumb a:hover {
-    opacity: 0.6;
-  }
-
-  .page-hero__logo {
-    margin-bottom: var(--logo-margin);
-    display: flex;
-    justify-content: center;
-    width: 100%;
+    align-items: {{ section.settings.text_align | replace: 'left', 'flex-start' | replace: 'center', 'center' | replace: 'right', 'flex-end' }};
+    gap: 1.5rem;
   }
 
   .page-hero__logo img {
-    max-width: {{ section.settings.logo_width_mobile }}px;
+    max-width: {{ section.settings.logo_width }}px;
     width: 100%;
     height: auto;
     object-fit: contain;
-    filter: drop-shadow(
-      {{ section.settings.logo_shadow_x }}px
-      {{ section.settings.logo_shadow_y }}px
-      {{ section.settings.logo_shadow_blur }}px
-      rgba(0, 0, 0, {{ section.settings.logo_shadow_opacity | divided_by: 100.0 }})
-    );
-  }
-
-  @media screen and (min-width: 768px) {
-    .page-hero__logo img {
-      max-width: {{ section.settings.logo_width_tablet }}px;
-    }
-  }
-
-  @media screen and (min-width: 1024px) {
-    .page-hero__logo img {
-      max-width: {{ section.settings.logo_width }}px;
-    }
+    display: block;
   }
 
   .page-hero__title {
-    width: 100%;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: {{ section.settings.text_color }};
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 800;
     text-align: {{ section.settings.text_align }};
-    font-size: clamp(
-      {{ section.settings.title_font_size_mobile }}px,
-      {{ section.settings.title_font_size_vw }}vw,
-      {{ section.settings.title_font_size }}px
-    );
-    color: var(--section-text-color);
-    margin: 0 0 var(--title-margin) 0;
-    line-height: {{ section.settings.title_line_height }};
-    font-weight: {{ section.settings.title_font_weight }};
-    letter-spacing: {{ section.settings.title_letter_spacing }}px;
-    text-transform: {{ section.settings.title_text_transform }};
-    {%- if section.settings.enable_title_shadow -%}
-    text-shadow:
-      {{ section.settings.title_shadow_x }}px
-      {{ section.settings.title_shadow_y }}px
-      {{ section.settings.title_shadow_blur }}px
-      rgba(0, 0, 0, {{ section.settings.title_shadow_opacity | divided_by: 100.0 }});
-    {%- endif -%}
   }
 
-  .page-hero__subtitle {
-    width: 100%;
-    text-align: {{ section.settings.text_align }};
-    font-size: clamp(
-      {{ section.settings.subtitle_font_size_mobile }}px,
-      {{ section.settings.subtitle_font_size_vw }}vw,
-      {{ section.settings.subtitle_font_size }}px
-    );
-    color: var(--section-text-color);
-    opacity: {{ section.settings.subtitle_opacity | divided_by: 100.0 }};
-    margin-top: var(--subtitle-margin);
-    line-height: {{ section.settings.subtitle_line_height }};
-    font-weight: {{ section.settings.subtitle_font_weight }};
-    max-width: {{ section.settings.subtitle_max_width }}px;
-    {%- if section.settings.text_align == 'center' -%}
-    margin-left: auto;
-    margin-right: auto;
-    {%- endif -%}
-  }
-
-  /* Scroll Animation */
-  .page-hero-animate {
+  /* fade-up animation (re-used from theme if available) */
+  .fade-up-anim {
     opacity: 0;
-    transform: translateY({{ section.settings.animation_distance }}px);
-    transition:
-      opacity {{ section.settings.animation_duration }}ms {{ section.settings.animation_easing }},
-      transform {{ section.settings.animation_duration }}ms {{ section.settings.animation_easing }};
+    transform: translateY(20px);
+    animation: fadeUp 0.6s ease forwards;
   }
 
-  .page-hero-animate.animated {
-    opacity: 1;
-    transform: translateY(0);
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-
-  /* Stagger delays for multiple elements */
-  .page-hero-animate:nth-child(1) { transition-delay: 0ms; }
-  .page-hero-animate:nth-child(2) { transition-delay: {{ section.settings.animation_stagger }}ms; }
-  .page-hero-animate:nth-child(3) { transition-delay: calc({{ section.settings.animation_stagger }}ms * 2); }
-  .page-hero-animate:nth-child(4) { transition-delay: calc({{ section.settings.animation_stagger }}ms * 3); }
 </style>
 
 <div class="page-hero-{{ section.id }}">
   <div class="page-hero__inner">
-    {%- if section.settings.show_breadcrumb -%}
-      <nav class="page-hero__breadcrumb page-hero-animate" aria-label="Breadcrumb">
-        <a href="/">{{ 'general.breadcrumb.home' | default: 'Home' }}</a>
-        <span class="breadcrumb-divider"> {{ section.settings.breadcrumb_divider }} </span>
-        <span>{{ page.title }}</span>
-      </nav>
-    {%- endif -%}
 
     {%- if section.settings.logo != blank -%}
-      <div class="page-hero__logo page-hero-animate">
+      <div class="page-hero__logo fade-up-anim">
         <img
           src="{{ section.settings.logo | image_url: width: 800 }}"
           alt="{{ section.settings.logo.alt | default: page.title | escape }}"
-          width="{{ section.settings.logo_width }}"
-          height="auto"
-          loading="eager"
         >
       </div>
     {%- endif -%}
 
-    {%- if section.settings.title != blank -%}
-      <h1 class="page-hero__title page-hero-animate">{{ section.settings.title }}</h1>
-    {%- else -%}
-      <h1 class="page-hero__title page-hero-animate">{{ page.title }}</h1>
+    {%- assign hero_title = section.settings.title | default: page.title -%}
+    {%- if hero_title != blank -%}
+      <h1 class="page-hero__title fade-up-anim" style="animation-delay: 120ms;">
+        {{ hero_title }}
+      </h1>
     {%- endif -%}
 
-    {%- if section.settings.subtitle != blank -%}
-      <div class="page-hero__subtitle page-hero-animate">{{ section.settings.subtitle }}</div>
-    {%- endif -%}
   </div>
 </div>
-
-<script>
-(function() {
-  const sectionId = '{{ section.id }}';
-  const animateElements = document.querySelectorAll('.page-hero-' + sectionId + ' .page-hero-animate');
-
-  if (!animateElements.length) return;
-
-  const observerOptions = {
-    threshold: {{ section.settings.animation_threshold | divided_by: 100.0 }},
-    rootMargin: '{{ section.settings.animation_root_margin }}px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animated');
-        {%- if section.settings.animation_once -%}
-        observer.unobserve(entry.target);
-        {%- endif -%}
-      } else {
-        {%- unless section.settings.animation_once -%}
-        entry.target.classList.remove('animated');
-        {%- endunless -%}
-      }
-    });
-  }, observerOptions);
-
-  animateElements.forEach(el => observer.observe(el));
-})();
-</script>
 
 {% schema %}
 {
@@ -263,172 +79,19 @@
   "settings": [
     {
       "type": "header",
-      "content": "Background"
+      "content": "Colors"
     },
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Background Color",
-      "default": "transparent"
-    },
-    {
-      "type": "image_picker",
-      "id": "bg_image",
-      "label": "Background Image"
-    },
-    {
-      "type": "select",
-      "id": "bg_image_position",
-      "label": "Background Image Position",
-      "options": [
-        { "value": "center", "label": "Center" },
-        { "value": "top", "label": "Top" },
-        { "value": "bottom", "label": "Bottom" },
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "range",
-      "id": "bg_image_opacity",
-      "min": 0, "max": 100, "step": 5, "unit": "%",
-      "label": "Background Image Opacity",
-      "default": 100
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_gradient_overlay",
-      "label": "Enable Gradient Overlay",
-      "default": false
-    },
-    {
-      "type": "color",
-      "id": "gradient_color_1",
-      "label": "Gradient Color 1",
-      "default": "rgba(0,0,0,0.3)"
-    },
-    {
-      "type": "color",
-      "id": "gradient_color_2",
-      "label": "Gradient Color 2",
-      "default": "rgba(0,0,0,0)"
-    },
-    {
-      "type": "range",
-      "id": "gradient_angle",
-      "min": 0, "max": 360, "step": 15, "unit": "deg",
-      "label": "Gradient Angle",
-      "default": 180
-    },
-    {
-      "type": "range",
-      "id": "gradient_opacity",
-      "min": 0, "max": 100, "step": 5, "unit": "%",
-      "label": "Gradient Opacity",
-      "default": 100
-    },
-    {
-      "type": "header",
-      "content": "Colors & Layout"
+      "label": "Background color",
+      "default": "#EBEBEB"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text Color",
+      "label": "Title color",
       "default": "#1A1A1A"
-    },
-    {
-      "type": "select",
-      "id": "content_alignment",
-      "label": "Content Alignment",
-      "options": [
-        { "value": "flex-start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "flex-end", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "text_align",
-      "label": "Text Alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "left"
-    },
-    {
-      "type": "range",
-      "id": "max_width",
-      "min": 800, "max": 1600, "step": 50, "unit": "px",
-      "label": "Maximum Width",
-      "default": 1200
-    },
-    {
-      "type": "header",
-      "content": "Breadcrumb"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_breadcrumb",
-      "label": "Show Breadcrumb",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "breadcrumb_divider",
-      "label": "Breadcrumb Divider",
-      "default": "/"
-    },
-    {
-      "type": "range",
-      "id": "breadcrumb_font_size",
-      "min": 10, "max": 20, "step": 1, "unit": "px",
-      "label": "Breadcrumb Font Size",
-      "default": 13
-    },
-    {
-      "type": "range",
-      "id": "breadcrumb_opacity",
-      "min": 30, "max": 100, "step": 5, "unit": "%",
-      "label": "Breadcrumb Opacity",
-      "default": 70
-    },
-    {
-      "type": "range",
-      "id": "breadcrumb_margin",
-      "min": 0, "max": 60, "step": 4, "unit": "px",
-      "label": "Breadcrumb Bottom Margin",
-      "default": 24
-    },
-    {
-      "type": "select",
-      "id": "breadcrumb_text_transform",
-      "label": "Breadcrumb Text Transform",
-      "options": [
-        { "value": "none", "label": "None" },
-        { "value": "uppercase", "label": "Uppercase" },
-        { "value": "lowercase", "label": "Lowercase" },
-        { "value": "capitalize", "label": "Capitalize" }
-      ],
-      "default": "uppercase"
-    },
-    {
-      "type": "range",
-      "id": "breadcrumb_letter_spacing",
-      "min": 0, "max": 5, "step": 0.5, "unit": "px",
-      "label": "Breadcrumb Letter Spacing",
-      "default": 1
-    },
-    {
-      "type": "range",
-      "id": "breadcrumb_font_weight",
-      "min": 300, "max": 900, "step": 100,
-      "label": "Breadcrumb Font Weight",
-      "default": 400
     },
     {
       "type": "header",
@@ -437,67 +100,17 @@
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Hero Logo"
+      "label": "Hero logo"
     },
     {
       "type": "range",
       "id": "logo_width",
-      "min": 100, "max": 800, "step": 10, "unit": "px",
-      "label": "Logo Max Width (Desktop)",
-      "default": 350
-    },
-    {
-      "type": "range",
-      "id": "logo_width_tablet",
-      "min": 80, "max": 600, "step": 10, "unit": "px",
-      "label": "Logo Max Width (Tablet)",
-      "default": 280
-    },
-    {
-      "type": "range",
-      "id": "logo_width_mobile",
-      "min": 60, "max": 400, "step": 10, "unit": "px",
-      "label": "Logo Max Width (Mobile)",
-      "default": 200
-    },
-    {
-      "type": "range",
-      "id": "logo_margin_bottom",
-      "min": 0, "max": 100, "step": 4, "unit": "px",
-      "label": "Logo Bottom Margin",
-      "default": 40
-    },
-    {
-      "type": "header",
-      "content": "Logo Shadow"
-    },
-    {
-      "type": "range",
-      "id": "logo_shadow_x",
-      "min": -20, "max": 20, "step": 1, "unit": "px",
-      "label": "Shadow X Offset",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "logo_shadow_y",
-      "min": -20, "max": 20, "step": 1, "unit": "px",
-      "label": "Shadow Y Offset",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "logo_shadow_blur",
-      "min": 0, "max": 50, "step": 2, "unit": "px",
-      "label": "Shadow Blur",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "logo_shadow_opacity",
-      "min": 0, "max": 100, "step": 5, "unit": "%",
-      "label": "Shadow Opacity",
-      "default": 15
+      "min": 60,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo max width",
+      "default": 160
     },
     {
       "type": "header",
@@ -506,172 +119,19 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Page Title Override",
-      "info": "Leave blank to use the default page title."
-    },
-    {
-      "type": "range",
-      "id": "title_font_size",
-      "min": 24, "max": 120, "step": 2, "unit": "px",
-      "label": "Title Font Size (Desktop)",
-      "default": 64
-    },
-    {
-      "type": "range",
-      "id": "title_font_size_mobile",
-      "min": 20, "max": 60, "step": 2, "unit": "px",
-      "label": "Title Font Size (Mobile)",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "title_font_size_vw",
-      "min": 2, "max": 10, "step": 0.5, "unit": "vw",
-      "label": "Title Responsive Scaling",
-      "default": 6
-    },
-    {
-      "type": "range",
-      "id": "title_line_height",
-      "min": 0.8, "max": 2, "step": 0.05,
-      "label": "Title Line Height",
-      "default": 1.1
-    },
-    {
-      "type": "range",
-      "id": "title_font_weight",
-      "min": 300, "max": 900, "step": 100,
-      "label": "Title Font Weight",
-      "default": 700
-    },
-    {
-      "type": "range",
-      "id": "title_letter_spacing",
-      "min": -5, "max": 10, "step": 0.5, "unit": "px",
-      "label": "Title Letter Spacing",
-      "default": 0
+      "label": "Title override",
+      "info": "Leave blank to use the page title automatically."
     },
     {
       "type": "select",
-      "id": "title_text_transform",
-      "label": "Title Text Transform",
+      "id": "text_align",
+      "label": "Alignment",
       "options": [
-        { "value": "none", "label": "None" },
-        { "value": "uppercase", "label": "Uppercase" },
-        { "value": "lowercase", "label": "Lowercase" },
-        { "value": "capitalize", "label": "Capitalize" }
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
       ],
-      "default": "none"
-    },
-    {
-      "type": "range",
-      "id": "title_margin_bottom",
-      "min": 0, "max": 80, "step": 4, "unit": "px",
-      "label": "Title Bottom Margin",
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "Title Shadow"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_title_shadow",
-      "label": "Enable Title Shadow",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "title_shadow_x",
-      "min": -20, "max": 20, "step": 1, "unit": "px",
-      "label": "Shadow X Offset",
-      "default": 2
-    },
-    {
-      "type": "range",
-      "id": "title_shadow_y",
-      "min": -20, "max": 20, "step": 1, "unit": "px",
-      "label": "Shadow Y Offset",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "title_shadow_blur",
-      "min": 0, "max": 50, "step": 2, "unit": "px",
-      "label": "Shadow Blur",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "title_shadow_opacity",
-      "min": 0, "max": 100, "step": 5, "unit": "%",
-      "label": "Shadow Opacity",
-      "default": 30
-    },
-    {
-      "type": "header",
-      "content": "Subtitle"
-    },
-    {
-      "type": "richtext",
-      "id": "subtitle",
-      "label": "Subtitle Text"
-    },
-    {
-      "type": "range",
-      "id": "subtitle_font_size",
-      "min": 14, "max": 48, "step": 1, "unit": "px",
-      "label": "Subtitle Font Size (Desktop)",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "subtitle_font_size_mobile",
-      "min": 12, "max": 32, "step": 1, "unit": "px",
-      "label": "Subtitle Font Size (Mobile)",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "subtitle_font_size_vw",
-      "min": 1, "max": 5, "step": 0.25, "unit": "vw",
-      "label": "Subtitle Responsive Scaling",
-      "default": 2
-    },
-    {
-      "type": "range",
-      "id": "subtitle_line_height",
-      "min": 1, "max": 2.5, "step": 0.1,
-      "label": "Subtitle Line Height",
-      "default": 1.6
-    },
-    {
-      "type": "range",
-      "id": "subtitle_font_weight",
-      "min": 300, "max": 900, "step": 100,
-      "label": "Subtitle Font Weight",
-      "default": 400
-    },
-    {
-      "type": "range",
-      "id": "subtitle_opacity",
-      "min": 30, "max": 100, "step": 5, "unit": "%",
-      "label": "Subtitle Opacity",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "subtitle_margin_top",
-      "min": 0, "max": 80, "step": 4, "unit": "px",
-      "label": "Subtitle Top Margin",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "subtitle_max_width",
-      "min": 400, "max": 1200, "step": 50, "unit": "px",
-      "label": "Subtitle Max Width",
-      "default": 700
+      "default": "left"
     },
     {
       "type": "header",
@@ -680,109 +140,22 @@
     {
       "type": "range",
       "id": "padding_top",
-      "min": 0, "max": 200, "step": 4, "unit": "px",
-      "label": "Top Padding",
-      "default": 80
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "min": 0, "max": 200, "step": 4, "unit": "px",
-      "label": "Bottom Padding",
-      "default": 60
-    },
-    {
-      "type": "range",
-      "id": "padding_horizontal",
-      "min": 0, "max": 100, "step": 4, "unit": "px",
-      "label": "Horizontal Padding (Desktop)",
-      "default": 32
-    },
-    {
-      "type": "range",
-      "id": "padding_horizontal_tablet",
-      "min": 0, "max": 80, "step": 4, "unit": "px",
-      "label": "Horizontal Padding (Tablet)",
-      "default": 24
-    },
-    {
-      "type": "range",
-      "id": "padding_horizontal_mobile",
-      "min": 0, "max": 60, "step": 4, "unit": "px",
-      "label": "Horizontal Padding (Mobile)",
-      "default": 16
-    },
-    {
-      "type": "header",
-      "content": "Animation Settings"
-    },
-    {
-      "type": "range",
-      "id": "animation_duration",
-      "min": 200, "max": 2000, "step": 100, "unit": "ms",
-      "label": "Animation Duration",
-      "default": 800
-    },
-    {
-      "type": "range",
-      "id": "animation_distance",
-      "min": 0, "max": 100, "step": 5, "unit": "px",
-      "label": "Animation Distance",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "animation_stagger",
-      "min": 0, "max": 300, "step": 25, "unit": "ms",
-      "label": "Animation Stagger Delay",
-      "default": 100
-    },
-    {
-      "type": "select",
-      "id": "animation_easing",
-      "label": "Animation Easing",
-      "options": [
-        { "value": "ease", "label": "Ease" },
-        { "value": "ease-in", "label": "Ease In" },
-        { "value": "ease-out", "label": "Ease Out" },
-        { "value": "ease-in-out", "label": "Ease In Out" },
-        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Smooth (Recommended)" },
-        { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "label": "Bounce" }
-      ],
-      "default": "cubic-bezier(0.16, 1, 0.3, 1)"
-    },
-    {
-      "type": "range",
-      "id": "animation_threshold",
-      "min": 0, "max": 100, "step": 5, "unit": "%",
-      "label": "Animation Trigger Threshold",
-      "default": 10,
-      "info": "Percentage of element visible before animation starts"
-    },
-    {
-      "type": "range",
-      "id": "animation_root_margin",
-      "min": -200, "max": 200, "step": 20, "unit": "px",
-      "label": "Animation Root Margin",
-      "default": 0,
-      "info": "Negative values trigger animation earlier"
-    },
-    {
-      "type": "checkbox",
-      "id": "animation_once",
-      "label": "Animate Only Once",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Hover Effects"
-    },
-    {
-      "type": "range",
-      "id": "hover_transition_duration",
-      "min": 100, "max": 800, "step": 50, "unit": "ms",
-      "label": "Hover Transition Duration",
-      "default": 300
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
     }
   ],
   "presets": [
