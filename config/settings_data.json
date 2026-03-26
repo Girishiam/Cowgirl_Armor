@@ -150,6 +150,8 @@
           "bg_color": "#1a1a1a",
           "text_color": "#ffffff",
           "border_color": "#333333",
+          "footer_logo": "shopify://shop_images/IMG_1966_1.png",
+          "logo_width": 210,
           "tagline": "Equipped with the Armor of God. Built for the Cowgirl who stands firm in faith.",
           "col2_title": "Quick Links",
           "menu_1": "main-menu",
@@ -160,7 +162,10 @@
           "email_placeholder": "Your email address",
           "subscribe_label": "Join",
           "newsletter_note": "No spam. Unsubscribe anytime.",
+          "copyright_name": "Cowgirl Armor",
           "copyright_text": "",
+          "copyright_override": "",
+          "legal_menu": "",
           "show_payment_icons": true
         }
       }
