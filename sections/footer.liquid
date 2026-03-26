@@ -263,11 +263,12 @@
       <!-- Column 1: Brand -->
       <div class="footer__brand">
         <a href="{{ routes.root_url }}" class="footer__brand-logo">
-          {%- if settings.logo != blank -%}
+          {%- assign display_logo = section.settings.footer_logo | default: settings.logo -%}
+          {%- if display_logo != blank -%}
             <img
-              src="{{ settings.logo | image_url: width: 320 }}"
+              src="{{ display_logo | image_url: width: 320 }}"
               alt="{{ shop.name }}"
-              width="160"
+              width="{{ section.settings.logo_width | default: 160 }}"
               height="auto"
             >
           {%- else -%}
@@ -383,14 +384,32 @@
 
     <!-- Bottom bar -->
     <div class="footer__bottom">
+
+      <!-- Copyright — fully customizable -->
       <p class="footer__copyright">
-        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
-        {%- if section.settings.copyright_text != blank -%}
-          &nbsp;&mdash;&nbsp;{{ section.settings.copyright_text }}
+        {%- if section.settings.copyright_override != blank -%}
+          {{ section.settings.copyright_override }}
+        {%- else -%}
+          &copy; {{ 'now' | date: '%Y' }}
+          {%- if section.settings.copyright_name != blank -%}
+            {{ section.settings.copyright_name }}
+          {%- else -%}
+            {{ shop.name }}
+          {%- endif -%}
+          {%- if section.settings.copyright_text != blank -%}
+            &nbsp;&mdash;&nbsp;{{ section.settings.copyright_text }}
+          {%- endif -%}
         {%- endif -%}
       </p>
 
-      {%- if shop.policies.size > 0 -%}
+      <!-- Legal links — use custom menu if set, otherwise fall back to shop policies -->
+      {%- if section.settings.legal_menu != blank -%}
+        <ul class="footer__legal-links">
+          {%- for link in linklists[section.settings.legal_menu].links -%}
+            <li><a href="{{ link.url }}" class="footer__legal-link">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- elsif shop.policies.size > 0 -%}
         <ul class="footer__legal-links">
           {%- for policy in shop.policies -%}
             {%- if policy.body != blank -%}
@@ -443,6 +462,21 @@
     {
       "type": "header",
       "content": "Brand column"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "Footer logo",
+      "info": "Upload a logo just for the footer. Leave blank to use your theme's global logo."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width (px)",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "default": 160
     },
     {
       "type": "textarea",
@@ -514,13 +548,39 @@
     },
     {
       "type": "header",
-      "content": "Bottom bar"
+      "content": "Bottom bar — Copyright"
+    },
+    {
+      "type": "text",
+      "id": "copyright_name",
+      "label": "Copyright name",
+      "info": "Replaces the shop name in '© 2026 [name]'. Leave blank to use your shop name automatically."
     },
     {
       "type": "text",
       "id": "copyright_text",
       "label": "Copyright suffix",
-      "info": "Appears after the shop name. e.g. \"All rights reserved.\""
+      "info": "Appears after the name, e.g. 'All rights reserved.'"
+    },
+    {
+      "type": "textarea",
+      "id": "copyright_override",
+      "label": "Full copyright override",
+      "info": "Optional. If filled in, this replaces the entire copyright line exactly as written (year, name, suffix are all ignored)."
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar — Legal links"
+    },
+    {
+      "type": "link_list",
+      "id": "legal_menu",
+      "label": "Legal links menu",
+      "info": "Create a navigation menu (e.g. 'footer-legal') and add links like Privacy Policy, Terms, etc. Leave blank to auto-show your shop's policies."
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar — Payment icons"
     },
     {
       "type": "checkbox",
