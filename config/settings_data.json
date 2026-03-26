@@ -125,7 +125,7 @@
           "drawer_logo_width": 120,
           "drawer_font_min": 24,
           "drawer_font_max": 32,
-          "drawer_font_weight": 600,
+          "drawer_font_weight": 500,
           "drawer_subfont_size": 18,
           "show_drawer_socials": true,
           "drawer_social_size": 28,
