@@ -313,19 +313,35 @@ class PredictiveSearch {
    ============================================ */
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Announcement bar close
-  const announcementClose = document.querySelector('.announcement-bar__close');
-  if (announcementClose) {
-    announcementClose.addEventListener('click', () => {
-      const bar = announcementClose.closest('.announcement-bar');
-      if (bar) bar.style.display = 'none';
-      localStorage.setItem('announcement-bar-closed', 'true');
-    });
-    if (localStorage.getItem('announcement-bar-closed') === 'true') {
-      const bar = document.querySelector('.announcement-bar');
-      if (bar) bar.style.display = 'none';
+// Announcement bar close
+function syncHeaderPosition() {
+  const announcement = document.querySelector('.announcement-bar');
+  const header = document.getElementById('site-header');
+  const aH = (announcement && announcement.offsetHeight > 0) ? announcement.offsetHeight : 0;
+  const hH = header ? header.offsetHeight : 0;
+  document.documentElement.style.setProperty('--announcement-height', aH + 'px');
+  document.documentElement.style.setProperty('--nav-total-height', (aH + hH) + 'px');
+}
+
+const announcementClose = document.querySelector('.announcement-bar__close');
+if (announcementClose) {
+  announcementClose.addEventListener('click', () => {
+    const bar = announcementClose.closest('.announcement-bar');
+    if (bar) {
+      bar.style.display = 'none';
+      syncHeaderPosition();
+    }
+    localStorage.setItem('announcement-bar-closed', 'true');
+  });
+
+  if (localStorage.getItem('announcement-bar-closed') === 'true') {
+    const bar = document.querySelector('.announcement-bar');
+    if (bar) {
+      bar.style.display = 'none';
+      syncHeaderPosition();
     }
   }
+}
 
   // Accessible links
   document.querySelectorAll('a[target="_blank"]').forEach(link => {
