@@ -38,7 +38,7 @@
   --spacing-sections: var(--spacing-sections, 60px);
   --spacing-grid-horizontal: var(--spacing-grid-horizontal, 20px);
   --spacing-grid-vertical: var(--spacing-grid-vertical, 20px);
-  --section-padding: clamp(3rem, 10vw, 6rem);
+  --section-padding: var(--spacing-section-y);
 
   /* Border & Corners */
   --border-radius: var(--border-radius, 0px);
@@ -452,6 +452,41 @@ h6 { font-size: var(--font-heading-h6); }
 .section { padding: var(--spacing-sections) 0; }
 .section--padding-top { padding-top: var(--spacing-sections); }
 .section--padding-bottom { padding-bottom: var(--spacing-sections); }
+
+/* Enhanced Spacing Utilities - T-Shirt Sizing */
+.section--spacing-xs { padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
+.section--spacing-sm { padding-top: var(--spacing-sm); padding-bottom: var(--spacing-sm); }
+.section--spacing-md { padding-top: var(--spacing-md); padding-bottom: var(--spacing-md); }
+.section--spacing-lg { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
+.section--spacing-xl { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl); }
+.section--spacing-2xl { padding-top: var(--spacing-2xl); padding-bottom: var(--spacing-2xl); }
+
+/* Asymmetric Spacing Utilities */
+.spacing-top-xs { padding-top: var(--spacing-xs); }
+.spacing-top-sm { padding-top: var(--spacing-sm); }
+.spacing-top-md { padding-top: var(--spacing-md); }
+.spacing-top-lg { padding-top: var(--spacing-lg); }
+.spacing-top-xl { padding-top: var(--spacing-xl); }
+.spacing-top-2xl { padding-top: var(--spacing-2xl); }
+.spacing-bottom-xs { padding-bottom: var(--spacing-xs); }
+.spacing-bottom-sm { padding-bottom: var(--spacing-sm); }
+.spacing-bottom-md { padding-bottom: var(--spacing-md); }
+.spacing-bottom-lg { padding-bottom: var(--spacing-lg); }
+.spacing-bottom-xl { padding-bottom: var(--spacing-xl); }
+.spacing-bottom-2xl { padding-bottom: var(--spacing-2xl); }
+
+/* Mobile responsive scaling */
+@media screen and (max-width: 767px) {
+  .section--spacing-xs,
+  .section--spacing-sm,
+  .section--spacing-md,
+  .section--spacing-lg,
+  .section--spacing-xl,
+  .section--spacing-2xl {
+    padding-top: calc(var(--spacing-section-y) * 0.6);
+    padding-bottom: calc(var(--spacing-section-y) * 0.6);
+  }
+}
 
 /* ============================================
    SPACING UTILITIES

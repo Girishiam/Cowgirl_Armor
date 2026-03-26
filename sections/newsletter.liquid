@@ -1,7 +1,11 @@
+{%- liquid
+  assign spacing_top = section.settings.spacing_top | default: 'lg'
+  assign spacing_bottom = section.settings.spacing_bottom | default: 'lg'
+-%}
 <div class="newsletter-section{% if section.settings.enable_animation %} has-animation{% endif %}"
      id="Newsletter-{{ section.id }}"
      style="position: relative;
-            padding: {{ section.settings.padding_top }}px {{ section.settings.padding_horizontal }}px {{ section.settings.padding_bottom }}px;
+            padding: var(--spacing-{{ spacing_top }}) {{ section.settings.padding_horizontal }}px var(--spacing-{{ spacing_bottom }});
             background-color: {{ section.settings.bg_color }};
             background-image: {% if section.settings.image != blank %}url('{{ section.settings.image | img_url: 'master' }}'){% else %}none{% endif %};
             background-size: {{ section.settings.bg_size }};
@@ -667,24 +671,32 @@
       "default": 85
     },
     {
-      "type": "range",
-      "id": "padding_top",
-      "min": 20,
-      "max": 150,
-      "step": 10,
-      "unit": "px",
-      "label": "Desktop Top Padding",
-      "default": 80
+      "type": "select",
+      "id": "spacing_top",
+      "label": "Top Spacing",
+      "options": [
+        { "value": "xs", "label": "Extra Small (20px)" },
+        { "value": "sm", "label": "Small (40px)" },
+        { "value": "md", "label": "Medium (60px)" },
+        { "value": "lg", "label": "Large (80px)" },
+        { "value": "xl", "label": "Extra Large (100px)" },
+        { "value": "2xl", "label": "2X Large (120px)" }
+      ],
+      "default": "lg"
     },
     {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 20,
-      "max": 150,
-      "step": 10,
-      "unit": "px",
-      "label": "Desktop Bottom Padding",
-      "default": 80
+      "type": "select",
+      "id": "spacing_bottom",
+      "label": "Bottom Spacing",
+      "options": [
+        { "value": "xs", "label": "Extra Small (20px)" },
+        { "value": "sm", "label": "Small (40px)" },
+        { "value": "md", "label": "Medium (60px)" },
+        { "value": "lg", "label": "Large (80px)" },
+        { "value": "xl", "label": "Extra Large (100px)" },
+        { "value": "2xl", "label": "2X Large (120px)" }
+      ],
+      "default": "lg"
     },
     {
       "type": "range",
