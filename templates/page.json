@@ -21,9 +21,27 @@
         "padding_top": 80,
         "padding_bottom": 60
       }
+    },
+    "image_with_text_LXxzEk": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image": "shopify://shop_images/GodMeetsYouWhereYouAree.webp",
+        "layout": "image_first",
+        "heading": "God meets you where you are.",
+        "text": "<p>My parents raised me in church, and led me by great examples of hard work and compassion. They were firm in their foundation of church and they walked in the path every day and showed me what it looks like to be wholesome, loving, determined people of God. I was blessed, and still am that God chose them as my parents.</p>",
+        "content_alignment": "text-left",
+        "button_label": "Read More",
+        "button_link": "",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "background_color": "#d9d9d9",
+        "text_color": "#1A1A1A"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "image_with_text_LXxzEk"
   ]
 }
