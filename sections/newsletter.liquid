@@ -1,780 +1,226 @@
-<div class="newsletter-section{% if section.settings.enable_animation %} has-animation{% endif %}"
-     id="Newsletter-{{ section.id }}"
-     style="position: relative;
-            padding: {{ section.settings.padding_top }}px {{ section.settings.padding_horizontal }}px {{ section.settings.padding_bottom }}px;
-            background-color: {{ section.settings.bg_color }};
-            background-image: {% if section.settings.image != blank %}url('{{ section.settings.image | img_url: 'master' }}'){% else %}none{% endif %};
-            background-size: {{ section.settings.bg_size }};
-            background-position: {{ section.settings.bg_position }};
-            display: flex;
-            justify-content: center;
-            align-items: center;">
-
-  <div class="newsletter-overlay"
-       style="position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              background: {% if section.settings.use_gradient %}{{ section.settings.overlay_gradient }}{% else %}{{ section.settings.overlay_color }}{% endif %};
-              opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-              z-index: 1;"></div>
-
-  <div class="newsletter-content{% if section.settings.enable_animation %} fade-up{% endif %}"
-       data-animation-delay="0"
-       style="position: relative;
-              z-index: 2;
-              width: 100%;
-              max-width: {{ section.settings.content_max_width }}px;
-              background: {{ section.settings.form_bg }};
-              padding: {{ section.settings.form_padding }}px;
-              border-radius: {{ section.settings.form_border_radius }}px;
-              box-shadow: {{ section.settings.form_shadow }};">
-
-    {%- if section.settings.title != blank -%}
-      <h2 class="newsletter-heading"
-          style="font-size: clamp({{ section.settings.heading_size_min }}px, 4vw, {{ section.settings.heading_size }}px);
-                 text-align: {{ section.settings.heading_align }};
-                 margin-bottom: {{ section.settings.heading_margin }}px;
-                 color: {{ section.settings.text_color }};
-                 font-family: var(--font-heading);
-                 font-weight: {{ section.settings.heading_weight }};
-                 letter-spacing: {{ section.settings.heading_letter_spacing }}px;">
-        {{ section.settings.title }}
-      </h2>
-    {%- endif -%}
-
-    {%- if section.settings.description != blank -%}
-      <div class="newsletter-description"
-           style="text-align: {{ section.settings.description_align }};
-                  color: {{ section.settings.description_color }};
-                  font-size: {{ section.settings.description_size }}px;
-                  line-height: {{ section.settings.description_line_height }};
-                  margin-bottom: {{ section.settings.description_margin }}px;
-                  max-width: {{ section.settings.description_max_width }}px;
-                  margin-left: auto;
-                  margin-right: auto;">
-        {{ section.settings.description }}
-      </div>
-    {%- endif -%}
-
-    {% form 'customer', id: 'newsletter-form-' | append: section.id, class: 'newsletter-form', data-ajax: section.settings.enable_ajax %}
-      <input type="hidden" name="contact[tags]" value="newsletter">
-
-      <div class="form-messages" id="form-messages-{{ section.id }}" style="display: none;">
-        <div class="form-success"
-             style="padding: {{ section.settings.message_padding }}px;
-                    background: {{ section.settings.success_bg }};
-                    color: {{ section.settings.success_text }};
-                    border-radius: {{ section.settings.message_radius }}px;
-                    margin-bottom: {{ section.settings.message_margin }}px;
-                    text-align: center;
-                    font-size: {{ section.settings.message_font_size }}px;
-                    font-weight: {{ section.settings.message_font_weight }};
-                    animation: slideDown 0.5s ease;">
-          <span class="success-icon" style="display: {{ section.settings.show_success_icon ? 'inline-block' : 'none' }}; margin-right: 8px;">✓</span>
-          <span class="success-message">{{ section.settings.success_message }}</span>
-        </div>
-
-        <div class="form-error"
-             style="padding: {{ section.settings.message_padding }}px;
-                    background: {{ section.settings.error_bg }};
-                    color: {{ section.settings.error_text }};
-                    border-radius: {{ section.settings.message_radius }}px;
-                    margin-bottom: {{ section.settings.message_margin }}px;
-                    text-align: center;
-                    font-size: {{ section.settings.message_font_size }}px;
-                    font-weight: {{ section.settings.message_font_weight }};
-                    animation: slideDown 0.5s ease;">
-          <span class="error-icon" style="display: {{ section.settings.show_error_icon ? 'inline-block' : 'none' }}; margin-right: 8px;">⚠</span>
-          <span class="error-message">{{ section.settings.error_message }}</span>
-        </div>
-      </div>
-
-      {%- if form.posted_successfully? -%}
-        <div class="form-success"
-             style="padding: {{ section.settings.message_padding }}px;
-                    background: {{ section.settings.success_bg }};
-                    color: {{ section.settings.success_text }};
-                    border-radius: {{ section.settings.message_radius }}px;
-                    margin-bottom: {{ section.settings.message_margin }}px;
-                    text-align: center;
-                    font-size: {{ section.settings.message_font_size }}px;
-                    font-weight: {{ section.settings.message_font_weight }};">
-          <span class="success-icon" style="display: {{ section.settings.show_success_icon ? 'inline-block' : 'none' }}; margin-right: 8px;">✓</span>
-          {{ section.settings.success_message }}
-        </div>
-      {%- elsif form.errors -%}
-        <div class="form-error"
-             style="padding: {{ section.settings.message_padding }}px;
-                    background: {{ section.settings.error_bg }};
-                    color: {{ section.settings.error_text }};
-                    border-radius: {{ section.settings.message_radius }}px;
-                    margin-bottom: {{ section.settings.message_margin }}px;
-                    text-align: center;
-                    font-size: {{ section.settings.message_font_size }}px;">
-          <span class="error-icon" style="display: {{ section.settings.show_error_icon ? 'inline-block' : 'none' }}; margin-right: 8px;">⚠</span>
-          {{ form.errors | default_errors }}
-        </div>
-      {%- endif -%}
-
-      {%- if section.settings.layout == 'row' -%}
-        <div class="form-row"
-             style="display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: {{ section.settings.field_gap }}px;
-                    margin-bottom: {{ section.settings.field_gap }}px;">
-
-          {%- if section.settings.show_name_fields -%}
-            <div class="form-field">
-              <label class="form-label"
-                     style="display: {{ section.settings.label_display }};
-                            font-size: {{ section.settings.label_font_size }}px;
-                            margin-bottom: {{ section.settings.label_margin }}px;
-                            font-weight: {{ section.settings.label_font_weight }};
-                            color: {{ section.settings.label_color }};
-                            letter-spacing: {{ section.settings.label_letter_spacing }}px;">
-                {{ section.settings.label_first_name }}
-                {%- if section.settings.show_required %}<span style="color: {{ section.settings.required_color }};">*</span>{%- endif -%}
-              </label>
-              <input type="text"
-                     name="contact[first_name]"
-                     class="form-input"
-                     placeholder="{{ section.settings.placeholder_first_name | escape }}"
-                     {% if section.settings.require_name %}required{% endif %}
-                     style="width: 100%;
-                            padding: {{ section.settings.input_padding }}px;
-                            background: {{ section.settings.input_bg }};
-                            border: {{ section.settings.input_border_width }}px solid {{ section.settings.input_border_color }};
-                            border-radius: {{ section.settings.input_border_radius }}px;
-                            color: {{ section.settings.input_text_color }};
-                            font-size: {{ section.settings.input_font_size }}px;
-                            font-family: var(--font-body);
-                            transition: all {{ section.settings.input_transition }}s ease;">
-            </div>
-
-            <div class="form-field">
-              <label class="form-label"
-                     style="display: {{ section.settings.label_display }};
-                            font-size: {{ section.settings.label_font_size }}px;
-                            margin-bottom: {{ section.settings.label_margin }}px;
-                            font-weight: {{ section.settings.label_font_weight }};
-                            color: {{ section.settings.label_color }};
-                            letter-spacing: {{ section.settings.label_letter_spacing }}px;">
-                {{ section.settings.label_last_name }}
-                {%- if section.settings.show_required %}<span style="color: {{ section.settings.required_color }};">*</span>{%- endif -%}
-              </label>
-              <input type="text"
-                     name="contact[last_name]"
-                     class="form-input"
-                     placeholder="{{ section.settings.placeholder_last_name | escape }}"
-                     {% if section.settings.require_name %}required{% endif %}
-                     style="width: 100%;
-                            padding: {{ section.settings.input_padding }}px;
-                            background: {{ section.settings.input_bg }};
-                            border: {{ section.settings.input_border_width }}px solid {{ section.settings.input_border_color }};
-                            border-radius: {{ section.settings.input_border_radius }}px;
-                            color: {{ section.settings.input_text_color }};
-                            font-size: {{ section.settings.input_font_size }}px;
-                            font-family: var(--font-body);
-                            transition: all {{ section.settings.input_transition }}s ease;">
-            </div>
-          {%- endif -%}
-
-          <div class="form-field">
-            <label class="form-label"
-                   style="display: {{ section.settings.label_display }};
-                          font-size: {{ section.settings.label_font_size }}px;
-                          margin-bottom: {{ section.settings.label_margin }}px;
-                          font-weight: {{ section.settings.label_font_weight }};
-                          color: {{ section.settings.label_color }};
-                          letter-spacing: {{ section.settings.label_letter_spacing }}px;">
-              {{ section.settings.label_email }}
-              {%- if section.settings.show_required %}<span style="color: {{ section.settings.required_color }};">*</span>{%- endif -%}
-            </label>
-            <input type="email"
-                   name="contact[email]"
-                   class="form-input"
-                   placeholder="{{ section.settings.placeholder_email | escape }}"
-                   required
-                   style="width: 100%;
-                          padding: {{ section.settings.input_padding }}px;
-                          background: {{ section.settings.input_bg }};
-                          border: {{ section.settings.input_border_width }}px solid {{ section.settings.input_border_color }};
-                          border-radius: {{ section.settings.input_border_radius }}px;
-                          color: {{ section.settings.input_text_color }};
-                          font-size: {{ section.settings.input_font_size }}px;
-                          font-family: var(--font-body);
-                          transition: all {{ section.settings.input_transition }}s ease;">
-          </div>
-
-          <div class="form-field" style="display: flex; align-items: flex-end;">
-            <button type="submit"
-                    class="form-submit"
-                    style="width: 100%;
-                           padding: {{ section.settings.button_padding }}px;
-                           background: {{ section.settings.button_bg }};
-                           color: {{ section.settings.button_text }};
-                           border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
-                           border-radius: {{ section.settings.button_border_radius }}px;
-                           font-size: {{ section.settings.button_font_size }}px;
-                           font-weight: {{ section.settings.button_font_weight }};
-                           font-family: var(--font-heading);
-                           letter-spacing: {{ section.settings.button_letter_spacing }}px;
-                           cursor: pointer;
-                           transition: all {{ section.settings.button_transition }}s ease;
-                           text-transform: {{ section.settings.button_text_transform }};
-                           position: relative;
-                           overflow: hidden;">
-              <span class="button-text">{{ section.settings.button_label }}</span>
-              <span class="button-loader" style="display: none;">
-                <svg width="20" height="20" viewBox="0 0 50 50" style="animation: spin 1s linear infinite;">
-                  <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="31.4 31.4" stroke-linecap="round"/>
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-
-      {%- else -%}
-        {%- if section.settings.show_name_fields -%}
-          <div class="form-row"
-               style="display: grid;
-                      grid-template-columns: 1fr 1fr;
-                      gap: {{ section.settings.field_gap }}px;
-                      margin-bottom: {{ section.settings.field_gap }}px;">
-            <div class="form-field">
-              <label class="form-label"
-                     style="display: {{ section.settings.label_display }};
-                            font-size: {{ section.settings.label_font_size }}px;
-                            margin-bottom: {{ section.settings.label_margin }}px;
-                            font-weight: {{ section.settings.label_font_weight }};
-                            color: {{ section.settings.label_color }};
-                            letter-spacing: {{ section.settings.label_letter_spacing }}px;">
-                {{ section.settings.label_first_name }}
-                {%- if section.settings.show_required %}<span style="color: {{ section.settings.required_color }};">*</span>{%- endif -%}
-              </label>
-              <input type="text"
-                     name="contact[first_name]"
-                     class="form-input"
-                     placeholder="{{ section.settings.placeholder_first_name | escape }}"
-                     {% if section.settings.require_name %}required{% endif %}
-                     style="width: 100%;
-                            padding: {{ section.settings.input_padding }}px;
-                            background: {{ section.settings.input_bg }};
-                            border: {{ section.settings.input_border_width }}px solid {{ section.settings.input_border_color }};
-                            border-radius: {{ section.settings.input_border_radius }}px;
-                            color: {{ section.settings.input_text_color }};
-                            font-size: {{ section.settings.input_font_size }}px;
-                            font-family: var(--font-body);
-                            transition: all {{ section.settings.input_transition }}s ease;">
-            </div>
-
-            <div class="form-field">
-              <label class="form-label"
-                     style="display: {{ section.settings.label_display }};
-                            font-size: {{ section.settings.label_font_size }}px;
-                            margin-bottom: {{ section.settings.label_margin }}px;
-                            font-weight: {{ section.settings.label_font_weight }};
-                            color: {{ section.settings.label_color }};
-                            letter-spacing: {{ section.settings.label_letter_spacing }}px;">
-                {{ section.settings.label_last_name }}
-                {%- if section.settings.show_required %}<span style="color: {{ section.settings.required_color }};">*</span>{%- endif -%}
-              </label>
-              <input type="text"
-                     name="contact[last_name]"
-                     class="form-input"
-                     placeholder="{{ section.settings.placeholder_last_name | escape }}"
-                     {% if section.settings.require_name %}required{% endif %}
-                     style="width: 100%;
-                            padding: {{ section.settings.input_padding }}px;
-                            background: {{ section.settings.input_bg }};
-                            border: {{ section.settings.input_border_width }}px solid {{ section.settings.input_border_color }};
-                            border-radius: {{ section.settings.input_border_radius }}px;
-                            color: {{ section.settings.input_text_color }};
-                            font-size: {{ section.settings.input_font_size }}px;
-                            font-family: var(--font-body);
-                            transition: all {{ section.settings.input_transition }}s ease;">
-            </div>
-          </div>
-        {%- endif -%}
-
-        <div class="form-field" style="margin-bottom: {{ section.settings.field_gap }}px;">
-          <label class="form-label"
-                 style="display: {{ section.settings.label_display }};
-                        font-size: {{ section.settings.label_font_size }}px;
-                        margin-bottom: {{ section.settings.label_margin }}px;
-                        font-weight: {{ section.settings.label_font_weight }};
-                        color: {{ section.settings.label_color }};
-                        letter-spacing: {{ section.settings.label_letter_spacing }}px;">
-            {{ section.settings.label_email }}
-            {%- if section.settings.show_required %}<span style="color: {{ section.settings.required_color }};">*</span>{%- endif -%}
-          </label>
-          <input type="email"
-                 name="contact[email]"
-                 class="form-input"
-                 placeholder="{{ section.settings.placeholder_email | escape }}"
-                 required
-                 style="width: 100%;
-                        padding: {{ section.settings.input_padding }}px;
-                        background: {{ section.settings.input_bg }};
-                        border: {{ section.settings.input_border_width }}px solid {{ section.settings.input_border_color }};
-                        border-radius: {{ section.settings.input_border_radius }}px;
-                        color: {{ section.settings.input_text_color }};
-                        font-size: {{ section.settings.input_font_size }}px;
-                        font-family: var(--font-body);
-                        transition: all {{ section.settings.input_transition }}s ease;">
-        </div>
-
-        <button type="submit"
-                class="form-submit"
-                style="width: 100%;
-                       padding: {{ section.settings.button_padding }}px;
-                       background: {{ section.settings.button_bg }};
-                       color: {{ section.settings.button_text }};
-                       border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
-                       border-radius: {{ section.settings.button_border_radius }}px;
-                       font-size: {{ section.settings.button_font_size }}px;
-                       font-weight: {{ section.settings.button_font_weight }};
-                       font-family: var(--font-heading);
-                       letter-spacing: {{ section.settings.button_letter_spacing }}px;
-                       cursor: pointer;
-                       transition: all {{ section.settings.button_transition }}s ease;
-                       text-transform: {{ section.settings.button_text_transform }};
-                       margin-top: {{ section.settings.button_margin_top }}px;">
-          <span class="button-text">{{ section.settings.button_label }}</span>
-          <span class="button-loader" style="display: none;">
-            <svg width="20" height="20" viewBox="0 0 50 50" style="animation: spin 1s linear infinite;">
-              <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="31.4 31.4" stroke-linecap="round"/>
-            </svg>
-          </span>
-        </button>
-      {%- endif -%}
-
-      {%- if section.settings.show_checkbox -%}
-        <label class="checkbox-container"
-               style="display: flex;
-                      align-items: center;
-                      gap: {{ section.settings.checkbox_gap }}px;
-                      margin-top: {{ section.settings.checkbox_margin }}px;
-                      cursor: pointer;">
-          <input type="checkbox"
-                 name="customer[accepts_marketing]"
-                 class="checkbox-input"
-                 value="true"
-                 style="appearance: none;
-                        width: {{ section.settings.checkbox_size }}px;
-                        height: {{ section.settings.checkbox_size }}px;
-                        border: {{ section.settings.checkbox_border_width }}px solid {{ section.settings.checkbox_border_color }};
-                        background: {{ section.settings.checkbox_bg }};
-                        border-radius: {{ section.settings.checkbox_radius }}px;
-                        cursor: pointer;
-                        position: relative;
-                        transition: all {{ section.settings.checkbox_transition }}s ease;">
-          <span class="checkbox-label"
-                style="font-size: {{ section.settings.checkbox_label_size }}px;
-                       color: {{ section.settings.checkbox_label_color }};
-                       font-family: var(--font-body);">
-            {{ section.settings.checkbox_text }}
-          </span>
-        </label>
-      {%- endif -%}
-    {% endform %}
-
-    {%- if section.settings.show_privacy_note and section.settings.privacy_note != blank -%}
-      <div class="privacy-note"
-           style="margin-top: {{ section.settings.privacy_note_margin }}px;
-                  text-align: {{ section.settings.privacy_note_align }};
-                  font-size: {{ section.settings.privacy_note_size }}px;
-                  color: {{ section.settings.privacy_note_color }};
-                  line-height: {{ section.settings.privacy_note_line_height }};">
-        {{ section.settings.privacy_note }}
-      </div>
-    {%- endif -%}
-  </div>
-</div>
-
 <style>
-  /* Input focus states */
-  .form-input:focus {
+  .newsletter-section-{{ section.id }} {
+    position: relative;
+    padding: clamp(4rem, 10vw, 8rem) 2rem;
+    background-size: cover;
+    background-position: center;
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    {% if section.settings.image != blank %}
+      background-image: url('{{ section.settings.image | image_url: width: 2000 }}');
+    {% endif %}
+  }
+
+  .newsletter-overlay-{{ section.id }} {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 1;
+  }
+
+  .newsletter-content-{{ section.id }} {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1600px;
+  }
+
+  .newsletter-heading-{{ section.id }} {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    text-align: center;
+    margin-bottom: 3.5rem;
+    color: {{ section.settings.text_color }};
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .premium-form-group {
+    margin-bottom: 2rem;
+  }
+
+  .premium-form-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .premium-form-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .premium-input-container {
+    position: relative;
+  }
+
+  .premium-label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .premium-input {
+    width: 100%;
+    padding: 0.8rem 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.4);
+    color: {{ section.settings.text_color }};
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, padding-left 0.3s ease;
+  }
+
+  .premium-input:focus {
     outline: none;
-    border-color: {{ section.settings.input_focus_border_color }};
-    border-width: {{ section.settings.input_focus_border_width }}px;
-    background: {{ section.settings.input_focus_bg }};
-    box-shadow: {{ section.settings.input_focus_shadow }};
+    border-bottom-color: {{ section.settings.text_color }};
+    border-bottom-width: 2px;
   }
 
-  .form-input::placeholder {
-    color: {{ section.settings.placeholder_color }};
-    opacity: {{ section.settings.placeholder_opacity | divided_by: 100.0 }};
+  .premium-input::placeholder {
+    color: rgba(0,0,0,0.6);
+    font-size: 0.9rem;
   }
 
-  /* Button hover states */
-  .form-submit:hover {
-    background: {{ section.settings.button_hover_bg }};
-    color: {{ section.settings.button_hover_text }};
-    border-color: {{ section.settings.button_hover_border }};
-    transform: translateY(-{{ section.settings.button_hover_lift }}px) scale({{ section.settings.button_hover_scale | divided_by: 100.0 }});
-    box-shadow: {{ section.settings.button_hover_shadow }};
+  .premium-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    cursor: pointer;
   }
 
-  .form-submit:active {
-    transform: translateY(0) scale(0.98);
+  .premium-checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(0,0,0,0.3);
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    border-radius: 2px;
   }
 
-  .form-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  /* Checkbox checked state */
-  .checkbox-input:checked {
-    background: {{ section.settings.checkbox_checked_bg }};
-    border-color: {{ section.settings.checkbox_checked_border }};
-  }
-
-  .checkbox-input:checked::after {
-    content: '{{ section.settings.checkbox_icon }}';
+  .premium-checkbox:checked::after {
+    content: '✓';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: {{ section.settings.checkbox_icon_size }}px;
-    color: {{ section.settings.checkbox_icon_color }};
+    font-size: 12px;
+    color: {{ section.settings.text_color }};
   }
 
-  /* Animations */
-  .fade-up {
-    opacity: 0;
-    transform: translateY({{ section.settings.animation_distance }}px);
-    transition: opacity {{ section.settings.animation_duration }}s {{ section.settings.animation_easing }},
-                transform {{ section.settings.animation_duration }}s {{ section.settings.animation_easing }};
+  .premium-checkbox-label {
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    color: {{ section.settings.text_color }};
   }
 
-  .fade-up.in-view {
-    opacity: 1;
-    transform: translateY(0);
+  .premium-submit-btn {
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+    border: 1px solid {{ section.settings.text_color }};
+    padding: 1rem 3rem;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
   }
 
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .premium-submit-btn:hover {
+    background-color: transparent;
+    color: {{ section.settings.text_color }};
   }
 
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  /* Mobile responsive */
-  @media screen and (max-width: 767px) {
-    .newsletter-section {
-      padding-top: {{ section.settings.mobile_padding_top }}px !important;
-      padding-bottom: {{ section.settings.mobile_padding_bottom }}px !important;
-    }
-
-    .form-row {
-      grid-template-columns: 1fr !important;
-    }
-
-    .newsletter-content {
-      padding: {{ section.settings.mobile_form_padding }}px !important;
-    }
-  }
 </style>
 
-<script>
-  // Form AJAX submission
-  {%- if section.settings.enable_ajax -%}
-  (function() {
-    const form = document.getElementById('newsletter-form-{{ section.id }}');
-    if (!form) return;
+<div class="newsletter-section-{{ section.id }}">
+  <div class="newsletter-overlay-{{ section.id }}"></div>
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+  <div class="newsletter-content-{{ section.id }} fade-up-anim">
+    {%- if section.settings.title != blank -%}
+      <h2 class="newsletter-heading-{{ section.id }}">{{ section.settings.title }}</h2>
+    {%- endif -%}
 
-      const button = form.querySelector('.form-submit');
-      const buttonText = button.querySelector('.button-text');
-      const buttonLoader = button.querySelector('.button-loader');
-      const messageContainer = document.getElementById('form-messages-{{ section.id }}');
-      const successMessage = messageContainer.querySelector('.form-success');
-      const errorMessage = messageContainer.querySelector('.form-error');
+    {% form 'customer', id: 'premium-newsletter-form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
 
-      // Show loading state
-      button.disabled = true;
-      buttonText.style.display = 'none';
-      buttonLoader.style.display = 'inline-block';
+      {%- if form.posted_successfully? -%}
+        <div
+          class="form-success"
+          style="padding: 1rem; background: rgba(255,255,255,0.8); color: green; margin-bottom: 2rem; text-align: center;"
+        >
+          {{ section.settings.success_message }}
+        </div>
+      {%- endif -%}
 
-      // Submit form
-      fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form)
-      })
-      .then(response => response.text())
-      .then(() => {
-        // Show success
-        messageContainer.style.display = 'block';
-        successMessage.style.display = 'block';
-        errorMessage.style.display = 'none';
+      <div class="premium-form-group">
+        <label class="premium-label">{{ section.settings.label_name | default: 'Name' }}</label>
+        <div class="premium-form-row">
+          <div class="premium-input-container">
+            <input
+              type="text"
+              name="contact[first_name]"
+              class="premium-input"
+              placeholder="{{ section.settings.placeholder_first_name | default: 'First Name (required)' | escape }}"
+              required
+            >
+          </div>
+          <div class="premium-input-container">
+            <input
+              type="text"
+              name="contact[last_name]"
+              class="premium-input"
+              placeholder="{{ section.settings.placeholder_last_name | default: 'Last Name (required)' | escape }}"
+              required
+            >
+          </div>
+        </div>
+      </div>
 
-        // Reset form
-        form.reset();
+      <div class="premium-form-group">
+        <label class="premium-label"
+          >{{ section.settings.label_email | default: 'Email' }} <span style="font-weight: normal; font-size: 0.85rem;">{{ section.settings.label_required | default: '(required)' }}</span></label
+        >
+        <input type="email" name="contact[email]" class="premium-input" placeholder="{{ section.settings.placeholder_email | escape }}" required>
+      </div>
 
-        // Hide loader
-        button.disabled = false;
-        buttonText.style.display = 'inline-block';
-        buttonLoader.style.display = 'none';
+      <label class="premium-checkbox-container">
+        <input type="checkbox" name="customer[accepts_marketing]" class="premium-checkbox" value="true">
+        <span class="premium-checkbox-label">{{ section.settings.checkbox_text }}</span>
+      </label>
 
-        // Hide message after delay
-        setTimeout(() => {
-          messageContainer.style.display = 'none';
-          successMessage.style.display = 'none';
-        }, {{ section.settings.message_auto_hide_delay | times: 1000 }});
-
-        {%- if section.settings.enable_confetti -%}
-        // Trigger confetti
-        if (typeof confetti !== 'undefined') {
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 }
-          });
-        }
-        {%- endif -%}
-      })
-      .catch(() => {
-        // Show error
-        messageContainer.style.display = 'block';
-        successMessage.style.display = 'none';
-        errorMessage.style.display = 'block';
-
-        // Hide loader
-        button.disabled = false;
-        buttonText.style.display = 'inline-block';
-        buttonLoader.style.display = 'none';
-
-        // Hide message after delay
-        setTimeout(() => {
-          messageContainer.style.display = 'none';
-          errorMessage.style.display = 'none';
-        }, {{ section.settings.message_auto_hide_delay | times: 1000 }});
-      });
-    });
-  })();
-  {%- endif -%}
-
-  // Scroll animations
-  {%- if section.settings.enable_animation -%}
-  (function() {
-    const options = {
-      threshold: {{ section.settings.animation_threshold | divided_by: 100.0 }},
-      rootMargin: '{{ section.settings.animation_margin }}px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const delay = entry.target.dataset.animationDelay || 0;
-          setTimeout(() => {
-            entry.target.classList.add('in-view');
-          }, parseFloat(delay) * 1000);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, options);
-
-    document.querySelectorAll('.newsletter-section .fade-up').forEach(el => {
-      observer.observe(el);
-    });
-  })();
-  {%- endif -%}
-</script>
+      <button type="submit" class="premium-submit-btn">
+        {{ section.settings.button_label }}
+      </button>
+    {% endform %}
+  </div>
+</div>
 
 {% schema %}
 {
-  "name": "Newsletter (Enhanced)",
+  "name": "Premium Newsletter",
   "settings": [
-    {
-      "type": "header",
-      "content": "Section Appearance"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#e2e2e2"
-    },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Background Image"
-    },
-    {
-      "type": "select",
-      "id": "bg_size",
-      "label": "Background Size",
-      "options": [
-        { "value": "auto", "label": "Auto" },
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" }
-      ],
-      "default": "cover"
-    },
-    {
-      "type": "select",
-      "id": "bg_position",
-      "label": "Background Position",
-      "options": [
-        { "value": "center", "label": "Center" },
-        { "value": "top", "label": "Top" },
-        { "value": "bottom", "label": "Bottom" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "checkbox",
-      "id": "use_gradient",
-      "label": "Use Gradient Overlay",
-      "default": false
-    },
-    {
-      "type": "color",
-      "id": "overlay_color",
-      "label": "Overlay Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "text",
-      "id": "overlay_gradient",
-      "label": "Gradient CSS",
-      "default": "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)"
-    },
-    {
-      "type": "range",
-      "id": "overlay_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Overlay Opacity",
-      "default": 85
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 20,
-      "max": 150,
-      "step": 10,
-      "unit": "px",
-      "label": "Desktop Top Padding",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 20,
-      "max": 150,
-      "step": 10,
-      "unit": "px",
-      "label": "Desktop Bottom Padding",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "padding_horizontal",
-      "min": 10,
-      "max": 60,
-      "step": 5,
-      "unit": "px",
-      "label": "Horizontal Padding",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_top",
-      "min": 20,
-      "max": 100,
-      "step": 10,
-      "unit": "px",
-      "label": "Mobile Top Padding",
-      "default": 60
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_bottom",
-      "min": 20,
-      "max": 100,
-      "step": 10,
-      "unit": "px",
-      "label": "Mobile Bottom Padding",
-      "default": 60
-    },
-    {
-      "type": "header",
-      "content": "Form Container"
-    },
-    {
-      "type": "range",
-      "id": "content_max_width",
-      "min": 400,
-      "max": 1000,
-      "step": 50,
-      "unit": "px",
-      "label": "Form Max Width",
-      "default": 700
-    },
-    {
-      "type": "color",
-      "id": "form_bg",
-      "label": "Form Background",
-      "default": "transparent"
-    },
-    {
-      "type": "range",
-      "id": "form_padding",
-      "min": 0,
-      "max": 80,
-      "step": 5,
-      "unit": "px",
-      "label": "Form Padding",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "mobile_form_padding",
-      "min": 0,
-      "max": 60,
-      "step": 5,
-      "unit": "px",
-      "label": "Mobile Form Padding",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "form_border_radius",
-      "min": 0,
-      "max": 30,
-      "step": 2,
-      "unit": "px",
-      "label": "Form Border Radius",
-      "default": 0
-    },
-    {
-      "type": "text",
-      "id": "form_shadow",
-      "label": "Form Shadow",
-      "default": "none"
-    },
-    {
-      "type": "header",
-      "content": "Heading"
     },
     {
       "type": "text",
@@ -783,406 +229,10 @@
       "default": "Join The Cowgirl Army"
     },
     {
-      "type": "select",
-      "id": "heading_align",
-      "label": "Heading Alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "range",
-      "id": "heading_size",
-      "min": 24,
-      "max": 60,
-      "step": 2,
-      "unit": "px",
-      "label": "Heading Size (Desktop)",
-      "default": 48
-    },
-    {
-      "type": "range",
-      "id": "heading_size_min",
-      "min": 20,
-      "max": 36,
-      "step": 2,
-      "unit": "px",
-      "label": "Heading Size (Mobile)",
-      "default": 28
-    },
-    {
-      "type": "range",
-      "id": "heading_weight",
-      "min": 300,
-      "max": 900,
-      "step": 100,
-      "label": "Heading Font Weight",
-      "default": 700
-    },
-    {
-      "type": "range",
-      "id": "heading_letter_spacing",
-      "min": 0,
-      "max": 5,
-      "step": 0.5,
-      "unit": "px",
-      "label": "Heading Letter Spacing",
-      "default": 1
-    },
-    {
-      "type": "range",
-      "id": "heading_margin",
-      "min": 10,
-      "max": 60,
-      "step": 5,
-      "unit": "px",
-      "label": "Heading Bottom Margin",
-      "default": 30
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Heading Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "header",
-      "content": "Description"
-    },
-    {
-      "type": "richtext",
-      "id": "description",
-      "label": "Description Text"
-    },
-    {
-      "type": "select",
-      "id": "description_align",
-      "label": "Description Alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "color",
-      "id": "description_color",
-      "label": "Description Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "range",
-      "id": "description_size",
-      "min": 12,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "label": "Description Font Size",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "description_line_height",
-      "min": 1.2,
-      "max": 2,
-      "step": 0.1,
-      "label": "Description Line Height",
-      "default": 1.6
-    },
-    {
-      "type": "range",
-      "id": "description_max_width",
-      "min": 300,
-      "max": 800,
-      "step": 50,
-      "unit": "px",
-      "label": "Description Max Width",
-      "default": 600
-    },
-    {
-      "type": "range",
-      "id": "description_margin",
-      "min": 10,
-      "max": 50,
-      "step": 5,
-      "unit": "px",
-      "label": "Description Bottom Margin",
-      "default": 30
-    },
-    {
-      "type": "header",
-      "content": "Form Layout"
-    },
-    {
-      "type": "select",
-      "id": "layout",
-      "label": "Form Layout",
-      "options": [
-        { "value": "stacked", "label": "Stacked (Vertical)" },
-        { "value": "row", "label": "Inline (Horizontal)" }
-      ],
-      "default": "stacked"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_name_fields",
-      "label": "Show Name Fields",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "require_name",
-      "label": "Require Name Fields",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "field_gap",
-      "min": 10,
-      "max": 40,
-      "step": 5,
-      "unit": "px",
-      "label": "Field Gap",
-      "default": 20
-    },
-    {
-      "type": "header",
-      "content": "Form Labels"
-    },
-    {
-      "type": "select",
-      "id": "label_display",
-      "label": "Label Display",
-      "options": [
-        { "value": "block", "label": "Show" },
-        { "value": "none", "label": "Hide" }
-      ],
-      "default": "block"
-    },
-    {
       "type": "text",
-      "id": "label_first_name",
-      "label": "First Name Label",
-      "default": "First Name"
-    },
-    {
-      "type": "text",
-      "id": "label_last_name",
-      "label": "Last Name Label",
-      "default": "Last Name"
-    },
-    {
-      "type": "text",
-      "id": "label_email",
-      "label": "Email Label",
-      "default": "Email"
-    },
-    {
-      "type": "color",
-      "id": "label_color",
-      "label": "Label Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "range",
-      "id": "label_font_size",
-      "min": 10,
-      "max": 18,
-      "step": 1,
-      "unit": "px",
-      "label": "Label Font Size",
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "label_font_weight",
-      "min": 400,
-      "max": 700,
-      "step": 100,
-      "label": "Label Font Weight",
-      "default": 600
-    },
-    {
-      "type": "range",
-      "id": "label_letter_spacing",
-      "min": 0,
-      "max": 3,
-      "step": 0.5,
-      "unit": "px",
-      "label": "Label Letter Spacing",
-      "default": 0.5
-    },
-    {
-      "type": "range",
-      "id": "label_margin",
-      "min": 4,
-      "max": 20,
-      "step": 2,
-      "unit": "px",
-      "label": "Label Bottom Margin",
-      "default": 8
-    },
-    {
-      "type": "checkbox",
-      "id": "show_required",
-      "label": "Show Required Indicator (*)",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "required_color",
-      "label": "Required Indicator Color",
-      "default": "#DC2626"
-    },
-    {
-      "type": "header",
-      "content": "Form Placeholders"
-    },
-    {
-      "type": "text",
-      "id": "placeholder_first_name",
-      "label": "First Name Placeholder",
-      "default": "First Name"
-    },
-    {
-      "type": "text",
-      "id": "placeholder_last_name",
-      "label": "Last Name Placeholder",
-      "default": "Last Name"
-    },
-    {
-      "type": "text",
-      "id": "placeholder_email",
-      "label": "Email Placeholder",
-      "default": "Email Address"
-    },
-    {
-      "type": "color",
-      "id": "placeholder_color",
-      "label": "Placeholder Color",
-      "default": "rgba(0,0,0,0.5)"
-    },
-    {
-      "type": "range",
-      "id": "placeholder_opacity",
-      "min": 30,
-      "max": 100,
-      "step": 10,
-      "unit": "%",
-      "label": "Placeholder Opacity",
-      "default": 60
-    },
-    {
-      "type": "header",
-      "content": "Form Inputs"
-    },
-    {
-      "type": "color",
-      "id": "input_bg",
-      "label": "Input Background",
-      "default": "transparent"
-    },
-    {
-      "type": "color",
-      "id": "input_text_color",
-      "label": "Input Text Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "range",
-      "id": "input_font_size",
-      "min": 14,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "label": "Input Font Size",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "input_padding",
-      "min": 8,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "label": "Input Padding",
-      "default": 12
-    },
-    {
-      "type": "color",
-      "id": "input_border_color",
-      "label": "Input Border Color",
-      "default": "rgba(0,0,0,0.2)"
-    },
-    {
-      "type": "range",
-      "id": "input_border_width",
-      "min": 1,
-      "max": 3,
-      "step": 0.5,
-      "unit": "px",
-      "label": "Input Border Width",
-      "default": 1
-    },
-    {
-      "type": "range",
-      "id": "input_border_radius",
-      "min": 0,
-      "max": 30,
-      "step": 2,
-      "unit": "px",
-      "label": "Input Border Radius",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "input_transition",
-      "min": 0.2,
-      "max": 0.6,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Input Transition Duration",
-      "default": 0.3
-    },
-    {
-      "type": "header",
-      "content": "Input Focus States"
-    },
-    {
-      "type": "color",
-      "id": "input_focus_border_color",
-      "label": "Focus Border Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "range",
-      "id": "input_focus_border_width",
-      "min": 1,
-      "max": 3,
-      "step": 0.5,
-      "unit": "px",
-      "label": "Focus Border Width",
-      "default": 2
-    },
-    {
-      "type": "color",
-      "id": "input_focus_bg",
-      "label": "Focus Background",
-      "default": "transparent"
-    },
-    {
-      "type": "text",
-      "id": "input_focus_shadow",
-      "label": "Focus Shadow",
-      "default": "0 0 0 3px rgba(0,0,0,0.1)"
-    },
-    {
-      "type": "header",
-      "content": "Submit Button"
+      "id": "checkbox_text",
+      "label": "Checkbox Label",
+      "default": "Sign up for news and updates"
     },
     {
       "type": "text",
@@ -1191,558 +241,87 @@
       "default": "Submit"
     },
     {
-      "type": "color",
-      "id": "button_bg",
-      "label": "Button Background",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "color",
-      "id": "button_text",
-      "label": "Button Text Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "button_border_color",
-      "label": "Button Border Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "range",
-      "id": "button_border_width",
-      "min": 0,
-      "max": 4,
-      "step": 0.5,
-      "unit": "px",
-      "label": "Button Border Width",
-      "default": 1
-    },
-    {
-      "type": "range",
-      "id": "button_border_radius",
-      "min": 0,
-      "max": 50,
-      "step": 2,
-      "unit": "px",
-      "label": "Button Border Radius",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "button_font_size",
-      "min": 12,
-      "max": 22,
-      "step": 1,
-      "unit": "px",
-      "label": "Button Font Size",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "button_font_weight",
-      "min": 400,
-      "max": 700,
-      "step": 100,
-      "label": "Button Font Weight",
-      "default": 600
-    },
-    {
-      "type": "range",
-      "id": "button_letter_spacing",
-      "min": 0,
-      "max": 3,
-      "step": 0.5,
-      "unit": "px",
-      "label": "Button Letter Spacing",
-      "default": 1
-    },
-    {
-      "type": "range",
-      "id": "button_padding",
-      "min": 10,
-      "max": 30,
-      "step": 2,
-      "unit": "px",
-      "label": "Button Padding",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "button_margin_top",
-      "min": 0,
-      "max": 40,
-      "step": 5,
-      "unit": "px",
-      "label": "Button Top Margin",
-      "default": 10
-    },
-    {
-      "type": "select",
-      "id": "button_text_transform",
-      "label": "Button Text Transform",
-      "options": [
-        { "value": "none", "label": "None" },
-        { "value": "uppercase", "label": "Uppercase" },
-        { "value": "lowercase", "label": "Lowercase" },
-        { "value": "capitalize", "label": "Capitalize" }
-      ],
-      "default": "uppercase"
-    },
-    {
-      "type": "range",
-      "id": "button_transition",
-      "min": 0.2,
-      "max": 0.6,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Button Transition Duration",
-      "default": 0.3
-    },
-    {
-      "type": "header",
-      "content": "Button Hover States"
-    },
-    {
-      "type": "color",
-      "id": "button_hover_bg",
-      "label": "Hover Background",
-      "default": "transparent"
-    },
-    {
-      "type": "color",
-      "id": "button_hover_text",
-      "label": "Hover Text Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "color",
-      "id": "button_hover_border",
-      "label": "Hover Border Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "range",
-      "id": "button_hover_lift",
-      "min": 0,
-      "max": 10,
-      "step": 1,
-      "unit": "px",
-      "label": "Hover Lift Distance",
-      "default": 2
-    },
-    {
-      "type": "range",
-      "id": "button_hover_scale",
-      "min": 100,
-      "max": 110,
-      "step": 1,
-      "unit": "%",
-      "label": "Hover Scale",
-      "default": 102
-    },
-    {
-      "type": "text",
-      "id": "button_hover_shadow",
-      "label": "Hover Shadow",
-      "default": "0 6px 20px rgba(0,0,0,0.15)"
-    },
-    {
-      "type": "header",
-      "content": "Checkbox (Marketing Consent)"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_checkbox",
-      "label": "Show Marketing Checkbox",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "checkbox_text",
-      "label": "Checkbox Label",
-      "default": "Sign up for news and updates"
-    },
-    {
-      "type": "range",
-      "id": "checkbox_size",
-      "min": 16,
-      "max": 28,
-      "step": 2,
-      "unit": "px",
-      "label": "Checkbox Size",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "checkbox_gap",
-      "min": 8,
-      "max": 20,
-      "step": 2,
-      "unit": "px",
-      "label": "Checkbox Gap",
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "checkbox_margin",
-      "min": 10,
-      "max": 40,
-      "step": 5,
-      "unit": "px",
-      "label": "Checkbox Top Margin",
-      "default": 20
-    },
-    {
-      "type": "color",
-      "id": "checkbox_bg",
-      "label": "Checkbox Background",
-      "default": "transparent"
-    },
-    {
-      "type": "color",
-      "id": "checkbox_border_color",
-      "label": "Checkbox Border Color",
-      "default": "rgba(0,0,0,0.3)"
-    },
-    {
-      "type": "range",
-      "id": "checkbox_border_width",
-      "min": 1,
-      "max": 3,
-      "step": 0.5,
-      "unit": "px",
-      "label": "Checkbox Border Width",
-      "default": 1
-    },
-    {
-      "type": "range",
-      "id": "checkbox_radius",
-      "min": 0,
-      "max": 10,
-      "step": 2,
-      "unit": "px",
-      "label": "Checkbox Border Radius",
-      "default": 2
-    },
-    {
-      "type": "color",
-      "id": "checkbox_checked_bg",
-      "label": "Checked Background",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "color",
-      "id": "checkbox_checked_border",
-      "label": "Checked Border Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "text",
-      "id": "checkbox_icon",
-      "label": "Checkbox Icon",
-      "default": "✓",
-      "info": "Can be any character or emoji"
-    },
-    {
-      "type": "color",
-      "id": "checkbox_icon_color",
-      "label": "Icon Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "checkbox_icon_size",
-      "min": 10,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "label": "Icon Size",
-      "default": 14
-    },
-    {
-      "type": "range",
-      "id": "checkbox_transition",
-      "min": 0.2,
-      "max": 0.6,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Checkbox Transition",
-      "default": 0.3
-    },
-    {
-      "type": "range",
-      "id": "checkbox_label_size",
-      "min": 12,
-      "max": 18,
-      "step": 1,
-      "unit": "px",
-      "label": "Checkbox Label Font Size",
-      "default": 14
-    },
-    {
-      "type": "color",
-      "id": "checkbox_label_color",
-      "label": "Checkbox Label Color",
-      "default": "#1a1a1a"
-    },
-    {
-      "type": "header",
-      "content": "Privacy Note"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_privacy_note",
-      "label": "Show Privacy Note",
-      "default": false
-    },
-    {
-      "type": "richtext",
-      "id": "privacy_note",
-      "label": "Privacy Note Text",
-      "default": "<p>We respect your privacy. Unsubscribe at any time.</p>"
-    },
-    {
-      "type": "select",
-      "id": "privacy_note_align",
-      "label": "Privacy Note Alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "color",
-      "id": "privacy_note_color",
-      "label": "Privacy Note Color",
-      "default": "rgba(0,0,0,0.6)"
-    },
-    {
-      "type": "range",
-      "id": "privacy_note_size",
-      "min": 10,
-      "max": 16,
-      "step": 1,
-      "unit": "px",
-      "label": "Privacy Note Font Size",
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "privacy_note_line_height",
-      "min": 1.2,
-      "max": 2,
-      "step": 0.1,
-      "label": "Privacy Note Line Height",
-      "default": 1.5
-    },
-    {
-      "type": "range",
-      "id": "privacy_note_margin",
-      "min": 10,
-      "max": 40,
-      "step": 5,
-      "unit": "px",
-      "label": "Privacy Note Top Margin",
-      "default": 20
-    },
-    {
-      "type": "header",
-      "content": "Success/Error Messages"
-    },
-    {
       "type": "text",
       "id": "success_message",
       "label": "Success Message",
       "default": "Welcome to the Cowgirl Army!"
     },
     {
+      "type": "header",
+      "content": "Form Labels & Placeholders"
+    },
+    {
       "type": "text",
-      "id": "error_message",
-      "label": "Error Message",
-      "default": "Something went wrong. Please try again."
+      "id": "label_name",
+      "label": "Name Label",
+      "default": "Name"
     },
     {
-      "type": "checkbox",
-      "id": "show_success_icon",
-      "label": "Show Success Icon (✓)",
-      "default": true
+      "type": "text",
+      "id": "placeholder_first_name",
+      "label": "First Name Placeholder",
+      "default": "First Name (required)"
     },
     {
-      "type": "checkbox",
-      "id": "show_error_icon",
-      "label": "Show Error Icon (⚠)",
-      "default": true
+      "type": "text",
+      "id": "placeholder_last_name",
+      "label": "Last Name Placeholder",
+      "default": "Last Name (required)"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email Label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_email",
+      "label": "Email Placeholder",
+      "default": "Email Address"
+    },
+    {
+      "type": "text",
+      "id": "label_required",
+      "label": "Required Indicator",
+      "default": "(required)"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
-      "id": "success_bg",
-      "label": "Success Background",
-      "default": "rgba(22,163,74,0.1)"
+      "id": "bg_color",
+      "label": "Fallback BG Color",
+      "default": "#e2e2e2"
     },
     {
       "type": "color",
-      "id": "success_text",
-      "label": "Success Text Color",
-      "default": "#16A34A"
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
     },
     {
       "type": "color",
-      "id": "error_bg",
-      "label": "Error Background",
-      "default": "rgba(220,38,38,0.1)"
-    },
-    {
-      "type": "color",
-      "id": "error_text",
-      "label": "Error Text Color",
-      "default": "#DC2626"
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#ffffff"
     },
     {
       "type": "range",
-      "id": "message_padding",
-      "min": 10,
-      "max": 30,
-      "step": 2,
-      "unit": "px",
-      "label": "Message Padding",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "message_radius",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
       "min": 0,
-      "max": 20,
-      "step": 2,
-      "unit": "px",
-      "label": "Message Border Radius",
-      "default": 8
-    },
-    {
-      "type": "range",
-      "id": "message_margin",
-      "min": 10,
-      "max": 40,
-      "step": 5,
-      "unit": "px",
-      "label": "Message Bottom Margin",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "message_font_size",
-      "min": 12,
-      "max": 18,
-      "step": 1,
-      "unit": "px",
-      "label": "Message Font Size",
-      "default": 14
-    },
-    {
-      "type": "range",
-      "id": "message_font_weight",
-      "min": 400,
-      "max": 700,
-      "step": 100,
-      "label": "Message Font Weight",
-      "default": 500
-    },
-    {
-      "type": "header",
-      "content": "Advanced Options"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_ajax",
-      "label": "Enable AJAX Submission",
-      "default": false,
-      "info": "Submit form without page reload"
-    },
-    {
-      "type": "range",
-      "id": "message_auto_hide_delay",
-      "min": 3,
-      "max": 10,
-      "step": 1,
-      "unit": "s",
-      "label": "Auto Hide Message Delay",
-      "default": 5,
-      "info": "How long success/error messages show (AJAX only)"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_confetti",
-      "label": "Enable Confetti on Success",
-      "default": false,
-      "info": "Requires confetti library (AJAX only)"
-    },
-    {
-      "type": "header",
-      "content": "Scroll Animations"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_animation",
-      "label": "Enable Scroll Animations",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "animation_duration",
-      "min": 0.3,
-      "max": 2,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Animation Duration",
-      "default": 0.8
-    },
-    {
-      "type": "range",
-      "id": "animation_distance",
-      "min": 20,
       "max": 100,
-      "step": 10,
-      "unit": "px",
-      "label": "Animation Distance",
-      "default": 40
-    },
-    {
-      "type": "select",
-      "id": "animation_easing",
-      "label": "Animation Easing",
-      "options": [
-        { "value": "ease", "label": "Ease" },
-        { "value": "ease-out", "label": "Ease Out" },
-        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Premium Ease" }
-      ],
-      "default": "cubic-bezier(0.16, 1, 0.3, 1)"
-    },
-    {
-      "type": "range",
-      "id": "animation_threshold",
-      "min": 0,
-      "max": 50,
       "step": 5,
       "unit": "%",
-      "label": "Animation Trigger Point",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "animation_margin",
-      "min": -200,
-      "max": 200,
-      "step": 50,
-      "unit": "px",
-      "label": "Animation Margin",
-      "default": 0
+      "default": 85
     }
   ],
   "presets": [
     {
-      "name": "Newsletter (Enhanced)",
+      "name": "Premium Newsletter",
       "category": "Form"
     }
   ]
