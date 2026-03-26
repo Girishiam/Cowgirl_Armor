@@ -306,11 +306,7 @@ class PredictiveSearch {
   formatMoney(cents) { return '$' + (cents / 100).toFixed(2); }
 }
 
-/* ============================================
-   INITIALIZATION
-   (header sticky + mobile drawer handled by
-    header.liquid — do NOT duplicate here)
-   ============================================ */
+
 document.addEventListener('DOMContentLoaded', () => {
 
     function syncHeaderPosition() {
