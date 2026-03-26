@@ -1,371 +1,716 @@
-/* Global Javascript for Cowgirl Armor Theme */
+<style>
+/* ══════════════════════════════════════════
+   SEARCH PAGE — uses your theme's CSS vars
+   so it auto-matches colors, fonts, borders
+   ══════════════════════════════════════════ */
 
-/* ============================================
-   UTILITY FUNCTIONS
-   ============================================ */
+.sp { font-family: var(--font-body); color: var(--color-text); }
+.sp *, .sp *::before, .sp *::after { box-sizing: border-box; }
+.sp a { text-decoration: none; color: inherit; }
+.sp ul { list-style: none; padding: 0; margin: 0; }
 
-function debounce(fn, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn.apply(this, args), wait);
-  };
+/* ── Hero ── */
+.sp-hero {
+  background-color: var(--color-base-bg);
+  border-bottom: var(--border-width, 1px) solid var(--color-border);
+  padding: clamp(3.5rem, 9vw, 6rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-function throttle(fn, wait) {
-  let time = Date.now();
-  return function (...args) {
-    if ((time + wait - Date.now()) < 0) {
-      fn.apply(this, args);
-      time = Date.now();
-    }
-  };
+/* Subtle decorative line top */
+.sp-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 56px; height: 2px;
+  background: var(--color-accent);
 }
 
-function fetchConfig(type = 'json') {
-  return {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': `application/${type}` }
-  };
+.sp-eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.sp-eyebrow-line {
+  display: inline-block;
+  width: 28px; height: 1px;
+  background: var(--color-accent);
+  opacity: 0.5;
 }
 
-function serializeForm(form) {
-  const formData = new FormData(form);
-  const obj = {};
-  for (let [key, value] of formData.entries()) { obj[key] = value; }
-  return obj;
+.sp-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5.5vw, 3.8rem);
+  font-weight: var(--heading-weight, 700);
+  text-transform: var(--heading-text-transform, uppercase);
+  letter-spacing: var(--heading-letter-spacing, 0px);
+  line-height: var(--heading-line-height, 1.1);
+  color: var(--color-text);
+  margin-bottom: 2.8rem;
 }
 
-/* ============================================
-   FOCUS TRAP
-   ============================================ */
-class FocusTrap {
-  constructor(container) {
-    this.container = container;
-    this.focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-  }
-  activate() {
-    const focusable = this.container.querySelectorAll(this.focusableElements);
-    this.firstFocusable = focusable[0];
-    this.lastFocusable = focusable[focusable.length - 1];
-    this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.firstFocusable?.focus();
-  }
-  deactivate() {
-    this.container.removeEventListener('keydown', this.handleKeyDown.bind(this));
-  }
-  handleKeyDown(e) {
-    if (e.key !== 'Tab') return;
-    if (e.shiftKey) {
-      if (document.activeElement === this.firstFocusable) {
-        this.lastFocusable?.focus();
-        e.preventDefault();
-      }
-    } else {
-      if (document.activeElement === this.lastFocusable) {
-        this.firstFocusable?.focus();
-        e.preventDefault();
-      }
-    }
-  }
+.sp-title-term {
+  /* highlight the searched term in accent */
+  font-style: italic;
+  text-transform: none;
+  color: var(--color-accent);
+  letter-spacing: 0;
 }
 
-/* ============================================
-   CART MANAGER
-   ============================================ */
-class CartManager {
-  constructor() {
-    this.cart = null;
-    this.init();
-  }
-  async init() {
-    await this.getCart();
-    this.setupEventListeners();
-  }
-  setupEventListeners() {
-    document.querySelectorAll('[data-add-to-cart-form]').forEach(form => {
-      form.addEventListener('submit', this.handleAddToCart.bind(this));
-    });
-    document.querySelectorAll('[data-cart-update]').forEach(button => {
-      button.addEventListener('click', this.handleCartUpdate.bind(this));
-    });
-    document.querySelectorAll('[data-cart-remove]').forEach(button => {
-      button.addEventListener('click', this.handleCartRemove.bind(this));
-    });
-  }
-  async getCart() {
-    try {
-      const response = await fetch('/cart.js');
-      this.cart = await response.json();
-      this.updateCartCount();
-      return this.cart;
-    } catch (error) {
-      console.error('Error fetching cart:', error);
-    }
-  }
-  async addToCart(items) {
-    try {
-      const response = await fetch('/cart/add.js', {
-        ...fetchConfig(),
-        body: JSON.stringify({ items })
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.description || 'Failed to add to cart');
-      }
-      this.cart = await response.json();
-      this.updateCartCount();
-      this.showCartNotification();
-      return this.cart;
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      this.showError(error.message);
-      throw error;
-    }
-  }
-  async updateCart(key, quantity) {
-    try {
-      const response = await fetch('/cart/change.js', {
-        ...fetchConfig(),
-        body: JSON.stringify({ id: key, quantity })
-      });
-      this.cart = await response.json();
-      this.updateCartCount();
-      return this.cart;
-    } catch (error) {
-      console.error('Error updating cart:', error);
-      throw error;
-    }
-  }
-  async removeFromCart(key) { return this.updateCart(key, 0); }
-  handleAddToCart(e) {
-    e.preventDefault();
-    const formData = serializeForm(e.target);
-    this.addToCart([{ id: formData.id, quantity: parseInt(formData.quantity) || 1 }]);
-  }
-  handleCartUpdate(e) {
-    const button = e.target.closest('[data-cart-update]');
-    const key = button.dataset.cartUpdate;
-    const input = button.closest('.cart-item').querySelector('[data-quantity-input]');
-    this.updateCart(key, parseInt(input.value));
-  }
-  handleCartRemove(e) {
-    const button = e.target.closest('[data-cart-remove]');
-    this.removeFromCart(button.dataset.cartRemove);
-  }
-  updateCartCount() {
-    const count = this.cart?.item_count || 0;
-    document.querySelectorAll('[data-cart-count]').forEach(el => {
-      el.textContent = count;
-      el.classList.toggle('hidden', count === 0);
-    });
-    // Also sync the header.liquid cart badge
-    document.dispatchEvent(new CustomEvent('cart:updated', { detail: { item_count: count } }));
-  }
-  showCartNotification() {
-    document.dispatchEvent(new CustomEvent('cart:item-added', { detail: this.cart }));
-  }
-  showError(message) {
-    document.dispatchEvent(new CustomEvent('cart:error', { detail: { message } }));
-  }
+/* ── Search bar ── */
+.sp-form { max-width: 640px; margin: 0 auto; }
+
+.sp-field {
+  display: flex;
+  align-items: stretch;
+  height: 54px;
+  border: var(--buttons-border-thickness, 1px) solid var(--color-border);
+  background: var(--inputs-bg, #fff);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  border-radius: var(--inputs-radius, 0px);
+  overflow: hidden;
 }
 
-/* ============================================
-   VARIANT SELECTOR
-   ============================================ */
-class VariantSelector {
-  constructor(element) {
-    this.element = element;
-    this.productData = JSON.parse(element.querySelector('[data-product-json]')?.textContent || '{}');
-    this.variantData = this.productData.variants || [];
-    this.currentVariant = this.variantData[0];
-    this.setupEventListeners();
-    this.updateUI();
-  }
-  setupEventListeners() {
-    this.element.querySelectorAll('[data-variant-option]').forEach(option => {
-      option.addEventListener('change', this.handleOptionChange.bind(this));
-    });
-  }
-  handleOptionChange() {
-    const selectedOptions = Array.from(
-      this.element.querySelectorAll('[data-variant-option]')
-    ).map(select => select.value);
-    this.currentVariant = this.variantData.find(variant =>
-      variant.options.every((option, index) => option === selectedOptions[index])
-    );
-    this.updateUI();
-  }
-  updateUI() {
-    if (!this.currentVariant) return;
-    const priceEl = this.element.querySelector('[data-product-price]');
-    if (priceEl) priceEl.textContent = this.formatMoney(this.currentVariant.price);
-    const compareEl = this.element.querySelector('[data-product-compare-price]');
-    if (compareEl) {
-      if (this.currentVariant.compare_at_price) {
-        compareEl.textContent = this.formatMoney(this.currentVariant.compare_at_price);
-        compareEl.classList.remove('hidden');
-      } else {
-        compareEl.classList.add('hidden');
-      }
-    }
-    const variantInput = this.element.querySelector('[name="id"]');
-    if (variantInput) variantInput.value = this.currentVariant.id;
-    const addButton = this.element.querySelector('[data-add-to-cart-button]');
-    if (addButton) {
-      addButton.disabled = !this.currentVariant.available;
-      addButton.textContent = this.currentVariant.available ? 'Add to Cart' : 'Sold Out';
-    }
-    this.element.dispatchEvent(new CustomEvent('variant:changed', {
-      detail: { variant: this.currentVariant }
-    }));
-  }
-  formatMoney(cents) { return '$' + (cents / 100).toFixed(2); }
+.sp-field:focus-within {
+  border-color: var(--inputs-focus-color, var(--color-accent));
+  box-shadow: 0 0 0 3px rgba(139,164,172,0.15);
 }
 
-/* ============================================
-   QUANTITY SELECTOR
-   ============================================ */
-class QuantitySelector {
-  constructor(element) {
-    this.element = element;
-    this.input = element.querySelector('[data-quantity-input]');
-    this.decreaseBtn = element.querySelector('[data-quantity-decrease]');
-    this.increaseBtn = element.querySelector('[data-quantity-increase]');
-    this.min = parseInt(this.input.min) || 1;
-    this.max = parseInt(this.input.max) || 999;
-    this.setupEventListeners();
-  }
-  setupEventListeners() {
-    this.decreaseBtn?.addEventListener('click', () => this.decrease());
-    this.increaseBtn?.addEventListener('click', () => this.increase());
-    this.input?.addEventListener('change', () => this.handleInputChange());
-  }
-  decrease() {
-    const v = parseInt(this.input.value);
-    if (v > this.min) { this.input.value = v - 1; this.triggerChange(); }
-  }
-  increase() {
-    const v = parseInt(this.input.value);
-    if (v < this.max) { this.input.value = v + 1; this.triggerChange(); }
-  }
-  handleInputChange() {
-    let v = parseInt(this.input.value);
-    if (isNaN(v) || v < this.min) v = this.min;
-    if (v > this.max) v = this.max;
-    this.input.value = v;
-    this.triggerChange();
-  }
-  triggerChange() { this.input.dispatchEvent(new Event('change', { bubbles: true })); }
+.sp-icon {
+  display: flex; align-items: center;
+  padding: 0 0.9rem 0 1.2rem;
+  color: var(--color-border);
+  flex-shrink: 0;
+}
+.sp-icon svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
 
-/* ============================================
-   PREDICTIVE SEARCH
-   ============================================ */
-class PredictiveSearch {
-  constructor(element) {
-    this.element = element;
-    this.input = element.querySelector('[data-search-input]');
-    this.results = element.querySelector('[data-search-results]');
-    this.minChars = 3;
-    this.setupEventListeners();
-  }
-  setupEventListeners() {
-    this.input?.addEventListener('input', debounce(this.handleInput.bind(this), 300));
-    this.input?.addEventListener('focus', () => this.showResults());
-    document.addEventListener('click', (e) => {
-      if (!this.element.contains(e.target)) this.hideResults();
-    });
-  }
-  async handleInput() {
-    const query = this.input.value.trim();
-    if (query.length < this.minChars) { this.hideResults(); return; }
-    try {
-      const response = await fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4`);
-      const data = await response.json();
-      this.renderResults(data.resources.results.products || []);
-    } catch (error) {
-      console.error('Search error:', error);
-    }
-  }
-  renderResults(products) {
-    if (!products.length) { this.hideResults(); return; }
-    this.results.innerHTML = products.map(product => `
-      <a href="${product.url}" class="search-result">
-        ${product.featured_image ? `<img src="${product.featured_image}" alt="${product.title}" class="search-result__image">` : ''}
-        <div class="search-result__content">
-          <div class="search-result__title">${product.title}</div>
-          <div class="search-result__price">${this.formatMoney(product.price)}</div>
+.sp-input {
+  flex: 1; min-width: 0;
+  background: transparent; border: none;
+  padding: 0 0.5rem;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.97rem;
+  font-weight: 400;
+  height: 100%;
+}
+.sp-input:focus { outline: none; }
+.sp-input::placeholder { color: var(--color-border); font-style: italic; }
+
+.sp-clear {
+  display: none; align-items: center; justify-content: center;
+  background: transparent; border: none;
+  padding: 0 0.65rem;
+  color: var(--color-border);
+  cursor: pointer; transition: color 0.2s; flex-shrink: 0;
+}
+.sp-clear:hover { color: var(--color-text); }
+.sp-clear svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+
+.sp-submit {
+  background-color: var(--color-button, var(--color-text));
+  color: var(--color-button-text, #fff);
+  border: none;
+  padding: 0 1.75rem;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer; flex-shrink: 0;
+  transition: background-color 0.2s ease;
+  height: 100%;
+  border-radius: 0 var(--inputs-radius, 0px) var(--inputs-radius, 0px) 0;
+}
+.sp-submit:hover { background-color: var(--color-button-hover, #333); }
+
+.sp-count {
+  margin-top: 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.83rem;
+  color: var(--color-border);
+  letter-spacing: 0.03em;
+}
+.sp-count strong { color: var(--color-accent); font-weight: 600; }
+
+/* ── Body ── */
+.sp-body {
+  max-width: var(--page-width, 1200px);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 4vw, 2rem);
+}
+
+/* ── Filter bar ── */
+.sp-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: var(--border-width, 1px) solid var(--color-border);
+}
+
+.sp-filter-label {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-border);
+  margin-right: 0.25rem;
+}
+
+.sp-filter-btn {
+  background: transparent;
+  border: var(--buttons-border-thickness, 1px) solid var(--color-border);
+  color: var(--color-border);
+  padding: 0.4rem 1rem;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: var(--buttons-radius, 0px);
+}
+
+.sp-filter-btn:hover,
+.sp-filter-btn.active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(139,164,172,0.08);
+}
+
+/* ── Section heading ── */
+.sp-section-hd {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-border);
+  margin: 3rem 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sp-section-hd::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+
+/* ── Product grid ── */
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--spacing-grid-horizontal, 20px);
+}
+
+/* ── Product card — mirrors your .product-card styles ── */
+.sp-card {
+  display: block;
+  position: relative;
+  color: var(--color-text);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--border-radius, 0px);
+  overflow: hidden;
+  transition: transform var(--duration-default, 200ms) ease,
+              box-shadow var(--duration-default, 200ms) ease;
+  background: var(--inputs-bg, #fff);
+}
+
+.sp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover, 0 8px 30px rgba(0,0,0,0.12));
+}
+
+.sp-card:hover .sp-card-img img { transform: scale(1.05); }
+
+.sp-card-img {
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--color-base-bg);
+  position: relative;
+}
+
+.sp-card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform var(--duration-long, 500ms) var(--ease-out-slow, ease);
+}
+
+.sp-card-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.sp-card-placeholder svg { width: 44px; height: 44px; fill: rgba(0,0,0,0.12); }
+
+/* Badge — uses your .badge--sale / .badge--new vars */
+.sp-badge {
+  position: absolute; top: 0.75rem; left: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  font-family: var(--font-heading);
+  font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border-radius: var(--badge-corner-radius, 0px);
+}
+.sp-badge.sale { background: var(--badge-sale-bg, var(--color-error, #DC2626)); color: var(--badge-sale-text, #fff); }
+.sp-badge.new  { background: var(--color-accent); color: var(--color-text); }
+
+.sp-card-body { padding: 1rem 1.1rem 1.3rem; }
+
+.sp-card-vendor {
+  font-family: var(--font-body);
+  font-size: 0.68rem; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.3rem; opacity: 0.9;
+}
+
+/* Mirror .product-card__title */
+.sp-card-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: var(--heading-weight, 700);
+  text-transform: var(--heading-text-transform, uppercase);
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.sp-card-price { display: flex; align-items: baseline; gap: 0.5rem; }
+.sp-price { font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; }
+.sp-compare { font-size: 0.82rem; opacity: 0.6; text-decoration: line-through; }
+.sp-price-sale { color: var(--price-sale-color, var(--color-error, #DC2626)); }
+
+.sp-card-cta {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  margin-top: 0.85rem;
+  font-family: var(--font-heading);
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-accent);
+  opacity: 0; transform: translateY(5px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.sp-card-cta svg { width: 11px; height: 11px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.sp-card:hover .sp-card-cta { opacity: 1; transform: translateY(0); }
+
+/* ── Page/article rows ── */
+.sp-rows {
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--border-radius, 0px);
+  overflow: hidden;
+  background: var(--inputs-bg, #fff);
+}
+
+.sp-row {
+  display: block;
+  padding: 1.4rem 3rem 1.4rem 1.5rem;
+  border-bottom: var(--border-width, 1px) solid var(--color-border);
+  transition: background 0.2s ease;
+  position: relative;
+}
+.sp-row:last-child { border-bottom: none; }
+.sp-row:hover { background: var(--color-base-bg); }
+.sp-row::after {
+  content: '→'; position: absolute;
+  right: 1.5rem; top: 50%; transform: translateY(-50%);
+  color: var(--color-accent); font-size: 1rem;
+  opacity: 0; transition: opacity 0.2s ease, right 0.2s ease;
+}
+.sp-row:hover::after { opacity: 1; right: 1.2rem; }
+
+.sp-row-type {
+  font-family: var(--font-heading);
+  font-size: 0.62rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--color-accent);
+  font-weight: 700; margin-bottom: 0.3rem;
+}
+
+.sp-row-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: var(--heading-weight, 700);
+  text-transform: var(--heading-text-transform, uppercase);
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  line-height: 1.3; margin-bottom: 0.25rem;
+}
+
+.sp-row-excerpt {
+  font-family: var(--font-body);
+  font-size: 0.88rem; color: var(--color-border);
+  line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* ── Empty state ── */
+.sp-empty {
+  text-align: center;
+  padding: clamp(4rem, 10vw, 7rem) 1.5rem;
+}
+
+.sp-empty-icon {
+  width: 52px; height: 52px;
+  margin: 0 auto 2rem; color: var(--color-border);
+}
+.sp-empty-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+
+.sp-empty h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: var(--heading-weight, 700);
+  text-transform: var(--heading-text-transform, uppercase);
+  letter-spacing: var(--heading-letter-spacing, 0px);
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+.sp-empty p {
+  font-family: var(--font-body);
+  font-size: 0.95rem; color: var(--color-border);
+  max-width: 380px; margin: 0 auto 2.5rem; line-height: 1.7;
+}
+
+/* ── Quick links / tags ── */
+.sp-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+
+.sp-tag {
+  background: transparent;
+  border: var(--buttons-border-thickness, 1px) solid var(--color-border);
+  color: var(--color-text);
+  padding: 0.5rem 1.2rem;
+  font-family: var(--font-heading);
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border-radius: var(--buttons-radius, 0px);
+  transition: all 0.2s ease;
+}
+.sp-tag:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(139,164,172,0.08);
+}
+
+/* ── Pagination — mirrors your .btn style ── */
+.sp-pages {
+  display: flex; justify-content: center; align-items: center;
+  gap: 0.4rem; padding: 4rem 0 1rem;
+}
+
+.sp-page {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  border: var(--buttons-border-thickness, 1px) solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 0.82rem; font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  border-radius: var(--buttons-radius, 0px);
+}
+.sp-page:hover, .sp-page.cur {
+  background: var(--color-button, var(--color-text));
+  color: var(--color-button-text, #fff);
+  border-color: var(--color-button, var(--color-text));
+}
+.sp-page.nav { width: auto; padding: 0 1.2rem; font-size: 0.7rem; letter-spacing: 0.12em; }
+
+/* ── Divider ── */
+.sp-divider {
+  border: none;
+  border-top: var(--border-width, 1px) solid var(--color-border);
+  margin: 4rem 0 0;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 600px) {
+  .sp-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .sp-submit { padding: 0 1rem; font-size: 0.65rem; }
+}
+</style>
+
+<div class="sp">
+
+  <!-- ══ HERO ══ -->
+  <div class="sp-hero">
+    <p class="sp-eyebrow">
+      <span class="sp-eyebrow-line"></span>
+      {{ shop.name }}
+      <span class="sp-eyebrow-line"></span>
+    </p>
+
+    <h1 class="sp-title">
+      {%- if search.performed -%}
+        Results for
+        <span class="sp-title-term">"{{ search.terms | escape }}"</span>
+      {%- else -%}
+        Search
+      {%- endif -%}
+    </h1>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="sp-form">
+      <input type="hidden" name="type" value="product,article,page">
+      <div class="sp-field">
+        <span class="sp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input
+          type="search"
+          name="q"
+          id="SpInput"
+          class="sp-input"
+          value="{{ search.terms | escape }}"
+          placeholder="Search apparel, gifts, devotionals…"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search"
+        >
+        <button type="button" class="sp-clear" id="SpClear" aria-label="Clear search">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button type="submit" class="sp-submit">Search</button>
+      </div>
+
+      {%- if search.performed -%}
+        <p class="sp-count">
+          {%- if search.results_count == 0 -%}
+            No results found
+          {%- elsif search.results_count == 1 -%}
+            <strong>1</strong> result found
+          {%- else -%}
+            <strong>{{ search.results_count }}</strong> results found
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </form>
+  </div>
+
+  <!-- ══ BODY ══ -->
+  <div class="sp-body">
+
+    {%- if search.performed -%}
+
+      {%- if search.results_count == 0 -%}
+        <div class="sp-empty">
+          <div class="sp-empty-icon">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h2>Nothing Found</h2>
+          <p>Try a different spelling, or browse our collections below.</p>
+          <div class="sp-tags">
+            <a href="{{ routes.collections_url }}" class="sp-tag">All Collections</a>
+            <a href="/collections/apparel" class="sp-tag">Apparel</a>
+            <a href="/collections/accessories" class="sp-tag">Accessories</a>
+            <a href="/collections/gifts" class="sp-tag">Gifts</a>
+            <a href="/collections/new-arrivals" class="sp-tag">New Arrivals</a>
+            <a href="/pages/faq" class="sp-tag">FAQ</a>
+          </div>
         </div>
-      </a>
-    `).join('');
-    this.showResults();
-  }
-  showResults() { this.results?.classList.remove('hidden'); }
-  hideResults() { this.results?.classList.add('hidden'); }
-  formatMoney(cents) { return '$' + (cents / 100).toFixed(2); }
-}
 
-/* ============================================
-   INITIALIZATION
-   (header sticky + mobile drawer handled by
-    header.liquid — do NOT duplicate here)
-   ============================================ */
-document.addEventListener('DOMContentLoaded', () => {
+      {%- else -%}
 
-// Announcement bar close
-function syncHeaderPosition() {
-  const announcement = document.querySelector('.announcement-bar');
-  const header = document.getElementById('site-header');
-  const aH = (announcement && announcement.offsetHeight > 0) ? announcement.offsetHeight : 0;
-  const hH = header ? header.offsetHeight : 0;
-  document.documentElement.style.setProperty('--announcement-height', aH + 'px');
-  document.documentElement.style.setProperty('--nav-total-height', (aH + hH) + 'px');
-}
+        {%- assign sp_products = search.results | where: 'object_type', 'product' -%}
+        {%- assign sp_articles = search.results | where: 'object_type', 'article' -%}
+        {%- assign sp_pages    = search.results | where: 'object_type', 'page' -%}
 
-const announcementClose = document.querySelector('.announcement-bar__close');
-if (announcementClose) {
-  announcementClose.addEventListener('click', () => {
-    const bar = announcementClose.closest('.announcement-bar');
-    if (bar) {
-      bar.style.display = 'none';
-      syncHeaderPosition();
+        <!-- Filters -->
+        <div class="sp-filters">
+          <span class="sp-filter-label">Show:</span>
+          <button class="sp-filter-btn active" data-filter="all">All ({{ search.results_count }})</button>
+          {%- if sp_products.size > 0 -%}
+            <button class="sp-filter-btn" data-filter="product">Products ({{ sp_products.size }})</button>
+          {%- endif -%}
+          {%- if sp_articles.size > 0 -%}
+            <button class="sp-filter-btn" data-filter="article">Articles ({{ sp_articles.size }})</button>
+          {%- endif -%}
+          {%- if sp_pages.size > 0 -%}
+            <button class="sp-filter-btn" data-filter="page">Pages ({{ sp_pages.size }})</button>
+          {%- endif -%}
+        </div>
+
+        <!-- Products -->
+        {%- if sp_products.size > 0 -%}
+          <p class="sp-section-hd" data-hd="product">Products</p>
+          <div class="sp-grid" data-section="product">
+            {%- for item in sp_products -%}
+              <a href="{{ item.url }}" class="sp-card" data-type="product">
+                <div class="sp-card-img">
+                  {%- if item.featured_image -%}
+                    <img
+                      src="{{ item.featured_image | image_url: width: 600 }}"
+                      alt="{{ item.featured_image.alt | escape }}"
+                      loading="lazy" width="600"
+                    >
+                  {%- else -%}
+                    <div class="sp-card-placeholder">
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {%- endif -%}
+                  {%- if item.compare_at_price > item.price -%}
+                    <span class="sp-badge sale">Sale</span>
+                  {%- elsif item.tags contains 'new' -%}
+                    <span class="sp-badge new">New</span>
+                  {%- endif -%}
+                </div>
+                <div class="sp-card-body">
+                  {%- if item.vendor != blank -%}
+                    <p class="sp-card-vendor">{{ item.vendor }}</p>
+                  {%- endif -%}
+                  <h3 class="sp-card-title">{{ item.title }}</h3>
+                  <div class="sp-card-price">
+                    {%- if item.compare_at_price > item.price -%}
+                      <span class="sp-price sp-price-sale">{{ item.price | money }}</span>
+                      <span class="sp-compare">{{ item.compare_at_price | money }}</span>
+                    {%- else -%}
+                      <span class="sp-price">{{ item.price | money }}</span>
+                    {%- endif -%}
+                  </div>
+                  <span class="sp-card-cta">
+                    View Product
+                    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </span>
+                </div>
+              </a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <!-- Articles -->
+        {%- if sp_articles.size > 0 -%}
+          <p class="sp-section-hd" data-hd="article">Articles &amp; Devotionals</p>
+          <div class="sp-rows" data-section="article">
+            {%- for item in sp_articles -%}
+              <a href="{{ item.url }}" class="sp-row" data-type="article">
+                <p class="sp-row-type">Article</p>
+                <p class="sp-row-title">{{ item.title }}</p>
+                {%- if item.excerpt_or_content != blank -%}
+                  <p class="sp-row-excerpt">{{ item.excerpt_or_content | strip_html }}</p>
+                {%- endif -%}
+              </a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <!-- Pages -->
+        {%- if sp_pages.size > 0 -%}
+          <p class="sp-section-hd" data-hd="page">Pages</p>
+          <div class="sp-rows" data-section="page">
+            {%- for item in sp_pages -%}
+              <a href="{{ item.url }}" class="sp-row" data-type="page">
+                <p class="sp-row-type">Page</p>
+                <p class="sp-row-title">{{ item.title }}</p>
+                {%- if item.content != blank -%}
+                  <p class="sp-row-excerpt">{{ item.content | strip_html }}</p>
+                {%- endif -%}
+              </a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <!-- Pagination -->
+        {%- if paginate.pages > 1 -%}
+          <nav class="sp-pages" aria-label="Search pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="sp-page nav">← Prev</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="sp-page">{{ part.title }}</a>
+              {%- else -%}
+                <span class="sp-page cur">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="sp-page nav">Next →</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- endif -%}
+
+    {%- else -%}
+
+      <!-- Pre-search -->
+      <div class="sp-empty">
+        <div class="sp-empty-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h2>Explore the Store</h2>
+        <p>Search for apparel, gifts, devotionals, or anything that speaks to your heart.</p>
+        <div class="sp-tags">
+          <a href="{{ routes.collections_url }}" class="sp-tag">All Collections</a>
+          <a href="/collections/apparel" class="sp-tag">Apparel</a>
+          <a href="/collections/accessories" class="sp-tag">Accessories</a>
+          <a href="/collections/gifts" class="sp-tag">Gifts</a>
+          <a href="/collections/new-arrivals" class="sp-tag">New Arrivals</a>
+          <a href="/blogs/devotionals" class="sp-tag">Devotionals</a>
+        </div>
+      </div>
+
+    {%- endif -%}
+
+    <hr class="sp-divider">
+
+  </div>
+</div>
+
+<script>
+  (function () {
+    var input = document.getElementById('SpInput');
+    var clear  = document.getElementById('SpClear');
+
+    function toggleClear() {
+      if (!input || !clear) return;
+      clear.style.display = input.value.length ? 'flex' : 'none';
     }
-    localStorage.setItem('announcement-bar-closed', 'true');
-  });
 
-  if (localStorage.getItem('announcement-bar-closed') === 'true') {
-    const bar = document.querySelector('.announcement-bar');
-    if (bar) {
-      bar.style.display = 'none';
-      syncHeaderPosition();
+    if (input) {
+      input.addEventListener('input', toggleClear);
+      toggleClear();
+      if (clear) {
+        clear.addEventListener('click', function () {
+          input.value = '';
+          input.focus();
+          toggleClear();
+        });
+      }
     }
-  }
-}
 
-  // Accessible links
-  document.querySelectorAll('a[target="_blank"]').forEach(link => {
-    if (!link.getAttribute('rel')?.includes('noopener')) {
-      link.setAttribute('rel', 'noopener noreferrer');
-    }
-  });
+    // Filter buttons
+    var btns = document.querySelectorAll('.sp-filter-btn');
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        btns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var f = btn.dataset.filter;
 
-  // Cart Manager
-  new CartManager();
-
-  // Variant Selectors
-  document.querySelectorAll('[data-product-form]').forEach(form => {
-    new VariantSelector(form);
-  });
-
-  // Quantity Selectors
-  document.querySelectorAll('[data-quantity-selector]').forEach(selector => {
-    new QuantitySelector(selector);
-  });
-
-  // Predictive Search
-  document.querySelectorAll('[data-predictive-search]').forEach(search => {
-    new PredictiveSearch(search);
-  });
-
-});
+        document.querySelectorAll('[data-type]').forEach(function (el) {
+          el.style.display = (f === 'all' || el.dataset.type === f) ? '' : 'none';
+        });
+        document.querySelectorAll('[data-section]').forEach(function (el) {
+          el.style.display = (f === 'all' || el.dataset.section === f) ? '' : 'none';
+        });
+        document.querySelectorAll('[data-hd]').forEach(function (el) {
+          el.style.display = (f === 'all' || el.dataset.hd === f) ? '' : 'none';
+        });
+      });
+    });
+  })();
+</script>
