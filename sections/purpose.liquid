@@ -1,10 +1,23 @@
 <div
-  class="purpose-section"
-  style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+  class="purpose-section{% if section.settings.enable_animation %} has-animation{% endif %}"
+  data-parallax="{{ section.settings.enable_parallax }}"
+  style="background-color: {{ section.settings.bg_color }};
+         background-image: {% if section.settings.bg_pattern != blank %}url('{{ section.settings.bg_pattern | img_url: 'master' }}'){% else %}none{% endif %};
+         background-size: {{ section.settings.bg_size }};
+         background-repeat: {{ section.settings.bg_repeat }};
+         padding-top: {{ section.settings.padding_top }}px;
+         padding-bottom: {{ section.settings.padding_bottom }}px;
+         width: 100%;"
 >
-  <div class="grid grid-2-col" style="align-items: center; gap: clamp(3rem, 6vw, 6rem);">
+  <div class="page-width" style="max-width: {{ section.settings.content_max_width }}px; margin: 0 auto; padding: 0 {{ section.settings.content_padding_h }}px;">
+    <div class="grid grid-2-col"
+         style="align-items: {{ section.settings.vertical_align }};
+                gap: clamp({{ section.settings.gap_min }}rem, 6vw, {{ section.settings.gap_max }}rem);
+                grid-template-columns: {% if section.settings.image_width == 'equal' %}1fr 1fr{% elsif section.settings.image_width == 'wider' %}1.2fr 1fr{% elsif section.settings.image_width == 'narrower' %}0.8fr 1fr{% endif %};">
+
     <div
-      class="purpose-content"
+      class="purpose-content{% if section.settings.enable_animation %} fade-up{% endif %}"
+      data-animation-delay="{{ section.settings.content_animation_delay }}"
       style="order: {% if section.settings.image_position == 'left' %}2{% else %}1{% endif %};"
     >
       {%- for block in section.blocks -%}
@@ -12,7 +25,15 @@
           {%- when 'heading' -%}
             <h2
               {{ block.shopify_attributes }}
-              style="color: {{ block.settings.color }}; font-size: clamp(32px, 5vw, {{ block.settings.size }}px); margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};"
+              class="purpose-heading{% if section.settings.enable_animation %} fade-up{% endif %}"
+              data-animation-delay="{{ section.settings.heading_animation_delay }}"
+              style="color: {{ block.settings.color }};
+                     font-size: clamp({{ block.settings.size_min }}px, 5vw, {{ block.settings.size }}px);
+                     margin-bottom: {{ block.settings.margin_bottom }}px;
+                     text-align: {{ block.settings.align }};
+                     font-weight: {{ block.settings.font_weight }};
+                     line-height: {{ block.settings.line_height }};
+                     letter-spacing: {{ block.settings.letter_spacing }}px;"
             >
               {{ block.settings.text }}
             </h2>
@@ -20,8 +41,15 @@
           {%- when 'text' -%}
             <div
               {{ block.shopify_attributes }}
-              class="purpose-text"
-              style="color: {{ block.settings.color }}; font-size: clamp(14px, 2vw, {{ block.settings.size }}px); margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }}; max-width: 550px; line-height: 1.6;"
+              class="purpose-text{% if section.settings.enable_animation %} fade-up{% endif %}"
+              data-animation-delay="{{ section.settings.text_animation_delay }}"
+              style="color: {{ block.settings.color }};
+                     font-size: clamp({{ block.settings.size_min }}px, 2vw, {{ block.settings.size }}px);
+                     margin-bottom: {{ block.settings.margin_bottom }}px;
+                     text-align: {{ block.settings.align }};
+                     max-width: {{ block.settings.max_width }}px;
+                     line-height: {{ block.settings.line_height }};
+                     {% if block.settings.align == 'center' %}margin-left: auto; margin-right: auto;{% endif %}"
             >
               {{ block.settings.text }}
             </div>
@@ -29,27 +57,34 @@
           {%- when 'button' -%}
             <style>
               .purpose-btn-{{ block.id }} {
-                border: 1px solid {{ block.settings.border_color }};
+                border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
                 color: {{ block.settings.text_color }};
                 background-color: {{ block.settings.bg_color }};
                 font-family: var(--font-body);
-                font-weight: 500;
-                font-size: 1.1rem;
-                padding: 0.8rem 2rem;
-                letter-spacing: 0.02em;
+                font-weight: {{ block.settings.font_weight }};
+                font-size: {{ block.settings.font_size }}px;
+                padding: {{ block.settings.padding_v }}px {{ block.settings.padding_h }}px;
+                letter-spacing: {{ block.settings.letter_spacing }}px;
                 display: inline-block;
                 text-decoration: none;
-                border-radius: 0;
-                transition: all 0.3s ease;
+                border-radius: {{ block.settings.border_radius }}px;
+                transition: all {{ block.settings.hover_transition }}s ease;
+                box-shadow: {{ block.settings.shadow }};
               }
               .purpose-btn-{{ block.id }}:hover {
-                background-color: {{ block.settings.text_color }} !important;
-                color: #ffffff !important;
+                background-color: {{ block.settings.hover_bg }} !important;
+                color: {{ block.settings.hover_text }} !important;
+                border-color: {{ block.settings.hover_border }} !important;
+                transform: translateY(-{{ block.settings.hover_lift }}px) scale({{ block.settings.hover_scale | divided_by: 100.0 }});
+                box-shadow: {{ block.settings.hover_shadow }};
               }
             </style>
             <div
               {{ block.shopify_attributes }}
-              style="margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.align }};"
+              class="purpose-button{% if section.settings.enable_animation %} fade-up{% endif %}"
+              data-animation-delay="{{ section.settings.button_animation_delay }}"
+              style="margin-bottom: {{ block.settings.margin_bottom }}px;
+                     text-align: {{ block.settings.align }};"
             >
               <a
                 href="{{ block.settings.button_link }}"
@@ -63,53 +98,315 @@
     </div>
 
     <div
-      class="purpose-image"
-      style="order: {% if section.settings.image_position == 'left' %}1{% else %}2{% endif %}; display: flex; justify-content: center; align-items: center;"
+      class="purpose-image{% if section.settings.enable_animation %} fade-up{% endif %}{% if section.settings.enable_image_hover %} image-hover-effect{% endif %}"
+      data-animation-delay="{{ section.settings.image_animation_delay }}"
+      style="order: {% if section.settings.image_position == 'left' %}1{% else %}2{% endif %};
+             display: flex;
+             justify-content: {{ section.settings.image_align }};
+             align-items: center;"
     >
       {%- if section.settings.image != blank -%}
-        <img
-          src="{{ section.settings.image | image_url: width: 800 }}"
-          alt="{{ section.settings.image.alt | default: 'Our Purpose Image' }}"
-          style="max-width: 100%; height: auto; object-fit: contain;"
-        >
+        <div class="image-wrapper"
+             style="position: relative;
+                    width: 100%;
+                    max-width: {{ section.settings.image_max_width }}px;
+                    border-radius: {{ section.settings.image_border_radius }}px;
+                    overflow: hidden;
+                    box-shadow: {{ section.settings.image_shadow }};">
+
+          {%- if section.settings.show_badge and section.settings.badge_text != blank -%}
+            <div class="image-badge"
+                 style="position: absolute;
+                        {{ section.settings.badge_position }}: {{ section.settings.badge_offset }}px;
+                        background: {{ section.settings.badge_bg }};
+                        color: {{ section.settings.badge_text_color }};
+                        padding: {{ section.settings.badge_padding }}px;
+                        border-radius: {{ section.settings.badge_radius }}px;
+                        font-size: {{ section.settings.badge_font_size }}px;
+                        font-weight: {{ section.settings.badge_font_weight }};
+                        z-index: 2;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+              {{ section.settings.badge_text }}
+            </div>
+          {%- endif -%}
+
+          <img
+            src="{{ section.settings.image | image_url: width: 800 }}"
+            srcset="{{ section.settings.image | image_url: width: 400 }} 400w,
+                    {{ section.settings.image | image_url: width: 600 }} 600w,
+                    {{ section.settings.image | image_url: width: 800 }} 800w"
+            sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 40vw"
+            alt="{{ section.settings.image.alt | default: 'Our Purpose Image' }}"
+            loading="lazy"
+            style="width: 100%;
+                   height: auto;
+                   object-fit: {{ section.settings.image_fit }};
+                   transition: transform {{ section.settings.image_hover_duration }}s {{ section.settings.image_hover_easing }};"
+          >
+        </div>
       {%- else -%}
-        <div style="width: 100%; max-width: 500px; aspect-ratio: 4/5; background-color: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;">
+        <div style="width: 100%;
+                    max-width: {{ section.settings.image_max_width }}px;
+                    aspect-ratio: {{ section.settings.placeholder_ratio }};
+                    background-color: {{ section.settings.placeholder_bg }};
+                    border-radius: {{ section.settings.image_border_radius }}px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: {{ section.settings.image_shadow }};">
           {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
         </div>
       {%- endif -%}
     </div>
   </div>
+  </div>
 </div>
+
+<style>
+  /* Animation classes */
+  .fade-up {
+    opacity: 0;
+    transform: translateY({{ section.settings.animation_distance }}px);
+    transition: opacity {{ section.settings.animation_duration }}s {{ section.settings.animation_easing }},
+                transform {{ section.settings.animation_duration }}s {{ section.settings.animation_easing }};
+  }
+
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Image hover effects */
+  .image-hover-effect img:hover {
+    transform: scale({{ section.settings.image_hover_scale | divided_by: 100.0 }}) !important;
+  }
+
+  /* Parallax effect */
+  [data-parallax="true"] .purpose-image {
+    will-change: transform;
+  }
+
+  /* Mobile responsive */
+  @media screen and (max-width: 767px) {
+    .grid-2-col {
+      grid-template-columns: 1fr !important;
+      gap: {{ section.settings.mobile_gap }}rem !important;
+    }
+
+    .purpose-content,
+    .purpose-image {
+      order: initial !important;
+    }
+
+    {% if section.settings.mobile_image_first %}
+    .purpose-image {
+      order: -1 !important;
+    }
+    {% endif %}
+
+    .purpose-section {
+      padding-top: {{ section.settings.mobile_padding_top }}px !important;
+      padding-bottom: {{ section.settings.mobile_padding_bottom }}px !important;
+    }
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    .purpose-section {
+      padding-top: {{ section.settings.tablet_padding_top }}px !important;
+      padding-bottom: {{ section.settings.tablet_padding_bottom }}px !important;
+    }
+  }
+</style>
+
+<script>
+  // Intersection Observer for scroll animations
+  {%- if section.settings.enable_animation -%}
+  (function() {
+    const options = {
+      threshold: {{ section.settings.animation_threshold | divided_by: 100.0 }},
+      rootMargin: '{{ section.settings.animation_margin }}px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.dataset.animationDelay || 0;
+          setTimeout(() => {
+            entry.target.classList.add('in-view');
+          }, parseFloat(delay) * 1000);
+
+          {%- unless section.settings.repeat_animation -%}
+          observer.unobserve(entry.target);
+          {%- endunless -%}
+        } {%- if section.settings.repeat_animation -%} else {
+          entry.target.classList.remove('in-view');
+        } {%- endif -%}
+      });
+    }, options);
+
+    document.querySelectorAll('.purpose-section .fade-up').forEach(el => {
+      observer.observe(el);
+    });
+  })();
+  {%- endif -%}
+
+  // Parallax effect
+  {%- if section.settings.enable_parallax -%}
+  (function() {
+    const purposeImage = document.querySelector('[data-parallax="true"] .purpose-image');
+    if (!purposeImage) return;
+
+    let ticking = false;
+    const speed = {{ section.settings.parallax_speed | divided_by: 100.0 }};
+
+    function updateParallax() {
+      const scrolled = window.pageYOffset;
+      const offsetTop = purposeImage.offsetTop;
+      const windowHeight = window.innerHeight;
+
+      if (scrolled + windowHeight > offsetTop && scrolled < offsetTop + purposeImage.offsetHeight) {
+        const yPos = (scrolled - offsetTop) * speed;
+        purposeImage.style.transform = `translateY(${yPos}px)`;
+      }
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    });
+  })();
+  {%- endif -%}
+</script>
 
 {% schema %}
 {
-  "name": "Image with Text (Armor)",
+  "name": "Purpose / Image with Text (Enhanced)",
   "settings": [
+    {
+      "type": "header",
+      "content": "Section Appearance"
+    },
     {
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "transparent"
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_pattern",
+      "label": "Background Pattern (Optional)"
+    },
+    {
+      "type": "select",
+      "id": "bg_size",
+      "label": "Background Size",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "bg_repeat",
+      "label": "Background Repeat",
+      "options": [
+        { "value": "no-repeat", "label": "No Repeat" },
+        { "value": "repeat", "label": "Repeat" },
+        { "value": "repeat-x", "label": "Repeat X" },
+        { "value": "repeat-y", "label": "Repeat Y" }
+      ],
+      "default": "no-repeat"
     },
     {
       "type": "range",
       "id": "padding_top",
       "min": 0,
-      "max": 100,
-      "step": 4,
+      "max": 150,
+      "step": 5,
       "unit": "px",
-      "label": "Top padding",
+      "label": "Desktop Top Padding",
       "default": 80
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "min": 0,
-      "max": 100,
-      "step": 4,
+      "max": 150,
+      "step": 5,
       "unit": "px",
-      "label": "Bottom padding",
+      "label": "Desktop Bottom Padding",
       "default": 80
+    },
+    {
+      "type": "range",
+      "id": "tablet_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Tablet Top Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "tablet_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Tablet Bottom Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Top Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Bottom Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Content Max Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "content_padding_h",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Horizontal Padding",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Layout"
     },
     {
       "type": "select",
@@ -122,9 +419,406 @@
       "default": "right"
     },
     {
+      "type": "select",
+      "id": "image_width",
+      "label": "Image Column Width",
+      "options": [
+        { "value": "narrower", "label": "Narrower (0.8fr)" },
+        { "value": "equal", "label": "Equal (1fr)" },
+        { "value": "wider", "label": "Wider (1.2fr)" }
+      ],
+      "default": "equal"
+    },
+    {
+      "type": "select",
+      "id": "vertical_align",
+      "label": "Vertical Alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "gap_min",
+      "min": 2,
+      "max": 5,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Gap Minimum",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap_max",
+      "min": 4,
+      "max": 10,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Gap Maximum",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "min": 2,
+      "max": 5,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Mobile Gap",
+      "default": 2.5
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_image_first",
+      "label": "Show Image First on Mobile",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
       "type": "image_picker",
       "id": "image",
       "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Image Max Width",
+      "default": 600
+    },
+    {
+      "type": "select",
+      "id": "image_align",
+      "label": "Image Alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image Fit",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover", "label": "Cover" },
+        { "value": "fill", "label": "Fill" }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Image Border Radius",
+      "default": 8
+    },
+    {
+      "type": "text",
+      "id": "image_shadow",
+      "label": "Image Shadow",
+      "default": "0 10px 40px rgba(0,0,0,0.1)",
+      "info": "CSS box-shadow value"
+    },
+    {
+      "type": "select",
+      "id": "placeholder_ratio",
+      "label": "Placeholder Aspect Ratio",
+      "options": [
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/3", "label": "Standard (4:3)" },
+        { "value": "4/5", "label": "Portrait (4:5)" },
+        { "value": "16/9", "label": "Wide (16:9)" }
+      ],
+      "default": "4/5"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg",
+      "label": "Placeholder Background",
+      "default": "rgba(0,0,0,0.05)"
+    },
+    {
+      "type": "header",
+      "content": "Image Badge (Optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Badge",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "New"
+    },
+    {
+      "type": "select",
+      "id": "badge_position",
+      "label": "Badge Position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "range",
+      "id": "badge_offset",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Badge Offset",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "badge_bg",
+      "label": "Badge Background",
+      "default": "#DC2626"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding",
+      "min": 6,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge Padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge Border Radius",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge Font Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "badge_font_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Badge Font Weight",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Image Hover Effect"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_hover",
+      "label": "Enable Hover Effect",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "image_hover_scale",
+      "min": 100,
+      "max": 115,
+      "step": 1,
+      "unit": "%",
+      "label": "Hover Scale",
+      "default": 105
+    },
+    {
+      "type": "range",
+      "id": "image_hover_duration",
+      "min": 0.2,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Hover Duration",
+      "default": 0.4
+    },
+    {
+      "type": "select",
+      "id": "image_hover_easing",
+      "label": "Hover Easing",
+      "options": [
+        { "value": "ease", "label": "Ease" },
+        { "value": "ease-in-out", "label": "Ease In Out" },
+        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Premium Ease" }
+      ],
+      "default": "cubic-bezier(0.16, 1, 0.3, 1)"
+    },
+    {
+      "type": "header",
+      "content": "Scroll Animations"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable Scroll Animations",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 0.3,
+      "max": 2,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Animation Duration",
+      "default": 0.8
+    },
+    {
+      "type": "range",
+      "id": "animation_distance",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Animation Distance",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Animation Easing",
+      "options": [
+        { "value": "ease", "label": "Ease" },
+        { "value": "ease-out", "label": "Ease Out" },
+        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Premium Ease" }
+      ],
+      "default": "cubic-bezier(0.16, 1, 0.3, 1)"
+    },
+    {
+      "type": "range",
+      "id": "animation_threshold",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Animation Trigger Point",
+      "default": 10,
+      "info": "Percentage of element visible before animation starts"
+    },
+    {
+      "type": "range",
+      "id": "animation_margin",
+      "min": -200,
+      "max": 200,
+      "step": 50,
+      "unit": "px",
+      "label": "Animation Margin",
+      "default": 0,
+      "info": "Negative = triggers earlier, Positive = triggers later"
+    },
+    {
+      "type": "checkbox",
+      "id": "repeat_animation",
+      "label": "Repeat Animation on Scroll",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "image_animation_delay",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Image Animation Delay",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "content_animation_delay",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Content Animation Delay",
+      "default": 0.1
+    },
+    {
+      "type": "range",
+      "id": "heading_animation_delay",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Heading Animation Delay",
+      "default": 0.2
+    },
+    {
+      "type": "range",
+      "id": "text_animation_delay",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Text Animation Delay",
+      "default": 0.3
+    },
+    {
+      "type": "range",
+      "id": "button_animation_delay",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Button Animation Delay",
+      "default": 0.4
+    },
+    {
+      "type": "header",
+      "content": "Parallax Effect"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_parallax",
+      "label": "Enable Parallax",
+      "default": false,
+      "info": "Image moves at different speed on scroll"
+    },
+    {
+      "type": "range",
+      "id": "parallax_speed",
+      "min": -50,
+      "max": 50,
+      "step": 5,
+      "label": "Parallax Speed",
+      "default": 20,
+      "info": "Negative = moves up, Positive = moves down"
     }
   ],
   "blocks": [
@@ -132,17 +826,65 @@
       "type": "heading",
       "name": "Heading",
       "settings": [
-        { "type": "text", "id": "text", "label": "Heading", "default": "Our Purpose" },
-        { "type": "color", "id": "color", "label": "Text Color", "default": "#1A1A1A" },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Heading",
+          "default": "Our Purpose"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Text Color",
+          "default": "#1A1A1A"
+        },
         {
           "type": "range",
           "id": "size",
-          "min": 20,
+          "min": 24,
           "max": 80,
           "step": 2,
           "unit": "px",
-          "label": "Font Size",
+          "label": "Font Size (Desktop)",
           "default": 48
+        },
+        {
+          "type": "range",
+          "id": "size_min",
+          "min": 20,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "label": "Font Size (Mobile)",
+          "default": 32
+        },
+        {
+          "type": "range",
+          "id": "font_weight",
+          "min": 300,
+          "max": 900,
+          "step": 100,
+          "label": "Font Weight",
+          "default": 700
+        },
+        {
+          "type": "range",
+          "id": "line_height",
+          "min": 1,
+          "max": 2,
+          "step": 0.1,
+          "label": "Line Height",
+          "default": 1.2
+        },
+        {
+          "type": "range",
+          "id": "letter_spacing",
+          "min": -2,
+          "max": 5,
+          "step": 0.5,
+          "unit": "px",
+          "label": "Letter Spacing",
+          "default": 0
         },
         {
           "type": "range",
@@ -175,18 +917,52 @@
           "type": "richtext",
           "id": "text",
           "label": "Text",
-          "default": "<p>We want to build a community of women that can lean on one another and God's word throughout this journey in life! Cowgirl Armor is the idea that you are equipped with God's word and by staying true to that word you have everything you need to go into battle with everyday because you are equipped with the Cowgirl Armor of God! We want this community to be somewhere that you can find encouragement, reassurance and share your story with those in our Cowgirl Community!</p>"
+          "default": "<p>We want to build a community of women that can lean on one another and God's word throughout this journey in life! Cowgirl Armor is the idea that you are equipped with God's word and by staying true to that word you have everything you need to go into battle with everyday because you are equipped with the Cowgirl Armor of God!</p>"
         },
-        { "type": "color", "id": "color", "label": "Text Color", "default": "#1A1A1A" },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Text Color",
+          "default": "#1A1A1A"
+        },
         {
           "type": "range",
           "id": "size",
-          "min": 12,
+          "min": 14,
           "max": 24,
           "step": 1,
           "unit": "px",
-          "label": "Font Size",
+          "label": "Font Size (Desktop)",
           "default": 16
+        },
+        {
+          "type": "range",
+          "id": "size_min",
+          "min": 12,
+          "max": 18,
+          "step": 1,
+          "unit": "px",
+          "label": "Font Size (Mobile)",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "line_height",
+          "min": 1.2,
+          "max": 2,
+          "step": 0.1,
+          "label": "Line Height",
+          "default": 1.6
+        },
+        {
+          "type": "range",
+          "id": "max_width",
+          "min": 400,
+          "max": 800,
+          "step": 50,
+          "unit": "px",
+          "label": "Max Width",
+          "default": 550
         },
         {
           "type": "range",
@@ -215,11 +991,166 @@
       "type": "button",
       "name": "Button",
       "settings": [
-        { "type": "text", "id": "button_label", "label": "Button Label", "default": "Our Inspiration" },
-        { "type": "url", "id": "button_link", "label": "Button Link" },
-        { "type": "color", "id": "text_color", "label": "Text Color", "default": "#1A1A1A" },
-        { "type": "color", "id": "bg_color", "label": "Background Color", "default": "transparent" },
-        { "type": "color", "id": "border_color", "label": "Border Color", "default": "#1A1A1A" },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Our Inspiration"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#1A1A1A"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "transparent"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border Color",
+          "default": "#1A1A1A"
+        },
+        {
+          "type": "range",
+          "id": "border_width",
+          "min": 1,
+          "max": 4,
+          "step": 0.5,
+          "unit": "px",
+          "label": "Border Width",
+          "default": 1.5
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Border Radius",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Font Size",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "font_weight",
+          "min": 400,
+          "max": 700,
+          "step": 100,
+          "label": "Font Weight",
+          "default": 500
+        },
+        {
+          "type": "range",
+          "id": "letter_spacing",
+          "min": 0,
+          "max": 3,
+          "step": 0.5,
+          "unit": "px",
+          "label": "Letter Spacing",
+          "default": 0.5
+        },
+        {
+          "type": "range",
+          "id": "padding_v",
+          "min": 8,
+          "max": 24,
+          "step": 2,
+          "unit": "px",
+          "label": "Vertical Padding",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "padding_h",
+          "min": 16,
+          "max": 48,
+          "step": 2,
+          "unit": "px",
+          "label": "Horizontal Padding",
+          "default": 32
+        },
+        {
+          "type": "text",
+          "id": "shadow",
+          "label": "Shadow",
+          "default": "none",
+          "info": "CSS box-shadow value"
+        },
+        {
+          "type": "color",
+          "id": "hover_bg",
+          "label": "Hover Background",
+          "default": "#1A1A1A"
+        },
+        {
+          "type": "color",
+          "id": "hover_text",
+          "label": "Hover Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "hover_border",
+          "label": "Hover Border Color",
+          "default": "#1A1A1A"
+        },
+        {
+          "type": "text",
+          "id": "hover_shadow",
+          "label": "Hover Shadow",
+          "default": "0 8px 20px rgba(0,0,0,0.15)",
+          "info": "CSS box-shadow value"
+        },
+        {
+          "type": "range",
+          "id": "hover_lift",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "unit": "px",
+          "label": "Hover Lift Distance",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "hover_scale",
+          "min": 100,
+          "max": 110,
+          "step": 1,
+          "unit": "%",
+          "label": "Hover Scale",
+          "default": 102
+        },
+        {
+          "type": "range",
+          "id": "hover_transition",
+          "min": 0.2,
+          "max": 0.6,
+          "step": 0.05,
+          "unit": "s",
+          "label": "Hover Transition Speed",
+          "default": 0.3
+        },
         {
           "type": "range",
           "id": "margin_bottom",
@@ -246,9 +1177,13 @@
   ],
   "presets": [
     {
-      "name": "Image with Text (Armor)",
+      "name": "Purpose / Image with Text (Enhanced)",
       "category": "Image",
-      "blocks": [{ "type": "heading" }, { "type": "text" }, { "type": "button" }]
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
     }
   ]
 }

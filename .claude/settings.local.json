@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(git -C /c/Users/Girish/Desktop/Cowgirl_Armor log --oneline)"
+    ]
+  }
+}

@@ -1,0 +1,182 @@
+{%- style -%}
+  #FeaturedCollection-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+  }
+{%- endstyle -%}
+
+<div class="featured-collection section" id="FeaturedCollection-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-header text-center mb-4">
+      {%- if section.settings.title != blank -%}
+        <h2 class="h2">
+          {{ section.settings.title }}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <div class="rte">
+          {{ section.settings.description }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- liquid
+      assign collection = collections[section.settings.collection]
+      assign products_to_display = section.settings.products_to_show
+    -%}
+
+    <div class="collection-grid grid grid-{{ section.settings.columns_desktop }}-col">
+      {%- for product in collection.products limit: products_to_display -%}
+        <div class="grid__item">
+          <div class="product-card">
+            <a href="{{ product.url }}" class="product-card__image-wrapper">
+              {%- if product.featured_image != blank -%}
+                <img
+                  src="{{ product.featured_image | image_url: width: 600 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  loading="lazy"
+                  class="product-card__image"
+                  width="{{ product.featured_image.width }}"
+                  height="{{ product.featured_image.height }}"
+                >
+              {%- else -%}
+                <div class="placeholder-svg">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {%- endif -%}
+
+              {%- if product.compare_at_price > product.price -%}
+                <span class="product-card__badge badge--sale">Sale</span>
+              {%- endif -%}
+            </a>
+
+            <div class="product-card__info">
+              {%- if section.settings.show_vendor and product.vendor != blank -%}
+                <div class="product-card__vendor">{{ product.vendor }}</div>
+              {%- endif -%}
+
+              <h3 class="product-card__title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+
+              <div class="product-card__price">
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="product-card__price--on-sale">
+                    {{ product.price | money }}
+                  </span>
+                  <span class="product-card__price--compare">
+                    {{ product.compare_at_price | money }}
+                  </span>
+                {%- else -%}
+                  {{ product.price | money }}
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        {%- for i in (1..products_to_display) -%}
+          <div class="grid__item">
+            <div class="product-card">
+              <div class="product-card__image-wrapper">
+                <div class="placeholder-svg">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              </div>
+              <div class="product-card__info">
+                <h3 class="product-card__title">Product Title</h3>
+                <div class="product-card__price">$19.99</div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_view_all and collection.products_count > products_to_display -%}
+      <div class="text-center mt-5">
+        <a href="{{ collection.url }}" class="btn btn--primary">
+          View All
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured Collection"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "Products to Show"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' Button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1A1A1A"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}
