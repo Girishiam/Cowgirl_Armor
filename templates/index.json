@@ -65,12 +65,35 @@
         "item2": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/IMG_2424.png",
             "card_bg": "#8ba4ac"
           }
         },
         "item3": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/IMG_2422.png",
+            "card_bg": "#8ba4ac"
+          }
+        },
+        "card_m6qKjm": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2420.png",
+            "card_bg": "#8ba4ac"
+          }
+        },
+        "card_hyj9Ni": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2419.png",
+            "card_bg": "#8ba4ac"
+          }
+        },
+        "card_PrbeEV": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2423.png",
             "card_bg": "#8ba4ac"
           }
         }
@@ -78,7 +101,10 @@
       "block_order": [
         "item1",
         "item2",
-        "item3"
+        "item3",
+        "card_m6qKjm",
+        "card_hyj9Ni",
+        "card_PrbeEV"
       ],
       "settings": {
         "bg_color": "rgba(0,0,0,0)",
