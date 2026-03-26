@@ -65,7 +65,8 @@
         "bg_color": "rgba(0,0,0,0)",
         "padding_top": 80,
         "padding_bottom": 80,
-        "image_position": "right"
+        "image_position": "right",
+        "image": "shopify://shop_images/IMG_1768_1.png"
       }
     },
     "icon_grid": {
@@ -106,6 +107,7 @@
     "newsletter": {
       "type": "newsletter",
       "settings": {
+        "image": "shopify://shop_images/IMG_3789.webp",
         "title": "Join The Cowgirl Army",
         "checkbox_text": "Sign up for news and updates",
         "button_label": "Submit",
@@ -119,7 +121,7 @@
         "bg_color": "#e2e2e2",
         "text_color": "#1a1a1a",
         "overlay_color": "#ffffff",
-        "overlay_opacity": 85
+        "overlay_opacity": 60
       }
     }
   },
