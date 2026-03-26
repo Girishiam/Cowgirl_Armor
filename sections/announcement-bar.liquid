@@ -1,4 +1,18 @@
 {%- if section.settings.show_announcement -%}
+  <style>
+    .announcement-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 101;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+  </style>
   <div class="announcement-bar" role="region" aria-label="Announcement" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
     <div class="announcement-bar__content">
       {%- if section.settings.link != blank -%}

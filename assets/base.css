@@ -16,16 +16,16 @@
   --color-button-hover: var(--color-button-hover, #333333);
 
   /* Typography */
-  --font-heading: var(--font-heading-family, 'Your-Bold-Industrial-Sans-Serif', sans-serif);
-  --font-body: var(--font-body-family, 'Your-Clean-Serif', serif);
+  --font-heading: var(--font-heading-family, sans-serif);
+  --font-body: var(--font-body-family, sans-serif);
   --heading-scale: var(--heading-scale, 1);
   --body-scale: var(--body-scale, 1);
 
   /* Font Sizes */
-  --font-size-base: calc(16px * var(--body-scale));
-  --font-size-sm: calc(14px * var(--body-scale));
-  --font-size-lg: calc(18px * var(--body-scale));
-  --font-size-xl: calc(20px * var(--body-scale));
+  --font-size-base: calc(var(--font-size-base-px, 16px) * var(--body-scale));
+  --font-size-sm: calc(0.875 * var(--font-size-base));
+  --font-size-lg: calc(1.125 * var(--font-size-base));
+  --font-size-xl: calc(1.25 * var(--font-size-base));
 
   --font-heading-h1: calc(2.5rem * var(--heading-scale));
   --font-heading-h2: calc(2rem * var(--heading-scale));
@@ -53,8 +53,7 @@
   --shadow-default: 0 4px var(--shadow-blur) rgba(0, 0, 0, var(--shadow-opacity));
   --shadow-hover: 0 8px calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, calc(var(--shadow-opacity) * 1.2));
 
-  /* Layout */
-  --page-width: 1200px;
+  /* Layout — page-width is set from theme settings via theme.liquid */
   --page-width-margin: 2rem;
 
   /* Transitions */
@@ -124,8 +123,11 @@ body {
   background-color: var(--color-base-bg);
   color: var(--color-text);
   font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--body-weight, 400);
+  letter-spacing: var(--body-letter-spacing, 0px);
+  line-height: var(--body-line-height, 1.6);
   -webkit-font-smoothing: antialiased;
-  line-height: 1.6;
 }
 
 h1,
@@ -136,9 +138,10 @@ h5,
 h6,
 .logo-text {
   font-family: var(--font-heading);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: bold;
+  font-weight: var(--heading-weight, 700);
+  text-transform: var(--heading-text-transform, uppercase);
+  letter-spacing: var(--heading-letter-spacing, 0px);
+  line-height: var(--heading-line-height, 1.1);
 }
 
 /* Custom Shield Container */
@@ -859,15 +862,15 @@ h6 { font-size: var(--font-heading-h6); }
 /* Container Utilities */
 .container {
   width: 100%;
-  max-width: var(--page-width);
+  max-width: var(--page-width, 1200px);
   margin: 0 auto;
-  padding: 0 var(--page-width-margin);
+  padding: 0 var(--page-width-margin, 2rem);
 }
 
 .page-width {
-  max-width: var(--page-width);
+  max-width: var(--page-width, 1200px);
   margin: 0 auto;
-  padding: 0 var(--page-width-margin);
+  padding: 0 var(--page-width-margin, 2rem);
 }
 
 /* Section Utilities */

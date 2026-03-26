@@ -53,9 +53,18 @@
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
     {%- endunless -%}
 
+    {%- assign header_font_bold = settings.type_header_font | font_modify: 'weight', 'bolder' -%}
+    {%- assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bolder' -%}
+    {%- assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic' -%}
+    {%- assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic' -%}
+
     <style>
       {{ settings.type_body_font | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
+      {%- if body_font_bold -%}{{ body_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
+      {%- if body_font_italic -%}{{ body_font_italic | font_face: font_display: 'swap' }}{%- endif -%}
+      {%- if body_font_bold_italic -%}{{ body_font_bold_italic | font_face: font_display: 'swap' }}{%- endif -%}
+      {%- if header_font_bold -%}{{ header_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
 
       :root {
         {%- comment -%} Colors {%- endcomment -%}
@@ -77,6 +86,18 @@
         --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
         --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
         --body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+        --font-size-base-px: {{ settings.font_size_base }}px;
+        --heading-weight: {{ settings.heading_weight }};
+        --heading-text-transform: {{ settings.heading_text_transform }};
+        --heading-letter-spacing: {{ settings.heading_letter_spacing }}px;
+        --heading-line-height: {{ settings.heading_line_height | divided_by: 100.0 }};
+        --body-weight: {{ settings.body_weight }};
+        --body-letter-spacing: {{ settings.body_letter_spacing }}px;
+        --body-line-height: {{ settings.body_line_height | divided_by: 100.0 }};
+
+        {%- comment -%} Page Layout {%- endcomment -%}
+        --page-width: {{ settings.page_width }}px;
+        --content-width: {{ settings.content_width }}px;
 
         {%- comment -%} Spacing {%- endcomment -%}
         --spacing-sections: {{ settings.spacing_sections }}px;
@@ -93,6 +114,39 @@
         {%- comment -%} Shadows {%- endcomment -%}
         --shadow-opacity: {{ settings.shadow_opacity | divided_by: 100.0 }};
         --shadow-blur: {{ settings.shadow_blur }}px;
+
+        {%- comment -%} Logo {%- endcomment -%}
+        --logo-width: {{ settings.logo_width }}px;
+
+        {%- comment -%} Badges {%- endcomment -%}
+        --badge-sale-bg: {{ settings.badge_sale_bg }};
+        --badge-sale-text: {{ settings.badge_sale_text }};
+        --badge-sold-out-bg: {{ settings.badge_sold_out_bg }};
+        --badge-sold-out-text: {{ settings.badge_sold_out_text }};
+        --badge-corner-radius: {{ settings.badge_corner_radius }}px;
+
+        {%- comment -%} Drawers {%- endcomment -%}
+        --drawer-overlay-opacity: {{ settings.drawer_overlay_opacity | divided_by: 100.0 }};
+        --drawer-overlay-color: {{ settings.drawer_overlay_color }};
+
+        {%- comment -%} Icons {%- endcomment -%}
+        --icon-size: {{ settings.icon_size }}px;
+
+        {%- comment -%} Input Fields {%- endcomment -%}
+        --inputs-radius: {{ settings.inputs_radius }}px;
+        --inputs-border-thickness: {{ settings.inputs_border_thickness }}px;
+        --inputs-bg: {{ settings.inputs_bg }};
+        --inputs-border-color: {{ settings.inputs_border_color }};
+        --inputs-focus-color: {{ settings.inputs_focus_color }};
+
+        {%- comment -%} Popovers & Modals {%- endcomment -%}
+        --popup-border-radius: {{ settings.popup_border_radius }}px;
+        --popup-border-thickness: {{ settings.popup_border_thickness }}px;
+        --popup-overlay-opacity: {{ settings.popup_overlay_opacity | divided_by: 100.0 }};
+        --popup-overlay-color: {{ settings.popup_overlay_color }};
+
+        {%- comment -%} Prices {%- endcomment -%}
+        --price-sale-color: {{ settings.price_sale_color }};
       }
 
       {% if settings.buttons_uppercase %}
@@ -104,6 +158,68 @@
       {% if settings.buttons_shadow %}
       .btn {
         box-shadow: 0 4px var(--shadow-blur) rgba(0, 0, 0, var(--shadow-opacity));
+      }
+      {% endif %}
+
+      input, textarea, select {
+        border-radius: var(--inputs-radius);
+        border-width: var(--inputs-border-thickness);
+        background-color: var(--inputs-bg);
+        border-color: var(--inputs-border-color);
+      }
+      input:focus, textarea:focus, select:focus {
+        border-color: var(--inputs-focus-color);
+        outline: none;
+      }
+
+      .badge--sale {
+        background-color: var(--badge-sale-bg);
+        color: var(--badge-sale-text);
+        border-radius: var(--badge-corner-radius);
+      }
+      .badge--sold-out {
+        background-color: var(--badge-sold-out-bg);
+        color: var(--badge-sold-out-text);
+        border-radius: var(--badge-corner-radius);
+      }
+
+      .price--sale { color: var(--price-sale-color); }
+
+      .modal-overlay, .drawer-overlay {
+        background-color: var(--drawer-overlay-color);
+        opacity: var(--drawer-overlay-opacity);
+      }
+      .modal-overlay {
+        opacity: var(--popup-overlay-opacity);
+        background-color: var(--popup-overlay-color);
+      }
+
+      {% unless settings.popup_show_overlay %}
+      .modal-overlay { display: none; }
+      {% endunless %}
+
+      {% if settings.animations_reveal_on_scroll %}
+      .animate-on-scroll {
+        opacity: 0;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      {% if settings.animations_type == 'slide-in' %}
+      .animate-on-scroll { transform: translateY(20px); }
+      .animate-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+      {% elsif settings.animations_type == 'zoom' %}
+      .animate-on-scroll { transform: scale(0.95); }
+      .animate-on-scroll.is-visible { opacity: 1; transform: scale(1); }
+      {% else %}
+      .animate-on-scroll.is-visible { opacity: 1; }
+      {% endif %}
+      {% endif %}
+
+      {% if settings.animations_hover_images %}
+      .card__media img, .product-card img {
+        transition: transform 0.4s ease;
+      }
+      .card__media:hover img, .product-card:hover img {
+        transform: scale(1.05);
       }
       {% endif %}
     </style>

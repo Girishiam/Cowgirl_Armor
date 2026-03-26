@@ -1,3 +1,21 @@
+<style>
+  .site-header {
+    position: fixed;
+    top: var(--announcement-height, 0px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 100;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  body {
+    padding-top: var(--nav-total-height, 80px);
+  }
+</style>
+
 <header
   class="site-header{% if section.settings.enable_sticky %} header-sticky{% endif %}"
   id="shopify-section-header"
@@ -35,15 +53,15 @@
 
     <div class="header__logo">
       <a href="{{ routes.root_url }}" class="logo-link">
-        {%- if section.settings.logo != blank -%}
+        {%- if settings.logo != blank -%}
           <img
-            src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}"
-            srcset="{{ section.settings.logo | image_url: width: section.settings.logo_width }} 1x,
-                    {{ section.settings.logo | image_url: width: section.settings.logo_width | times: 2 }} 2x"
+            src="{{ settings.logo | image_url: width: settings.logo_width }}"
+            srcset="{{ settings.logo | image_url: width: settings.logo_width }} 1x,
+                    {{ settings.logo | image_url: width: settings.logo_width | times: 2 }} 2x"
             alt="{{ shop.name }}"
             class="logo-image"
-            style="max-width: {{ section.settings.logo_width }}px; height: auto;"
-            width="{{ section.settings.logo_width }}"
+            style="max-width: {{ settings.logo_width }}px; height: auto;"
+            width="{{ settings.logo_width }}"
             height="auto"
             loading="eager"
           >
@@ -405,55 +423,24 @@
     color: {{ section.settings.search_input_text }};
   }
 
-  /* Sticky header */
-  .header-sticky {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    transition: all {{ section.settings.sticky_transition }}s ease;
-  }
-
-  .header-sticky.is-scrolled {
-    background-color: {{ section.settings.sticky_bg }} !important;
-    box-shadow: {{ section.settings.sticky_shadow }};
-    padding-top: {{ section.settings.sticky_padding }}px !important;
-    padding-bottom: {{ section.settings.sticky_padding }}px !important;
-  }
-
-  {%- if section.settings.hide_border_on_scroll -%}
-  .header-sticky.is-scrolled {
-    border-bottom-color: transparent !important;
-  }
-  {%- endif -%}
 </style>
 
 <script>
-  // Sticky header
-  {%- if section.settings.enable_sticky -%}
+  // Position header below announcement bar and set body padding
   (function() {
-    const header = document.querySelector('.header-sticky');
-    if (!header) return;
+    const header = document.querySelector('.site-header');
+    const announcement = document.querySelector('.announcement-bar');
 
-    const threshold = {{ section.settings.sticky_threshold }};
-    let ticking = false;
-
-    function updateHeader() {
-      if (window.scrollY > threshold) {
-        header.classList.add('is-scrolled');
-      } else {
-        header.classList.remove('is-scrolled');
-      }
-      ticking = false;
+    function setHeights() {
+      const announcementH = announcement ? announcement.offsetHeight : 0;
+      const headerH = header ? header.offsetHeight : 0;
+      document.documentElement.style.setProperty('--announcement-height', announcementH + 'px');
+      document.documentElement.style.setProperty('--nav-total-height', (announcementH + headerH) + 'px');
     }
 
-    window.addEventListener('scroll', function() {
-      if (!ticking) {
-        window.requestAnimationFrame(updateHeader);
-        ticking = true;
-      }
-    });
+    setHeights();
+    window.addEventListener('resize', setHeights, { passive: true });
   })();
-  {%- endif -%}
 
   // Mobile drawer
   (function() {

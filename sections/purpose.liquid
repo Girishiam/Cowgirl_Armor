@@ -1,446 +1,160 @@
-<div
-  class="purpose-section{% if section.settings.enable_animation %} has-animation{% endif %}"
-  data-parallax="{{ section.settings.enable_parallax }}"
-  style="background-color: {{ section.settings.bg_color }};
-         background-image: {% if section.settings.bg_pattern != blank %}url('{{ section.settings.bg_pattern | img_url: 'master' }}'){% else %}none{% endif %};
-         background-size: {{ section.settings.bg_size }};
-         background-repeat: {{ section.settings.bg_repeat }};
-         padding-top: {{ section.settings.padding_top }}px;
-         padding-bottom: {{ section.settings.padding_bottom }}px;
-         width: 100%;"
->
-  <div class="page-width purpose-container-{{ section.id }}" style="max-width: {{ section.settings.content_max_width }}px; margin: 0 auto;">
-    <div class="grid grid-2-col"
-         style="align-items: {{ section.settings.vertical_align }};
-                gap: clamp({{ section.settings.gap_min }}rem, 6vw, {{ section.settings.gap_max }}rem);
-                grid-template-columns: {% if section.settings.image_width == 'equal' %}1fr 1fr{% elsif section.settings.image_width == 'wider' %}1.2fr 1fr{% elsif section.settings.image_width == 'narrower' %}0.8fr 1fr{% endif %};">
-
-    <div
-      class="purpose-content{% if section.settings.enable_animation %} fade-up{% endif %}"
-      data-animation-delay="{{ section.settings.content_animation_delay }}"
-      style="order: {% if section.settings.image_position == 'left' %}2{% else %}1{% endif %};"
-    >
-      {%- for block in section.blocks -%}
-        {%- case block.type -%}
-          {%- when 'heading' -%}
-            <h2
-              {{ block.shopify_attributes }}
-              class="purpose-heading{% if section.settings.enable_animation %} fade-up{% endif %}"
-              data-animation-delay="{{ section.settings.heading_animation_delay }}"
-              style="color: {{ block.settings.color }};
-                     font-size: clamp({{ block.settings.size_min }}px, 5vw, {{ block.settings.size }}px);
-                     margin-bottom: {{ block.settings.margin_bottom }}px;
-                     text-align: {{ block.settings.align }};
-                     font-weight: {{ block.settings.font_weight }};
-                     line-height: {{ block.settings.line_height }};
-                     letter-spacing: {{ block.settings.letter_spacing }}px;"
-            >
-              {{ block.settings.text }}
-            </h2>
-
-          {%- when 'text' -%}
-            <div
-              {{ block.shopify_attributes }}
-              class="purpose-text{% if section.settings.enable_animation %} fade-up{% endif %}"
-              data-animation-delay="{{ section.settings.text_animation_delay }}"
-              style="color: {{ block.settings.color }};
-                     font-size: clamp({{ block.settings.size_min }}px, 2vw, {{ block.settings.size }}px);
-                     margin-bottom: {{ block.settings.margin_bottom }}px;
-                     text-align: {{ block.settings.align }};
-                     max-width: {{ block.settings.max_width }}px;
-                     line-height: {{ block.settings.line_height }};
-                     {% if block.settings.align == 'center' %}margin-left: auto; margin-right: auto;{% endif %}"
-            >
-              {{ block.settings.text }}
-            </div>
-
-          {%- when 'button' -%}
-            <style>
-              .purpose-btn-{{ block.id }} {
-                border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
-                color: {{ block.settings.text_color }};
-                background-color: {{ block.settings.bg_color }};
-                font-family: var(--font-body);
-                font-weight: {{ block.settings.font_weight }};
-                font-size: {{ block.settings.font_size }}px;
-                padding: {{ block.settings.padding_v }}px {{ block.settings.padding_h }}px;
-                letter-spacing: {{ block.settings.letter_spacing }}px;
-                display: inline-block;
-                text-decoration: none;
-                border-radius: {{ block.settings.border_radius }}px;
-                transition: all {{ block.settings.hover_transition }}s ease;
-                box-shadow: {{ block.settings.shadow }};
-              }
-              .purpose-btn-{{ block.id }}:hover {
-                background-color: {{ block.settings.hover_bg }} !important;
-                color: {{ block.settings.hover_text }} !important;
-                border-color: {{ block.settings.hover_border }} !important;
-                transform: translateY(-{{ block.settings.hover_lift }}px) scale({{ block.settings.hover_scale | divided_by: 100.0 }});
-                box-shadow: {{ block.settings.hover_shadow }};
-              }
-            </style>
-            <div
-              {{ block.shopify_attributes }}
-              class="purpose-button{% if section.settings.enable_animation %} fade-up{% endif %}"
-              data-animation-delay="{{ section.settings.button_animation_delay }}"
-              style="margin-bottom: {{ block.settings.margin_bottom }}px;
-                     text-align: {{ block.settings.align }};"
-            >
-              <a
-                href="{{ block.settings.button_link }}"
-                class="btn purpose-btn-{{ block.id }}"
-              >
-                {{ block.settings.button_label }}
-              </a>
-            </div>
-        {%- endcase -%}
-      {%- endfor -%}
-    </div>
-
-    <div
-      class="purpose-image{% if section.settings.enable_animation %} fade-up{% endif %}{% if section.settings.enable_image_hover %} image-hover-effect{% endif %}"
-      data-animation-delay="{{ section.settings.image_animation_delay }}"
-      style="order: {% if section.settings.image_position == 'left' %}1{% else %}2{% endif %};
-             display: flex;
-             justify-content: {{ section.settings.image_align }};
-             align-items: center;"
-    >
-      {%- if section.settings.image != blank -%}
-        <div class="image-wrapper"
-             style="position: relative;
-                    width: 100%;
-                    max-width: {{ section.settings.image_max_width }}px;
-                    border-radius: {{ section.settings.image_border_radius }}px;
-                    overflow: hidden;
-                    box-shadow: {{ section.settings.image_shadow }};">
-
-          {%- if section.settings.show_badge and section.settings.badge_text != blank -%}
-            <div class="image-badge"
-                 style="position: absolute;
-                        {{ section.settings.badge_position }}: {{ section.settings.badge_offset }}px;
-                        background: {{ section.settings.badge_bg }};
-                        color: {{ section.settings.badge_text_color }};
-                        padding: {{ section.settings.badge_padding }}px;
-                        border-radius: {{ section.settings.badge_radius }}px;
-                        font-size: {{ section.settings.badge_font_size }}px;
-                        font-weight: {{ section.settings.badge_font_weight }};
-                        z-index: 2;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-              {{ section.settings.badge_text }}
-            </div>
-          {%- endif -%}
-
-          <img
-            src="{{ section.settings.image | image_url: width: 800 }}"
-            srcset="{{ section.settings.image | image_url: width: 400 }} 400w,
-                    {{ section.settings.image | image_url: width: 600 }} 600w,
-                    {{ section.settings.image | image_url: width: 800 }} 800w"
-            sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 40vw"
-            alt="{{ section.settings.image.alt | default: 'Our Purpose Image' }}"
-            loading="lazy"
-            style="width: 100%;
-                   height: auto;
-                   object-fit: {{ section.settings.image_fit }};
-                   transition: transform {{ section.settings.image_hover_duration }}s {{ section.settings.image_hover_easing }};"
-          >
-        </div>
-      {%- else -%}
-        <div style="width: 100%;
-                    max-width: {{ section.settings.image_max_width }}px;
-                    aspect-ratio: {{ section.settings.placeholder_ratio }};
-                    background-color: {{ section.settings.placeholder_bg }};
-                    border-radius: {{ section.settings.image_border_radius }}px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    box-shadow: {{ section.settings.image_shadow }};">
-          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-        </div>
-      {%- endif -%}
-    </div>
-  </div>
-  </div>
-</div>
-
 <style>
-  /* Animation classes */
-  .fade-up {
-    opacity: 0;
-    transform: translateY({{ section.settings.animation_distance }}px);
-    transition: opacity {{ section.settings.animation_duration }}s {{ section.settings.animation_easing }},
-                transform {{ section.settings.animation_duration }}s {{ section.settings.animation_easing }};
+  .purpose-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
-  .fade-up.in-view {
-    opacity: 1;
-    transform: translateY(0);
+  .purpose-{{ section.id }} .purpose-inner {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(1.5rem, 5vw, 5rem);
+    padding-right: clamp(1.5rem, 5vw, 5rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
   }
 
-  /* Image hover effects */
-  .image-hover-effect img:hover {
-    transform: scale({{ section.settings.image_hover_scale | divided_by: 100.0 }}) !important;
+  .purpose-{{ section.id }} .purpose-image-col {
+    order: {% if section.settings.image_position == 'left' %}1{% else %}2{% endif %};
   }
 
-  /* Parallax effect */
-  [data-parallax="true"] .purpose-image {
-    will-change: transform;
+  .purpose-{{ section.id }} .purpose-text-col {
+    order: {% if section.settings.image_position == 'left' %}2{% else %}1{% endif %};
   }
 
-  /* Responsive Container Padding */
-  .purpose-container-{{ section.id }} {
-    padding-left: {{ section.settings.content_padding_h }}px;
-    padding-right: {{ section.settings.content_padding_h }}px;
+  .purpose-{{ section.id }} .purpose-image-wrap {
+    border-radius: {{ section.settings.image_radius }}px;
+    overflow: hidden;
+    box-shadow: {{ section.settings.image_shadow }};
+    aspect-ratio: {{ section.settings.image_ratio }};
   }
 
-  @media screen and (max-width: 1023px) {
-    .purpose-container-{{ section.id }} {
-      padding-left: {{ section.settings.content_padding_h_tablet }}px;
-      padding-right: {{ section.settings.content_padding_h_tablet }}px;
-    }
+  .purpose-{{ section.id }} .purpose-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
-  /* Mobile responsive */
+  .purpose-{{ section.id }} .purpose-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: {{ section.settings.label_color }};
+    margin-bottom: 1rem;
+  }
+
+  .purpose-{{ section.id }} .purpose-heading {
+    font-size: clamp(2rem, 4vw, {{ section.settings.heading_size }}px);
+    font-weight: {{ section.settings.heading_weight }};
+    color: {{ section.settings.heading_color }};
+    line-height: 1.15;
+    margin: 0 0 1.5rem;
+  }
+
+  .purpose-{{ section.id }} .purpose-text {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: {{ section.settings.text_color }};
+    line-height: 1.8;
+    margin: 0 0 2.5rem;
+    opacity: 0.85;
+  }
+
+  .purpose-{{ section.id }} .purpose-btn {
+    display: inline-block;
+    text-decoration: none;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
+    background-color: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_text }};
+    border: 2px solid {{ section.settings.btn_border }};
+    border-radius: {{ section.settings.btn_radius }}px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .purpose-{{ section.id }} .purpose-btn:hover {
+    background-color: {{ section.settings.btn_hover_bg }};
+    color: {{ section.settings.btn_hover_text }};
+    border-color: {{ section.settings.btn_hover_bg }};
+  }
+
   @media screen and (max-width: 767px) {
-    .purpose-container-{{ section.id }} {
-      padding-left: {{ section.settings.content_padding_h_mobile }}px;
-      padding-right: {{ section.settings.content_padding_h_mobile }}px;
+    .purpose-{{ section.id }} .purpose-inner {
+      grid-template-columns: 1fr;
     }
-    .grid-2-col {
-      grid-template-columns: 1fr !important;
-      gap: {{ section.settings.mobile_gap }}rem !important;
+    .purpose-{{ section.id }} .purpose-image-col {
+      order: {% if section.settings.mobile_image_first %}1{% else %}2{% endif %};
     }
-
-    .purpose-content,
-    .purpose-image {
-      order: initial !important;
+    .purpose-{{ section.id }} .purpose-text-col {
+      order: {% if section.settings.mobile_image_first %}2{% else %}1{% endif %};
     }
-
-    {% if section.settings.mobile_image_first %}
-    .purpose-image {
-      order: -1 !important;
-    }
-    {% endif %}
-
-    .purpose-section {
-      padding-top: {{ section.settings.mobile_padding_top }}px !important;
-      padding-bottom: {{ section.settings.mobile_padding_bottom }}px !important;
-    }
-  }
-
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
-    .purpose-section {
-      padding-top: {{ section.settings.tablet_padding_top }}px !important;
-      padding-bottom: {{ section.settings.tablet_padding_bottom }}px !important;
+    .purpose-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
     }
   }
 </style>
 
-<script>
-  // Intersection Observer for scroll animations
-  {%- if section.settings.enable_animation -%}
-  (function() {
-    const options = {
-      threshold: {{ section.settings.animation_threshold | divided_by: 100.0 }},
-      rootMargin: '{{ section.settings.animation_margin }}px'
-    };
+<div class="purpose-{{ section.id }}">
+  <div class="purpose-inner">
 
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const delay = entry.target.dataset.animationDelay || 0;
-          setTimeout(() => {
-            entry.target.classList.add('in-view');
-          }, parseFloat(delay) * 1000);
+    <div class="purpose-image-col">
+      <div class="purpose-image-wrap">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 900 }}"
+            srcset="{{ section.settings.image | image_url: width: 450 }} 450w,
+                    {{ section.settings.image | image_url: width: 750 }} 750w,
+                    {{ section.settings.image | image_url: width: 900 }} 900w"
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+            loading="lazy"
+            width="900"
+            height="auto"
+          >
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+    </div>
 
-          {%- unless section.settings.repeat_animation -%}
-          observer.unobserve(entry.target);
-          {%- endunless -%}
-        } {%- if section.settings.repeat_animation -%} else {
-          entry.target.classList.remove('in-view');
-        } {%- endif -%}
-      });
-    }, options);
+    <div class="purpose-text-col">
+      {%- if section.settings.label != blank -%}
+        <span class="purpose-label">{{ section.settings.label }}</span>
+      {%- endif -%}
 
-    document.querySelectorAll('.purpose-section .fade-up').forEach(el => {
-      observer.observe(el);
-    });
-  })();
-  {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="purpose-heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
 
-  // Parallax effect
-  {%- if section.settings.enable_parallax -%}
-  (function() {
-    const purposeImage = document.querySelector('[data-parallax="true"] .purpose-image');
-    if (!purposeImage) return;
+      {%- if section.settings.text != blank -%}
+        <div class="purpose-text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
 
-    let ticking = false;
-    const speed = {{ section.settings.parallax_speed | divided_by: 100.0 }};
+      {%- if section.settings.btn_label != blank -%}
+        <a
+          href="{{ section.settings.btn_link | default: '#' }}"
+          class="purpose-btn"
+        >
+          {{ section.settings.btn_label }}
+        </a>
+      {%- endif -%}
+    </div>
 
-    function updateParallax() {
-      const scrolled = window.pageYOffset;
-      const offsetTop = purposeImage.offsetTop;
-      const windowHeight = window.innerHeight;
-
-      if (scrolled + windowHeight > offsetTop && scrolled < offsetTop + purposeImage.offsetHeight) {
-        const yPos = (scrolled - offsetTop) * speed;
-        purposeImage.style.transform = `translateY(${yPos}px)`;
-      }
-
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', function() {
-      if (!ticking) {
-        window.requestAnimationFrame(updateParallax);
-        ticking = true;
-      }
-    });
-  })();
-  {%- endif -%}
-</script>
+  </div>
+</div>
 
 {% schema %}
 {
-  "name": "Purpose / Image with Text (Enhanced)",
+  "name": "Purpose",
   "settings": [
-    {
-      "type": "header",
-      "content": "Section Appearance"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "image_picker",
-      "id": "bg_pattern",
-      "label": "Background Pattern (Optional)"
-    },
-    {
-      "type": "select",
-      "id": "bg_size",
-      "label": "Background Size",
-      "options": [
-        { "value": "auto", "label": "Auto" },
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" }
-      ],
-      "default": "auto"
-    },
-    {
-      "type": "select",
-      "id": "bg_repeat",
-      "label": "Background Repeat",
-      "options": [
-        { "value": "no-repeat", "label": "No Repeat" },
-        { "value": "repeat", "label": "Repeat" },
-        { "value": "repeat-x", "label": "Repeat X" },
-        { "value": "repeat-y", "label": "Repeat Y" }
-      ],
-      "default": "no-repeat"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 150,
-      "step": 5,
-      "unit": "px",
-      "label": "Desktop Top Padding",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 150,
-      "step": 5,
-      "unit": "px",
-      "label": "Desktop Bottom Padding",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "tablet_padding_top",
-      "min": 0,
-      "max": 120,
-      "step": 5,
-      "unit": "px",
-      "label": "Tablet Top Padding",
-      "default": 60
-    },
-    {
-      "type": "range",
-      "id": "tablet_padding_bottom",
-      "min": 0,
-      "max": 120,
-      "step": 5,
-      "unit": "px",
-      "label": "Tablet Bottom Padding",
-      "default": 60
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Mobile Top Padding",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Mobile Bottom Padding",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "content_max_width",
-      "min": 800,
-      "max": 1600,
-      "step": 50,
-      "unit": "px",
-      "label": "Content Max Width",
-      "default": 1200
-    },
-    {
-      "type": "range",
-      "id": "content_padding_h",
-      "min": 10,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Content Horizontal Padding (Desktop)",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "content_padding_h_tablet",
-      "min": 10,
-      "max": 80,
-      "step": 5,
-      "unit": "px",
-      "label": "Content Horizontal Padding (Tablet)",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "content_padding_h_mobile",
-      "min": 10,
-      "max": 60,
-      "step": 5,
-      "unit": "px",
-      "label": "Content Horizontal Padding (Mobile)",
-      "default": 20
-    },
     {
       "type": "header",
       "content": "Layout"
@@ -448,7 +162,7 @@
     {
       "type": "select",
       "id": "image_position",
-      "label": "Image Position (Desktop)",
+      "label": "Image Position",
       "options": [
         { "value": "left", "label": "Left" },
         { "value": "right", "label": "Right" }
@@ -456,66 +170,50 @@
       "default": "right"
     },
     {
-      "type": "select",
-      "id": "image_width",
-      "label": "Image Column Width",
-      "options": [
-        { "value": "narrower", "label": "Narrower (0.8fr)" },
-        { "value": "equal", "label": "Equal (1fr)" },
-        { "value": "wider", "label": "Wider (1.2fr)" }
-      ],
-      "default": "equal"
-    },
-    {
-      "type": "select",
-      "id": "vertical_align",
-      "label": "Vertical Alignment",
-      "options": [
-        { "value": "flex-start", "label": "Top" },
-        { "value": "center", "label": "Center" },
-        { "value": "flex-end", "label": "Bottom" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "range",
-      "id": "gap_min",
-      "min": 2,
-      "max": 5,
-      "step": 0.5,
-      "unit": "rem",
-      "label": "Gap Minimum",
-      "default": 3
-    },
-    {
-      "type": "range",
-      "id": "gap_max",
-      "min": 4,
-      "max": 10,
-      "step": 0.5,
-      "unit": "rem",
-      "label": "Gap Maximum",
-      "default": 6
-    },
-    {
-      "type": "range",
-      "id": "mobile_gap",
-      "min": 2,
-      "max": 5,
-      "step": 0.5,
-      "unit": "rem",
-      "label": "Mobile Gap",
-      "default": 2.5
-    },
-    {
       "type": "checkbox",
       "id": "mobile_image_first",
-      "label": "Show Image First on Mobile",
+      "label": "Show image first on mobile",
       "default": true
     },
     {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image Ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" },
+        { "value": "16 / 9", "label": "Wide (16:9)" }
+      ],
+      "default": "4 / 5"
+    },
+    {
       "type": "header",
-      "content": "Image Settings"
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 20,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 20,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Image"
     },
     {
       "type": "image_picker",
@@ -524,703 +222,172 @@
     },
     {
       "type": "range",
-      "id": "image_max_width",
-      "min": 300,
-      "max": 800,
-      "step": 50,
-      "unit": "px",
-      "label": "Image Max Width",
-      "default": 600
-    },
-    {
-      "type": "select",
-      "id": "image_align",
-      "label": "Image Alignment",
-      "options": [
-        { "value": "flex-start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "flex-end", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "image_fit",
-      "label": "Image Fit",
-      "options": [
-        { "value": "contain", "label": "Contain" },
-        { "value": "cover", "label": "Cover" },
-        { "value": "fill", "label": "Fill" }
-      ],
-      "default": "contain"
-    },
-    {
-      "type": "range",
-      "id": "image_border_radius",
+      "id": "image_radius",
+      "label": "Image Border Radius",
       "min": 0,
-      "max": 50,
+      "max": 40,
       "step": 2,
       "unit": "px",
-      "label": "Image Border Radius",
       "default": 8
     },
     {
       "type": "text",
       "id": "image_shadow",
       "label": "Image Shadow",
-      "default": "0 10px 40px rgba(0,0,0,0.1)",
-      "info": "CSS box-shadow value"
-    },
-    {
-      "type": "select",
-      "id": "placeholder_ratio",
-      "label": "Placeholder Aspect Ratio",
-      "options": [
-        { "value": "1/1", "label": "Square (1:1)" },
-        { "value": "4/3", "label": "Standard (4:3)" },
-        { "value": "4/5", "label": "Portrait (4:5)" },
-        { "value": "16/9", "label": "Wide (16:9)" }
-      ],
-      "default": "4/5"
-    },
-    {
-      "type": "color",
-      "id": "placeholder_bg",
-      "label": "Placeholder Background",
-      "default": "rgba(0,0,0,0.05)"
+      "default": "0 20px 60px rgba(0,0,0,0.12)"
     },
     {
       "type": "header",
-      "content": "Image Badge (Optional)"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_badge",
-      "label": "Show Badge",
-      "default": false
+      "content": "Content"
     },
     {
       "type": "text",
-      "id": "badge_text",
-      "label": "Badge Text",
-      "default": "New"
+      "id": "label",
+      "label": "Eyebrow Label",
+      "default": "Who We Are"
     },
     {
-      "type": "select",
-      "id": "badge_position",
-      "label": "Badge Position",
-      "options": [
-        { "value": "top", "label": "Top" },
-        { "value": "bottom", "label": "Bottom" }
-      ],
-      "default": "top"
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Purpose"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Body Text",
+      "default": "<p>We want to build a community of women that can lean on one another and God's word throughout this journey in life. Cowgirl Armor is the idea that you are equipped with God's word and by staying true to that word you have everything you need to go into battle with everyday.</p>"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "Our Inspiration"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label Color",
+      "default": "#8B7355"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body Text Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
+      "content": "Heading Style"
     },
     {
       "type": "range",
-      "id": "badge_offset",
-      "min": 10,
-      "max": 40,
-      "step": 5,
+      "id": "heading_size",
+      "label": "Heading Size (Desktop)",
+      "min": 28,
+      "max": 72,
+      "step": 2,
       "unit": "px",
-      "label": "Badge Offset",
-      "default": 20
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "label": "Heading Weight",
+      "min": 300,
+      "max": 900,
+      "step": 100,
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Button Style"
     },
     {
       "type": "color",
-      "id": "badge_bg",
-      "label": "Badge Background",
-      "default": "#DC2626"
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "transparent"
     },
     {
       "type": "color",
-      "id": "badge_text_color",
-      "label": "Badge Text Color",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "btn_border",
+      "label": "Button Border",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_bg",
+      "label": "Button Hover Background",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_text",
+      "label": "Button Hover Text",
       "default": "#ffffff"
     },
     {
       "type": "range",
-      "id": "badge_padding",
-      "min": 6,
-      "max": 20,
+      "id": "btn_radius",
+      "label": "Button Radius",
+      "min": 0,
+      "max": 40,
       "step": 2,
       "unit": "px",
-      "label": "Badge Padding",
-      "default": 10
+      "default": 4
     },
     {
       "type": "range",
-      "id": "badge_radius",
-      "min": 0,
-      "max": 30,
+      "id": "btn_padding_v",
+      "label": "Button Vertical Padding",
+      "min": 8,
+      "max": 24,
       "step": 2,
       "unit": "px",
-      "label": "Badge Border Radius",
-      "default": 20
+      "default": 14
     },
     {
       "type": "range",
-      "id": "badge_font_size",
-      "min": 10,
-      "max": 18,
-      "step": 1,
+      "id": "btn_padding_h",
+      "label": "Button Horizontal Padding",
+      "min": 16,
+      "max": 60,
+      "step": 4,
       "unit": "px",
-      "label": "Badge Font Size",
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "badge_font_weight",
-      "min": 400,
-      "max": 700,
-      "step": 100,
-      "label": "Badge Font Weight",
-      "default": 600
-    },
-    {
-      "type": "header",
-      "content": "Image Hover Effect"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_image_hover",
-      "label": "Enable Hover Effect",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "image_hover_scale",
-      "min": 100,
-      "max": 115,
-      "step": 1,
-      "unit": "%",
-      "label": "Hover Scale",
-      "default": 105
-    },
-    {
-      "type": "range",
-      "id": "image_hover_duration",
-      "min": 0.2,
-      "max": 1,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Hover Duration",
-      "default": 0.4
-    },
-    {
-      "type": "select",
-      "id": "image_hover_easing",
-      "label": "Hover Easing",
-      "options": [
-        { "value": "ease", "label": "Ease" },
-        { "value": "ease-in-out", "label": "Ease In Out" },
-        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Premium Ease" }
-      ],
-      "default": "cubic-bezier(0.16, 1, 0.3, 1)"
-    },
-    {
-      "type": "header",
-      "content": "Scroll Animations"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_animation",
-      "label": "Enable Scroll Animations",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "animation_duration",
-      "min": 0.3,
-      "max": 2,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Animation Duration",
-      "default": 0.8
-    },
-    {
-      "type": "range",
-      "id": "animation_distance",
-      "min": 20,
-      "max": 100,
-      "step": 10,
-      "unit": "px",
-      "label": "Animation Distance",
-      "default": 40
-    },
-    {
-      "type": "select",
-      "id": "animation_easing",
-      "label": "Animation Easing",
-      "options": [
-        { "value": "ease", "label": "Ease" },
-        { "value": "ease-out", "label": "Ease Out" },
-        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Premium Ease" }
-      ],
-      "default": "cubic-bezier(0.16, 1, 0.3, 1)"
-    },
-    {
-      "type": "range",
-      "id": "animation_threshold",
-      "min": 0,
-      "max": 50,
-      "step": 5,
-      "unit": "%",
-      "label": "Animation Trigger Point",
-      "default": 10,
-      "info": "Percentage of element visible before animation starts"
-    },
-    {
-      "type": "range",
-      "id": "animation_margin",
-      "min": -200,
-      "max": 200,
-      "step": 50,
-      "unit": "px",
-      "label": "Animation Margin",
-      "default": 0,
-      "info": "Negative = triggers earlier, Positive = triggers later"
-    },
-    {
-      "type": "checkbox",
-      "id": "repeat_animation",
-      "label": "Repeat Animation on Scroll",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "image_animation_delay",
-      "min": 0,
-      "max": 1,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Image Animation Delay",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "content_animation_delay",
-      "min": 0,
-      "max": 1,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Content Animation Delay",
-      "default": 0.1
-    },
-    {
-      "type": "range",
-      "id": "heading_animation_delay",
-      "min": 0,
-      "max": 1,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Heading Animation Delay",
-      "default": 0.2
-    },
-    {
-      "type": "range",
-      "id": "text_animation_delay",
-      "min": 0,
-      "max": 1,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Text Animation Delay",
-      "default": 0.3
-    },
-    {
-      "type": "range",
-      "id": "button_animation_delay",
-      "min": 0,
-      "max": 1,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Button Animation Delay",
-      "default": 0.4
-    },
-    {
-      "type": "header",
-      "content": "Parallax Effect"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_parallax",
-      "label": "Enable Parallax",
-      "default": false,
-      "info": "Image moves at different speed on scroll"
-    },
-    {
-      "type": "range",
-      "id": "parallax_speed",
-      "min": -50,
-      "max": 50,
-      "step": 5,
-      "label": "Parallax Speed",
-      "default": 20,
-      "info": "Negative = moves up, Positive = moves down"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "heading",
-      "name": "Heading",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Heading",
-          "default": "Our Purpose"
-        },
-        {
-          "type": "color",
-          "id": "color",
-          "label": "Text Color",
-          "default": "#1A1A1A"
-        },
-        {
-          "type": "range",
-          "id": "size",
-          "min": 24,
-          "max": 80,
-          "step": 2,
-          "unit": "px",
-          "label": "Font Size (Desktop)",
-          "default": 48
-        },
-        {
-          "type": "range",
-          "id": "size_min",
-          "min": 20,
-          "max": 40,
-          "step": 2,
-          "unit": "px",
-          "label": "Font Size (Mobile)",
-          "default": 32
-        },
-        {
-          "type": "range",
-          "id": "font_weight",
-          "min": 300,
-          "max": 900,
-          "step": 100,
-          "label": "Font Weight",
-          "default": 700
-        },
-        {
-          "type": "range",
-          "id": "line_height",
-          "min": 1,
-          "max": 2,
-          "step": 0.1,
-          "label": "Line Height",
-          "default": 1.2
-        },
-        {
-          "type": "range",
-          "id": "letter_spacing",
-          "min": -2,
-          "max": 5,
-          "step": 0.5,
-          "unit": "px",
-          "label": "Letter Spacing",
-          "default": 0
-        },
-        {
-          "type": "range",
-          "id": "margin_bottom",
-          "min": 0,
-          "max": 60,
-          "step": 2,
-          "unit": "px",
-          "label": "Bottom Margin",
-          "default": 24
-        },
-        {
-          "type": "select",
-          "id": "align",
-          "label": "Alignment",
-          "options": [
-            { "value": "left", "label": "Left" },
-            { "value": "center", "label": "Center" },
-            { "value": "right", "label": "Right" }
-          ],
-          "default": "left"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "Text Content",
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>We want to build a community of women that can lean on one another and God's word throughout this journey in life! Cowgirl Armor is the idea that you are equipped with God's word and by staying true to that word you have everything you need to go into battle with everyday because you are equipped with the Cowgirl Armor of God!</p>"
-        },
-        {
-          "type": "color",
-          "id": "color",
-          "label": "Text Color",
-          "default": "#1A1A1A"
-        },
-        {
-          "type": "range",
-          "id": "size",
-          "min": 14,
-          "max": 24,
-          "step": 1,
-          "unit": "px",
-          "label": "Font Size (Desktop)",
-          "default": 16
-        },
-        {
-          "type": "range",
-          "id": "size_min",
-          "min": 12,
-          "max": 18,
-          "step": 1,
-          "unit": "px",
-          "label": "Font Size (Mobile)",
-          "default": 14
-        },
-        {
-          "type": "range",
-          "id": "line_height",
-          "min": 1.2,
-          "max": 2,
-          "step": 0.1,
-          "label": "Line Height",
-          "default": 1.6
-        },
-        {
-          "type": "range",
-          "id": "max_width",
-          "min": 400,
-          "max": 800,
-          "step": 50,
-          "unit": "px",
-          "label": "Max Width",
-          "default": 550
-        },
-        {
-          "type": "range",
-          "id": "margin_bottom",
-          "min": 0,
-          "max": 60,
-          "step": 2,
-          "unit": "px",
-          "label": "Bottom Margin",
-          "default": 32
-        },
-        {
-          "type": "select",
-          "id": "align",
-          "label": "Alignment",
-          "options": [
-            { "value": "left", "label": "Left" },
-            { "value": "center", "label": "Center" },
-            { "value": "right", "label": "Right" }
-          ],
-          "default": "left"
-        }
-      ]
-    },
-    {
-      "type": "button",
-      "name": "Button",
-      "settings": [
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "Button Label",
-          "default": "Our Inspiration"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "Button Link"
-        },
-        {
-          "type": "color",
-          "id": "text_color",
-          "label": "Text Color",
-          "default": "#1A1A1A"
-        },
-        {
-          "type": "color",
-          "id": "bg_color",
-          "label": "Background Color",
-          "default": "transparent"
-        },
-        {
-          "type": "color",
-          "id": "border_color",
-          "label": "Border Color",
-          "default": "#1A1A1A"
-        },
-        {
-          "type": "range",
-          "id": "border_width",
-          "min": 1,
-          "max": 4,
-          "step": 0.5,
-          "unit": "px",
-          "label": "Border Width",
-          "default": 1.5
-        },
-        {
-          "type": "range",
-          "id": "border_radius",
-          "min": 0,
-          "max": 50,
-          "step": 2,
-          "unit": "px",
-          "label": "Border Radius",
-          "default": 4
-        },
-        {
-          "type": "range",
-          "id": "font_size",
-          "min": 12,
-          "max": 24,
-          "step": 1,
-          "unit": "px",
-          "label": "Font Size",
-          "default": 16
-        },
-        {
-          "type": "range",
-          "id": "font_weight",
-          "min": 400,
-          "max": 700,
-          "step": 100,
-          "label": "Font Weight",
-          "default": 500
-        },
-        {
-          "type": "range",
-          "id": "letter_spacing",
-          "min": 0,
-          "max": 3,
-          "step": 0.5,
-          "unit": "px",
-          "label": "Letter Spacing",
-          "default": 0.5
-        },
-        {
-          "type": "range",
-          "id": "padding_v",
-          "min": 8,
-          "max": 24,
-          "step": 2,
-          "unit": "px",
-          "label": "Vertical Padding",
-          "default": 12
-        },
-        {
-          "type": "range",
-          "id": "padding_h",
-          "min": 16,
-          "max": 48,
-          "step": 2,
-          "unit": "px",
-          "label": "Horizontal Padding",
-          "default": 32
-        },
-        {
-          "type": "text",
-          "id": "shadow",
-          "label": "Shadow",
-          "default": "none",
-          "info": "CSS box-shadow value"
-        },
-        {
-          "type": "color",
-          "id": "hover_bg",
-          "label": "Hover Background",
-          "default": "#1A1A1A"
-        },
-        {
-          "type": "color",
-          "id": "hover_text",
-          "label": "Hover Text Color",
-          "default": "#ffffff"
-        },
-        {
-          "type": "color",
-          "id": "hover_border",
-          "label": "Hover Border Color",
-          "default": "#1A1A1A"
-        },
-        {
-          "type": "text",
-          "id": "hover_shadow",
-          "label": "Hover Shadow",
-          "default": "0 8px 20px rgba(0,0,0,0.15)",
-          "info": "CSS box-shadow value"
-        },
-        {
-          "type": "range",
-          "id": "hover_lift",
-          "min": 0,
-          "max": 10,
-          "step": 1,
-          "unit": "px",
-          "label": "Hover Lift Distance",
-          "default": 4
-        },
-        {
-          "type": "range",
-          "id": "hover_scale",
-          "min": 100,
-          "max": 110,
-          "step": 1,
-          "unit": "%",
-          "label": "Hover Scale",
-          "default": 102
-        },
-        {
-          "type": "range",
-          "id": "hover_transition",
-          "min": 0.2,
-          "max": 0.6,
-          "step": 0.05,
-          "unit": "s",
-          "label": "Hover Transition Speed",
-          "default": 0.3
-        },
-        {
-          "type": "range",
-          "id": "margin_bottom",
-          "min": 0,
-          "max": 60,
-          "step": 2,
-          "unit": "px",
-          "label": "Bottom Margin",
-          "default": 20
-        },
-        {
-          "type": "select",
-          "id": "align",
-          "label": "Alignment",
-          "options": [
-            { "value": "left", "label": "Left" },
-            { "value": "center", "label": "Center" },
-            { "value": "right", "label": "Right" }
-          ],
-          "default": "left"
-        }
-      ]
+      "default": 36
     }
   ],
   "presets": [
     {
-      "name": "Purpose / Image with Text (Enhanced)",
-      "category": "Image",
-      "blocks": [
-        { "type": "heading" },
-        { "type": "text" },
-        { "type": "button" }
-      ]
+      "name": "Purpose"
     }
   ]
 }
