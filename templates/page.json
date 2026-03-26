@@ -11,7 +11,15 @@
   "sections": {
     "main": {
       "type": "premium-page-hero",
-      "settings": {}
+      "settings": {
+        "bg_color": "rgba(0,0,0,0)",
+        "text_color": "#1a1a1a",
+        "logo_width": 350,
+        "title": "",
+        "text_align": "left",
+        "padding_top": 80,
+        "padding_bottom": 60
+      }
     }
   },
   "order": [
