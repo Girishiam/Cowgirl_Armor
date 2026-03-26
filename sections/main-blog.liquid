@@ -117,7 +117,6 @@
     opacity: 0.6;
   }
 
-  /* Pagination */
   .blog-listing__pagination {
     display: flex;
     justify-content: center;
@@ -161,6 +160,8 @@
     }
   }
 </style>
+
+{%- paginate blog.articles by section.settings.posts_per_page -%}
 
 <div class="blog-listing-{{ section.id }}">
   <div class="blog-listing__inner">
@@ -233,11 +234,22 @@
   </div>
 </div>
 
+{%- endpaginate -%}
+
 {% schema %}
 {
   "name": "Blog Listing",
   "templates": ["blog"],
   "settings": [
+    {
+      "type": "range",
+      "id": "posts_per_page",
+      "label": "Posts Per Page",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
     {
       "type": "checkbox",
       "id": "show_heading",
