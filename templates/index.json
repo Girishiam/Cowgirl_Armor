@@ -12,7 +12,7 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "hero_height": 90,
+        "hero_height": 80,
         "bg_color": "#d9d9d9",
         "overlay_color": "#000000",
         "overlay_opacity": 0,
@@ -26,6 +26,8 @@
         "image_position": "right",
         "mobile_image_first": true,
         "image_ratio": "1 / 1",
+        "padding_top": 60,
+        "padding_bottom": 60,
         "image": "shopify://shop_images/IMG_1768_1.png",
         "image_radius": 40,
         "image_shadow": "0 20px 60px rgba(0,0,0,0.12)",
@@ -106,6 +108,8 @@
       ],
       "settings": {
         "bg_color": "rgba(0,0,0,0)",
+        "padding_top": 40,
+        "padding_bottom": 80,
         "grid_gap": 20,
         "columns_desktop": 3
       }
