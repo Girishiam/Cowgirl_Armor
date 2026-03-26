@@ -11,10 +11,35 @@
   "sections": {
     "main": {
       "type": "premium-page-hero",
-      "settings": {}
+      "settings": {
+        "bg_color": "rgba(0,0,0,0)",
+        "text_color": "#1a1a1a",
+        "logo": "shopify://shop_images/IMG_1760_1.png",
+        "logo_width": 350,
+        "title": "",
+        "text_align": "left",
+        "padding_top": 80,
+        "padding_bottom": 60
+      }
+    },
+    "premium_split_content_eKRyrG": {
+      "type": "premium-split-content",
+      "name": "Premium Split Content",
+      "settings": {
+        "bg_color": "transparent",
+        "text_color": "#1A1A1A",
+        "image_position": "left",
+        "text_align": "center",
+        "image": "shopify://shop_images/IMG_0217.webp",
+        "heading": "Ephesians 6",
+        "text": "<p><strong>Cowgirl Armor is founded on Ephesians 6 and  The Full Armor of God for all cowgirls.</strong> <br/><br/>”<strong>11</strong> Put on God’s complete set of armor provided for us, so that you will be protected as you fight against the evil strategies of the accuser! <strong>12 </strong>Your hand-to-hand combat is not with human beings, but with the highest principalities and authorities operating in rebellion under the heavenly realms. For they are a powerful class of demon-gods and evil spirits that hold this dark world in bondage. <strong>13 </strong>Because of this, you must wear all the armor that God provides so you’re protected as you confront the slanderer, for you are destined for all things and will rise victorious.</p><p><strong>14 </strong>Put on truth as a belt to strengthen you to stand in triumph. Put on holiness as the protective armor that covers your heart. <strong>15</strong> Stand on your feet alert, then you’ll always be ready to share the blessings of peace.</p><p><strong>16</strong> In every battle, take faith as your wrap-around shield, for it is able to extinguish the blazing arrows coming at you from the evil one! <strong>17-18 </strong>Embrace the power of salvation’s full deliverance, like a helmet <em>to protect your thoughts from lies</em>. And take the mighty razor-sharp Spirit-sword of the spoken word of God.</p><p>Pray passionately in the Spirit, as you constantly intercede with every form of prayer at all times. Pray the blessings of God upon all his believers.”<br/><br/>Ephesians 6:11-18 TPT Bible</p>",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "premium_split_content_eKRyrG"
   ]
 }
