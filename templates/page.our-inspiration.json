@@ -36,10 +36,24 @@
         "padding_top": 80,
         "padding_bottom": 80
       }
+    },
+    "massive_cta_banner_XwzEVk": {
+      "type": "massive-cta-banner",
+      "name": "Massive CTA Banner",
+      "settings": {
+        "bg_color": "#8a8a8a",
+        "text_color": "#ffffff",
+        "text": "JOIN THE COWGIRL ARMY",
+        "link": "shopify://pages/contact",
+        "max_font_size": 80,
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     }
   },
   "order": [
     "main",
-    "premium_split_content_eKRyrG"
+    "premium_split_content_eKRyrG",
+    "massive_cta_banner_XwzEVk"
   ]
 }
