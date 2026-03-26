@@ -11,6 +11,7 @@
   "sections": {
     "main": {
       "type": "premium-page-hero",
+      "disabled": true,
       "settings": {
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
