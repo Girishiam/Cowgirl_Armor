@@ -1,20 +1,22 @@
 <style>
   .page-hero-{{ section.id }} {
-    background-color: {{ section.settings.bg_color }};
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    width: 100%;
-  }
-
-  .page-hero__inner {
+    background-color: {{ section.settings.bg_color }};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     max-width: 1200px;
     margin: 0 auto;
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+
+  .page-hero__logo {
+    margin-bottom: 4rem;
     display: flex;
-    flex-direction: column;
-    align-items: {{ section.settings.text_align | replace: 'left', 'flex-start' | replace: 'center', 'center' | replace: 'right', 'flex-end' }};
-    gap: 1.5rem;
+    justify-content: center;
+    width: 100%;
   }
 
   .page-hero__logo img {
@@ -22,55 +24,30 @@
     width: 100%;
     height: auto;
     object-fit: contain;
-    display: block;
   }
 
   .page-hero__title {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    width: 100%;
+    text-align: {{ section.settings.text_align }};
+    font-size: clamp(2.5rem, 6vw, 4rem);
     color: {{ section.settings.text_color }};
     margin: 0;
     line-height: 1.1;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    font-weight: 800;
-    text-align: {{ section.settings.text_align }};
-  }
-
-  /* fade-up animation (re-used from theme if available) */
-  .fade-up-anim {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s ease forwards;
-  }
-
-  @keyframes fadeUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 </style>
 
 <div class="page-hero-{{ section.id }}">
-  <div class="page-hero__inner">
+  {%- if section.settings.logo != blank -%}
+    <div class="page-hero__logo fade-up-anim">
+      <img src="{{ section.settings.logo | image_url: width: 800 }}" alt="{{ section.settings.logo.alt | default: page.title | escape }}">
+    </div>
+  {%- endif -%}
 
-    {%- if section.settings.logo != blank -%}
-      <div class="page-hero__logo fade-up-anim">
-        <img
-          src="{{ section.settings.logo | image_url: width: 800 }}"
-          alt="{{ section.settings.logo.alt | default: page.title | escape }}"
-        >
-      </div>
-    {%- endif -%}
-
-    {%- assign hero_title = section.settings.title | default: page.title -%}
-    {%- if hero_title != blank -%}
-      <h1 class="page-hero__title fade-up-anim" style="animation-delay: 120ms;">
-        {{ hero_title }}
-      </h1>
-    {%- endif -%}
-
-  </div>
+  {%- if section.settings.title != blank -%}
+    <h1 class="page-hero__title fade-up-anim" style="animation-delay: 100ms;">{{ section.settings.title }}</h1>
+  {%- else -%}
+    <h1 class="page-hero__title fade-up-anim" style="animation-delay: 100ms;">{{ page.title }}</h1>
+  {%- endif -%}
 </div>
 
 {% schema %}
@@ -78,54 +55,39 @@
   "name": "Premium Page Hero",
   "settings": [
     {
-      "type": "header",
-      "content": "Colors"
-    },
-    {
       "type": "color",
       "id": "bg_color",
-      "label": "Background color",
-      "default": "#EBEBEB"
+      "label": "Background Color",
+      "default": "transparent"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Title color",
+      "label": "Text Color",
       "default": "#1A1A1A"
-    },
-    {
-      "type": "header",
-      "content": "Logo"
     },
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Hero logo"
+      "label": "Hero Logo"
     },
     {
       "type": "range",
       "id": "logo_width",
-      "min": 60,
-      "max": 400,
-      "step": 10,
-      "unit": "px",
-      "label": "Logo max width",
-      "default": 160
-    },
-    {
-      "type": "header",
-      "content": "Title"
+      "min": 100, "max": 600, "step": 10, "unit": "px",
+      "label": "Logo Max Width",
+      "default": 350
     },
     {
       "type": "text",
       "id": "title",
-      "label": "Title override",
-      "info": "Leave blank to use the page title automatically."
+      "label": "Page Title Override",
+      "info": "Leave blank to use the default page title."
     },
     {
       "type": "select",
       "id": "text_align",
-      "label": "Alignment",
+      "label": "Title Alignment",
       "options": [
         { "value": "left", "label": "Left" },
         { "value": "center", "label": "Center" },
@@ -134,29 +96,8 @@
       "default": "left"
     },
     {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "label": "Top padding",
-      "default": 64
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "label": "Bottom padding",
-      "default": 64
-    }
+      "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Top Padding", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Bottom Padding", "default": 60 }
   ],
   "presets": [
     {
