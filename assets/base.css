@@ -260,7 +260,7 @@ h1, h2, h3, h4, h5, h6, .logo-text {
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1600px;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -319,7 +319,7 @@ h1, h2, h3, h4, h5, h6, .logo-text {
    ============================================ */
 .icon-grid-section {
   padding: 5rem 2rem;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 .category-card {
