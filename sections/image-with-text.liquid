@@ -5,48 +5,155 @@
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
   }
+
   .iwt-section-{{ section.id }} .iwt-grid {
     display: grid;
     grid-template-columns: 1fr;
-    align-items: center;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: clamp(1.5rem, 4vw, 3rem);
-    padding-right: clamp(1.5rem, 4vw, 3rem);
+    align-items: stretch;
+    max-width: 1400px;
+    margin: 0 auto;
   }
+
   @media screen and (min-width: 768px) {
     .iwt-section-{{ section.id }} .iwt-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
+
+  /* Image Column */
   .iwt-section-{{ section.id }} .iwt-media {
-    width: 100%;
+    position: relative;
     overflow: hidden;
+    min-height: 420px;
   }
+
+  @media screen and (min-width: 768px) {
+    .iwt-section-{{ section.id }} .iwt-media {
+      min-height: 560px;
+    }
+  }
+
   .iwt-section-{{ section.id }} .iwt-media img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    display: block;
     object-fit: cover;
-  }
-  .iwt-section-{{ section.id }} .iwt-media .placeholder-svg svg {
-    width: 100%;
-    height: auto;
-    min-height: 300px;
+    object-position: center;
     display: block;
+    transition: transform 0.7s ease;
   }
+
+  .iwt-section-{{ section.id }} .iwt-media:hover img {
+    transform: scale(1.03);
+  }
+
+  .iwt-section-{{ section.id }} .iwt-media .placeholder-svg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.05);
+  }
+
+  .iwt-section-{{ section.id }} .iwt-media .placeholder-svg svg {
+    width: 60%;
+    height: auto;
+    opacity: 0.3;
+  }
+
+  /* Content Column */
   .iwt-section-{{ section.id }} .iwt-content {
-    padding: clamp(2rem, 5vw, 4rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(2rem, 5vw, 5rem);
     text-align: {{ section.settings.content_alignment | replace: 'text-', '' }};
   }
-  .iwt-section-{{ section.id }} .iwt-heading {
-    margin-bottom: 1.25rem;
+
+  {%- if section.settings.content_alignment == 'text-center' -%}
+  .iwt-section-{{ section.id }} .iwt-content {
+    align-items: center;
   }
+  {%- elsif section.settings.content_alignment == 'text-right' -%}
+  .iwt-section-{{ section.id }} .iwt-content {
+    align-items: flex-end;
+  }
+  {%- else -%}
+  .iwt-section-{{ section.id }} .iwt-content {
+    align-items: flex-start;
+  }
+  {%- endif -%}
+
+  .iwt-section-{{ section.id }} .iwt-eyebrow {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 1rem;
+  }
+
+  .iwt-section-{{ section.id }} .iwt-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.25rem;
+    color: {{ section.settings.text_color }};
+  }
+
   .iwt-section-{{ section.id }} .iwt-text {
-    margin-bottom: 2rem;
-    line-height: 1.7;
-    opacity: 0.85;
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    line-height: 1.8;
+    opacity: 0.75;
+    margin: 0 0 2.25rem;
+    max-width: 480px;
+  }
+
+  /* Outline Button */
+  .iwt-section-{{ section.id }} .iwt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: {{ section.settings.text_color }};
+    border: 1.5px solid {{ section.settings.text_color }};
+    padding: 0.85rem 2rem;
+    border-radius: var(--buttons-radius, 4px);
+    transition: background-color 0.25s ease, color 0.25s ease;
+    background: transparent;
+  }
+
+  .iwt-section-{{ section.id }} .iwt-btn:hover {
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.background_color }};
+  }
+
+  .iwt-section-{{ section.id }} .iwt-btn svg {
+    transition: transform 0.25s ease;
+  }
+
+  .iwt-section-{{ section.id }} .iwt-btn:hover svg {
+    transform: translateX(4px);
+  }
+
+  @media screen and (max-width: 767px) {
+    .iwt-section-{{ section.id }} .iwt-media {
+      min-height: 300px;
+    }
+    .iwt-section-{{ section.id }} .iwt-text {
+      max-width: 100%;
+    }
   }
 </style>
 
@@ -58,10 +165,12 @@
         {%- if section.settings.image != blank -%}
           <img
             src="{{ section.settings.image | image_url: width: 1200 }}"
+            srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                    {{ section.settings.image | image_url: width: 900 }} 900w,
+                    {{ section.settings.image | image_url: width: 1200 }} 1200w"
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="{{ section.settings.image.alt | escape }}"
             loading="lazy"
-            width="{{ section.settings.image.width }}"
-            height="{{ section.settings.image.height }}"
           >
         {%- else -%}
           <div class="placeholder-svg">{{ 'image' | placeholder_svg_tag }}</div>
@@ -70,17 +179,28 @@
     {%- endif -%}
 
     <div class="iwt-content">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="iwt-eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+
       {%- if section.settings.heading != blank -%}
         <h2 class="iwt-heading">{{ section.settings.heading }}</h2>
       {%- endif -%}
+
       {%- if section.settings.text != blank -%}
         <div class="iwt-text rte">{{ section.settings.text }}</div>
       {%- endif -%}
+
       {%- if section.settings.button_label != blank -%}
         <a
           {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
-          class="btn btn--primary"
-        >{{ section.settings.button_label }}</a>
+          class="iwt-btn"
+        >
+          {{ section.settings.button_label }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
       {%- endif -%}
     </div>
 
@@ -89,10 +209,12 @@
         {%- if section.settings.image != blank -%}
           <img
             src="{{ section.settings.image | image_url: width: 1200 }}"
+            srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                    {{ section.settings.image | image_url: width: 900 }} 900w,
+                    {{ section.settings.image | image_url: width: 1200 }} 1200w"
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="{{ section.settings.image.alt | escape }}"
             loading="lazy"
-            width="{{ section.settings.image.width }}"
-            height="{{ section.settings.image.height }}"
           >
         {%- else -%}
           <div class="placeholder-svg">{{ 'image' | placeholder_svg_tag }}</div>
@@ -110,25 +232,48 @@
   "class": "section",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Image"
+      "type": "header",
+      "content": "Layout"
     },
     {
       "type": "select",
       "id": "layout",
       "label": "Layout",
       "options": [
-        {
-          "value": "image_first",
-          "label": "Image first"
-        },
-        {
-          "value": "text_first",
-          "label": "Text first"
-        }
+        { "value": "image_first", "label": "Image left, text right" },
+        { "value": "text_first", "label": "Text left, image right" }
       ],
       "default": "image_first"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content Alignment",
+      "options": [
+        { "value": "text-left", "label": "Left" },
+        { "value": "text-center", "label": "Center" },
+        { "value": "text-right", "label": "Right" }
+      ],
+      "default": "text-left"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Label",
+      "info": "Small label above the heading"
     },
     {
       "type": "text",
@@ -140,27 +285,7 @@
       "type": "richtext",
       "id": "text",
       "label": "Description",
-      "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
-    },
-    {
-      "type": "select",
-      "id": "content_alignment",
-      "label": "Content Alignment",
-      "options": [
-        {
-          "value": "text-left",
-          "label": "Left"
-        },
-        {
-          "value": "text-center",
-          "label": "Center"
-        },
-        {
-          "value": "text-right",
-          "label": "Right"
-        }
-      ],
-      "default": "text-left"
+      "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post.</p>"
     },
     {
       "type": "text",
@@ -180,22 +305,22 @@
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top padding",
+      "label": "Top Padding",
       "min": 0,
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 60
+      "default": 0
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "label": "Bottom padding",
+      "label": "Bottom Padding",
       "min": 0,
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 60
+      "default": 0
     },
     {
       "type": "header",
@@ -216,7 +341,7 @@
   ],
   "presets": [
     {
-      "name": "Image with text"
+      "name": "Image with Text"
     }
   ]
 }
