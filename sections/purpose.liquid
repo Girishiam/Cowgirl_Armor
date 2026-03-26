@@ -9,7 +9,7 @@
          padding-bottom: {{ section.settings.padding_bottom }}px;
          width: 100%;"
 >
-  <div class="page-width" style="max-width: {{ section.settings.content_max_width }}px; margin: 0 auto; padding: 0 {{ section.settings.content_padding_h }}px;">
+  <div class="page-width purpose-container-{{ section.id }}" style="max-width: {{ section.settings.content_max_width }}px; margin: 0 auto;">
     <div class="grid grid-2-col"
          style="align-items: {{ section.settings.vertical_align }};
                 gap: clamp({{ section.settings.gap_min }}rem, 6vw, {{ section.settings.gap_max }}rem);
@@ -186,8 +186,25 @@
     will-change: transform;
   }
 
+  /* Responsive Container Padding */
+  .purpose-container-{{ section.id }} {
+    padding-left: {{ section.settings.content_padding_h }}px;
+    padding-right: {{ section.settings.content_padding_h }}px;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .purpose-container-{{ section.id }} {
+      padding-left: {{ section.settings.content_padding_h_tablet }}px;
+      padding-right: {{ section.settings.content_padding_h_tablet }}px;
+    }
+  }
+
   /* Mobile responsive */
   @media screen and (max-width: 767px) {
+    .purpose-container-{{ section.id }} {
+      padding-left: {{ section.settings.content_padding_h_mobile }}px;
+      padding-right: {{ section.settings.content_padding_h_mobile }}px;
+    }
     .grid-2-col {
       grid-template-columns: 1fr !important;
       gap: {{ section.settings.mobile_gap }}rem !important;
@@ -398,11 +415,31 @@
       "type": "range",
       "id": "content_padding_h",
       "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Horizontal Padding (Desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_padding_h_tablet",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Horizontal Padding (Tablet)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "content_padding_h_mobile",
+      "min": 10,
       "max": 60,
       "step": 5,
       "unit": "px",
-      "label": "Content Horizontal Padding",
-      "default": 30
+      "label": "Content Horizontal Padding (Mobile)",
+      "default": 20
     },
     {
       "type": "header",
