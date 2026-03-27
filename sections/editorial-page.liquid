@@ -1,17 +1,47 @@
 <style>
+  /* ── Reset & Vars ── */
   .ep-{{ section.id }} {
-    background-color: {{ section.settings.bg_color }};
-    color: {{ section.settings.text_color }};
+    --ep-bg:         {{ section.settings.bg_color }};
+    --ep-text:       {{ section.settings.text_color }};
+    --ep-accent:     {{ section.settings.quote_border_color }};
+    --ep-quote-bg:   {{ section.settings.quote_bg }};
+    --ep-quote-text: {{ section.settings.quote_color }};
+    background-color: var(--ep-bg);
+    color: var(--ep-text);
     padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
-  /* ── Hero ── */
+  /* ════════════════════════════════
+     TITLE BLOCK  (comes first)
+  ════════════════════════════════ */
+  .ep-{{ section.id }} .ep-title-block {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: {{ section.settings.padding_top }}px clamp(1.5rem, 5vw, 5rem) 3rem;
+    text-align: {{ section.settings.hero_title_align }};
+  }
+
+  .ep-{{ section.id }} .ep-title-block h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, 6vw, {{ section.settings.title_size }}px);
+    font-weight: {{ section.settings.title_weight }};
+    color: var(--ep-text);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  /* ════════════════════════════════
+     HERO IMAGE  (full-width, below title)
+  ════════════════════════════════ */
   .ep-{{ section.id }} .ep-hero {
     position: relative;
     width: 100%;
+    max-width: 1600px;
+    margin: 0 auto 0;
     height: {{ section.settings.hero_height }}px;
     overflow: hidden;
-    margin-bottom: 0;
   }
 
   .ep-{{ section.id }} .ep-hero img {
@@ -27,67 +57,29 @@
   .ep-{{ section.id }} .ep-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(0,0,0,{{ section.settings.hero_overlay_opacity | divided_by: 100.0 }}) 100%);
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 40%,
+      rgba(0,0,0,{{ section.settings.hero_overlay_opacity | divided_by: 100.0 }}) 100%
+    );
     z-index: 1;
   }
 
-  .ep-{{ section.id }} .ep-hero-title {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
-    padding: 3rem clamp(1.5rem, 5vw, 4rem);
-    text-align: {{ section.settings.hero_title_align }};
-  }
-
-  .ep-{{ section.id }} .ep-hero-title h1 {
-    font-family: var(--font-heading);
-    font-size: clamp(2rem, 6vw, {{ section.settings.title_size }}px);
-    font-weight: {{ section.settings.title_weight }};
-    color: {{ section.settings.hero_title_color }};
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    margin: 0;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-  }
-
-  /* No image fallback */
-  .ep-{{ section.id }} .ep-hero--no-image {
-    height: auto;
-    background: {{ section.settings.bg_color }};
-    padding: {{ section.settings.padding_top }}px clamp(1.5rem, 5vw, 4rem) 3rem;
-    text-align: {{ section.settings.hero_title_align }};
-  }
-
-  .ep-{{ section.id }} .ep-hero--no-image h1 {
-    font-family: var(--font-heading);
-    font-size: clamp(2rem, 6vw, {{ section.settings.title_size }}px);
-    font-weight: {{ section.settings.title_weight }};
-    color: {{ section.settings.text_color }};
-    line-height: 1.1;
-    margin: 0;
-  }
-
-  /* ── Content Wrap ── */
+  /* ════════════════════════════════
+     CONTENT BODY  (story + blocks)
+  ════════════════════════════════ */
   .ep-{{ section.id }} .ep-body {
     max-width: {{ section.settings.content_width }}px;
     margin: 0 auto;
-    padding: {{ section.settings.padding_top }}px clamp(1.5rem, 5vw, 3rem) 0;
+    padding: 4rem clamp(1.5rem, 5vw, 3rem) 0;
   }
-
-  {%- if section.settings.image != blank -%}
-  .ep-{{ section.id }} .ep-body {
-    padding-top: 4rem;
-  }
-  {%- endif -%}
 
   /* ── Rich Text ── */
   .ep-{{ section.id }} .ep-rte {
     font-family: var(--font-body);
     font-size: clamp(1rem, 1.8vw, {{ section.settings.body_size }}px);
-    line-height: {{ section.settings.body_line_height }};
-    color: {{ section.settings.text_color }};
+    line-height: {{ section.settings.body_line_height | times: 0.1 }};
+    color: var(--ep-text);
   }
 
   .ep-{{ section.id }} .ep-rte p {
@@ -100,11 +92,11 @@
   .ep-{{ section.id }} .ep-rte h4 {
     font-family: var(--font-heading);
     margin: 3rem 0 1.25rem;
-    color: {{ section.settings.text_color }};
+    color: var(--ep-text);
   }
 
   .ep-{{ section.id }} .ep-rte a {
-    color: {{ section.settings.text_color }};
+    color: var(--ep-text);
     text-decoration: underline;
     text-underline-offset: 4px;
   }
@@ -120,8 +112,8 @@
   .ep-{{ section.id }} .ep-pullquote {
     margin: 3rem 0;
     padding: 2.5rem clamp(1.5rem, 5vw, 3.5rem);
-    border-left: {{ section.settings.quote_border_width }}px solid {{ section.settings.quote_border_color }};
-    background-color: {{ section.settings.quote_bg }};
+    border-left: {{ section.settings.quote_border_width }}px solid var(--ep-accent);
+    background-color: var(--ep-quote-bg);
     border-radius: 0 {{ section.settings.image_radius }}px {{ section.settings.image_radius }}px 0;
   }
 
@@ -130,7 +122,7 @@
     font-size: clamp(1.3rem, 3vw, {{ section.settings.quote_size }}px);
     font-weight: {{ section.settings.quote_weight }};
     line-height: 1.4;
-    color: {{ section.settings.quote_color }};
+    color: var(--ep-quote-text);
     margin: 0 0 1rem;
     font-style: normal;
     letter-spacing: -0.01em;
@@ -145,7 +137,9 @@
     font-style: normal;
   }
 
-  /* ── Author Signature ── */
+  /* ════════════════════════════════
+     AUTHOR SIGNATURE
+  ════════════════════════════════ */
   .ep-{{ section.id }} .ep-author {
     display: flex;
     align-items: center;
@@ -171,8 +165,6 @@
     display: block;
   }
 
-  .ep-{{ section.id }} .ep-author-info {}
-
   .ep-{{ section.id }} .ep-author-label {
     font-size: 0.7rem;
     font-weight: 600;
@@ -186,7 +178,7 @@
     font-family: var(--font-heading);
     font-size: clamp(1rem, 2vw, 1.2rem);
     font-weight: 700;
-    color: {{ section.settings.text_color }};
+    color: var(--ep-text);
     margin-bottom: 0.35rem;
   }
 
@@ -197,11 +189,13 @@
     opacity: 0.65;
   }
 
-  /* ── Pagination ── */
+  /* ════════════════════════════════
+     PREV / NEXT PAGINATION
+  ════════════════════════════════ */
   .ep-{{ section.id }} .ep-pagination {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 2rem;
     flex-wrap: wrap;
     padding: 2.5rem 0 0;
@@ -218,24 +212,18 @@
     font-weight: 600;
     letter-spacing: 0.05em;
     text-decoration: none;
-    color: {{ section.settings.text_color }};
+    color: var(--ep-text);
     text-transform: uppercase;
     transition: opacity 0.2s ease;
     max-width: 45%;
   }
 
-  .ep-{{ section.id }} .ep-pagination a:hover {
-    opacity: 0.5;
-  }
-
-  .ep-{{ section.id }} .ep-pagination a svg {
-    flex-shrink: 0;
-  }
-
+  .ep-{{ section.id }} .ep-pagination a:hover { opacity: 0.5; }
+  .ep-{{ section.id }} .ep-pagination a svg { flex-shrink: 0; }
   .ep-{{ section.id }} .ep-pagination .ep-prev { text-align: left; }
   .ep-{{ section.id }} .ep-pagination .ep-next { text-align: right; margin-left: auto; }
 
-  .ep-{{ section.id }} .ep-pagination .ep-nav-label {
+  .ep-{{ section.id }} .ep-nav-label {
     font-size: 0.65rem;
     letter-spacing: 0.15em;
     opacity: 0.5;
@@ -243,58 +231,54 @@
     margin-bottom: 0.25rem;
   }
 
-  .ep-{{ section.id }} .ep-pagination .ep-nav-title {
+  .ep-{{ section.id }} .ep-nav-title {
     display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
+  /* ════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════ */
   @media screen and (max-width: 600px) {
     .ep-{{ section.id }} .ep-author { flex-direction: column; align-items: flex-start; }
     .ep-{{ section.id }} .ep-pagination a { max-width: 100%; }
   }
 </style>
 
-{%- assign show_hero = false -%}
-{%- if section.settings.image != blank -%}
-  {%- assign show_hero = true -%}
-{%- endif -%}
-
 <div class="ep-{{ section.id }}">
 
-  {%- if show_hero -%}
+  {%- comment -%} ── 1. TITLE (always first) ── {%- endcomment -%}
+  {%- if section.settings.title != blank -%}
+    <div class="ep-title-block">
+      <h1>{{ section.settings.title }}</h1>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── 2. HERO IMAGE (below title) ── {%- endcomment -%}
+  {%- if section.settings.image != blank -%}
     <div class="ep-hero">
       <img
         src="{{ section.settings.image | image_url: width: 1600 }}"
         srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
                 {{ section.settings.image | image_url: width: 1200 }} 1200w,
                 {{ section.settings.image | image_url: width: 1600 }} 1600w"
-        sizes="100vw"
+        sizes="(max-width: 1600px) 100vw, 1600px"
         alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
         loading="eager"
+        width="1600"
       >
       {%- if section.settings.hero_overlay_opacity > 0 -%}
         <div class="ep-hero-overlay"></div>
       {%- endif -%}
-      {%- if section.settings.title != blank -%}
-        <div class="ep-hero-title">
-          <h1>{{ section.settings.title }}</h1>
-        </div>
-      {%- endif -%}
     </div>
-  {%- else -%}
-    {%- if section.settings.title != blank -%}
-      <div class="ep-hero ep-hero--no-image">
-        <h1>{{ section.settings.title }}</h1>
-      </div>
-    {%- endif -%}
   {%- endif -%}
 
+  {%- comment -%} ── 3. STORY BLOCKS + 4. AUTHOR + 5. PAGINATION ── {%- endcomment -%}
   <div class="ep-body">
 
     {%- for block in section.blocks -%}
-
       {%- case block.type -%}
 
         {%- when 'rich_text' -%}
@@ -322,6 +306,8 @@
                   src="{{ block.settings.avatar | image_url: width: 120 }}"
                   alt="{{ block.settings.name | escape }}"
                   loading="lazy"
+                  width="120"
+                  height="120"
                 >
               </div>
             {%- endif -%}
@@ -341,9 +327,9 @@
         {%- when 'pagination' -%}
           {%- if block.settings.prev_label != blank or block.settings.next_label != blank -%}
             <div class="ep-pagination" {{ block.shopify_attributes }}>
-              {%- if block.settings.prev_link != blank -%}
+              {%- if block.settings.prev_link != blank and block.settings.prev_label != blank -%}
                 <a href="{{ block.settings.prev_link }}" class="ep-prev">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                     <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                   <span>
@@ -352,13 +338,13 @@
                   </span>
                 </a>
               {%- endif -%}
-              {%- if block.settings.next_link != blank -%}
+              {%- if block.settings.next_link != blank and block.settings.next_label != blank -%}
                 <a href="{{ block.settings.next_link }}" class="ep-next">
                   <span>
                     <span class="ep-nav-label">Next</span>
                     <span class="ep-nav-title">{{ block.settings.next_label }}</span>
                   </span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                     <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </a>
@@ -367,7 +353,6 @@
           {%- endif -%}
 
       {%- endcase -%}
-
     {%- endfor -%}
 
   </div>
@@ -380,18 +365,33 @@
   "settings": [
     {
       "type": "header",
-      "content": "Hero"
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Hero Image"
+      "content": "Title"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Page Title",
       "default": "God meets you where you are."
+    },
+    {
+      "type": "select",
+      "id": "hero_title_align",
+      "label": "Title Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Hero Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image"
     },
     {
       "type": "range",
@@ -409,10 +409,10 @@
       "label": "Image Focus",
       "options": [
         { "value": "center center", "label": "Center" },
-        { "value": "top center", "label": "Top" },
+        { "value": "top center",    "label": "Top"    },
         { "value": "bottom center", "label": "Bottom" },
-        { "value": "left center", "label": "Left" },
-        { "value": "right center", "label": "Right" }
+        { "value": "left center",   "label": "Left"   },
+        { "value": "right center",  "label": "Right"  }
       ],
       "default": "center center"
     },
@@ -425,23 +425,6 @@
       "step": 5,
       "unit": "%",
       "default": 40
-    },
-    {
-      "type": "select",
-      "id": "hero_title_align",
-      "label": "Title Alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "color",
-      "id": "hero_title_color",
-      "label": "Title Color (on image)",
-      "default": "#ffffff"
     },
     {
       "type": "header",
@@ -517,7 +500,7 @@
     {
       "type": "range",
       "id": "padding_top",
-      "label": "Top Padding (no image)",
+      "label": "Top Padding",
       "min": 40,
       "max": 160,
       "step": 8,
@@ -654,7 +637,7 @@
         {
           "type": "image_picker",
           "id": "avatar",
-          "label": "Author Photo"
+          "label": "Author Photo (optional)"
         },
         {
           "type": "text",
@@ -708,10 +691,10 @@
     {
       "name": "Editorial Page",
       "blocks": [
-        { "type": "rich_text" },
-        { "type": "pullquote" },
-        { "type": "author" },
-        { "type": "pagination" }
+        { "type": "rich_text"   },
+        { "type": "pullquote"   },
+        { "type": "author"      },
+        { "type": "pagination"  }
       ]
     }
   ]
