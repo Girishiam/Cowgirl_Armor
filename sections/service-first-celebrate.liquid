@@ -1,0 +1,920 @@
+<style>
+  /* ── Base ── */
+  .loc-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  }
+
+  .loc-section-{{ section.id }} .loc__container {
+    max-width: {{ section.settings.content_max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.padding_h_desktop }}px;
+  }
+
+  /* ── Eyebrow ── */
+  .loc-section-{{ section.id }} .loc__eyebrow {
+    display: inline-block;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 {{ section.settings.eyebrow_gap }}px;
+    position: relative;
+    padding-left: {{ section.settings.eyebrow_line_width | plus: 12 }}px;
+  }
+  .loc-section-{{ section.id }} .loc__eyebrow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: {{ section.settings.eyebrow_line_width }}px;
+    height: 1px;
+    background-color: {{ section.settings.accent_color }};
+  }
+
+  /* ── Title ── */
+  .loc-section-{{ section.id }} .loc__title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_size_min }}px, 5vw, {{ section.settings.title_size_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
+    letter-spacing: {{ section.settings.title_letter_spacing | divided_by: 100.0 }}em;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 {{ section.settings.title_gap }}px;
+    max-width: {{ section.settings.title_max_width }}px;
+  }
+
+  /* ── Intro text ── */
+  .loc-section-{{ section.id }} .loc__intro {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp({{ section.settings.intro_size_min }}px, 1.5vw, {{ section.settings.intro_size_max }}px);
+    font-weight: {{ section.settings.intro_weight }};
+    line-height: {{ section.settings.intro_line_height | divided_by: 100.0 }};
+    color: {{ section.settings.intro_color }};
+    max-width: {{ section.settings.intro_max_width }}px;
+    margin: 0 0 {{ section.settings.intro_gap }}px;
+  }
+  .loc-section-{{ section.id }} .loc__intro p { margin: 0 0 1em; }
+  .loc-section-{{ section.id }} .loc__intro p:last-child { margin: 0; }
+  .loc-section-{{ section.id }} .loc__intro strong { font-weight: 700; color: {{ section.settings.title_color }}; }
+  .loc-section-{{ section.id }} .loc__intro a { color: {{ section.settings.accent_color }}; }
+
+  /* ── Main Grid: image + details ── */
+  .loc-section-{{ section.id }} .loc__grid {
+    display: grid;
+    grid-template-columns: {{ section.settings.image_col_width }}px 1fr;
+    gap: {{ section.settings.grid_gap }}px;
+    align-items: start;
+  }
+
+  /* ── Image Card ── */
+  .loc-section-{{ section.id }} .loc__image-wrap {
+    position: relative;
+    border-radius: {{ section.settings.card_radius }}px;
+    overflow: hidden;
+    box-shadow: {{ section.settings.card_shadow }};
+  }
+  .loc-section-{{ section.id }} .loc__image-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: {{ section.settings.card_radius }}px;
+    border: 1px solid rgba(255,255,255,0.3);
+    pointer-events: none;
+  }
+  .loc-section-{{ section.id }} .loc__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: {{ section.settings.card_radius }}px;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .loc-section-{{ section.id }} .loc__image-wrap:hover .loc__image {
+    transform: scale(1.02);
+  }
+
+  /* ── Caption below image ── */
+  .loc-section-{{ section.id }} .loc__caption {
+    margin-top: {{ section.settings.caption_gap }}px;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.caption_size }}px;
+    font-weight: {{ section.settings.caption_weight }};
+    color: {{ section.settings.caption_color }};
+    line-height: 1.5;
+    text-align: {{ section.settings.caption_align }};
+  }
+  .loc-section-{{ section.id }} .loc__caption strong {
+    font-weight: 700;
+    color: {{ section.settings.title_color }};
+  }
+  .loc-section-{{ section.id }} .loc__caption a {
+    color: {{ section.settings.accent_color }};
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── Details Panel ── */
+  .loc-section-{{ section.id }} .loc__details {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.details_gap }}px;
+  }
+
+  /* ── Detail Card ── */
+  .loc-section-{{ section.id }} .loc__card {
+    background-color: {{ section.settings.card_bg }};
+    border-radius: {{ section.settings.card_radius }}px;
+    padding: {{ section.settings.card_padding_v }}px {{ section.settings.card_padding_h }}px;
+    border: 1px solid {{ section.settings.card_border_color }};
+    box-shadow: {{ section.settings.card_shadow }};
+    position: relative;
+    overflow: hidden;
+  }
+  .loc-section-{{ section.id }} .loc__card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: {{ section.settings.card_accent_bar }}px;
+    height: 100%;
+    background-color: {{ section.settings.accent_color }};
+    border-radius: {{ section.settings.card_radius }}px 0 0 {{ section.settings.card_radius }}px;
+  }
+  .loc-section-{{ section.id }} .loc__card-inner {
+    padding-left: {{ section.settings.card_accent_bar | plus: 16 }}px;
+  }
+
+  .loc-section-{{ section.id }} .loc__card-label {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.card_label_size }}px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 8px;
+  }
+  .loc-section-{{ section.id }} .loc__card-title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.card_title_size_min }}px, 2vw, {{ section.settings.card_title_size_max }}px);
+    font-weight: {{ section.settings.card_title_weight }};
+    color: {{ section.settings.title_color }};
+    margin: 0 0 6px;
+    line-height: 1.25;
+  }
+  .loc-section-{{ section.id }} .loc__card-text {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.card_text_size }}px;
+    color: {{ section.settings.card_text_color }};
+    line-height: 1.65;
+    margin: 0;
+  }
+  .loc-section-{{ section.id }} .loc__card-text p { margin: 0 0 0.5em; }
+  .loc-section-{{ section.id }} .loc__card-text p:last-child { margin: 0; }
+  .loc-section-{{ section.id }} .loc__card-text strong { font-weight: 700; color: {{ section.settings.title_color }}; }
+  .loc-section-{{ section.id }} .loc__card-text a {
+    color: {{ section.settings.accent_color }};
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ── CTA Button ── */
+  .loc-section-{{ section.id }} .loc__btn-wrap {
+    margin-top: {{ section.settings.btn_gap }}px;
+  }
+  .loc-section-{{ section.id }} .loc__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.btn_font_size }}px;
+    font-weight: {{ section.settings.btn_font_weight }};
+    letter-spacing: 0.05em;
+    text-transform: {{ section.settings.btn_transform }};
+    background-color: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_text_color }};
+    border: {{ section.settings.btn_border_width }}px solid {{ section.settings.btn_border_color }};
+    border-radius: {{ section.settings.btn_radius }}px;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .loc-section-{{ section.id }} .loc__btn:hover {
+    background-color: {{ section.settings.btn_bg_hover }};
+    color: {{ section.settings.btn_text_hover }};
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+  }
+  .loc-section-{{ section.id }} .loc__btn svg {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  .loc-section-{{ section.id }} .loc__btn:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* ── Divider ── */
+  .loc-section-{{ section.id }} .loc__divider {
+    width: {{ section.settings.divider_width }}px;
+    height: 1px;
+    background-color: {{ section.settings.divider_color }};
+    margin: {{ section.settings.divider_margin }}px 0;
+  }
+
+  /* ── Responsive ── */
+  @media screen and (max-width: 900px) {
+    .loc-section-{{ section.id }} .loc__grid {
+      grid-template-columns: 1fr;
+    }
+    .loc-section-{{ section.id }} .loc__image-wrap {
+      max-width: {{ section.settings.image_col_width }}px;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .loc-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+    .loc-section-{{ section.id }} .loc__container {
+      padding: 0 {{ section.settings.padding_h_mobile }}px;
+    }
+    .loc-section-{{ section.id }} .loc__card::before {
+      width: {{ section.settings.card_accent_bar | divided_by: 1.5 | round }}px;
+    }
+    .loc-section-{{ section.id }} .loc__card-inner {
+      padding-left: {{ section.settings.card_accent_bar | divided_by: 1.5 | round | plus: 12 }}px;
+    }
+  }
+</style>
+
+<section class="loc-section-{{ section.id }}">
+  <div class="loc__container">
+
+    {%- comment -%} ── Header ── {%- endcomment -%}
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="loc__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.title != blank -%}
+      <h2 class="loc__title">{{ section.settings.title }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.intro != blank -%}
+      <div class="loc__intro">{{ section.settings.intro }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.show_divider_top -%}
+      <div class="loc__divider"></div>
+    {%- endif -%}
+
+    {%- comment -%} ── Grid ── {%- endcomment -%}
+    <div class="loc__grid">
+
+      {%- comment -%} Left: Image + Caption {%- endcomment -%}
+      <div>
+        {%- if section.settings.image != blank -%}
+          <div class="loc__image-wrap">
+            <img
+              src="{{ section.settings.image | image_url: width: 900 }}"
+              srcset="{{ section.settings.image | image_url: width: 400 }} 400w,
+                      {{ section.settings.image | image_url: width: 700 }} 700w,
+                      {{ section.settings.image | image_url: width: 900 }} 900w"
+              sizes="(max-width: 600px) 100vw, {{ section.settings.image_col_width }}px"
+              alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+              class="loc__image"
+              loading="lazy"
+              width="{{ section.settings.image_col_width }}"
+            >
+          </div>
+        {%- else -%}
+          <div class="loc__image-wrap">
+            {{ 'image' | placeholder_svg_tag: 'loc__image placeholder-svg' }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.caption != blank -%}
+          <div class="loc__caption">{{ section.settings.caption }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Right: Detail Cards {%- endcomment -%}
+      <div class="loc__details">
+
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+
+            {%- when 'detail_card' -%}
+              <div class="loc__card" {{ block.shopify_attributes }}>
+                <div class="loc__card-inner">
+                  {%- if block.settings.label != blank -%}
+                    <p class="loc__card-label">{{ block.settings.label }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.card_title != blank -%}
+                    <p class="loc__card-title">{{ block.settings.card_title }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.card_text != blank -%}
+                    <div class="loc__card-text">{{ block.settings.card_text }}</div>
+                  {%- endif -%}
+                </div>
+              </div>
+
+            {%- when 'cta_button' -%}
+              {%- if block.settings.btn_label != blank -%}
+                <div class="loc__btn-wrap" {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.btn_link }}" class="loc__btn"
+                     {% if block.settings.open_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                    {{ block.settings.btn_label }}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </a>
+                </div>
+              {%- endif -%}
+
+          {%- endcase -%}
+        {%- endfor -%}
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Service Location",
+  "blocks": [
+    {
+      "type": "detail_card",
+      "name": "Detail Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label (eyebrow)",
+          "default": "Venue"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Card Title",
+          "default": "Double N Cowboy Church"
+        },
+        {
+          "type": "richtext",
+          "id": "card_text",
+          "label": "Card Content",
+          "info": "Supports bold, italic, links"
+        }
+      ]
+    },
+    {
+      "type": "cta_button",
+      "name": "Button",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Button Label",
+          "default": "Get Directions"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_new_tab",
+          "label": "Open in new tab",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#E2E2E2"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title / Heading Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#8BA4AC",
+      "info": "Used for eyebrow, card labels, accent bar, links"
+    },
+    {
+      "type": "color",
+      "id": "intro_color",
+      "label": "Intro Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Max Content Width",
+      "min": 800, "max": 1600, "step": 20, "unit": "px", "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "image_col_width",
+      "label": "Image Column Width",
+      "min": 260, "max": 700, "step": 20, "unit": "px", "default": 480
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid Gap",
+      "min": 20, "max": 100, "step": 4, "unit": "px", "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Padding — Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top",
+      "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom",
+      "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_h_desktop",
+      "label": "Sides",
+      "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Padding — Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top",
+      "min": 0, "max": 100, "step": 4, "unit": "px", "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom",
+      "min": 0, "max": 100, "step": 4, "unit": "px", "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_h_mobile",
+      "label": "Sides",
+      "min": 0, "max": 40, "step": 4, "unit": "px", "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "In Loving Memory"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow Font Size",
+      "min": 9, "max": 16, "step": 1, "unit": "px", "default": 11
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_gap",
+      "label": "Gap Below Eyebrow",
+      "min": 4, "max": 32, "step": 2, "unit": "px", "default": 16
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_line_width",
+      "label": "Eyebrow Line Width",
+      "min": 16, "max": 60, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Celebrating Oaklynn: Service Location & Directions"
+    },
+    {
+      "type": "range",
+      "id": "title_size_min",
+      "label": "Title Size — Min",
+      "min": 20, "max": 56, "step": 2, "unit": "px", "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_size_max",
+      "label": "Title Size — Max",
+      "min": 32, "max": 96, "step": 2, "unit": "px", "default": 60
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title Font Weight",
+      "min": 300, "max": 900, "step": 100, "default": 700
+    },
+    {
+      "type": "range",
+      "id": "title_line_height",
+      "label": "Title Line Height",
+      "min": 90, "max": 150, "step": 5, "unit": "%", "default": 110,
+      "info": "e.g. 110 = 1.1"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Title Letter Spacing",
+      "min": -5, "max": 10, "step": 1, "default": -2,
+      "info": "Divide by 100 — e.g. -2 = -0.02em"
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "label": "Gap Below Title",
+      "min": 8, "max": 80, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_max_width",
+      "label": "Title Max Width",
+      "min": 400, "max": 1000, "step": 20, "unit": "px", "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Intro Text"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro Paragraph",
+      "info": "Supports bold, italic, links"
+    },
+    {
+      "type": "range",
+      "id": "intro_size_min",
+      "label": "Intro Size — Min",
+      "min": 13, "max": 22, "step": 1, "unit": "px", "default": 15
+    },
+    {
+      "type": "range",
+      "id": "intro_size_max",
+      "label": "Intro Size — Max",
+      "min": 14, "max": 26, "step": 1, "unit": "px", "default": 19
+    },
+    {
+      "type": "range",
+      "id": "intro_weight",
+      "label": "Intro Font Weight",
+      "min": 300, "max": 600, "step": 100, "default": 400
+    },
+    {
+      "type": "range",
+      "id": "intro_line_height",
+      "label": "Intro Line Height",
+      "min": 130, "max": 210, "step": 5, "unit": "%", "default": 175
+    },
+    {
+      "type": "range",
+      "id": "intro_max_width",
+      "label": "Intro Max Width",
+      "min": 400, "max": 900, "step": 20, "unit": "px", "default": 600
+    },
+    {
+      "type": "range",
+      "id": "intro_gap",
+      "label": "Gap Below Intro",
+      "min": 16, "max": 80, "step": 4, "unit": "px", "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider_top",
+      "label": "Show divider above grid",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider Color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "label": "Divider Width",
+      "min": 40, "max": 400, "step": 20, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "divider_margin",
+      "label": "Divider Margin",
+      "min": 8, "max": 60, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Flyer / Image"
+    },
+    {
+      "type": "header",
+      "content": "Caption (below image)"
+    },
+    {
+      "type": "richtext",
+      "id": "caption",
+      "label": "Caption Text",
+      "info": "Supports bold, links. Leave blank to hide."
+    },
+    {
+      "type": "range",
+      "id": "caption_gap",
+      "label": "Gap Above Caption",
+      "min": 8, "max": 32, "step": 2, "unit": "px", "default": 16
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "label": "Caption Font Size",
+      "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "caption_weight",
+      "label": "Caption Font Weight",
+      "min": 300, "max": 700, "step": 100, "default": 400
+    },
+    {
+      "type": "color",
+      "id": "caption_color",
+      "label": "Caption Color",
+      "default": "#444444"
+    },
+    {
+      "type": "select",
+      "id": "caption_align",
+      "label": "Caption Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Detail Cards"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card Body Text Color",
+      "default": "#444444"
+    },
+    {
+      "type": "text",
+      "id": "card_shadow",
+      "label": "Card Shadow",
+      "default": "0 2px 16px rgba(0,0,0,0.06)"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card Border Radius",
+      "min": 0, "max": 24, "step": 2, "unit": "px", "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_padding_v",
+      "label": "Card Padding Vertical",
+      "min": 16, "max": 60, "step": 2, "unit": "px", "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_padding_h",
+      "label": "Card Padding Horizontal",
+      "min": 16, "max": 60, "step": 2, "unit": "px", "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_accent_bar",
+      "label": "Accent Bar Width",
+      "min": 0, "max": 8, "step": 1, "unit": "px", "default": 4
+    },
+    {
+      "type": "range",
+      "id": "card_label_size",
+      "label": "Card Label Size",
+      "min": 9, "max": 14, "step": 1, "unit": "px", "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_title_size_min",
+      "label": "Card Title Size — Min",
+      "min": 14, "max": 28, "step": 1, "unit": "px", "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_title_size_max",
+      "label": "Card Title Size — Max",
+      "min": 16, "max": 36, "step": 1, "unit": "px", "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_title_weight",
+      "label": "Card Title Font Weight",
+      "min": 400, "max": 800, "step": 100, "default": 600
+    },
+    {
+      "type": "range",
+      "id": "card_text_size",
+      "label": "Card Body Text Size",
+      "min": 12, "max": 18, "step": 1, "unit": "px", "default": 15
+    },
+    {
+      "type": "range",
+      "id": "details_gap",
+      "label": "Gap Between Cards",
+      "min": 8, "max": 40, "step": 4, "unit": "px", "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button Style"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_hover",
+      "label": "Button Hover Background",
+      "default": "#8BA4AC"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_hover",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_border_color",
+      "label": "Button Border Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "btn_border_width",
+      "label": "Button Border Width",
+      "min": 0, "max": 4, "step": 1, "unit": "px", "default": 1
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button Radius",
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 6
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_v",
+      "label": "Button Padding V",
+      "min": 10, "max": 28, "step": 2, "unit": "px", "default": 16
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_h",
+      "label": "Button Padding H",
+      "min": 16, "max": 60, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "range",
+      "id": "btn_font_size",
+      "label": "Button Font Size",
+      "min": 12, "max": 18, "step": 1, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_font_weight",
+      "label": "Button Font Weight",
+      "min": 400, "max": 700, "step": 100, "default": 600
+    },
+    {
+      "type": "select",
+      "id": "btn_transform",
+      "label": "Button Text Transform",
+      "options": [
+        { "value": "none",      "label": "None"      },
+        { "value": "uppercase", "label": "Uppercase" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "btn_gap",
+      "label": "Gap Above Button",
+      "min": 0, "max": 32, "step": 4, "unit": "px", "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Service Location",
+      "blocks": [
+        {
+          "type": "detail_card",
+          "settings": {
+            "label": "Venue",
+            "card_title": "Double N Cowboy Church"
+          }
+        },
+        {
+          "type": "detail_card",
+          "settings": {
+            "label": "Address",
+            "card_title": "7202 E State Highway 6, Dublin TX 76446"
+          }
+        },
+        {
+          "type": "detail_card",
+          "settings": {
+            "label": "Important Note",
+            "card_title": "Use the PIN or this address into your GPS"
+          }
+        },
+        {
+          "type": "cta_button",
+          "settings": {
+            "btn_label": "View Pin Location",
+            "open_new_tab": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
