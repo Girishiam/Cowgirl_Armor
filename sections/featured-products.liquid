@@ -1,0 +1,322 @@
+<style>
+  .fp-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  }
+  .fp-{{ section.id }} .fp__container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.padding_h }}px;
+  }
+  .fp-{{ section.id }} .fp__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: {{ section.settings.header_gap }}px;
+    flex-wrap: wrap;
+  }
+  .fp-{{ section.id }} .fp__eyebrow {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .fp-{{ section.id }} .fp__eyebrow::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: {{ section.settings.accent_color }};
+    flex-shrink: 0;
+  }
+  .fp-{{ section.id }} .fp__title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_min }}px, 4vw, {{ section.settings.title_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: 1.1;
+    letter-spacing: {{ section.settings.title_ls | divided_by: 100.0 }}em;
+    color: {{ section.settings.text_color }};
+    margin: 0;
+  }
+  .fp-{{ section.id }} .fp__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    opacity: 0.55;
+    white-space: nowrap;
+    transition: opacity 0.2s, gap 0.2s;
+    flex-shrink: 0;
+  }
+  .fp-{{ section.id }} .fp__view-all:hover { opacity: 1; gap: 12px; }
+
+  /* Grid */
+  .fp-{{ section.id }} .fp__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+  }
+  @media screen and (max-width: 767px) {
+    .fp-{{ section.id }} .fp__grid {
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+      gap: {{ section.settings.grid_gap_mobile }}px;
+    }
+    .fp-{{ section.id }} .fp__container { padding: 0 {{ section.settings.padding_h_mobile }}px; }
+  }
+
+  /* Card */
+  .fp-{{ section.id }} .fp__card {
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    display: flex;
+    flex-direction: column;
+  }
+  .fp-{{ section.id }} .fp__card-img-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.img_bg }};
+    aspect-ratio: {{ section.settings.img_ratio }};
+    margin-bottom: {{ section.settings.info_gap }}px;
+  }
+  .fp-{{ section.id }} .fp__card-img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .fp-{{ section.id }} .fp__card:hover .fp__card-img { transform: scale(1.06); }
+  .fp-{{ section.id }} .fp__badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: {{ section.settings.badge_radius }}px; z-index: 2;
+  }
+  .fp-{{ section.id }} .fp__badge--sale    { background: {{ section.settings.sale_color }}; color: #fff; }
+  .fp-{{ section.id }} .fp__badge--soldout { background: rgba(0,0,0,0.65); color: #fff; }
+  .fp-{{ section.id }} .fp__quick-add {
+    position: absolute; bottom: 10px; left: 10px; right: 10px;
+    padding: 10px; background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: {{ section.settings.btn_radius }}px;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.22s, transform 0.22s, background-color 0.18s;
+    z-index: 2;
+  }
+  .fp-{{ section.id }} .fp__card:hover .fp__quick-add { opacity: 1; transform: translateY(0); }
+  .fp-{{ section.id }} .fp__quick-add:hover { background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; }
+  .fp-{{ section.id }} .fp__vendor {
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    opacity: 0.4; margin: 0 0 4px;
+  }
+  .fp-{{ section.id }} .fp__card-title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.card_title_min }}px, 1.4vw, {{ section.settings.card_title_max }}px);
+    font-weight: {{ section.settings.card_title_weight }};
+    margin: 0 0 6px; line-height: 1.3;
+  }
+  .fp-{{ section.id }} .fp__price {
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    font-size: {{ section.settings.price_size }}px; font-weight: 600;
+  }
+  .fp-{{ section.id }} .fp__price--sale { color: {{ section.settings.sale_color }}; }
+  .fp-{{ section.id }} .fp__price--compare { text-decoration: line-through; opacity: 0.4; font-weight: 400; font-size: 0.88em; }
+</style>
+
+<section class="fp-{{ section.id }}">
+  <div class="fp__container">
+
+    {%- if section.settings.title != blank or section.settings.eyebrow != blank -%}
+      <div class="fp__header">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="fp__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.title != blank -%}
+            <h2 class="fp__title">{{ section.settings.title }}</h2>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.view_all_label != blank and section.settings.view_all_link != blank -%}
+          <a href="{{ section.settings.view_all_link }}" class="fp__view-all">
+            {{ section.settings.view_all_label }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="fp__grid">
+      {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
+        {%- assign variant = product.selected_or_first_available_variant -%}
+        {%- assign on_sale = false -%}
+        {%- if variant.compare_at_price > variant.price -%}{%- assign on_sale = true -%}{%- endif -%}
+
+        <a href="{{ product.url }}" class="fp__card">
+          <div class="fp__card-img-wrap">
+            {%- if product.featured_image -%}
+              <img
+                src="{{ product.featured_image | image_url: width: 600 }}"
+                srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
+                        {{ product.featured_image | image_url: width: 600 }} 600w,
+                        {{ product.featured_image | image_url: width: 900 }} 900w"
+                sizes="(max-width: 767px) {{ 100 | divided_by: section.settings.columns_mobile }}vw, {{ 100 | divided_by: section.settings.columns_desktop }}vw"
+                alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                class="fp__card-img" loading="lazy"
+              >
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'fp__card-img placeholder-svg' }}
+            {%- endif -%}
+
+            {%- unless product.available -%}
+              <span class="fp__badge fp__badge--soldout">{{ section.settings.badge_sold_out | default: 'Sold Out' }}</span>
+            {%- endunless -%}
+            {%- if on_sale and product.available -%}
+              <span class="fp__badge fp__badge--sale">{{ section.settings.badge_sale | default: 'Sale' }}</span>
+            {%- endif -%}
+
+            {%- if section.settings.show_quick_add and product.available -%}
+              {%- if product.variants.size == 1 -%}
+                <button class="fp__quick-add" data-quick-add data-variant-id="{{ variant.id }}" aria-label="Quick add {{ product.title | escape }}">
+                  {{ section.settings.quick_add_label | default: 'Quick Add' }}
+                </button>
+              {%- else -%}
+                <span class="fp__quick-add">{{ section.settings.choose_options_label | default: 'Choose Options' }}</span>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+
+          <div>
+            {%- if section.settings.show_vendor and product.vendor != blank -%}
+              <p class="fp__vendor">{{ product.vendor }}</p>
+            {%- endif -%}
+            <p class="fp__card-title">{{ product.title }}</p>
+            <div class="fp__price">
+              {%- if on_sale -%}
+                <span class="fp__price--sale">{{ variant.price | money }}</span>
+                <span class="fp__price--compare">{{ variant.compare_at_price | money }}</span>
+              {%- else -%}
+                <span>{{ variant.price | money }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        </a>
+      {%- else -%}
+        {%- for i in (1..section.settings.products_to_show) -%}
+          <div class="fp__card">
+            <div class="fp__card-img-wrap">{{ 'product-' | append: forloop.index | placeholder_svg_tag: 'fp__card-img placeholder-svg' }}</div>
+            <p class="fp__card-title">{{ 'onboarding.product_title' | t | default: 'Example Product' }}</p>
+            <div class="fp__price"><span>$0.00</span></div>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  document.querySelectorAll('.fp-{{ section.id }} [data-quick-add]').forEach(function(btn) {
+    btn.addEventListener('click', async function(e) {
+      e.preventDefault(); e.stopPropagation();
+      if (typeof Cart === 'undefined') return;
+      var variantId = btn.dataset.variantId;
+      var orig = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '{{ section.settings.quick_add_loading | default: "Adding..." | escape }}';
+      try {
+        var item = await Cart.addItem(variantId, 1);
+        var cart = await Cart.fetchCart();
+        Cart.dispatchUpdate(cart);
+        document.dispatchEvent(new CustomEvent('cart:item-added', { detail: item }));
+        var drawer = document.querySelector('cart-drawer');
+        var notif  = document.querySelector('cart-notification');
+        if (drawer) drawer.open();
+        else if (notif) notif.show(item);
+        btn.textContent = '{{ section.settings.quick_add_success | default: "Added!" | escape }}';
+        setTimeout(function() { btn.disabled = false; btn.textContent = orig; }, 2000);
+      } catch(err) { btn.disabled = false; btn.textContent = orig; }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text",        "id": "eyebrow",           "label": "Eyebrow Text" },
+    { "type": "text",        "id": "title",             "label": "Section Title",        "default": "Featured Products" },
+    { "type": "collection",  "id": "collection",        "label": "Collection" },
+    { "type": "range",       "id": "products_to_show",  "label": "Products to Show",     "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "text",        "id": "view_all_label",    "label": "View All Label",        "default": "View all" },
+    { "type": "url",         "id": "view_all_link",     "label": "View All Link" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color",     "label": "Background",    "default": "#ffffff" },
+    { "type": "color", "id": "text_color",   "label": "Text Color",    "default": "#1A1A1A" },
+    { "type": "color", "id": "accent_color", "label": "Accent Color",  "default": "#8BA4AC" },
+    { "type": "color", "id": "sale_color",   "label": "Sale Color",    "default": "#DC2626" },
+    { "type": "color", "id": "img_bg",       "label": "Image Bg",      "default": "#f0f0f0" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "max_width",       "label": "Max Width",          "min": 800, "max": 1920, "step": 20, "unit": "px", "default": 1600 },
+    { "type": "range", "id": "padding_top",     "label": "Padding Top",        "min": 0,   "max": 160,  "step": 4,  "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom",  "label": "Padding Bottom",     "min": 0,   "max": 160,  "step": 4,  "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_h",       "label": "Side Padding",       "min": 0,   "max": 80,   "step": 4,  "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_h_mobile","label": "Side Padding Mobile","min": 0,   "max": 40,   "step": 4,  "unit": "px", "default": 16 },
+    { "type": "range", "id": "header_gap",      "label": "Header Gap",         "min": 16,  "max": 64,   "step": 4,  "unit": "px", "default": 32 },
+    { "type": "range", "id": "columns_desktop", "label": "Columns Desktop",    "min": 2,   "max": 5,    "step": 1,              "default": 4 },
+    { "type": "range", "id": "columns_mobile",  "label": "Columns Mobile",     "min": 1,   "max": 3,    "step": 1,              "default": 2 },
+    { "type": "range", "id": "grid_gap",        "label": "Grid Gap Desktop",   "min": 8,   "max": 60,   "step": 4,  "unit": "px", "default": 20 },
+    { "type": "range", "id": "grid_gap_mobile", "label": "Grid Gap Mobile",    "min": 4,   "max": 32,   "step": 4,  "unit": "px", "default": 12 },
+    { "type": "select","id": "img_ratio",       "label": "Image Ratio",
+      "options": [
+        { "value": "1/1", "label": "Square"    },
+        { "value": "3/4", "label": "Portrait"  },
+        { "value": "4/3", "label": "Landscape" },
+        { "value": "2/3", "label": "Tall"      }
+      ], "default": "3/4"
+    },
+    { "type": "range", "id": "card_radius",     "label": "Card Radius",        "min": 0, "max": 20, "step": 2, "unit": "px", "default": 4 },
+    { "type": "range", "id": "info_gap",        "label": "Image to Info Gap",  "min": 8, "max": 24, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "badge_radius",    "label": "Badge Radius",       "min": 0, "max": 20, "step": 2, "unit": "px", "default": 4 },
+    { "type": "range", "id": "btn_radius",      "label": "Button Radius",      "min": 0, "max": 30, "step": 2, "unit": "px", "default": 4 },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "title_min",          "label": "Section Title Min",  "min": 18, "max": 40, "step": 2, "unit": "px", "default": 24 },
+    { "type": "range", "id": "title_max",          "label": "Section Title Max",  "min": 24, "max": 64, "step": 2, "unit": "px", "default": 40 },
+    { "type": "range", "id": "title_weight",       "label": "Title Weight",       "min": 300,"max": 900,"step": 100,             "default": 700 },
+    { "type": "range", "id": "title_ls",           "label": "Title Letter Spacing","min": -5,"max": 10, "step": 1,              "default": -1, "info": "Divide by 100" },
+    { "type": "range", "id": "card_title_min",     "label": "Card Title Min",     "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14 },
+    { "type": "range", "id": "card_title_max",     "label": "Card Title Max",     "min": 14, "max": 28, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "card_title_weight",  "label": "Card Title Weight",  "min": 300,"max": 700,"step": 100,             "default": 500 },
+    { "type": "range", "id": "price_size",         "label": "Price Size",         "min": 12, "max": 20, "step": 1, "unit": "px", "default": 15 },
+
+    { "type": "header", "content": "Product Info" },
+    { "type": "checkbox", "id": "show_vendor",           "label": "Show vendor",          "default": false },
+    { "type": "checkbox", "id": "show_quick_add",        "label": "Show Quick Add",       "default": true },
+    { "type": "text",     "id": "quick_add_label",       "label": "Quick Add Label",      "default": "Quick Add" },
+    { "type": "text",     "id": "choose_options_label",  "label": "Choose Options Label", "default": "Choose Options" },
+    { "type": "text",     "id": "quick_add_loading",     "label": "Quick Add Loading",    "default": "Adding..." },
+    { "type": "text",     "id": "quick_add_success",     "label": "Quick Add Success",    "default": "Added!" },
+    { "type": "text",     "id": "badge_sale",            "label": "Sale Badge",           "default": "Sale" },
+    { "type": "text",     "id": "badge_sold_out",        "label": "Sold Out Badge",       "default": "Sold Out" }
+  ],
+  "presets": [{ "name": "Featured Products" }]
+}
+{% endschema %}
