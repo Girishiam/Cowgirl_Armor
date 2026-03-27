@@ -94,7 +94,7 @@
         "overlay_clear_stop": 40,
         "bg_color": "#1a1a1a",
         "content_position": "flex-end",
-        "text_align": "left",
+        "text_align": "center",
         "content_max_width": 800,
         "padding_desktop": 64,
         "padding_mobile": 32,
