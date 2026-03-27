@@ -72,101 +72,101 @@ class FocusTrap {
 
 /* ============================================
    CART MANAGER
+   Bridges legacy data-attribute selectors to
+   the Cart object defined in cart.js.
+   cart.js must load before main.js (already
+   set up in theme.liquid).
    ============================================ */
 class CartManager {
   constructor() {
-    this.cart = null;
-    this.init();
-  }
-  async init() {
-    await this.getCart();
     this.setupEventListeners();
+    this.syncCount();
   }
+
   setupEventListeners() {
+    // Legacy: data-add-to-cart-form (NOT data-atc-form — cart.js handles that)
     document.querySelectorAll('[data-add-to-cart-form]').forEach(form => {
       form.addEventListener('submit', this.handleAddToCart.bind(this));
     });
+
     document.querySelectorAll('[data-cart-update]').forEach(button => {
       button.addEventListener('click', this.handleCartUpdate.bind(this));
     });
+
     document.querySelectorAll('[data-cart-remove]').forEach(button => {
       button.addEventListener('click', this.handleCartRemove.bind(this));
     });
-  }
-  async getCart() {
-    try {
-      const response = await fetch('/cart.js');
-      this.cart = await response.json();
-      this.updateCartCount();
-      return this.cart;
-    } catch (error) {
-      console.error('Error fetching cart:', error);
-    }
-  }
-  async addToCart(items) {
-    try {
-      const response = await fetch('/cart/add.js', {
-        ...fetchConfig(),
-        body: JSON.stringify({ items })
+
+    // Keep all [data-cart-count] elements in sync with cart:updated events
+    document.addEventListener('cart:updated', (e) => {
+      const count = e.detail?.item_count || 0;
+      document.querySelectorAll('[data-cart-count]').forEach(el => {
+        el.textContent = count;
+        el.classList.toggle('hidden', count === 0);
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.description || 'Failed to add to cart');
-      }
-      this.cart = await response.json();
-      this.updateCartCount();
-      this.showCartNotification();
-      return this.cart;
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      this.showError(error.message);
-      throw error;
-    }
-  }
-  async updateCart(key, quantity) {
-    try {
-      const response = await fetch('/cart/change.js', {
-        ...fetchConfig(),
-        body: JSON.stringify({ id: key, quantity })
-      });
-      this.cart = await response.json();
-      this.updateCartCount();
-      return this.cart;
-    } catch (error) {
-      console.error('Error updating cart:', error);
-      throw error;
-    }
-  }
-  async removeFromCart(key) { return this.updateCart(key, 0); }
-  handleAddToCart(e) {
-    e.preventDefault();
-    const formData = serializeForm(e.target);
-    this.addToCart([{ id: formData.id, quantity: parseInt(formData.quantity) || 1 }]);
-  }
-  handleCartUpdate(e) {
-    const button = e.target.closest('[data-cart-update]');
-    const key = button.dataset.cartUpdate;
-    const input = button.closest('.cart-item').querySelector('[data-quantity-input]');
-    this.updateCart(key, parseInt(input.value));
-  }
-  handleCartRemove(e) {
-    const button = e.target.closest('[data-cart-remove]');
-    this.removeFromCart(button.dataset.cartRemove);
-  }
-  updateCartCount() {
-    const count = this.cart?.item_count || 0;
-    document.querySelectorAll('[data-cart-count]').forEach(el => {
-      el.textContent = count;
-      el.classList.toggle('hidden', count === 0);
     });
-    // Also sync the header.liquid cart badge
-    document.dispatchEvent(new CustomEvent('cart:updated', { detail: { item_count: count } }));
   }
-  showCartNotification() {
-    document.dispatchEvent(new CustomEvent('cart:item-added', { detail: this.cart }));
+
+  async syncCount() {
+    try {
+      const cart = await Cart.fetchCart();
+      Cart.dispatchUpdate(cart);
+    } catch (e) {
+      // Cart not yet available — safe to ignore on non-cart pages
+    }
   }
-  showError(message) {
-    document.dispatchEvent(new CustomEvent('cart:error', { detail: { message } }));
+
+  async handleAddToCart(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = serializeForm(form);
+    const variantId = data.id;
+    const quantity  = parseInt(data.quantity) || 1;
+    if (!variantId) return;
+
+    const btn = form.querySelector('[data-add-to-cart-button]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Adding...'; }
+
+    try {
+      const item = await Cart.addItem(variantId, quantity);
+      const cart = await Cart.fetchCart();
+      Cart.dispatchUpdate(cart);
+      document.dispatchEvent(new CustomEvent('cart:item-added', { detail: item }));
+
+      const drawer = document.querySelector('cart-drawer');
+      const notif  = document.querySelector('cart-notification');
+      if (drawer) drawer.open();
+      else if (notif) notif.show(item);
+
+      if (btn) {
+        btn.textContent = 'Added!';
+        setTimeout(() => { btn.disabled = false; btn.textContent = 'Add to Cart'; }, 2000);
+      }
+    } catch (err) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Add to Cart'; }
+      console.error('Add to cart error:', err.message);
+    }
+  }
+
+  async handleCartUpdate(e) {
+    const button = e.target.closest('[data-cart-update]');
+    if (!button) return;
+    const key   = button.dataset.cartUpdate;
+    const input = button.closest('.cart-item')?.querySelector('[data-quantity-input]');
+    if (!key || !input) return;
+    try {
+      const cart = await Cart.changeItem(key, parseInt(input.value));
+      Cart.dispatchUpdate(cart);
+    } catch (err) { console.error('Cart update error:', err); }
+  }
+
+  async handleCartRemove(e) {
+    const button = e.target.closest('[data-cart-remove]');
+    if (!button) return;
+    try {
+      const cart = await Cart.changeItem(button.dataset.cartRemove, 0);
+      Cart.dispatchUpdate(cart);
+    } catch (err) { console.error('Cart remove error:', err); }
   }
 }
 
@@ -198,8 +198,10 @@ class VariantSelector {
   }
   updateUI() {
     if (!this.currentVariant) return;
+
     const priceEl = this.element.querySelector('[data-product-price]');
     if (priceEl) priceEl.textContent = this.formatMoney(this.currentVariant.price);
+
     const compareEl = this.element.querySelector('[data-product-compare-price]');
     if (compareEl) {
       if (this.currentVariant.compare_at_price) {
@@ -209,13 +211,19 @@ class VariantSelector {
         compareEl.classList.add('hidden');
       }
     }
+
     const variantInput = this.element.querySelector('[name="id"]');
     if (variantInput) variantInput.value = this.currentVariant.id;
-    const addButton = this.element.querySelector('[data-add-to-cart-button]');
+
+    // Support both naming conventions
+    const addButton = this.element.querySelector('[data-add-to-cart-button], [data-atc-btn]');
     if (addButton) {
       addButton.disabled = !this.currentVariant.available;
-      addButton.textContent = this.currentVariant.available ? 'Add to Cart' : 'Sold Out';
+      addButton.textContent = this.currentVariant.available
+        ? (addButton.dataset.addText || 'Add to Cart')
+        : (addButton.dataset.soldOutText || 'Sold Out');
     }
+
     this.element.dispatchEvent(new CustomEvent('variant:changed', {
       detail: { variant: this.currentVariant }
     }));
@@ -232,8 +240,8 @@ class QuantitySelector {
     this.input = element.querySelector('[data-quantity-input]');
     this.decreaseBtn = element.querySelector('[data-quantity-decrease]');
     this.increaseBtn = element.querySelector('[data-quantity-increase]');
-    this.min = parseInt(this.input.min) || 1;
-    this.max = parseInt(this.input.max) || 999;
+    this.min = parseInt(this.input?.min) || 1;
+    this.max = parseInt(this.input?.max) || 999;
     this.setupEventListeners();
   }
   setupEventListeners() {
@@ -283,7 +291,7 @@ class PredictiveSearch {
     try {
       const response = await fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4`);
       const data = await response.json();
-      this.renderResults(data.resources.results.products || []);
+      this.renderResults(data.resources?.results?.products || []);
     } catch (error) {
       console.error('Search error:', error);
     }
@@ -292,7 +300,9 @@ class PredictiveSearch {
     if (!products.length) { this.hideResults(); return; }
     this.results.innerHTML = products.map(product => `
       <a href="${product.url}" class="search-result">
-        ${product.featured_image ? `<img src="${product.featured_image}" alt="${product.title}" class="search-result__image">` : ''}
+        ${product.featured_image
+          ? `<img src="${product.featured_image}" alt="${product.title}" class="search-result__image">`
+          : ''}
         <div class="search-result__content">
           <div class="search-result__title">${product.title}</div>
           <div class="search-result__price">${this.formatMoney(product.price)}</div>
@@ -308,62 +318,62 @@ class PredictiveSearch {
 
 /* ============================================
    INITIALIZATION
-   (header sticky + mobile drawer handled by
-    header.liquid — do NOT duplicate here)
+   header sticky + mobile drawer handled by
+   header.liquid — do NOT duplicate here
    ============================================ */
 document.addEventListener('DOMContentLoaded', () => {
 
-// Announcement bar close
-function syncHeaderPosition() {
-  const announcement = document.querySelector('.announcement-bar');
-  const header = document.getElementById('site-header');
-  const aH = (announcement && announcement.offsetHeight > 0) ? announcement.offsetHeight : 0;
-  const hH = header ? header.offsetHeight : 0;
-  document.documentElement.style.setProperty('--announcement-height', aH + 'px');
-  document.documentElement.style.setProperty('--nav-total-height', (aH + hH) + 'px');
-}
+  /* ── Announcement bar ── */
+  function syncHeaderPosition() {
+    const announcement = document.querySelector('.announcement-bar');
+    const header = document.getElementById('site-header');
+    const aH = (announcement && announcement.offsetHeight > 0) ? announcement.offsetHeight : 0;
+    const hH = header ? header.offsetHeight : 0;
+    document.documentElement.style.setProperty('--announcement-height', aH + 'px');
+    document.documentElement.style.setProperty('--nav-total-height', (aH + hH) + 'px');
+  }
 
-const announcementClose = document.querySelector('.announcement-bar__close');
-if (announcementClose) {
-  announcementClose.addEventListener('click', () => {
-    const bar = announcementClose.closest('.announcement-bar');
-    if (bar) {
-      bar.style.display = 'none';
-      syncHeaderPosition();
-    }
-    localStorage.setItem('announcement-bar-closed', 'true');
-  });
+  // Run on load so body padding is correct immediately
+  syncHeaderPosition();
+  window.addEventListener('resize', debounce(syncHeaderPosition, 100), { passive: true });
+  window.addEventListener('load', syncHeaderPosition);
 
-  if (localStorage.getItem('announcement-bar-closed') === 'true') {
-    const bar = document.querySelector('.announcement-bar');
-    if (bar) {
-      bar.style.display = 'none';
-      syncHeaderPosition();
+  const announcementClose = document.querySelector('.announcement-bar__close');
+  if (announcementClose) {
+    announcementClose.addEventListener('click', () => {
+      const bar = announcementClose.closest('.announcement-bar');
+      if (bar) { bar.style.display = 'none'; syncHeaderPosition(); }
+      // sessionStorage resets each browser session (better UX than localStorage)
+      sessionStorage.setItem('announcement-bar-closed', 'true');
+    });
+
+    if (sessionStorage.getItem('announcement-bar-closed') === 'true') {
+      const bar = document.querySelector('.announcement-bar');
+      if (bar) { bar.style.display = 'none'; syncHeaderPosition(); }
     }
   }
-}
 
-  // Accessible links
+  /* ── Accessible external links ── */
   document.querySelectorAll('a[target="_blank"]').forEach(link => {
     if (!link.getAttribute('rel')?.includes('noopener')) {
       link.setAttribute('rel', 'noopener noreferrer');
     }
   });
 
-  // Cart Manager
+  /* ── Cart Manager ── */
   new CartManager();
 
-  // Variant Selectors
+  /* ── Variant Selectors ── */
   document.querySelectorAll('[data-product-form]').forEach(form => {
     new VariantSelector(form);
   });
 
-  // Quantity Selectors
+  /* ── Quantity Selectors ── */
   document.querySelectorAll('[data-quantity-selector]').forEach(selector => {
     new QuantitySelector(selector);
   });
 
-  // Predictive Search
+  /* ── Predictive Search ── */
   document.querySelectorAll('[data-predictive-search]').forEach(search => {
     new PredictiveSearch(search);
   });
