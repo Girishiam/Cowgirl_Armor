@@ -1,0 +1,588 @@
+<style>
+  .rte-editorial-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    padding-left: {{ section.settings.padding_h_mobile }}px;
+    padding-right: {{ section.settings.padding_h_mobile }}px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .rte-editorial-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+      padding-left: {{ section.settings.padding_h_desktop }}px;
+      padding-right: {{ section.settings.padding_h_desktop }}px;
+    }
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__inner {
+    max-width: {{ section.settings.content_max_width }}px;
+    {%- if section.settings.content_align == 'center' %}
+    margin-left: auto;
+    margin-right: auto;
+    {%- elsif section.settings.content_align == 'right' %}
+    margin-left: auto;
+    margin-right: 0;
+    {%- else %}
+    margin-left: 0;
+    margin-right: auto;
+    {%- endif %}
+  }
+
+  /* ── Title ── */
+  .rte-editorial-{{ section.id }} .rte-ed__title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_size_min }}px, 5vw, {{ section.settings.title_size_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
+    letter-spacing: {{ section.settings.title_letter_spacing | divided_by: 100.0 }}em;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 {{ section.settings.title_gap }}px;
+    text-align: {{ section.settings.text_align }};
+  }
+
+  /* ── Rich Text Body ── */
+  .rte-editorial-{{ section.id }} .rte-ed__body {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp({{ section.settings.body_size_min }}px, 1.5vw, {{ section.settings.body_size_max }}px);
+    font-weight: {{ section.settings.body_weight }};
+    line-height: {{ section.settings.body_line_height | divided_by: 100.0 }};
+    color: {{ section.settings.body_color }};
+    text-align: {{ section.settings.text_align }};
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body p {
+    margin: 0 0 {{ section.settings.paragraph_gap }}px;
+  }
+  .rte-editorial-{{ section.id }} .rte-ed__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body h1,
+  .rte-editorial-{{ section.id }} .rte-ed__body h2,
+  .rte-editorial-{{ section.id }} .rte-ed__body h3,
+  .rte-editorial-{{ section.id }} .rte-ed__body h4,
+  .rte-editorial-{{ section.id }} .rte-ed__body h5,
+  .rte-editorial-{{ section.id }} .rte-ed__body h6 {
+    font-family: var(--font-heading-family, serif);
+    font-weight: {{ section.settings.subheading_weight }};
+    font-size: clamp({{ section.settings.subheading_size_min }}px, 2vw, {{ section.settings.subheading_size_max }}px);
+    color: {{ section.settings.subheading_color }};
+    margin: {{ section.settings.subheading_gap_top }}px 0 {{ section.settings.subheading_gap_bottom }}px;
+    line-height: 1.3;
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body strong,
+  .rte-editorial-{{ section.id }} .rte-ed__body b {
+    font-weight: {{ section.settings.bold_weight }};
+    color: {{ section.settings.bold_color }};
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body em,
+  .rte-editorial-{{ section.id }} .rte-ed__body i {
+    font-style: italic;
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body a {
+    color: {{ section.settings.link_color }};
+    text-decoration: {{ section.settings.link_decoration }};
+    text-underline-offset: 3px;
+  }
+  .rte-editorial-{{ section.id }} .rte-ed__body a:hover {
+    opacity: 0.75;
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body ul,
+  .rte-editorial-{{ section.id }} .rte-ed__body ol {
+    padding-left: {{ section.settings.list_indent }}px;
+    margin: 0 0 {{ section.settings.paragraph_gap }}px;
+  }
+  .rte-editorial-{{ section.id }} .rte-ed__body ul {
+    list-style: {{ section.settings.ul_style }};
+  }
+  .rte-editorial-{{ section.id }} .rte-ed__body ol {
+    list-style: decimal;
+  }
+  .rte-editorial-{{ section.id }} .rte-ed__body li {
+    margin-bottom: {{ section.settings.list_item_gap }}px;
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body blockquote {
+    border-left: 3px solid {{ section.settings.body_color }};
+    margin: 1.5rem 0;
+    padding: 0.5rem 0 0.5rem 1.25rem;
+    opacity: 0.75;
+    font-style: italic;
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body hr {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    margin: {{ section.settings.paragraph_gap }}px 0;
+  }
+
+  .rte-editorial-{{ section.id }} .rte-ed__body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5rem 0;
+    border-radius: {{ section.settings.image_radius }}px;
+  }
+
+  /* ── Button ── */
+  .rte-editorial-{{ section.id }} .rte-ed__btn-wrap {
+    margin-top: {{ section.settings.btn_gap }}px;
+    text-align: {{ section.settings.text_align }};
+  }
+  .rte-editorial-{{ section.id }} .rte-ed__btn {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_text }};
+    border: {{ section.settings.btn_border_width }}px solid {{ section.settings.btn_border_color }};
+    border-radius: {{ section.settings.btn_radius }}px;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.btn_font_size }}px;
+    font-weight: {{ section.settings.btn_font_weight }};
+    letter-spacing: 0.04em;
+    text-transform: {{ section.settings.btn_transform }};
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .rte-editorial-{{ section.id }} .rte-ed__btn:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+  }
+</style>
+
+<div class="rte-editorial-{{ section.id }}">
+  <div class="rte-ed__inner">
+
+    {%- if section.settings.title != blank -%}
+      <{{ section.settings.title_tag }} class="rte-ed__title">
+        {{ section.settings.title }}
+      </{{ section.settings.title_tag }}>
+    {%- endif -%}
+
+    {%- if section.settings.content != blank -%}
+      <div class="rte-ed__body rte">
+        {{ section.settings.content }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.btn_label != blank and section.settings.btn_link != blank -%}
+      <div class="rte-ed__btn-wrap">
+        <a href="{{ section.settings.btn_link }}" class="rte-ed__btn">
+          {{ section.settings.btn_label }}
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rich Text Editorial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content Max Width",
+      "min": 400, "max": 1600, "step": 20, "unit": "px", "default": 860
+    },
+    {
+      "type": "select",
+      "id": "content_align",
+      "label": "Content Block Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left",    "label": "Left"    },
+        { "value": "center",  "label": "Center"  },
+        { "value": "right",   "label": "Right"   },
+        { "value": "justify", "label": "Justify" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Padding — Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_h_desktop",
+      "label": "Sides", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Padding — Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_h_mobile",
+      "label": "Sides", "min": 0, "max": 60, "step": 4, "unit": "px", "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Be The Light Pink Memorial Cap"
+    },
+    {
+      "type": "select",
+      "id": "title_tag",
+      "label": "Title HTML Tag",
+      "options": [
+        { "value": "h1", "label": "H1 — Page title"    },
+        { "value": "h2", "label": "H2 — Section title" },
+        { "value": "h3", "label": "H3"                 },
+        { "value": "p",  "label": "Paragraph"          }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "title_size_min",
+      "label": "Title Size — Min (mobile)",
+      "min": 18, "max": 60, "step": 2, "unit": "px", "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_size_max",
+      "label": "Title Size — Max (desktop)",
+      "min": 24, "max": 96, "step": 2, "unit": "px", "default": 52
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title Font Weight",
+      "min": 300, "max": 900, "step": 100, "default": 700
+    },
+    {
+      "type": "range",
+      "id": "title_line_height",
+      "label": "Title Line Height",
+      "min": 90, "max": 160, "step": 5, "unit": "%", "default": 115,
+      "info": "e.g. 115 = 1.15"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Title Letter Spacing",
+      "min": -5, "max": 20, "step": 1, "default": -2,
+      "info": "Divide by 100 — e.g. -2 = -0.02em"
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "label": "Gap Below Title",
+      "min": 8, "max": 80, "step": 4, "unit": "px", "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Body Text"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "info": "Supports bold, italic, headings, bullet lists, numbered lists, links"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "body_size_min",
+      "label": "Body Size — Min (mobile)",
+      "min": 12, "max": 24, "step": 1, "unit": "px", "default": 15
+    },
+    {
+      "type": "range",
+      "id": "body_size_max",
+      "label": "Body Size — Max (desktop)",
+      "min": 14, "max": 28, "step": 1, "unit": "px", "default": 18
+    },
+    {
+      "type": "range",
+      "id": "body_weight",
+      "label": "Body Font Weight",
+      "min": 300, "max": 700, "step": 100, "default": 400
+    },
+    {
+      "type": "range",
+      "id": "body_line_height",
+      "label": "Body Line Height",
+      "min": 120, "max": 220, "step": 5, "unit": "%", "default": 175,
+      "info": "e.g. 175 = 1.75"
+    },
+    {
+      "type": "range",
+      "id": "paragraph_gap",
+      "label": "Gap Between Paragraphs",
+      "min": 8, "max": 48, "step": 2, "unit": "px", "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Bold Text"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Bold Text Color",
+      "default": "#1a1a1a",
+      "info": "Set to a different color to make bold text stand out"
+    },
+    {
+      "type": "range",
+      "id": "bold_weight",
+      "label": "Bold Font Weight",
+      "min": 500, "max": 900, "step": 100, "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Subheadings (H2–H6 in body)"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_min",
+      "label": "Subheading Size — Min",
+      "min": 14, "max": 32, "step": 1, "unit": "px", "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_max",
+      "label": "Subheading Size — Max",
+      "min": 16, "max": 48, "step": 1, "unit": "px", "default": 24
+    },
+    {
+      "type": "range",
+      "id": "subheading_weight",
+      "label": "Subheading Font Weight",
+      "min": 400, "max": 900, "step": 100, "default": 700
+    },
+    {
+      "type": "range",
+      "id": "subheading_gap_top",
+      "label": "Gap Above Subheading",
+      "min": 0, "max": 60, "step": 4, "unit": "px", "default": 28
+    },
+    {
+      "type": "range",
+      "id": "subheading_gap_bottom",
+      "label": "Gap Below Subheading",
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Links"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "select",
+      "id": "link_decoration",
+      "label": "Link Decoration",
+      "options": [
+        { "value": "underline",    "label": "Underline"    },
+        { "value": "none",         "label": "None"         }
+      ],
+      "default": "underline"
+    },
+    {
+      "type": "header",
+      "content": "Lists"
+    },
+    {
+      "type": "select",
+      "id": "ul_style",
+      "label": "Bullet List Style",
+      "options": [
+        { "value": "disc",   "label": "Disc •"    },
+        { "value": "circle", "label": "Circle ○"  },
+        { "value": "square", "label": "Square ▪"  },
+        { "value": "none",   "label": "None"      }
+      ],
+      "default": "disc"
+    },
+    {
+      "type": "range",
+      "id": "list_indent",
+      "label": "List Indent",
+      "min": 12, "max": 40, "step": 2, "unit": "px", "default": 22
+    },
+    {
+      "type": "range",
+      "id": "list_item_gap",
+      "label": "Gap Between List Items",
+      "min": 0, "max": 20, "step": 2, "unit": "px", "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Images (inside body)"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image Border Radius",
+      "min": 0, "max": 20, "step": 2, "unit": "px", "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Button (optional)"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "info": "Leave blank to hide"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_border_color",
+      "label": "Button Border Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "btn_border_width",
+      "label": "Button Border Width",
+      "min": 0, "max": 4, "step": 1, "unit": "px", "default": 1
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button Corner Radius",
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 4
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_v",
+      "label": "Button Padding Vertical",
+      "min": 8, "max": 32, "step": 2, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_h",
+      "label": "Button Padding Horizontal",
+      "min": 16, "max": 80, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "range",
+      "id": "btn_font_size",
+      "label": "Button Font Size",
+      "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_font_weight",
+      "label": "Button Font Weight",
+      "min": 400, "max": 700, "step": 100, "default": 600
+    },
+    {
+      "type": "select",
+      "id": "btn_transform",
+      "label": "Button Text Transform",
+      "options": [
+        { "value": "none",      "label": "None"      },
+        { "value": "uppercase", "label": "Uppercase" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "btn_gap",
+      "label": "Gap Above Button",
+      "min": 8, "max": 60, "step": 4, "unit": "px", "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich Text Editorial"
+    }
+  ]
+}
+{% endschema %}
