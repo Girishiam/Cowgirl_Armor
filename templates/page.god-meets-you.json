@@ -78,12 +78,81 @@
         "background_color": "#d9d9d9",
         "text_color": "#1a1a1a"
       }
+    },
+    "editorial_page_VgtTDQ": {
+      "type": "editorial-page",
+      "blocks": {
+        "rich_text_JYjbth": {
+          "type": "rich_text",
+          "settings": {
+            "content": "<p>I’ve been a Christian my whole life, I’m just not sure if I’ve ever been a good one. But I can tell you this: the past 18 months have shown me that our God is the most loving God, and He will meet you where you’re at. He will change you, and what matters most is that every day you’re trying</p>"
+          }
+        },
+        "pullquote_Wb9NPY": {
+          "type": "pullquote",
+          "settings": {
+            "quote": "God meets you where you are.",
+            "cite": "Romans 8:38-39"
+          }
+        },
+        "author_qKeFce": {
+          "type": "author",
+          "settings": {
+            "label": "Written by",
+            "name": "A Cowgirl, xoxo",
+            "bio": "Equipped with the Armor of God."
+          }
+        },
+        "pagination_yJ8dra": {
+          "type": "pagination",
+          "settings": {
+            "prev_label": "",
+            "prev_link": "",
+            "next_label": "",
+            "next_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "rich_text_JYjbth",
+        "pullquote_Wb9NPY",
+        "author_qKeFce",
+        "pagination_yJ8dra"
+      ],
+      "name": "Editorial Page",
+      "settings": {
+        "image": "shopify://shop_images/GodMeetsYouWhereYouAree.webp",
+        "title": "God meets you where you are.",
+        "hero_height": 800,
+        "hero_focal": "center center",
+        "hero_overlay_opacity": 80,
+        "hero_title_align": "center",
+        "hero_title_color": "#ffffff",
+        "title_size": 60,
+        "title_weight": 700,
+        "body_size": 18,
+        "body_line_height": 18,
+        "content_width": 720,
+        "image_radius": 4,
+        "padding_top": 64,
+        "padding_bottom": 40,
+        "bg_color": "#d9d9d9",
+        "text_color": "#1A1A1A",
+        "quote_size": 28,
+        "quote_weight": 400,
+        "quote_border_width": 3,
+        "quote_border_color": "#8BA4AC",
+        "quote_bg": "#f5f5f5",
+        "quote_color": "#1A1A1A",
+        "avatar_size": 64
+      }
     }
   },
   "order": [
     "main",
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
-    "image_with_text_UAJ3AJ"
+    "image_with_text_UAJ3AJ",
+    "editorial_page_VgtTDQ"
   ]
 }
