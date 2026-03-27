@@ -69,9 +69,9 @@
      CONTENT BODY  (story + blocks)
   ════════════════════════════════ */
   .ep-{{ section.id }} .ep-body {
-    max-width: {{ section.settings.content_width }}px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 4rem clamp(1.5rem, 5vw, 3rem) 0;
+    padding: 4rem clamp(1.5rem, 5vw, 5rem) 0;
   }
 
   /* ── Rich Text ── */
@@ -80,6 +80,8 @@
     font-size: clamp(1rem, 1.8vw, {{ section.settings.body_size }}px);
     line-height: {{ section.settings.body_line_height | times: 0.1 }};
     color: var(--ep-text);
+    text-align: justify;
+    hyphens: auto;
   }
 
   .ep-{{ section.id }} .ep-rte p {
@@ -472,16 +474,6 @@
     {
       "type": "header",
       "content": "Layout"
-    },
-    {
-      "type": "range",
-      "id": "content_width",
-      "label": "Content Max Width",
-      "min": 480,
-      "max": 900,
-      "step": 20,
-      "unit": "px",
-      "default": 720
     },
     {
       "type": "range",
