@@ -17,13 +17,48 @@
         "text_color": "#1a1a1a",
         "logo_width": 350,
         "title": "",
-        "text_align": "center",
+        "text_align": "left",
         "padding_top": 80,
         "padding_bottom": 60
+      }
+    },
+    "premium_memorial_story_ExQC8Q": {
+      "type": "premium-memorial-story",
+      "blocks": {
+        "heading_PptcUg": {
+          "type": "heading",
+          "settings": {
+            "text": "Be The Light Pink Memorial Cap | #LoveLikeOaklynn"
+          }
+        },
+        "text_bgpXQ7": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Share the story and where the proceeds are going. Use bullet points for clear readability.</p>",
+            "hide_bullets": true
+          }
+        }
+      },
+      "block_order": [
+        "heading_PptcUg",
+        "text_bgpXQ7"
+      ],
+      "name": "Memorial Story Banner",
+      "settings": {
+        "image": "shopify://shop_images/GodMeetsYouWhereYouAree.webp",
+        "image_position": "center center",
+        "content_position": "left",
+        "bg_color": "#1A1A1A",
+        "text_color": "#FFFFFF",
+        "overlay_color": "#000000",
+        "overlay_opacity": 50,
+        "padding_top": 80,
+        "padding_bottom": 80
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "premium_memorial_story_ExQC8Q"
   ]
 }
