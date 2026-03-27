@@ -99,9 +99,10 @@
         "author_qKeFce": {
           "type": "author",
           "settings": {
+            "avatar": "shopify://shop_images/Signed_ACowgirl.webp",
             "label": "Written by",
             "name": "A Cowgirl, xoxo",
-            "bio": "Equipped with the Armor of God."
+            "bio": ""
           }
         },
         "pagination_yJ8dra": {
