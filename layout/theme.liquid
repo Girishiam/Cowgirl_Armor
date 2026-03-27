@@ -22,14 +22,19 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
-    {%- comment -%} Social Media Meta Tags {%- endcomment -%}
+    {%- comment -%} Social / OG tags {%- endcomment -%}
     <meta property="og:site_name" content="{{ shop.name }}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:title" content="{{ page_title | escape }}">
     <meta property="og:type" content="website">
     <meta property="og:description" content="{{ page_description | escape }}">
-    {%- if page_image -%}
-      <meta property="og:image" content="http:{{ page_image | image_url: width: 1200 }}">
+    {%- if settings.share_image != blank -%}
+      <meta property="og:image" content="https:{{ settings.share_image | image_url: width: 1200 }}">
+      <meta property="og:image:secure_url" content="https:{{ settings.share_image | image_url: width: 1200 }}">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+    {%- elsif page_image -%}
+      <meta property="og:image" content="https:{{ page_image | image_url: width: 1200 }}">
       <meta property="og:image:secure_url" content="https:{{ page_image | image_url: width: 1200 }}">
       <meta property="og:image:width" content="1200">
       <meta property="og:image:height" content="630">
@@ -40,12 +45,12 @@
 
     {{ content_for_header }}
 
-    {%- comment -%} Preconnect for performance {%- endcomment -%}
+    {%- comment -%} Performance: preconnect {%- endcomment -%}
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
 
-    {%- comment -%} Load fonts {%- endcomment -%}
+    {%- comment -%} Font preloads {%- endcomment -%}
     {%- unless settings.type_header_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
     {%- endunless -%}
@@ -53,113 +58,104 @@
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
     {%- endunless -%}
 
-    {%- assign header_font_bold = settings.type_header_font | font_modify: 'weight', 'bolder' -%}
-    {%- assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bolder' -%}
-    {%- assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic' -%}
-    {%- assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic' -%}
+    {%- assign header_font_bold      = settings.type_header_font | font_modify: 'weight', 'bolder' -%}
+    {%- assign body_font_bold        = settings.type_body_font   | font_modify: 'weight', 'bolder' -%}
+    {%- assign body_font_italic      = settings.type_body_font   | font_modify: 'style',  'italic' -%}
+    {%- assign body_font_bold_italic = body_font_bold            | font_modify: 'style',  'italic' -%}
 
     <style>
-      {{ settings.type_body_font | font_face: font_display: 'swap' }}
+      {{ settings.type_body_font   | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
-      {%- if body_font_bold -%}{{ body_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
-      {%- if body_font_italic -%}{{ body_font_italic | font_face: font_display: 'swap' }}{%- endif -%}
+      {%- if body_font_bold        -%}{{ body_font_bold        | font_face: font_display: 'swap' }}{%- endif -%}
+      {%- if body_font_italic      -%}{{ body_font_italic      | font_face: font_display: 'swap' }}{%- endif -%}
       {%- if body_font_bold_italic -%}{{ body_font_bold_italic | font_face: font_display: 'swap' }}{%- endif -%}
-      {%- if header_font_bold -%}{{ header_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
+      {%- if header_font_bold      -%}{{ header_font_bold      | font_face: font_display: 'swap' }}{%- endif -%}
 
       :root {
-        {%- comment -%} Colors {%- endcomment -%}
-        --color-bg: {{ settings.color_bg }};
-        --color-text: {{ settings.color_text }};
-        --color-accent: {{ settings.color_accent }};
-        --color-secondary: {{ settings.color_secondary }};
-        --color-border: {{ settings.color_border }};
-        --color-error: {{ settings.color_error }};
-        --color-success: {{ settings.color_success }};
+        /* ── Colors ── */
+        --color-bg:                 {{ settings.color_bg }};
+        --color-text:               {{ settings.color_text }};
+        --color-accent:             {{ settings.color_accent }};
+        --color-secondary:          {{ settings.color_secondary }};
+        --color-border:             {{ settings.color_border }};
+        --color-error:              {{ settings.color_error }};
+        --color-success:            {{ settings.color_success }};
 
-        {%- comment -%} Button Colors {%- endcomment -%}
-        --color-button: {{ settings.color_button }};
-        --color-button-text: {{ settings.color_button_text }};
-        --color-button-hover: {{ settings.color_button_hover }};
+        /* ── Buttons ── */
+        --color-button:             {{ settings.color_button }};
+        --color-button-text:        {{ settings.color_button_text }};
+        --color-button-hover:       {{ settings.color_button_hover }};
 
-        {%- comment -%} Typography {%- endcomment -%}
-        --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
-        --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
-        --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
-        --body-scale: {{ settings.body_scale | divided_by: 100.0 }};
-        --font-size-base-px: {{ settings.font_size_base }}px;
-        --heading-weight: {{ settings.heading_weight }};
-        --heading-text-transform: {{ settings.heading_text_transform }};
-        --heading-letter-spacing: {{ settings.heading_letter_spacing }}px;
-        --heading-line-height: {{ settings.heading_line_height | divided_by: 100.0 }};
-        --body-weight: {{ settings.body_weight }};
-        --body-letter-spacing: {{ settings.body_letter_spacing }}px;
-        --body-line-height: {{ settings.body_line_height | divided_by: 100.0 }};
+        /* ── Typography ── */
+        --font-heading-family:      {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+        --font-body-family:         {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+        --heading-scale:            {{ settings.heading_scale | divided_by: 100.0 }};
+        --body-scale:               {{ settings.body_scale | divided_by: 100.0 }};
+        --font-size-base-px:        {{ settings.font_size_base }}px;
+        --heading-weight:           {{ settings.heading_weight }};
+        --heading-text-transform:   {{ settings.heading_text_transform }};
+        --heading-letter-spacing:   {{ settings.heading_letter_spacing }}px;
+        --heading-line-height:      {{ settings.heading_line_height | divided_by: 100.0 }};
+        --body-weight:              {{ settings.body_weight }};
+        --body-letter-spacing:      {{ settings.body_letter_spacing }}px;
+        --body-line-height:         {{ settings.body_line_height | divided_by: 100.0 }};
 
-        {%- comment -%} Page Layout {%- endcomment -%}
-        --page-width: {{ settings.page_width }}px;
-        --content-width: {{ settings.content_width }}px;
+        /* ── Layout ── */
+        --page-width:               {{ settings.page_width }}px;
+        --content-width:            {{ settings.content_width }}px;
 
-        {%- comment -%} Spacing {%- endcomment -%}
-        --spacing-sections: {{ settings.spacing_sections }}px;
-        --spacing-grid-horizontal: {{ settings.spacing_grid_horizontal }}px;
-        --spacing-grid-vertical: {{ settings.spacing_grid_vertical }}px;
+        /* ── Spacing ── */
+        --spacing-sections:         {{ settings.spacing_sections }}px;
+        --spacing-grid-horizontal:  {{ settings.spacing_grid_horizontal }}px;
+        --spacing-grid-vertical:    {{ settings.spacing_grid_vertical }}px;
 
-        {%- comment -%} Border & Corners {%- endcomment -%}
-        --border-radius: {{ settings.border_radius }}px;
-        --border-thickness: {{ settings.border_thickness }}px;
-        --border-opacity: {{ settings.border_opacity | divided_by: 100.0 }};
-        --buttons-radius: {{ settings.buttons_radius }}px;
+        /* ── Borders ── */
+        --border-radius:            {{ settings.border_radius }}px;
+        --border-thickness:         {{ settings.border_thickness }}px;
+        --border-opacity:           {{ settings.border_opacity | divided_by: 100.0 }};
+        --buttons-radius:           {{ settings.buttons_radius }}px;
         --buttons-border-thickness: {{ settings.buttons_border_thickness }}px;
 
-        {%- comment -%} Shadows {%- endcomment -%}
-        --shadow-opacity: {{ settings.shadow_opacity | divided_by: 100.0 }};
-        --shadow-blur: {{ settings.shadow_blur }}px;
+        /* ── Shadows ── */
+        --shadow-opacity:           {{ settings.shadow_opacity | divided_by: 100.0 }};
+        --shadow-blur:              {{ settings.shadow_blur }}px;
 
-        {%- comment -%} Logo {%- endcomment -%}
-        --logo-width: {{ settings.logo_width }}px;
+        /* ── Logo ── */
+        --logo-width:               {{ settings.logo_width }}px;
 
-        {%- comment -%} Badges {%- endcomment -%}
-        --badge-sale-bg: {{ settings.badge_sale_bg }};
-        --badge-sale-text: {{ settings.badge_sale_text }};
-        --badge-sold-out-bg: {{ settings.badge_sold_out_bg }};
-        --badge-sold-out-text: {{ settings.badge_sold_out_text }};
-        --badge-corner-radius: {{ settings.badge_corner_radius }}px;
+        /* ── Badges ── */
+        --badge-sale-bg:            {{ settings.badge_sale_bg }};
+        --badge-sale-text:          {{ settings.badge_sale_text }};
+        --badge-sold-out-bg:        {{ settings.badge_sold_out_bg }};
+        --badge-sold-out-text:      {{ settings.badge_sold_out_text }};
+        --badge-corner-radius:      {{ settings.badge_corner_radius }}px;
 
-        {%- comment -%} Drawers {%- endcomment -%}
-        --drawer-overlay-opacity: {{ settings.drawer_overlay_opacity | divided_by: 100.0 }};
-        --drawer-overlay-color: {{ settings.drawer_overlay_color }};
+        /* ── Drawers ── */
+        --drawer-overlay-opacity:   {{ settings.drawer_overlay_opacity | divided_by: 100.0 }};
+        --drawer-overlay-color:     {{ settings.drawer_overlay_color }};
 
-        {%- comment -%} Icons {%- endcomment -%}
-        --icon-size: {{ settings.icon_size }}px;
+        /* ── Icons ── */
+        --icon-size:                {{ settings.icon_size }}px;
 
-        {%- comment -%} Input Fields {%- endcomment -%}
-        --inputs-radius: {{ settings.inputs_radius }}px;
-        --inputs-border-thickness: {{ settings.inputs_border_thickness }}px;
-        --inputs-bg: {{ settings.inputs_bg }};
-        --inputs-border-color: {{ settings.inputs_border_color }};
-        --inputs-focus-color: {{ settings.inputs_focus_color }};
+        /* ── Inputs ── */
+        --inputs-radius:            {{ settings.inputs_radius }}px;
+        --inputs-border-thickness:  {{ settings.inputs_border_thickness }}px;
+        --inputs-bg:                {{ settings.inputs_bg }};
+        --inputs-border-color:      {{ settings.inputs_border_color }};
+        --inputs-focus-color:       {{ settings.inputs_focus_color }};
 
-        {%- comment -%} Popovers & Modals {%- endcomment -%}
-        --popup-border-radius: {{ settings.popup_border_radius }}px;
-        --popup-border-thickness: {{ settings.popup_border_thickness }}px;
-        --popup-overlay-opacity: {{ settings.popup_overlay_opacity | divided_by: 100.0 }};
-        --popup-overlay-color: {{ settings.popup_overlay_color }};
+        /* ── Popups ── */
+        --popup-border-radius:      {{ settings.popup_border_radius }}px;
+        --popup-border-thickness:   {{ settings.popup_border_thickness }}px;
+        --popup-overlay-opacity:    {{ settings.popup_overlay_opacity | divided_by: 100.0 }};
+        --popup-overlay-color:      {{ settings.popup_overlay_color }};
 
-        {%- comment -%} Prices {%- endcomment -%}
-        --price-sale-color: {{ settings.price_sale_color }};
+        /* ── Prices ── */
+        --price-sale-color:         {{ settings.price_sale_color }};
       }
 
-      {% if settings.buttons_uppercase %}
-      .btn {
-        text-transform: uppercase;
-      }
-      {% endif %}
-
-      {% if settings.buttons_shadow %}
-      .btn {
-        box-shadow: 0 4px var(--shadow-blur) rgba(0, 0, 0, var(--shadow-opacity));
-      }
-      {% endif %}
+      {% if settings.buttons_uppercase %}.btn { text-transform: uppercase; }{% endif %}
+      {% if settings.buttons_shadow %}.btn { box-shadow: 0 4px var(--shadow-blur) rgba(0,0,0,var(--shadow-opacity)); }{% endif %}
 
       input, textarea, select {
         border-radius: var(--inputs-radius);
@@ -172,18 +168,9 @@
         outline: none;
       }
 
-      .badge--sale {
-        background-color: var(--badge-sale-bg);
-        color: var(--badge-sale-text);
-        border-radius: var(--badge-corner-radius);
-      }
-      .badge--sold-out {
-        background-color: var(--badge-sold-out-bg);
-        color: var(--badge-sold-out-text);
-        border-radius: var(--badge-corner-radius);
-      }
-
-      .price--sale { color: var(--price-sale-color); }
+      .badge--sale     { background-color: var(--badge-sale-bg);     color: var(--badge-sale-text);     border-radius: var(--badge-corner-radius); }
+      .badge--sold-out { background-color: var(--badge-sold-out-bg); color: var(--badge-sold-out-text); border-radius: var(--badge-corner-radius); }
+      .price--sale     { color: var(--price-sale-color); }
 
       .modal-overlay, .drawer-overlay {
         background-color: var(--drawer-overlay-color);
@@ -193,11 +180,9 @@
         opacity: var(--popup-overlay-opacity);
         background-color: var(--popup-overlay-color);
       }
+      {% unless settings.popup_show_overlay %}.modal-overlay { display: none; }{% endunless %}
 
-      {% unless settings.popup_show_overlay %}
-      .modal-overlay { display: none; }
-      {% endunless %}
-
+      /* ── Scroll animations ── */
       {% if settings.animations_reveal_on_scroll %}
       .animate-on-scroll {
         opacity: 0;
@@ -214,6 +199,7 @@
       {% endif %}
       {% endif %}
 
+      /* ── Image hover zoom ── */
       {% if settings.animations_hover_images %}
       .card__media img, .product-card img {
         transition: transform 0.4s ease;
@@ -222,16 +208,55 @@
         transform: scale(1.05);
       }
       {% endif %}
+
+      /* ── Skip to content ── */
+      .skip-to-content {
+        position: absolute;
+        left: -9999px;
+        z-index: 9999;
+        padding: 10px 20px;
+        background: var(--color-bg, #fff);
+        color: var(--color-text, #000);
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+      .skip-to-content:focus { left: 10px; top: 10px; }
     </style>
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
-    <script src="{{ 'main.js' | asset_url }}" defer="defer"></script>
+
+    {%- comment -%}
+      Expose routes BEFORE cart.js loads so Cart object can read them.
+      cart.js defines CartDrawer custom element — must load before main.js.
+    {%- endcomment -%}
+    <script>
+      window.shopUrl = '{{ request.origin }}';
+      window.routes = {
+        cart_add_url:          '{{ routes.cart_add_url }}',
+        cart_change_url:       '{{ routes.cart_change_url }}',
+        cart_update_url:       '{{ routes.cart_update_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}'
+      };
+      window.cartStrings = {
+        error:         `{{ 'sections.cart.cart_error'    | t }}`,
+        quantityError: `{{ 'sections.cart.quantity_error' | t }}`
+      };
+      window.variantStrings = {
+        addToCart:   `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut:     `{{ 'products.product.sold_out'    | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`
+      };
+    </script>
+
+    {%- comment -%} cart.js before main.js — defines CartDrawer custom element {%- endcomment -%}
+    <script src="{{ 'cart.js' | asset_url }}" defer></script>
+    <script src="{{ 'main.js' | asset_url }}" defer></script>
   </head>
 
   <body class="template-{{ template.name }}">
-    <a class="skip-to-content" href="#MainContent">
-      Skip to content
-    </a>
+
+    <a class="skip-to-content" href="#MainContent">Skip to content</a>
 
     {% section 'announcement-bar' %}
     {% section 'header' %}
@@ -242,29 +267,44 @@
 
     {% section 'footer' %}
 
+    {%- comment -%}
+      ── Cart UI ──────────────────────────────────────────────
+      Use cart-drawer for a slide-in panel (recommended).
+      Swap for cart-notification if you prefer a toast bubble.
+      Check which one matches settings.cart_type below.
+    {%- endcomment -%}
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'cart-drawer' %}
+    {%- elsif settings.cart_type == 'notification' -%}
+      {% section 'cart-notification' %}
+    {%- else -%}
+      {%- comment -%} 'page' type — no overlay needed {%- endcomment -%}
+    {%- endif -%}
+
+    {%- comment -%} Accessibility {%- endcomment -%}
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
     </ul>
 
+    {%- comment -%} Scroll-reveal IntersectionObserver {%- endcomment -%}
+    {% if settings.animations_reveal_on_scroll %}
     <script>
-      window.shopUrl = '{{ request.origin }}';
-      window.routes = {
-        cart_add_url: '{{ routes.cart_add_url }}',
-        cart_change_url: '{{ routes.cart_change_url }}',
-        cart_update_url: '{{ routes.cart_update_url }}',
-        predictive_search_url: '{{ routes.predictive_search_url }}'
-      };
-
-      window.cartStrings = {
-        error: `{{ 'sections.cart.cart_error' | t }}`,
-        quantityError: `{{ 'sections.cart.quantity_error' | t }}`
-      };
-
-      window.variantStrings = {
-        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
-        soldOut: `{{ 'products.product.sold_out' | t }}`,
-        unavailable: `{{ 'products.product.unavailable' | t }}`
-      };
+      (function() {
+        if (!('IntersectionObserver' in window)) return;
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.animate-on-scroll').forEach(function(el) {
+          observer.observe(el);
+        });
+      })();
     </script>
+    {% endif %}
+
   </body>
 </html>
