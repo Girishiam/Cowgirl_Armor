@@ -85,11 +85,12 @@
         "rich_text_JYjbth": {
           "type": "rich_text",
           "settings": {
-            "content": "<p>I’ve been a Christian my whole life, I’m just not sure if I’ve ever been a good one. But I can tell you this: the past 18 months have shown me that our God is the most loving God, and He will meet you where you’re at. He will change you, and what matters most is that every day you’re trying</p>"
+            "content": "<p>I’ve been a Christian my whole life, I’m just not sure if I’ve ever been a good one. But I can tell you this: the past 18 months have shown me that our God is the most loving God, and He will meet you where you’re at. He will change you, and what matters most is that every day you’re trying.</p><p>My parents raised me in church, and led me by great examples of hard work and compassion. They were firm in their foundation of church and they walked in the path every day and showed me what it looks like to be wholesome, loving, determined people of God. I was blessed, and still am that God chose them as my parents.</p><p>Life happens, we move away from our parents, we lose our way, and go through tough times. Every single person on this earth has done things we regret, and are far from perfect. I lost a little of myself over the past few years. Personal injuries, horse injuries, and situations I landed in made me bitter, jealous, and maybe even mean at times. I had no reason to be, I had a great job, and a few great friends who have never left me, even in the worst of times. But, when I got hurt, I thought what I loved the most was taken away from me. Roping has been my whole life since the first time I picked one up in junior high. I resented God for taking my passion away from me. I resented my friends because they were getting to do the things I could not. I kept all this inside because I was embarrassed of the person I had become. I was supposed to be a leader, and here I was in a dark, depressed shadow, with nothing but bitterness in my heart. I had a surgery, it didn’t help. I did physical therapy, it didn’t help. I tried to just ride and rope through the pain. It didn’t help. I was an empty shell of someone who I swore I would never be. I was lost.</p><p>Somewhere in July, when things we’re at the lowest of lows, I decided to start going back to church with some encouragement from my mom. I showed up, but I can’t say I was putting in the effort. I figured “there” as better than not at all, I was faking it. A few weeks later I was sitting in a pew at back, away from everyone else, just going through the motions when the Preacher spoke, and I felt like he was speaking directly to me. “God meets you where you are”. He had been going through the book of Romans and was talking about chapter 8, verse 38-39 where the bible says “For I am sure that neither death nor life, nor angels nor rulers, nor things present nor things to come, nor powers, nor height nor depth, nor anything else in all creation, will be able to separate us from the love of God in Christ Jesus our Lord.”</p><p>I was hit straight in the chest. I was faking it. In my faith, in my job, in my spirit. In every aspect of my life, I was faking it, not believing that I was worthy of God’s love, not worthy of being a winner, not worthy of the position I had been put it. It wasn’t about what I didn’t have or get to do anymore, it was about what I wasn’t doing with what I did have. That moment changed me. In that moment he met me. He met me right where I was at. I was sitting in a church pew. But that didn’t matter. He would have met me anywhere; laying in a ditch somewhere, at a bar, in jail. “Nor anything else in all creation, will be able to separate us from the love of God.” My ability to rope never defined who I was as a person. Those friends who stuck around, it wasn’t because of my abilities or lack thereof, it was because they loved me just like Jesus does. The reason I get to wake up every day and get to go to a job I love is because God isn’t done with me yet. He wants me to show young men and women his example of love me though him.</p><p>A funny thing happened after that. My life got so much better after I started living for him and not myself. I started opening my bible more. I had decided if I couldn’t rope again, I was going to help others be the best version of themselves through Christ and in the arena. I started inviting others to go to church with me. I started to speak positively into others, and that darkness went away.</p><p>Sometime this fall, one of those amazing friends who stuck around mentioned another treatment that they thought might help me after my surgery. It was a little scary, a little expensive, and I wasn’t sure if I could stomach the possibility of another failed try at fixing my broken self. I prayed about it, and the next morning all I could think about was giving it one more try, and that I did. I prayed it would help me, but I also decided to love myself enough to give my full physical effort in this as well. 18 months after surgery, I am finally back to roping again, entering again, pro rodeoing again.</p><p>Here we are, 4 months past that broken woman sitting in a back pew feeling better spiritually, mentally, and physically that I have in years. Roping again, happy again, but most importantly, loving myself in my relationship with Christ again. He met me where I was, and to repay him for that, I’m going to be vulnerable and meet others where they are and show them his love and what he can do for you. Everyone is going through something. Maybe they are not telling you. Talk to your friends, invite them to Church, give him opportunities for Christ to love them. Show that compassion Christ shows us to others. Love each other, Cowgirls.</p>"
           }
         },
         "pullquote_Wb9NPY": {
           "type": "pullquote",
+          "disabled": true,
           "settings": {
             "quote": "God meets you where you are.",
             "cite": "Romans 8:38-39"
@@ -106,8 +107,8 @@
         "pagination_yJ8dra": {
           "type": "pagination",
           "settings": {
-            "prev_label": "",
-            "prev_link": "",
+            "prev_label": "Believe in Yourself Cowgirl",
+            "prev_link": "shopify://pages/believe-in-yourself",
             "next_label": "",
             "next_link": ""
           }
@@ -121,29 +122,27 @@
       ],
       "name": "Editorial Page",
       "settings": {
-        "image": "shopify://shop_images/GodMeetsYouWhereYouAree.webp",
         "title": "God meets you where you are.",
+        "hero_title_align": "center",
+        "image": "shopify://shop_images/GodMeetsYouWhereYouAree.webp",
         "hero_height": 800,
         "hero_focal": "center center",
         "hero_overlay_opacity": 80,
-        "hero_title_align": "center",
-        "hero_title_color": "#ffffff",
         "title_size": 60,
         "title_weight": 700,
         "body_size": 18,
         "body_line_height": 18,
-        "content_width": 720,
         "image_radius": 4,
         "padding_top": 64,
         "padding_bottom": 40,
         "bg_color": "#d9d9d9",
-        "text_color": "#1A1A1A",
+        "text_color": "#1a1a1a",
         "quote_size": 28,
         "quote_weight": 400,
         "quote_border_width": 3,
-        "quote_border_color": "#8BA4AC",
+        "quote_border_color": "#8ba4ac",
         "quote_bg": "#f5f5f5",
-        "quote_color": "#1A1A1A",
+        "quote_color": "#1a1a1a",
         "avatar_size": 64
       }
     }
