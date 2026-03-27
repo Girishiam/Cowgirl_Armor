@@ -1,0 +1,1056 @@
+<style>
+  /* ── Reset ── */
+  .pf-{{ section.id }} *,
+  .pf-{{ section.id }} *::before,
+  .pf-{{ section.id }} *::after { box-sizing: border-box; }
+
+  /* ── Section ── */
+  .pf-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top_desktop }}px 0 {{ section.settings.padding_bottom_desktop }}px;
+  }
+
+  .pf-{{ section.id }} .pf__container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.padding_h_desktop }}px;
+  }
+
+  /* ── 2-col grid ── */
+  .pf-{{ section.id }} .pf__grid {
+    display: grid;
+    grid-template-columns: {{ section.settings.left_col }}fr {{ section.settings.right_col }}fr;
+    gap: {{ section.settings.col_gap }}px;
+    align-items: start;
+  }
+
+  /* ════════════════════
+     LEFT — Title block
+  ════════════════════ */
+  .pf-{{ section.id }} .pf__left {
+    position: sticky;
+    top: 100px;
+  }
+
+  .pf-{{ section.id }} .pf__eyebrow {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 {{ section.settings.eyebrow_gap }}px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pf-{{ section.id }} .pf__eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: {{ section.settings.accent_color }};
+    flex-shrink: 0;
+  }
+
+  .pf-{{ section.id }} .pf__title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_min }}px, 4vw, {{ section.settings.title_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: {{ section.settings.title_lh | divided_by: 100.0 }};
+    letter-spacing: {{ section.settings.title_ls | divided_by: 100.0 }}em;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 {{ section.settings.title_gap }}px;
+  }
+
+  .pf-{{ section.id }} .pf__subtitle {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp({{ section.settings.subtitle_min }}px, 1.3vw, {{ section.settings.subtitle_max }}px);
+    font-weight: {{ section.settings.subtitle_weight }};
+    line-height: 1.65;
+    color: {{ section.settings.subtitle_color }};
+    margin: 0;
+  }
+  .pf-{{ section.id }} .pf__subtitle p { margin: 0 0 0.75em; }
+  .pf-{{ section.id }} .pf__subtitle p:last-child { margin: 0; }
+  .pf-{{ section.id }} .pf__subtitle strong { font-weight: 700; color: {{ section.settings.title_color }}; }
+
+  /* ════════════════════
+     RIGHT — Form
+  ════════════════════ */
+  .pf-{{ section.id }} .pf__right {}
+
+  /* Success / error messages */
+  .pf-{{ section.id }} .pf__msg {
+    padding: 14px 20px;
+    border-radius: {{ section.settings.input_radius }}px;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 14px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .pf-{{ section.id }} .pf__msg--success {
+    background: #f0faf4;
+    border: 1px solid #a3d9b8;
+    color: #1a6e3c;
+  }
+  .pf-{{ section.id }} .pf__msg--error {
+    background: #fdf2f2;
+    border: 1px solid #f5c6c6;
+    color: #9b1c1c;
+  }
+  .pf-{{ section.id }} .pf__msg.is-visible { display: block; }
+
+  /* Form grid */
+  .pf-{{ section.id }} .pf__form {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.field_gap }}px;
+  }
+
+  /* Field groups (label + input) */
+  .pf-{{ section.id }} .pf__field {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.label_gap }}px;
+  }
+
+  /* Name row — 2 cols */
+  .pf-{{ section.id }} .pf__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.name_gap }}px;
+  }
+
+  /* Labels */
+  .pf-{{ section.id }} .pf__label {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.label_size }}px;
+    font-weight: {{ section.settings.label_weight }};
+    color: {{ section.settings.label_color }};
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pf-{{ section.id }} .pf__label .pf__req {
+    font-size: {{ section.settings.label_size | minus: 1 }}px;
+    font-weight: 400;
+    color: {{ section.settings.label_color }};
+    opacity: 0.5;
+  }
+
+  /* Inputs */
+  .pf-{{ section.id }} .pf__input,
+  .pf-{{ section.id }} .pf__textarea {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.input_size }}px;
+    font-weight: {{ section.settings.input_weight }};
+    color: {{ section.settings.input_text_color }};
+    background-color: {{ section.settings.input_bg }};
+    border: {{ section.settings.input_border_w }}px solid {{ section.settings.input_border_color }};
+    border-radius: {{ section.settings.input_radius }}px;
+    padding: {{ section.settings.input_pv }}px {{ section.settings.input_ph }}px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .pf-{{ section.id }} .pf__input::placeholder,
+  .pf-{{ section.id }} .pf__textarea::placeholder {
+    color: {{ section.settings.input_placeholder_color }};
+    opacity: 1;
+  }
+  .pf-{{ section.id }} .pf__input:focus,
+  .pf-{{ section.id }} .pf__textarea:focus {
+    border-color: {{ section.settings.input_focus_color }};
+    box-shadow: 0 0 0 3px {{ section.settings.input_focus_color | color_modify: 'alpha', 0.12 }};
+  }
+  .pf-{{ section.id }} .pf__input.is-invalid,
+  .pf-{{ section.id }} .pf__textarea.is-invalid {
+    border-color: #dc2626;
+  }
+
+  .pf-{{ section.id }} .pf__textarea {
+    resize: vertical;
+    min-height: {{ section.settings.textarea_height }}px;
+    line-height: 1.6;
+  }
+
+  /* Checkbox */
+  .pf-{{ section.id }} .pf__check-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .pf-{{ section.id }} .pf__check {
+    width: {{ section.settings.check_size }}px;
+    height: {{ section.settings.check_size }}px;
+    border: {{ section.settings.input_border_w }}px solid {{ section.settings.input_border_color }};
+    border-radius: {{ section.settings.check_radius }}px;
+    background-color: {{ section.settings.input_bg }};
+    flex-shrink: 0;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    transition: background-color 0.18s ease, border-color 0.18s ease;
+  }
+  .pf-{{ section.id }} .pf__check:checked {
+    background-color: {{ section.settings.accent_color }};
+    border-color: {{ section.settings.accent_color }};
+  }
+  .pf-{{ section.id }} .pf__check:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 35%;
+    height: 60%;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+  }
+  .pf-{{ section.id }} .pf__check-label {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.label_size }}px;
+    font-weight: {{ section.settings.label_weight }};
+    color: {{ section.settings.label_color }};
+    user-select: none;
+  }
+
+  /* Submit button */
+  .pf-{{ section.id }} .pf__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.btn_size }}px;
+    font-weight: {{ section.settings.btn_weight }};
+    letter-spacing: 0.04em;
+    text-transform: {{ section.settings.btn_transform }};
+    background-color: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_color }};
+    border: {{ section.settings.btn_border_w }}px solid {{ section.settings.btn_border_c }};
+    border-radius: {{ section.settings.btn_radius }}px;
+    padding: {{ section.settings.btn_pv }}px {{ section.settings.btn_ph }}px;
+    transition: background-color 0.25s ease, color 0.25s ease,
+                transform 0.2s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    align-self: flex-start;
+    position: relative;
+    overflow: hidden;
+  }
+  .pf-{{ section.id }} .pf__submit:hover {
+    background-color: {{ section.settings.btn_bg_hover }};
+    color: {{ section.settings.btn_color_hover }};
+    border-color: {{ section.settings.btn_bg_hover }};
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  }
+  .pf-{{ section.id }} .pf__submit:active {
+    transform: translateY(0);
+  }
+  .pf-{{ section.id }} .pf__submit.is-loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .pf-{{ section.id }} .pf__submit .pf__spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: pfSpin 0.7s linear infinite;
+  }
+  .pf-{{ section.id }} .pf__submit.is-loading .pf__spinner { display: block; }
+  .pf-{{ section.id }} .pf__submit.is-loading .pf__btn-text { opacity: 0.7; }
+
+  @keyframes pfSpin { to { transform: rotate(360deg); } }
+
+  /* Field-level error */
+  .pf-{{ section.id }} .pf__error-msg {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 12px;
+    color: #dc2626;
+    margin: 0;
+    display: none;
+  }
+  .pf-{{ section.id }} .pf__field.has-error .pf__error-msg { display: block; }
+
+  /* ── Responsive ── */
+  @media screen and (max-width: 900px) {
+    .pf-{{ section.id }} .pf__grid {
+      grid-template-columns: 1fr;
+      gap: {{ section.settings.col_gap | divided_by: 2 }}px;
+    }
+    .pf-{{ section.id }} .pf__left {
+      position: static;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .pf-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+    .pf-{{ section.id }} .pf__container {
+      padding: 0 {{ section.settings.padding_h_mobile }}px;
+    }
+    .pf-{{ section.id }} .pf__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="pf-{{ section.id }}">
+  <div class="pf__container">
+    <div class="pf__grid">
+
+      <!-- ══ LEFT: Title ══ -->
+      <div class="pf__left">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="pf__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.title != blank -%}
+          <h2 class="pf__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.subtitle != blank -%}
+          <div class="pf__subtitle">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+
+      <!-- ══ RIGHT: Form ══ -->
+      <div class="pf__right">
+
+        <div class="pf__msg pf__msg--success" id="pf-success-{{ section.id }}" role="alert">
+          {{ section.settings.success_msg }}
+        </div>
+        <div class="pf__msg pf__msg--error" id="pf-error-{{ section.id }}" role="alert">
+          {{ section.settings.error_msg }}
+        </div>
+
+        {%- form 'contact', id: 'pf-form-' | append: section.id, class: 'pf__form' -%}
+
+          {%- comment -%} Shopify contact form shows success via ?contact[posted_successfully] {%- endcomment -%}
+          {%- if form.posted_successfully? -%}
+            <script>
+              document.getElementById('pf-success-{{ section.id }}').classList.add('is-visible');
+              document.getElementById('pf-form-{{ section.id }}').style.display = 'none';
+            </script>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <script>
+              document.getElementById('pf-error-{{ section.id }}').classList.add('is-visible');
+            </script>
+          {%- endif -%}
+
+          {%- comment -%} ── Name row ── {%- endcomment -%}
+          {%- if section.settings.show_name -%}
+            <div class="pf__field">
+              <label class="pf__label">
+                {{ section.settings.name_label }}
+              </label>
+              <div class="pf__row">
+                <div class="pf__field">
+                  <label class="pf__label" for="pf-first-{{ section.id }}">
+                    {{ section.settings.first_name_label }}
+                    {%- if section.settings.name_required -%}
+                      <span class="pf__req">({{ section.settings.required_text }})</span>
+                    {%- endif -%}
+                  </label>
+                  <input
+                    type="text"
+                    id="pf-first-{{ section.id }}"
+                    name="contact[first_name]"
+                    class="pf__input"
+                    autocomplete="given-name"
+                    {% if section.settings.name_required %}required{% endif %}
+                    placeholder="{{ section.settings.first_name_placeholder }}"
+                  >
+                </div>
+                <div class="pf__field">
+                  <label class="pf__label" for="pf-last-{{ section.id }}">
+                    {{ section.settings.last_name_label }}
+                    {%- if section.settings.name_required -%}
+                      <span class="pf__req">({{ section.settings.required_text }})</span>
+                    {%- endif -%}
+                  </label>
+                  <input
+                    type="text"
+                    id="pf-last-{{ section.id }}"
+                    name="contact[last_name]"
+                    class="pf__input"
+                    autocomplete="family-name"
+                    {% if section.settings.name_required %}required{% endif %}
+                    placeholder="{{ section.settings.last_name_placeholder }}"
+                  >
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} ── Phone ── {%- endcomment -%}
+          {%- if section.settings.show_phone -%}
+            <div class="pf__field">
+              <label class="pf__label" for="pf-phone-{{ section.id }}">
+                {{ section.settings.phone_label }}
+                {%- if section.settings.phone_required -%}
+                  <span class="pf__req">({{ section.settings.required_text }})</span>
+                {%- endif -%}
+              </label>
+              <input
+                type="tel"
+                id="pf-phone-{{ section.id }}"
+                name="contact[phone]"
+                class="pf__input"
+                autocomplete="tel"
+                {% if section.settings.phone_required %}required{% endif %}
+                placeholder="{{ section.settings.phone_placeholder }}"
+              >
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} ── Email ── {%- endcomment -%}
+          {%- if section.settings.show_email -%}
+            <div class="pf__field">
+              <label class="pf__label" for="pf-email-{{ section.id }}">
+                {{ section.settings.email_label }}
+                {%- if section.settings.email_required -%}
+                  <span class="pf__req">({{ section.settings.required_text }})</span>
+                {%- endif -%}
+              </label>
+              <input
+                type="email"
+                id="pf-email-{{ section.id }}"
+                name="contact[email]"
+                class="pf__input"
+                autocomplete="email"
+                {% if section.settings.email_required %}required{% endif %}
+                placeholder="{{ section.settings.email_placeholder }}"
+                value="{{ form.email }}"
+              >
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} ── Newsletter checkbox ── {%- endcomment -%}
+          {%- if section.settings.show_newsletter -%}
+            <div class="pf__field">
+              <label class="pf__check-wrap">
+                <input
+                  type="checkbox"
+                  name="contact[newsletter]"
+                  class="pf__check"
+                  value="yes"
+                >
+                <span class="pf__check-label">{{ section.settings.newsletter_label }}</span>
+              </label>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} ── Message / Prayers ── {%- endcomment -%}
+          {%- if section.settings.show_message -%}
+            <div class="pf__field">
+              <label class="pf__label" for="pf-message-{{ section.id }}">
+                {{ section.settings.message_label }}
+                {%- if section.settings.message_required -%}
+                  <span class="pf__req">({{ section.settings.required_text }})</span>
+                {%- endif -%}
+              </label>
+              <textarea
+                id="pf-message-{{ section.id }}"
+                name="contact[body]"
+                class="pf__textarea"
+                {% if section.settings.message_required %}required{% endif %}
+                placeholder="{{ section.settings.message_placeholder }}"
+              >{{ form.body }}</textarea>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} ── Submit ── {%- endcomment -%}
+          <div>
+            <button type="submit" class="pf__submit">
+              <span class="pf__spinner" aria-hidden="true"></span>
+              <span class="pf__btn-text">{{ section.settings.btn_label }}</span>
+            </button>
+          </div>
+
+        {%- endform -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Prayer / Contact Form",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#8BA4AC"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Text Color",
+      "default": "#555555"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Content Width",
+      "min": 800, "max": 1600, "step": 20, "unit": "px", "default": 1280
+    },
+    {
+      "type": "range",
+      "id": "left_col",
+      "label": "Left Column Weight",
+      "min": 1, "max": 3, "step": 1, "default": 2,
+      "info": "e.g. 2 left vs 3 right"
+    },
+    {
+      "type": "range",
+      "id": "right_col",
+      "label": "Right Column Weight",
+      "min": 1, "max": 4, "step": 1, "default": 3
+    },
+    {
+      "type": "range",
+      "id": "col_gap",
+      "label": "Column Gap",
+      "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Padding — Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_h_desktop",
+      "label": "Sides", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Padding — Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_h_mobile",
+      "label": "Sides", "min": 0, "max": 40, "step": 4, "unit": "px", "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Left — Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "info": "Leave blank to hide"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow Font Size",
+      "min": 9, "max": 14, "step": 1, "unit": "px", "default": 11
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_gap",
+      "label": "Gap Below Eyebrow",
+      "min": 4, "max": 32, "step": 2, "unit": "px", "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Left — Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Share your love and prayers to the Domer Family:"
+    },
+    {
+      "type": "range",
+      "id": "title_min",
+      "label": "Title Size — Min",
+      "min": 20, "max": 56, "step": 2, "unit": "px", "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_max",
+      "label": "Title Size — Max",
+      "min": 28, "max": 80, "step": 2, "unit": "px", "default": 52
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title Font Weight",
+      "min": 300, "max": 900, "step": 100, "default": 700
+    },
+    {
+      "type": "range",
+      "id": "title_lh",
+      "label": "Title Line Height",
+      "min": 90, "max": 150, "step": 5, "unit": "%", "default": 110
+    },
+    {
+      "type": "range",
+      "id": "title_ls",
+      "label": "Title Letter Spacing",
+      "min": -5, "max": 10, "step": 1, "default": -2,
+      "info": "Divide by 100 — e.g. -2 = -0.02em"
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "label": "Gap Below Title",
+      "min": 0, "max": 48, "step": 4, "unit": "px", "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Left — Subtitle"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle / Description",
+      "info": "Optional text below the title. Supports bold, italic."
+    },
+    {
+      "type": "range",
+      "id": "subtitle_min",
+      "label": "Subtitle Size — Min",
+      "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "subtitle_max",
+      "label": "Subtitle Size — Max",
+      "min": 14, "max": 24, "step": 1, "unit": "px", "default": 17
+    },
+    {
+      "type": "range",
+      "id": "subtitle_weight",
+      "label": "Subtitle Font Weight",
+      "min": 300, "max": 600, "step": 100, "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Form Fields"
+    },
+    {
+      "type": "text",
+      "id": "required_text",
+      "label": "Required Field Label",
+      "default": "required"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name",
+      "label": "Show Name Fields",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Name Group Label",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "first_name_label",
+      "label": "First Name Label",
+      "default": "First Name"
+    },
+    {
+      "type": "text",
+      "id": "first_name_placeholder",
+      "label": "First Name Placeholder"
+    },
+    {
+      "type": "text",
+      "id": "last_name_label",
+      "label": "Last Name Label",
+      "default": "Last Name"
+    },
+    {
+      "type": "text",
+      "id": "last_name_placeholder",
+      "label": "Last Name Placeholder"
+    },
+    {
+      "type": "checkbox",
+      "id": "name_required",
+      "label": "Name Required",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Show Phone Field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Phone Label",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Phone Placeholder"
+    },
+    {
+      "type": "checkbox",
+      "id": "phone_required",
+      "label": "Phone Required",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email",
+      "label": "Show Email Field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email Label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email Placeholder"
+    },
+    {
+      "type": "checkbox",
+      "id": "email_required",
+      "label": "Email Required",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show Newsletter Checkbox",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_label",
+      "label": "Newsletter Checkbox Label",
+      "default": "Sign up for news and updates"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_message",
+      "label": "Show Message / Prayers Field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Message Label",
+      "default": "Message and prayers to send to the family;"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message Placeholder"
+    },
+    {
+      "type": "checkbox",
+      "id": "message_required",
+      "label": "Message Required",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Input Styling"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label Font Size",
+      "min": 11, "max": 18, "step": 1, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "label_weight",
+      "label": "Label Font Weight",
+      "min": 300, "max": 700, "step": 100, "default": 400
+    },
+    {
+      "type": "range",
+      "id": "label_gap",
+      "label": "Gap: Label to Input",
+      "min": 4, "max": 16, "step": 2, "unit": "px", "default": 8
+    },
+    {
+      "type": "color",
+      "id": "input_bg",
+      "label": "Input Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "input_placeholder_color",
+      "label": "Placeholder Color",
+      "default": "#aaaaaa"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input Border Color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_color",
+      "label": "Input Focus Color",
+      "default": "#8BA4AC"
+    },
+    {
+      "type": "range",
+      "id": "input_border_w",
+      "label": "Input Border Width",
+      "min": 0, "max": 3, "step": 1, "unit": "px", "default": 1
+    },
+    {
+      "type": "range",
+      "id": "input_radius",
+      "label": "Input Border Radius",
+      "min": 0, "max": 16, "step": 2, "unit": "px", "default": 4
+    },
+    {
+      "type": "range",
+      "id": "input_pv",
+      "label": "Input Padding Vertical",
+      "min": 8, "max": 24, "step": 2, "unit": "px", "default": 12
+    },
+    {
+      "type": "range",
+      "id": "input_ph",
+      "label": "Input Padding Horizontal",
+      "min": 8, "max": 28, "step": 2, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "input_size",
+      "label": "Input Font Size",
+      "min": 12, "max": 20, "step": 1, "unit": "px", "default": 15
+    },
+    {
+      "type": "range",
+      "id": "input_weight",
+      "label": "Input Font Weight",
+      "min": 300, "max": 500, "step": 100, "default": 400
+    },
+    {
+      "type": "range",
+      "id": "field_gap",
+      "label": "Gap Between Fields",
+      "min": 8, "max": 48, "step": 4, "unit": "px", "default": 24
+    },
+    {
+      "type": "range",
+      "id": "name_gap",
+      "label": "Gap Between Name Fields",
+      "min": 8, "max": 40, "step": 4, "unit": "px", "default": 20
+    },
+    {
+      "type": "range",
+      "id": "textarea_height",
+      "label": "Message Field Min Height",
+      "min": 80, "max": 300, "step": 10, "unit": "px", "default": 140
+    },
+    {
+      "type": "header",
+      "content": "Checkbox"
+    },
+    {
+      "type": "range",
+      "id": "check_size",
+      "label": "Checkbox Size",
+      "min": 14, "max": 24, "step": 2, "unit": "px", "default": 18
+    },
+    {
+      "type": "range",
+      "id": "check_radius",
+      "label": "Checkbox Radius",
+      "min": 0, "max": 6, "step": 1, "unit": "px", "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Submit Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "Submit"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_hover",
+      "label": "Button Hover Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "btn_color_hover",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_border_c",
+      "label": "Button Border Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "btn_border_w",
+      "label": "Button Border Width",
+      "min": 0, "max": 4, "step": 1, "unit": "px", "default": 1
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button Radius",
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 4
+    },
+    {
+      "type": "range",
+      "id": "btn_pv",
+      "label": "Button Padding V",
+      "min": 10, "max": 28, "step": 2, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_ph",
+      "label": "Button Padding H",
+      "min": 16, "max": 60, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "range",
+      "id": "btn_size",
+      "label": "Button Font Size",
+      "min": 12, "max": 18, "step": 1, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_weight",
+      "label": "Button Font Weight",
+      "min": 400, "max": 700, "step": 100, "default": 500
+    },
+    {
+      "type": "select",
+      "id": "btn_transform",
+      "label": "Button Text Transform",
+      "options": [
+        { "value": "none",      "label": "None"      },
+        { "value": "uppercase", "label": "Uppercase" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "text",
+      "id": "success_msg",
+      "label": "Success Message",
+      "default": "Thank you — your message and prayers have been received. The Domer family is grateful for your love."
+    },
+    {
+      "type": "text",
+      "id": "error_msg",
+      "label": "Error Message",
+      "default": "Something went wrong. Please check the form and try again."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Prayer / Contact Form"
+    }
+  ]
+}
+{% endschema %}
