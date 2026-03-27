@@ -6,7 +6,10 @@
     display: flex;
     flex-direction: column;
     justify-content: {{ section.settings.content_position }};
-    padding: {{ section.settings.padding_mobile }}px;
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    padding-left: {{ section.settings.padding_h_mobile }}px;
+    padding-right: {{ section.settings.padding_h_mobile }}px;
     overflow: hidden;
     background-color: {{ section.settings.bg_color }};
   }
@@ -14,7 +17,10 @@
   @media screen and (min-width: 768px) {
     .memorial-hero-{{ section.id }} {
       min-height: {{ section.settings.height_desktop }}px;
-      padding: {{ section.settings.padding_desktop }}px;
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+      padding-left: {{ section.settings.padding_h_desktop }}px;
+      padding-right: {{ section.settings.padding_h_desktop }}px;
     }
   }
 
@@ -117,6 +123,41 @@
     {%- endif -%}
   }
 
+  /* Richtext elements inside subtitle */
+  .memorial-hero-{{ section.id }} .mh__subtitle p {
+    margin: 0 0 0.6em;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle p:last-child {
+    margin-bottom: 0;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle strong,
+  .memorial-hero-{{ section.id }} .mh__subtitle b {
+    font-weight: 700;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle em,
+  .memorial-hero-{{ section.id }} .mh__subtitle i {
+    font-style: italic;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle ul,
+  .memorial-hero-{{ section.id }} .mh__subtitle ol {
+    padding-left: 1.4em;
+    margin: 0.4em 0 0.6em;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle ul {
+    list-style: disc;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle ol {
+    list-style: decimal;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle li {
+    margin-bottom: 0.3em;
+  }
+  .memorial-hero-{{ section.id }} .mh__subtitle a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   .memorial-hero-{{ section.id }} .mh__btn {
     display: inline-block;
     padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
@@ -191,10 +232,10 @@
     {%- endif -%}
 
     {%- if section.settings.subtitle != blank -%}
-      <p class="mh__subtitle{% if section.settings.enable_text_anim %} fade-up{% endif %}"
+      <div class="mh__subtitle{% if section.settings.enable_text_anim %} fade-up{% endif %}"
          style="{% if section.settings.enable_text_anim %}animation-delay: 400ms;{% endif %}">
         {{ section.settings.subtitle }}
-      </p>
+      </div>
     {%- endif -%}
 
     {%- if section.settings.btn_label != blank and section.settings.btn_link != blank -%}
@@ -363,23 +404,39 @@
     },
     {
       "type": "range",
-      "id": "padding_desktop",
-      "label": "Padding — Desktop",
-      "min": 20,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 64
+      "id": "padding_top_desktop",
+      "label": "Padding Top — Desktop",
+      "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64
     },
     {
       "type": "range",
-      "id": "padding_mobile",
-      "label": "Padding — Mobile",
-      "min": 16,
-      "max": 60,
-      "step": 4,
-      "unit": "px",
-      "default": 32
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom — Desktop",
+      "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_h_desktop",
+      "label": "Padding Sides — Desktop",
+      "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top — Mobile",
+      "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom — Mobile",
+      "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_h_mobile",
+      "label": "Padding Sides — Mobile",
+      "min": 0, "max": 80, "step": 4, "unit": "px", "default": 24
     },
     {
       "type": "header",
@@ -508,10 +565,11 @@
       "content": "Subtitle"
     },
     {
-      "type": "text",
+      "type": "richtext",
       "id": "subtitle",
       "label": "Subheading",
-      "default": "#LoveLikeOaklynn"
+      "default": "<p>#LoveLikeOaklynn</p>",
+      "info": "Supports bold, italic, bullet lists, numbered lists"
     },
     {
       "type": "range",
