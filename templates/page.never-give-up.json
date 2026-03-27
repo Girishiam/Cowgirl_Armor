@@ -24,6 +24,7 @@
     },
     "image_with_text_LXxzEk": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with text",
       "settings": {
         "layout": "image_first",
@@ -42,6 +43,7 @@
     },
     "image_with_text_PBqPNK": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with Text",
       "settings": {
         "layout": "image_first",
@@ -60,6 +62,7 @@
     },
     "image_with_text_UAJ3AJ": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with Text",
       "settings": {
         "layout": "image_first",
@@ -75,12 +78,81 @@
         "background_color": "#d9d9d9",
         "text_color": "#1a1a1a"
       }
+    },
+    "editorial_page_Jhkkyi": {
+      "type": "editorial-page",
+      "blocks": {
+        "rich_text_NFNj8f": {
+          "type": "rich_text",
+          "settings": {
+            "content": "<p>It's easy to want to quit when things don't go your way. I believe all things are possible. The Bible tells us so. Luke 1:37 says, \"For nothing will be impossible with God.\" I love Audrey Hepburn's quote too. \"Nothing is impossible, the word itself says 'I'm possible.'</p><p>Paul David Tripp explains it like this:</p><p>\"One of the greatest causes of failure in our lives is that we have a habit of quitting too soon. We are overtaken by defeat in our minds and hearts, so we simply give in and quit. But so often, the mistake that we make in giving up and quitting is that we do it too soon. And yet as a disciple of Jesus we have been encouraged to not give up, but to stand up. One encouraging verse is found in 1 Cor. 16:13, \"Be on the alert, stand firm in the faith, act like men, be strong.\" And in 2 Chron. 15:7, \"But as for you, be strong and do not give up, for your work will be rewarded.\" God has always encouraged his people to stand strong and not to give in but live by faith in him. Are we struggling in our lives because we have given up too soon? Our prayers were powerful, but God was also wanting our spirit of humility to take over and stick with our prayers with faith and endurance.”</p><p></p><p>Rodeo is one of those things where it would be easy to quit. It is a grueling sport.</p><p>People have no idea how hard it really is and when you don't win for a long time... these words are easier read than done. You miss your family. You miss your bed. You miss food. You miss a real shower. It's a lot.</p><p>Any goal you have or dream you are pursuing can become daunting when you are not getting the outcome you desire. We bought a farm across the road from our property because the Cowboy has always dreamed of owning it, and it joins our land. Like all men, he only wants the land that touches his. This farm became available and although the price was ridiculous, we had to have it. It joined our property. Plus, last I checked God isn't making any more land. The Cowboy's plan was to buy feeder calves and pay off the land with the money they made.</p><p>His plan started working and we began having a stellar year. Cattle were bringing a lot of money. He had purchased them at a low price and was selling them high.</p><p>It was working. He'd have that place paid off in no time. And then spring came along and with it a nice little weed called hemlock. It's been around forever and most of the year, it's not a problem. But at a certain time of year, and for a certain size of calf, mixed with lack of certain feed, if a calf eats it, it will die. We lost 18 head of cattle at $1600 per head in one week. We also lost about eight to a disease called black leg. A lot of our profit was lost, and we were back to maybe not square one, but certainly back to building it up. It would have been easy to quit.</p><p>There is a story in Daniel where he talks about how he had been praying and fasting for three weeks. He was eating just enough food so that he could continue to work, but he ate plain food because he was so humble and was seeking God. For three weeks! I don't know about you, but I get dizzy after a one-day fast and I cannot wait to watch the sun go down so I can get some food.</p><p>After the three weeks, Daniel had a vision or a dream of a man that we assume to be Jesus. Daniel then faints and is awoken by another man, this time it was an angel. The angel told Daniel that while he had been praying, the angel was trying to come to him with an answer, but that he had been in battle for 21 days.</p><p>A battle between heaven and hell over the prayers of Daniel. Did you notice for how long? Three weeks! Folks, sometimes when we don't hear from God, He's fighting battles for you that you cannot even see!</p><p>Daniel didn't stop praying. Maybe he thought about quitting. Maybe he thought about giving up, saying to himself that God was not listening so why should I keep doing this? But Daniel continued to pray. Daniel was given the assignment of writing down God's own words, all because he didn't give up in his prayers.</p><p>Have you given up on something too soon? Pray! And get back to it. Mark Batterson says \"Do it for 24 hours. You can do anything for 24 hours. And then do it again for 24 hours.\" Be determined not give up, and to seek Him no matter what is happening to you. When God has not answered as soon as you want, just keep praying. He hears you but He is busy. I once heard a preacher say, \"If we could see the battles being fought for us in the spiritual realm, we'd never sleep again.\" Keep praying. He is battling for you!</p>"
+          }
+        },
+        "pullquote_YRAaJf": {
+          "type": "pullquote",
+          "disabled": true,
+          "settings": {
+            "quote": "God meets you where you are.",
+            "cite": "Romans 8:38-39"
+          }
+        },
+        "author_4kyH9Q": {
+          "type": "author",
+          "settings": {
+            "avatar": "shopify://shop_images/Signed_ACowgirl.webp",
+            "label": "Written by",
+            "name": "A Cowgirl, xoxo",
+            "bio": ""
+          }
+        },
+        "pagination_cPXTxq": {
+          "type": "pagination",
+          "settings": {
+            "prev_label": "Believe in yourself",
+            "prev_link": "shopify://pages/believe-in-yourself",
+            "next_label": "",
+            "next_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "rich_text_NFNj8f",
+        "pullquote_YRAaJf",
+        "author_4kyH9Q",
+        "pagination_cPXTxq"
+      ],
+      "name": "Editorial Page",
+      "settings": {
+        "title": "never give up",
+        "hero_title_align": "center",
+        "image": "shopify://shop_images/IMG_0217.webp",
+        "hero_height": 560,
+        "hero_focal": "center center",
+        "hero_overlay_opacity": 40,
+        "title_size": 64,
+        "title_weight": 700,
+        "body_size": 18,
+        "body_line_height": 18,
+        "image_radius": 4,
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "bg_color": "#ffffff",
+        "text_color": "#1A1A1A",
+        "quote_size": 28,
+        "quote_weight": 500,
+        "quote_border_width": 3,
+        "quote_border_color": "#8BA4AC",
+        "quote_bg": "#f5f5f5",
+        "quote_color": "#1A1A1A",
+        "avatar_size": 64
+      }
     }
   },
   "order": [
     "main",
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
-    "image_with_text_UAJ3AJ"
+    "image_with_text_UAJ3AJ",
+    "editorial_page_Jhkkyi"
   ]
 }
