@@ -151,7 +151,7 @@
         "height_mobile": 500,
         "overlay_style": "solid",
         "overlay_color": "#000000",
-        "overlay_opacity": 100,
+        "overlay_opacity": 50,
         "overlay_clear_stop": 35,
         "bg_color": "#1A1A1A",
         "content_position": "center",
