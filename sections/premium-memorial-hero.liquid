@@ -80,7 +80,7 @@
     font-family: var(--font-body-family, sans-serif);
     font-size: clamp(0.75rem, 1.2vw, {{ section.settings.eyebrow_size }}px);
     font-weight: 600;
-    letter-spacing: {{ section.settings.eyebrow_spacing }}em;
+    letter-spacing: {{ section.settings.eyebrow_spacing | divided_by: 100.0 }}em;
     text-transform: uppercase;
     color: {{ section.settings.eyebrow_color }};
     margin: 0 0 {{ section.settings.eyebrow_gap }}px;
@@ -95,7 +95,7 @@
     font-size: clamp({{ section.settings.title_size_min }}px, 6vw, {{ section.settings.title_size_max }}px);
     font-weight: {{ section.settings.title_weight }};
     line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
-    letter-spacing: {{ section.settings.title_letter_spacing }}em;
+    letter-spacing: {{ section.settings.title_letter_spacing | divided_by: 100.0 }}em;
     margin: 0 0 {{ section.settings.title_gap }}px;
     color: inherit;
     {%- if section.settings.enable_text_shadow -%}
@@ -108,7 +108,7 @@
     font-size: clamp({{ section.settings.subtitle_size_min }}px, 2vw, {{ section.settings.subtitle_size_max }}px);
     font-weight: {{ section.settings.subtitle_weight }};
     line-height: 1.5;
-    letter-spacing: {{ section.settings.subtitle_spacing }}em;
+    letter-spacing: {{ section.settings.subtitle_spacing | divided_by: 100.0 }}em;
     margin: 0 0 {{ section.settings.subtitle_gap }}px;
     color: inherit;
     opacity: {{ section.settings.subtitle_opacity | divided_by: 100.0 }};
@@ -415,7 +415,7 @@
       "max": 30,
       "step": 1,
       "default": 15,
-      "info": "Divide by 100 — e.g. 15 = 0.15em"
+      "info": "Divide by 100 for em value — e.g. 15 = 0.15em"
     },
     {
       "type": "range",
@@ -491,7 +491,7 @@
       "max": 20,
       "step": 1,
       "default": -1,
-      "info": "Divide by 100 — e.g. -1 = -0.01em"
+      "info": "Divide by 100 for em value — e.g. -1 = -0.01em, 5 = 0.05em"
     },
     {
       "type": "range",
@@ -550,7 +550,7 @@
       "max": 20,
       "step": 1,
       "default": 5,
-      "info": "Divide by 100 — e.g. 5 = 0.05em"
+      "info": "Divide by 100 for em value — e.g. 5 = 0.05em"
     },
     {
       "type": "range",
