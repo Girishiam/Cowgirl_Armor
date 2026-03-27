@@ -107,10 +107,10 @@
         "pagination_yJ8dra": {
           "type": "pagination",
           "settings": {
-            "prev_label": "Believe in Yourself Cowgirl",
+            "prev_label": "",
             "prev_link": "shopify://pages/believe-in-yourself",
-            "next_label": "",
-            "next_link": ""
+            "next_label": "Believe in Yourself Cowgirl",
+            "next_link": "shopify://pages/believe-in-yourself"
           }
         }
       },
