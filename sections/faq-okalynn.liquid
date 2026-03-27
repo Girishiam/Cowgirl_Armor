@@ -1,0 +1,608 @@
+<style>
+  /* ── Wrapper ── */
+  .faq-split-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    min-height: {{ section.settings.min_height }}px;
+    display: grid;
+    grid-template-columns: {{ section.settings.left_col_width }}% 1fr;
+    overflow: hidden;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  /* ── Left Panel — image + title ── */
+  .faq-split-{{ section.id }} .fs__left {
+    position: relative;
+    min-height: {{ section.settings.min_height }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: {{ section.settings.title_valign }};
+    padding: {{ section.settings.left_padding_v }}px {{ section.settings.left_padding_h }}px;
+    overflow: hidden;
+  }
+
+  .faq-split-{{ section.id }} .fs__left-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.image_focal }};
+    z-index: 0;
+  }
+
+  .faq-split-{{ section.id }} .fs__left-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    {%- assign ov_r = section.settings.overlay_color | color_extract: 'red' -%}
+    {%- assign ov_g = section.settings.overlay_color | color_extract: 'green' -%}
+    {%- assign ov_b = section.settings.overlay_color | color_extract: 'blue' -%}
+    {%- assign ov_a = section.settings.overlay_opacity | divided_by: 100.0 -%}
+    background: rgba({{ ov_r }}, {{ ov_g }}, {{ ov_b }}, {{ ov_a }});
+  }
+
+  .faq-split-{{ section.id }} .fs__left-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .faq-split-{{ section.id }} .fs__title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_size_min }}px, 3vw, {{ section.settings.title_size_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
+    color: {{ section.settings.title_color }};
+    margin: 0;
+    letter-spacing: {{ section.settings.title_letter_spacing | divided_by: 100.0 }}em;
+  }
+
+  .faq-split-{{ section.id }} .fs__subtitle {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp(13px, 1.2vw, {{ section.settings.subtitle_size }}px);
+    color: {{ section.settings.title_color }};
+    opacity: 0.75;
+    margin: 12px 0 0;
+    font-weight: 400;
+  }
+
+  /* ── Right Panel — FAQ ── */
+  .faq-split-{{ section.id }} .fs__right {
+    background-color: {{ section.settings.faq_bg }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: {{ section.settings.right_padding_v }}px {{ section.settings.right_padding_h }}px;
+  }
+
+  /* ── Accordion ── */
+  .faq-split-{{ section.id }} .faq-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .faq-split-{{ section.id }} .faq-item {
+    border-top: {{ section.settings.divider_width }}px solid {{ section.settings.divider_color }};
+  }
+  .faq-split-{{ section.id }} .faq-item:last-child {
+    border-bottom: {{ section.settings.divider_width }}px solid {{ section.settings.divider_color }};
+  }
+
+  .faq-split-{{ section.id }} .faq-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: {{ section.settings.item_padding_v }}px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: {{ section.settings.question_color }};
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp({{ section.settings.question_size_min }}px, 1.4vw, {{ section.settings.question_size_max }}px);
+    font-weight: {{ section.settings.question_weight }};
+    line-height: 1.4;
+    transition: opacity 0.2s ease;
+  }
+  .faq-split-{{ section.id }} .faq-trigger:hover {
+    opacity: 0.7;
+  }
+
+  /* Caret icon */
+  .faq-split-{{ section.id }} .faq-caret {
+    flex-shrink: 0;
+    width: {{ section.settings.caret_size }}px;
+    height: {{ section.settings.caret_size }}px;
+    color: {{ section.settings.caret_color }};
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .faq-split-{{ section.id }} .faq-item.is-open .faq-caret {
+    transform: rotate(180deg);
+  }
+
+  /* Answer panel — animated with max-height */
+  .faq-split-{{ section.id }} .faq-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.35s ease,
+                padding 0.35s ease;
+    opacity: 0;
+    padding-bottom: 0;
+  }
+  .faq-split-{{ section.id }} .faq-item.is-open .faq-body {
+    max-height: 600px;
+    opacity: 1;
+    padding-bottom: {{ section.settings.item_padding_v }}px;
+  }
+
+  .faq-split-{{ section.id }} .faq-answer {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp({{ section.settings.answer_size_min }}px, 1.2vw, {{ section.settings.answer_size_max }}px);
+    font-weight: {{ section.settings.answer_weight }};
+    line-height: {{ section.settings.answer_line_height | divided_by: 100.0 }};
+    color: {{ section.settings.answer_color }};
+  }
+  .faq-split-{{ section.id }} .faq-answer p { margin: 0 0 0.75em; }
+  .faq-split-{{ section.id }} .faq-answer p:last-child { margin-bottom: 0; }
+  .faq-split-{{ section.id }} .faq-answer strong { font-weight: 700; }
+  .faq-split-{{ section.id }} .faq-answer a {
+    color: {{ section.settings.answer_link_color }};
+    text-underline-offset: 3px;
+  }
+  .faq-split-{{ section.id }} .faq-answer ul,
+  .faq-split-{{ section.id }} .faq-answer ol {
+    padding-left: 1.4em;
+    margin: 0.4em 0 0.75em;
+  }
+  .faq-split-{{ section.id }} .faq-answer li { margin-bottom: 0.3em; }
+
+  /* ── Mobile: stack vertically ── */
+  @media screen and (max-width: {{ section.settings.mobile_breakpoint }}px) {
+    .faq-split-{{ section.id }} {
+      grid-template-columns: 1fr;
+    }
+    .faq-split-{{ section.id }} .fs__left {
+      min-height: {{ section.settings.mobile_image_height }}px;
+    }
+    .faq-split-{{ section.id }} .fs__right {
+      padding: {{ section.settings.right_padding_v | divided_by: 1.5 | round }}px {{ section.settings.right_padding_h | divided_by: 1.5 | round }}px;
+    }
+  }
+</style>
+
+<section class="faq-split-{{ section.id }}">
+
+  <!-- ── Left: Image + Title ── -->
+  <div class="fs__left">
+    {%- if section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1400 }}"
+        srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                {{ section.settings.image | image_url: width: 900 }} 900w,
+                {{ section.settings.image | image_url: width: 1400 }} 1400w"
+        sizes="{{ section.settings.left_col_width }}vw"
+        alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+        class="fs__left-bg"
+        loading="lazy"
+      >
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'fs__left-bg placeholder-svg' }}
+    {%- endif -%}
+
+    {%- if section.settings.overlay_opacity > 0 -%}
+      <div class="fs__left-overlay"></div>
+    {%- endif -%}
+
+    <div class="fs__left-content">
+      {%- if section.settings.title != blank -%}
+        <h2 class="fs__title">{{ section.settings.title }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <p class="fs__subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- ── Right: FAQ Accordion ── -->
+  <div class="fs__right">
+    <ul class="faq-list" role="list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'faq_item' -%}
+          <li class="faq-item{% if block.settings.open_by_default %} is-open{% endif %}"
+              {{ block.shopify_attributes }}>
+            <button
+              class="faq-trigger"
+              aria-expanded="{{ block.settings.open_by_default }}"
+              aria-controls="faq-body-{{ block.id }}">
+              <span>{{ block.settings.question }}</span>
+              <svg class="faq-caret" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5"
+                   stroke-linecap="round" stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+            <div class="faq-body"
+                 id="faq-body-{{ block.id }}"
+                 role="region">
+              {%- if block.settings.answer != blank -%}
+                <div class="faq-answer rte">{{ block.settings.answer }}</div>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+
+</section>
+
+<script>
+(function() {
+  var section = document.querySelector('.faq-split-{{ section.id }}');
+  if (!section) return;
+
+  var items = section.querySelectorAll('.faq-item');
+
+  items.forEach(function(item) {
+    var trigger = item.querySelector('.faq-trigger');
+    var body    = item.querySelector('.faq-body');
+    if (!trigger || !body) return;
+
+    trigger.addEventListener('click', function() {
+      var isOpen = item.classList.contains('is-open');
+
+      {%- if section.settings.close_others -%}
+      /* Close all other items first */
+      items.forEach(function(other) {
+        if (other !== item && other.classList.contains('is-open')) {
+          other.classList.remove('is-open');
+          var otherTrigger = other.querySelector('.faq-trigger');
+          if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+      {%- endif -%}
+
+      /* Toggle current */
+      item.classList.toggle('is-open', !isOpen);
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Split",
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is included?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "left_col_width",
+      "label": "Left Column Width",
+      "min": 25, "max": 60, "step": 5, "unit": "%", "default": 45
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Min Height",
+      "min": 300, "max": 1000, "step": 20, "unit": "px", "default": 600
+    },
+    {
+      "type": "range",
+      "id": "mobile_breakpoint",
+      "label": "Mobile Breakpoint",
+      "min": 480, "max": 1024, "step": 16, "unit": "px", "default": 768
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "label": "Mobile Image Height",
+      "min": 200, "max": 600, "step": 20, "unit": "px", "default": 300
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "header",
+      "content": "Left Panel — Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "select",
+      "id": "image_focal",
+      "label": "Image Focal Point",
+      "options": [
+        { "value": "center center", "label": "Center"       },
+        { "value": "top center",    "label": "Top"          },
+        { "value": "bottom center", "label": "Bottom"       },
+        { "value": "left center",   "label": "Left"         },
+        { "value": "right center",  "label": "Right"        }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0, "max": 80, "step": 5, "unit": "%", "default": 35
+    },
+    {
+      "type": "range",
+      "id": "left_padding_v",
+      "label": "Left Panel Padding (vertical)",
+      "min": 20, "max": 120, "step": 4, "unit": "px", "default": 48
+    },
+    {
+      "type": "range",
+      "id": "left_padding_h",
+      "label": "Left Panel Padding (horizontal)",
+      "min": 16, "max": 80, "step": 4, "unit": "px", "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Left Panel — Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "info": "Optional line below the title"
+    },
+    {
+      "type": "select",
+      "id": "title_valign",
+      "label": "Title Vertical Position",
+      "options": [
+        { "value": "flex-start", "label": "Top"    },
+        { "value": "center",     "label": "Middle" },
+        { "value": "flex-end",   "label": "Bottom" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size_min",
+      "label": "Title Size — Min",
+      "min": 16, "max": 48, "step": 2, "unit": "px", "default": 22
+    },
+    {
+      "type": "range",
+      "id": "title_size_max",
+      "label": "Title Size — Max",
+      "min": 24, "max": 72, "step": 2, "unit": "px", "default": 36
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title Font Weight",
+      "min": 300, "max": 900, "step": 100, "default": 700
+    },
+    {
+      "type": "range",
+      "id": "title_line_height",
+      "label": "Title Line Height",
+      "min": 90, "max": 160, "step": 5, "unit": "%", "default": 120,
+      "info": "e.g. 120 = 1.2"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Title Letter Spacing",
+      "min": -5, "max": 20, "step": 1, "default": -1,
+      "info": "Divide by 100 — e.g. -1 = -0.01em"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle Size (max)",
+      "min": 12, "max": 22, "step": 1, "unit": "px", "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Right Panel — FAQ"
+    },
+    {
+      "type": "color",
+      "id": "faq_bg",
+      "label": "FAQ Panel Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "right_padding_v",
+      "label": "Right Panel Padding (vertical)",
+      "min": 20, "max": 120, "step": 4, "unit": "px", "default": 48
+    },
+    {
+      "type": "range",
+      "id": "right_padding_h",
+      "label": "Right Panel Padding (horizontal)",
+      "min": 16, "max": 100, "step": 4, "unit": "px", "default": 60
+    },
+    {
+      "type": "checkbox",
+      "id": "close_others",
+      "label": "Close others when one opens",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Dividers"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider Color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "label": "Divider Thickness",
+      "min": 1, "max": 3, "step": 1, "unit": "px", "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Question Style"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "question_size_min",
+      "label": "Question Size — Min",
+      "min": 13, "max": 24, "step": 1, "unit": "px", "default": 16
+    },
+    {
+      "type": "range",
+      "id": "question_size_max",
+      "label": "Question Size — Max",
+      "min": 14, "max": 28, "step": 1, "unit": "px", "default": 20
+    },
+    {
+      "type": "range",
+      "id": "question_weight",
+      "label": "Question Font Weight",
+      "min": 300, "max": 700, "step": 100, "default": 500
+    },
+    {
+      "type": "range",
+      "id": "item_padding_v",
+      "label": "Item Vertical Padding",
+      "min": 12, "max": 40, "step": 2, "unit": "px", "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Caret Icon"
+    },
+    {
+      "type": "color",
+      "id": "caret_color",
+      "label": "Caret Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "caret_size",
+      "label": "Caret Size",
+      "min": 16, "max": 32, "step": 2, "unit": "px", "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Answer Style"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer Color",
+      "default": "#444444"
+    },
+    {
+      "type": "range",
+      "id": "answer_size_min",
+      "label": "Answer Size — Min",
+      "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14
+    },
+    {
+      "type": "range",
+      "id": "answer_size_max",
+      "label": "Answer Size — Max",
+      "min": 14, "max": 22, "step": 1, "unit": "px", "default": 17
+    },
+    {
+      "type": "range",
+      "id": "answer_weight",
+      "label": "Answer Font Weight",
+      "min": 300, "max": 600, "step": 100, "default": 400
+    },
+    {
+      "type": "range",
+      "id": "answer_line_height",
+      "label": "Answer Line Height",
+      "min": 130, "max": 220, "step": 5, "unit": "%", "default": 170,
+      "info": "e.g. 170 = 1.7"
+    },
+    {
+      "type": "color",
+      "id": "answer_link_color",
+      "label": "Answer Link Color",
+      "default": "#1a1a1a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Split",
+      "blocks": [
+        { "type": "faq_item", "settings": { "question": "What is the Be The Light Memorial Cap?" } },
+        { "type": "faq_item", "settings": { "question": "Where do the proceeds go?" } },
+        { "type": "faq_item", "settings": { "question": "Production & Shipping Timeline" } },
+        { "type": "faq_item", "settings": { "question": "Are these limited edition?" } },
+        { "type": "faq_item", "settings": { "question": "What does wearing this cap symbolize?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
