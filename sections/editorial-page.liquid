@@ -262,14 +262,14 @@
   {%- if section.settings.image != blank -%}
     <div class="ep-hero">
       <img
-        src="{{ section.settings.image | image_url: width: 1600 }}"
+        src="{{ section.settings.image | image_url: width: 1200 }}"
         srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
                 {{ section.settings.image | image_url: width: 1200 }} 1200w,
-                {{ section.settings.image | image_url: width: 1600 }} 1600w"
-        sizes="(max-width: 1600px) 100vw, 1600px"
+                {{ section.settings.image | image_url: width: 1200 }} 1600w"
+        sizes="(max-width: 1200px) 100vw, 1200px"
         alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
         loading="eager"
-        width="1600"
+        width="1200"
       >
       {%- if section.settings.hero_overlay_opacity > 0 -%}
         <div class="ep-hero-overlay"></div>
