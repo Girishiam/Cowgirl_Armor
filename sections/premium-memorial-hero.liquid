@@ -43,6 +43,11 @@
     to   { transform: scale(1);    }
   }
 
+  {%- assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0 -%}
+  {%- assign ov_r = section.settings.overlay_color | color_extract: 'red' -%}
+  {%- assign ov_g = section.settings.overlay_color | color_extract: 'green' -%}
+  {%- assign ov_b = section.settings.overlay_color | color_extract: 'blue' -%}
+
   .memorial-hero-{{ section.id }} .mh__overlay {
     position: absolute;
     top: 0; left: 0;
@@ -51,17 +56,17 @@
     {%- if section.settings.overlay_style == 'gradient_bottom' -%}
       background: linear-gradient(
         to bottom,
-        rgba(0,0,0,0) {{ section.settings.overlay_clear_stop }}%,
-        {{ section.settings.overlay_color | color_modify: 'alpha', section.settings.overlay_opacity | divided_by: 100.0 }} 100%
+        rgba({{ ov_r }},{{ ov_g }},{{ ov_b }},0) {{ section.settings.overlay_clear_stop }}%,
+        rgba({{ ov_r }},{{ ov_g }},{{ ov_b }},{{ overlay_alpha }}) 100%
       );
     {%- elsif section.settings.overlay_style == 'gradient_top' -%}
       background: linear-gradient(
         to top,
-        rgba(0,0,0,0) {{ section.settings.overlay_clear_stop }}%,
-        {{ section.settings.overlay_color | color_modify: 'alpha', section.settings.overlay_opacity | divided_by: 100.0 }} 100%
+        rgba({{ ov_r }},{{ ov_g }},{{ ov_b }},0) {{ section.settings.overlay_clear_stop }}%,
+        rgba({{ ov_r }},{{ ov_g }},{{ ov_b }},{{ overlay_alpha }}) 100%
       );
     {%- elsif section.settings.overlay_style == 'solid' -%}
-      background: {{ section.settings.overlay_color | color_modify: 'alpha', section.settings.overlay_opacity | divided_by: 100.0 }};
+      background: rgba({{ ov_r }},{{ ov_g }},{{ ov_b }},{{ overlay_alpha }});
     {%- elsif section.settings.overlay_style == 'none' -%}
       display: none;
     {%- endif -%}
