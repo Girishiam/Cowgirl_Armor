@@ -4,24 +4,14 @@
     position: relative;
     width: 100%;
     min-height: {{ section.settings.min_height }}px;
-    display: grid;
-    grid-template-columns: {{ section.settings.left_col_width }}% 1fr;
     overflow: hidden;
     background-color: {{ section.settings.bg_color }};
-  }
-
-  /* ── Left Panel — image + title ── */
-  .faq-split-{{ section.id }} .fs__left {
-    position: relative;
-    min-height: {{ section.settings.min_height }}px;
     display: flex;
-    flex-direction: column;
-    justify-content: {{ section.settings.title_valign }};
-    padding: {{ section.settings.left_padding_v }}px {{ section.settings.left_padding_h }}px;
-    overflow: hidden;
+    align-items: stretch;
   }
 
-  .faq-split-{{ section.id }} .fs__left-bg {
+  /* ── Full-bleed background image ── */
+  .faq-split-{{ section.id }} .fs__bg {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -31,6 +21,7 @@
     z-index: 0;
   }
 
+  /* ── Overlay over full section ── */
   .faq-split-{{ section.id }} .fs__left-overlay {
     position: absolute;
     inset: 0;
@@ -42,9 +33,23 @@
     background: rgba({{ ov_r }}, {{ ov_g }}, {{ ov_b }}, {{ ov_a }});
   }
 
-  .faq-split-{{ section.id }} .fs__left-content {
+  /* ── Inner grid sits above bg image ── */
+  .faq-split-{{ section.id }} .fs__inner {
     position: relative;
     z-index: 2;
+    width: 100%;
+    display: grid;
+    grid-template-columns: {{ section.settings.left_col_width }}% 1fr;
+    align-items: start;
+  }
+
+  /* ── Left: title block ── */
+  .faq-split-{{ section.id }} .fs__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: {{ section.settings.title_valign }};
+    padding: {{ section.settings.left_padding_v }}px {{ section.settings.left_padding_h }}px;
+    min-height: {{ section.settings.min_height }}px;
   }
 
   .faq-split-{{ section.id }} .fs__title {
@@ -163,13 +168,14 @@
 
   /* ── Mobile: stack vertically ── */
   @media screen and (max-width: {{ section.settings.mobile_breakpoint }}px) {
-    .faq-split-{{ section.id }} {
+    .faq-split-{{ section.id }} .fs__inner {
       grid-template-columns: 1fr;
     }
     .faq-split-{{ section.id }} .fs__left {
       min-height: {{ section.settings.mobile_image_height }}px;
     }
     .faq-split-{{ section.id }} .fs__right {
+      min-height: auto;
       padding: {{ section.settings.right_padding_v | divided_by: 1.5 | round }}px {{ section.settings.right_padding_h | divided_by: 1.5 | round }}px;
     }
   }
@@ -177,28 +183,31 @@
 
 <section class="faq-split-{{ section.id }}">
 
-  <!-- ── Left: Image + Title ── -->
-  <div class="fs__left">
-    {%- if section.settings.image != blank -%}
-      <img
-        src="{{ section.settings.image | image_url: width: 1400 }}"
-        srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
-                {{ section.settings.image | image_url: width: 900 }} 900w,
-                {{ section.settings.image | image_url: width: 1400 }} 1400w"
-        sizes="{{ section.settings.left_col_width }}vw"
-        alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
-        class="fs__left-bg"
-        loading="lazy"
-      >
-    {%- else -%}
-      {{ 'lifestyle-2' | placeholder_svg_tag: 'fs__left-bg placeholder-svg' }}
-    {%- endif -%}
+  {%- comment -%} Full-bleed background {%- endcomment -%}
+  {%- if section.settings.image != blank -%}
+    <img
+      src="{{ section.settings.image | image_url: width: 1600 }}"
+      srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
+              {{ section.settings.image | image_url: width: 1200 }} 1200w,
+              {{ section.settings.image | image_url: width: 1600 }} 1600w"
+      sizes="100vw"
+      alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+      class="fs__bg"
+      loading="lazy"
+    >
+  {%- else -%}
+    {{ 'lifestyle-2' | placeholder_svg_tag: 'fs__bg placeholder-svg' }}
+  {%- endif -%}
 
-    {%- if section.settings.overlay_opacity > 0 -%}
-      <div class="fs__left-overlay"></div>
-    {%- endif -%}
+  {%- if section.settings.overlay_opacity > 0 -%}
+    <div class="fs__left-overlay"></div>
+  {%- endif -%}
 
-    <div class="fs__left-content">
+  <!-- Content grid -->
+  <div class="fs__inner">
+
+    <!-- Left: Title -->
+    <div class="fs__left">
       {%- if section.settings.title != blank -%}
         <h2 class="fs__title">{{ section.settings.title }}</h2>
       {%- endif -%}
@@ -206,10 +215,9 @@
         <p class="fs__subtitle">{{ section.settings.subtitle }}</p>
       {%- endif -%}
     </div>
-  </div>
 
-  <!-- ── Right: FAQ Accordion ── -->
-  <div class="fs__right">
+    <!-- Right: FAQ Accordion -->
+    <div class="fs__right">
     <ul class="faq-list" role="list">
       {%- for block in section.blocks -%}
         {%- if block.type == 'faq_item' -%}
@@ -464,7 +472,7 @@
       "type": "color",
       "id": "faq_bg",
       "label": "FAQ Panel Background",
-      "default": "#ffffff"
+      "default": "#00000000"
     },
     {
       "type": "range",
