@@ -100,7 +100,6 @@
   .site-nav__link {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
     text-decoration: none;
     color: {{ section.settings.header_text_color }};
     font-size: clamp(12px, 1.1vw, {{ section.settings.nav_font_size }}px);
@@ -125,20 +124,12 @@
     transition: transform 0.25s ease;
     transform-origin: left;
   }
-  .site-nav__link:hover::after,
-  .site-nav__link--active::after { transform: scaleX(1); }
+  /* Only show underline on non-dropdown links */
+  .site-nav__item:not(.site-nav__item--has-dropdown) .site-nav__link:hover::after,
+  .site-nav__item:not(.site-nav__item--has-dropdown) .site-nav__link--active::after { transform: scaleX(1); }
   .site-nav__link:hover { opacity: 0.75; }
 
-  .icon-caret {
-    display: inline-block;
-    transition: transform 0.2s ease;
-    flex-shrink: 0;
-    margin-bottom: 6px; /* align with text baseline shift from padding */
-  }
-  .site-nav__item--has-dropdown:hover .icon-caret,
-  .site-nav__item--has-dropdown.is-open .icon-caret {
-    transform: rotate(180deg);
-  }
+
 
   /* ─── Dropdown ──────────────────────────────────────────── */
   .site-nav__dropdown {
@@ -205,7 +196,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: {{ section.settings.social_gap }}px;
+    gap: {{ section.settings.icon_gap }}px;
     flex: 1;
   }
   .header__icon {
@@ -221,9 +212,16 @@
     position: relative;
     transition: opacity 0.2s ease;
     flex-shrink: 0;
+    width: calc({{ section.settings.icon_size }}px + 8px);
+    height: calc({{ section.settings.icon_size }}px + 8px);
   }
   .header__icon:hover { opacity: 0.7; }
-  .header__icon svg { display: block; }
+  .header__icon svg {
+    display: block;
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    flex-shrink: 0;
+  }
 
   /* Cart badge */
   .header__cart { position: relative; }
@@ -273,6 +271,7 @@
     display: flex;
     align-items: center;
     gap: {{ section.settings.social_gap }}px;
+    flex-shrink: 0;
   }
 
   /* ─── Hamburger — mobile only ───────────────────────────── */
@@ -563,9 +562,6 @@
                    aria-haspopup="true"
                    aria-expanded="false">
                   {{ link.title }}
-                  <svg class="icon-caret" width="{{ section.settings.caret_size }}" height="{{ section.settings.caret_size | divided_by: 2 | ceil }}" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
                 </a>
                 <ul class="site-nav__dropdown" role="menu">
                   {%- for childlink in link.links -%}
@@ -956,14 +952,15 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "range",  "id": "caret_size",           "label": "Dropdown Caret Size",   "min": 8,  "max": 14,  "step": 1, "unit": "px", "default": 10 },
 
     { "type": "header", "content": "Dropdown" },
-    { "type": "color",  "id": "dropdown_bg",          "label": "Dropdown Background",   "default": "#ffffff" },
+    { "type": "color",  "id": "dropdown_bg",          "label": "Dropdown Background",   "default": "#d9d9d9" },
     { "type": "range",  "id": "dropdown_font_size",   "label": "Dropdown Font Size",    "min": 12, "max": 18,  "step": 1, "unit": "px", "default": 14 },
     { "type": "range",  "id": "dropdown_radius",      "label": "Dropdown Border Radius","min": 0,  "max": 20,  "step": 2, "unit": "px", "default": 6 },
     { "type": "text",   "id": "dropdown_shadow",      "label": "Dropdown Shadow",       "default": "0 8px 30px rgba(0,0,0,0.12)" },
 
     { "type": "header", "content": "Icons & Cart" },
     { "type": "range",  "id": "icon_size",            "label": "Icon Size",             "min": 18, "max": 30,  "step": 2, "unit": "px", "default": 22 },
-    { "type": "range",  "id": "social_gap",           "label": "Icons Gap",             "min": 6,  "max": 24,  "step": 2, "unit": "px", "default": 12 },
+    { "type": "range",  "id": "icon_gap",             "label": "Header Icons Gap",      "min": 4,  "max": 32,  "step": 4, "unit": "px", "default": 8  },
+    { "type": "range",  "id": "social_gap",           "label": "Social Icons Gap",      "min": 4,  "max": 24,  "step": 4, "unit": "px", "default": 8  },
     { "type": "color",  "id": "cart_badge_bg",        "label": "Cart Badge Background", "default": "#DC2626" },
     { "type": "color",  "id": "cart_badge_text",      "label": "Cart Badge Text",       "default": "#ffffff" },
     { "type": "range",  "id": "cart_badge_size",      "label": "Cart Badge Font Size",  "min": 9,  "max": 14,  "step": 1, "unit": "px", "default": 10 },
