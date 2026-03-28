@@ -78,12 +78,84 @@
         "background_color": "#d9d9d9",
         "text_color": "#1a1a1a"
       }
+    },
+    "premium_waitlist_form_nhVcVk": {
+      "type": "premium-waitlist-form",
+      "name": "Premium Waitlist Form",
+      "settings": {
+        "bg_color": "#F9F9F9",
+        "text_color": "#1A1A1A",
+        "heading": "We have exciting news in March... but until then",
+        "text": "<p>Some things aren't meant to be missed. The pieces that speak to your faith, your fire, and the cowgirl you're becoming — they don't always stay on the shelf long.</p><p>Join the Cowgirl Armor first-come, first-served list and be first in line for every drop, every restock, and every piece created to remind you who you are and whose you are.</p>",
+        "button_label": "I want in!",
+        "success_message": "You're on the list! Keep an eye on your inbox.",
+        "error_message_prefix": "Please adjust the following fields:",
+        "first_name_label": "First Name",
+        "last_name_label": "Last Name",
+        "email_label": "Email",
+        "phone_label": "Phone",
+        "phone_placeholder": "(555) 000-0000",
+        "required_text": "(required)",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "premium_story_form_DCqXWm": {
+      "type": "premium-story-form",
+      "name": "Story Submission Form",
+      "settings": {
+        "bg_color": "#F9F9F9",
+        "text_color": "#1A1A1A",
+        "heading": "Share your Cowgirl Story!",
+        "text": "<p>We are all in this journey together, and we are anonymous sharing other inspirational Cowgirl Stories on our blog, with \"Signed A Cowgirl.\" If it's on your heart to share your story, please send it to us here, and we will get back to you asap! We are all in this together cowgirls!</p>",
+        "button_label": "Send it!",
+        "success_message": "Thank you for sharing your story with us!",
+        "label_first_name": "First Name",
+        "label_last_name": "Last Name",
+        "label_email": "Email",
+        "label_story": "Your Cowgirl Story:",
+        "label_permission": "Can we share this on our Cowgirl Stories?",
+        "subtext_permission": "If always anonymous, please note that in the message above.",
+        "label_yes": "Yes",
+        "label_no": "No",
+        "label_prayer": "How can we be praying for you?",
+        "label_required": "(required)",
+        "padding_top": 80,
+        "padding_bottom": 100
+      }
+    },
+    "premium_contact_general_nQiCdP": {
+      "type": "premium-contact-general",
+      "name": "General Contact & Graphic",
+      "settings": {
+        "heading": "Questions?",
+        "subtext": "We are here to help!",
+        "image": "shopify://shop_images/IMG_1768_1.png",
+        "show_checkbox": true,
+        "checkbox_label": "Sign up for news and updates",
+        "label_first_name": "First Name",
+        "label_last_name": "Last Name",
+        "label_email": "Email",
+        "label_subject": "Subject",
+        "label_message": "Message",
+        "label_required": "(required)",
+        "button_label": "Submit",
+        "success_message": "Thanks for reaching out! We will get back to you shortly.",
+        "bg_color": "#EBEBEB",
+        "card_bg_color": "#FFFFFF",
+        "text_color": "#1A1A1A",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
     }
   },
   "order": [
     "main",
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
-    "image_with_text_UAJ3AJ"
+    "image_with_text_UAJ3AJ",
+    "premium_waitlist_form_nhVcVk",
+    "premium_story_form_DCqXWm",
+    "premium_contact_general_nQiCdP"
   ]
 }
