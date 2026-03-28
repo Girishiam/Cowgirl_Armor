@@ -144,6 +144,119 @@
         "padding_top": 100,
         "padding_bottom": 100
       }
+    },
+    "faq_okalynn_FRfyhQ": {
+      "type": "faq-okalynn",
+      "blocks": {
+        "faq_item_6d6cfX": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is the Be The Light Memorial Cap?",
+            "answer": "<p>The <em>Be The Light</em> Memorial Cap was created in loving memory of Oaklynn Rae Domer (August 11, 2022 – February 19, 2026). It represents bravery, love, unity, and choosing light even in the hardest seasons. This cap is more than apparel — it’s a symbol of her joyful spirit and the lasting impact she has made on so many hearts.</p>",
+            "open_by_default": false
+          }
+        },
+        "faq_item_VMHgrx": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where do the proceeds go?",
+            "answer": "<p>100% of proceeds from the <em>Be The Light</em> Memorial Cap are donated in honor of Oaklynn Rae Domer to support young girls in the western and rodeo community. Every purchase makes an impact.<br/><br/></p>",
+            "open_by_default": false
+          }
+        },
+        "faq_item_NDxYCP": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Production & Shipping Timeline",
+            "answer": "<p>The response to the memorial cap has been overwhelming, and we are incredibly humbled by your support.</p><ul><li>Please allow <strong>2–3 weeks</strong> for your cap to be produced and shipped.</li><li>Caps are made as orders come in, so early orders will ship first.</li><li>International shipping (e.g., Australia) may take additional time.</li></ul><p>We greatly appreciate your patience and understanding as a small business working to get every cap to every supporter.</p>",
+            "open_by_default": false
+          }
+        },
+        "faq_item_gbCBeU": {
+          "type": "faq_item",
+          "settings": {
+            "question": "For Australia Orders",
+            "answer": "<p>If you would like to purchase from Australia, please:<br/>• <a href=\"https://www.cowgirlarmor.com/australian-orders-oaklynn-rae-domer\" target=\"_blank\">Fill out the designated Australia order form</a>-<a href=\"https://www.cowgirlarmor.com/australian-orders-oaklynn-rae-domer\" target=\"_blank\"> CLICK HERE</a><br/><strong>OR</strong><br/>• Contact Ariana Varischetti directly at +61 459 552 968</p><p>This helps us coordinate shipping and reduce international shipping costs.</p>",
+            "open_by_default": false
+          }
+        },
+        "faq_item_idGbP7": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are these limited edition?",
+            "answer": "<p>Yes. These memorial caps are produced in limited quantities based on demand. Restocks may occur, but availability is not guaranteed<br/><br/></p>",
+            "open_by_default": false
+          }
+        },
+        "faq_item_yWiidU": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What does wearing this cap symbolize?",
+            "answer": "<p>Wearing this cap means choosing to:</p><ul><li>Be Brave</li><li>Love Boldly</li><li>Support young girls chasing dreams</li><li>Stand with the rodeo community</li><li>Keep Oaklynn’s light shining</li></ul><p>It’s a reminder that even the smallest light can make the biggest impact.</p>",
+            "open_by_default": false
+          }
+        },
+        "faq_item_7kV9Xt": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I order for a group or rodeo event?",
+            "answer": "<p>Yes. For bulk or event orders, please contact us directly so we can coordinate sizing and availability.<br/><br/></p>",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_6d6cfX",
+        "faq_item_VMHgrx",
+        "faq_item_NDxYCP",
+        "faq_item_gbCBeU",
+        "faq_item_idGbP7",
+        "faq_item_yWiidU",
+        "faq_item_7kV9Xt"
+      ],
+      "name": "FAQ Split",
+      "settings": {
+        "left_col_width": 45,
+        "min_height": 600,
+        "mobile_breakpoint": 768,
+        "mobile_image_height": 300,
+        "bg_color": "#f5f5f5",
+        "image": "shopify://shop_images/OaklynnDomer3.jpg",
+        "image_focal": "center center",
+        "overlay_color": "#000000",
+        "overlay_opacity": 40,
+        "left_padding_v": 48,
+        "left_padding_h": 40,
+        "title": "Frequently Asked Questions on “Be The Light” for Oaklynn Rae Domer",
+        "subtitle": "",
+        "title_valign": "center",
+        "title_color": "#ffffff",
+        "title_size_min": 28,
+        "title_size_max": 36,
+        "title_weight": 700,
+        "title_line_height": 120,
+        "title_letter_spacing": -1,
+        "subtitle_size": 15,
+        "faq_bg": "#ffffff",
+        "right_padding_v": 48,
+        "right_padding_h": 60,
+        "close_others": true,
+        "divider_color": "#cccccc",
+        "divider_width": 1,
+        "question_color": "#1a1a1a",
+        "question_size_min": 16,
+        "question_size_max": 20,
+        "question_weight": 500,
+        "item_padding_v": 22,
+        "caret_color": "#1a1a1a",
+        "caret_size": 22,
+        "answer_color": "#444444",
+        "answer_size_min": 14,
+        "answer_size_max": 17,
+        "answer_weight": 400,
+        "answer_line_height": 170,
+        "answer_link_color": "#1a1a1a"
+      }
     }
   },
   "order": [
@@ -151,6 +264,7 @@
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
     "image_with_text_UAJ3AJ",
-    "premium_two_column_faq_KbH6U7"
+    "premium_two_column_faq_KbH6U7",
+    "faq_okalynn_FRfyhQ"
   ]
 }
