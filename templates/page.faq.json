@@ -24,6 +24,7 @@
     },
     "image_with_text_LXxzEk": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with text",
       "settings": {
         "layout": "image_first",
@@ -42,6 +43,7 @@
     },
     "image_with_text_PBqPNK": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with Text",
       "settings": {
         "layout": "image_first",
@@ -60,6 +62,7 @@
     },
     "image_with_text_UAJ3AJ": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with Text",
       "settings": {
         "layout": "image_first",
