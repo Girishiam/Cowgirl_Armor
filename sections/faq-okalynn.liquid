@@ -3,7 +3,6 @@
   .faq-split-{{ section.id }} {
     position: relative;
     width: 100%;
-    min-height: {{ section.settings.min_height }}px;
     overflow: hidden;
     background-color: {{ section.settings.bg_color }};
     display: flex;
@@ -16,6 +15,7 @@
     inset: 0;
     width: 100%;
     height: 100%;
+    min-height: {{ section.settings.min_height }}px;
     object-fit: cover;
     object-position: {{ section.settings.image_focal }};
     z-index: 0;
@@ -40,7 +40,8 @@
     width: 100%;
     display: grid;
     grid-template-columns: {{ section.settings.left_col_width }}% 1fr;
-    align-items: start;
+    align-items: center;
+    min-height: {{ section.settings.min_height }}px;
   }
 
   /* ── Left: title block ── */
@@ -49,7 +50,6 @@
     flex-direction: column;
     justify-content: {{ section.settings.title_valign }};
     padding: {{ section.settings.left_padding_v }}px {{ section.settings.left_padding_h }}px;
-    min-height: {{ section.settings.min_height }}px;
   }
 
   .faq-split-{{ section.id }} .fs__title {
@@ -78,6 +78,7 @@
     flex-direction: column;
     justify-content: center;
     padding: {{ section.settings.right_padding_v }}px {{ section.settings.right_padding_h }}px;
+    align-self: stretch;
   }
 
   /* ── Accordion ── */
@@ -170,9 +171,7 @@
   @media screen and (max-width: {{ section.settings.mobile_breakpoint }}px) {
     .faq-split-{{ section.id }} .fs__inner {
       grid-template-columns: 1fr;
-    }
-    .faq-split-{{ section.id }} .fs__left {
-      min-height: {{ section.settings.mobile_image_height }}px;
+      min-height: 0;
     }
     .faq-split-{{ section.id }} .fs__right {
       min-height: auto;
