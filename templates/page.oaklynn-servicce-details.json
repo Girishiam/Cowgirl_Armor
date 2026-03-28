@@ -311,6 +311,26 @@
         "btn_weight": 600,
         "btn_transform": "none"
       }
+    },
+    "premium_memorial_form_dqiX7V": {
+      "type": "premium-memorial-form",
+      "name": "Memorial Contact Form",
+      "settings": {
+        "bg_color": "#FFFFFF",
+        "text_color": "#1A1A1A",
+        "heading": "Share your love and prayers to the Domer Family:",
+        "show_checkbox": true,
+        "checkbox_label": "Sign up for news and updates",
+        "label_first_name": "First Name",
+        "label_last_name": "Last Name",
+        "label_email": "Email",
+        "label_message": "Message and prayers to send to the family:",
+        "label_required": "(required)",
+        "button_label": "Submit",
+        "success_message": "Thank you. Your message has been sent to the family.",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
     }
   },
   "order": [
@@ -319,6 +339,7 @@
     "image_with_text_PBqPNK",
     "image_with_text_UAJ3AJ",
     "service_first_celebrate_UbLTRB",
-    "service_location_GKQkdL"
+    "service_location_GKQkdL",
+    "premium_memorial_form_dqiX7V"
   ]
 }
