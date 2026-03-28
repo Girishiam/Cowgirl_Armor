@@ -194,6 +194,123 @@
         "btn_transform": "none",
         "btn_gap": 8
       }
+    },
+    "service_location_GKQkdL": {
+      "type": "service-location",
+      "blocks": {
+        "eyebrow_F6mUfB": {
+          "type": "eyebrow",
+          "settings": {
+            "text": "Service Details"
+          }
+        },
+        "title_NJBbP9": {
+          "type": "title",
+          "settings": {
+            "text": "Service Location",
+            "tag": "h2"
+          }
+        },
+        "address_hdYNfh": {
+          "type": "address",
+          "settings": {
+            "text": "Services will be held at: Double N Cowboy Church — 7202 E State Highway 6, Dublin, TX 76446"
+          }
+        },
+        "rule_Jbji6W": {
+          "type": "rule",
+          "settings": {}
+        },
+        "block_title_gq4yAT": {
+          "type": "block_title",
+          "settings": {
+            "text": "Important Navigation Tips",
+            "tag": "h3"
+          }
+        },
+        "rich_text_Q8rLPn": {
+          "type": "rich_text",
+          "settings": {
+            "content": "<p>To ensure you reach the church without delay, please keep the following in mind:</p><ul><li><strong>Use the Direct Pin:</strong> You can navigate directly to the church by <a href=\"https://maps.apple.com/place?map=explore&address=7202+SH-6%2C+Dublin%2C+TX++76446%2C+United+States&coordinate=32.09115%2C-98.275833&name=7202+SH-6\" target=\"_blank\"><strong>clicking here for the GPS location</strong></a>.</li><li><strong>Check Your GPS:</strong> When entering the address manually, it is very important to include <strong>\"East\"</strong> before Highway 6.</li><li><strong>Watch for Detours:</strong> Please use your GPS to stay aware of any local <strong>construction and detours</strong>.</li><li><strong>Look for the Arena:</strong> There is an arena located just before the church.</li><li><strong>Identify the Entrance:</strong> The <strong>Double N Cowboy Church sign</strong> is located at the entrance to guide you in.</li></ul><p>Thank you for being a part of this community and for showing up to stand alongside the Domer family. We look forward to seeing the \"Be The Light\" spirit in full force as we celebrate Oaklynn.</p>"
+          }
+        },
+        "images_JkHNFh": {
+          "type": "images",
+          "settings": {}
+        },
+        "button_nbBLrP": {
+          "type": "button",
+          "settings": {
+            "label": "View Pin Location on Google Maps",
+            "link": "https://maps.app.goo.gl/j7TdRnWsWNVZ6MKN7",
+            "new_tab": true
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow_F6mUfB",
+        "title_NJBbP9",
+        "address_hdYNfh",
+        "rule_Jbji6W",
+        "block_title_gq4yAT",
+        "rich_text_Q8rLPn",
+        "images_JkHNFh",
+        "button_nbBLrP"
+      ],
+      "name": "Service Location & Nav",
+      "settings": {
+        "bg_color": "#ffffff",
+        "title_color": "#1a1a1a",
+        "accent_color": "#8BA4AC",
+        "body_color": "#444444",
+        "address_color": "#555555",
+        "rule_color": "#e0e0e0",
+        "max_width": 1280,
+        "left_col": 2,
+        "right_col": 3,
+        "col_gap": 60,
+        "left_gap": 16,
+        "right_gap": 20,
+        "sub_img_gap": 10,
+        "padding_top_desktop": 72,
+        "padding_bottom_desktop": 72,
+        "padding_h_desktop": 40,
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 48,
+        "padding_h_mobile": 20,
+        "hero_image": "shopify://shop_images/OaklynnRae.jpg",
+        "sub_image_1": "shopify://shop_images/Screenshot_2026-02-23_at_3.05.05_PM.webp",
+        "sub_image_2": "shopify://shop_images/Screenshot_2026-02-23_at_6.18.50_PM.webp",
+        "img_radius": 8,
+        "img_shadow": "0 4px 24px rgba(0,0,0,0.10)",
+        "eyebrow_size": 11,
+        "title_min": 24,
+        "title_max": 40,
+        "title_weight": 700,
+        "title_ls": -1,
+        "address_min": 13,
+        "address_max": 16,
+        "address_weight": 400,
+        "block_title_min": 18,
+        "block_title_max": 26,
+        "block_title_weight": 700,
+        "body_min": 14,
+        "body_max": 17,
+        "body_weight": 400,
+        "body_lh": 170,
+        "btn_bg": "#1a1a1a",
+        "btn_color": "#ffffff",
+        "btn_bg_hover": "#8BA4AC",
+        "btn_color_hover": "#ffffff",
+        "btn_border_c": "#1a1a1a",
+        "btn_border_w": 1,
+        "btn_radius": 6,
+        "btn_pv": 14,
+        "btn_ph": 28,
+        "btn_size": 14,
+        "btn_weight": 600,
+        "btn_transform": "none"
+      }
     }
   },
   "order": [
@@ -201,6 +318,7 @@
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
     "image_with_text_UAJ3AJ",
-    "service_first_celebrate_UbLTRB"
+    "service_first_celebrate_UbLTRB",
+    "service_location_GKQkdL"
   ]
 }
