@@ -5,8 +5,6 @@
     width: 100%;
     overflow: hidden;
     background-color: {{ section.settings.bg_color }};
-    display: flex;
-    align-items: stretch;
   }
 
   /* ── Full-bleed background image ── */
@@ -38,10 +36,10 @@
     position: relative;
     z-index: 2;
     width: 100%;
+    min-height: {{ section.settings.min_height }}px;
     display: grid;
     grid-template-columns: {{ section.settings.left_col_width }}% 1fr;
-    align-items: center;
-    min-height: {{ section.settings.min_height }}px;
+    align-items: stretch;
   }
 
   /* ── Left: title block ── */
@@ -50,6 +48,7 @@
     flex-direction: column;
     justify-content: {{ section.settings.title_valign }};
     padding: {{ section.settings.left_padding_v }}px {{ section.settings.left_padding_h }}px;
+    background: transparent;
   }
 
   .faq-split-{{ section.id }} .fs__title {
@@ -72,13 +71,16 @@
   }
 
   /* ── Right Panel — FAQ ── */
+  {%- assign faq_r = section.settings.faq_bg | color_extract: 'red' -%}
+  {%- assign faq_g = section.settings.faq_bg | color_extract: 'green' -%}
+  {%- assign faq_b = section.settings.faq_bg | color_extract: 'blue' -%}
+  {%- assign faq_a = section.settings.faq_panel_opacity | divided_by: 100.0 -%}
   .faq-split-{{ section.id }} .fs__right {
-    background-color: {{ section.settings.faq_bg }};
+    background-color: rgba({{ faq_r }}, {{ faq_g }}, {{ faq_b }}, {{ faq_a }});
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: {{ section.settings.right_padding_v }}px {{ section.settings.right_padding_h }}px;
-    align-self: stretch;
   }
 
   /* ── Accordion ── */
@@ -470,8 +472,15 @@
     {
       "type": "color",
       "id": "faq_bg",
-      "label": "FAQ Panel Background",
-      "default": "#00000000"
+      "label": "FAQ Panel Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "faq_panel_opacity",
+      "label": "FAQ Panel Opacity",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 0,
+      "info": "0 = fully transparent (shows bg image), 100 = solid color"
     },
     {
       "type": "range",
