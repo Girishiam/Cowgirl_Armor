@@ -78,12 +78,79 @@
         "background_color": "#d9d9d9",
         "text_color": "#1a1a1a"
       }
+    },
+    "premium_two_column_faq_KbH6U7": {
+      "type": "premium-two-column-faq",
+      "blocks": {
+        "faq_Tjh7mg": {
+          "type": "faq",
+          "settings": {
+            "question": "When Can I expect my order?",
+            "answer": "<p>Most in-stock items ship within <strong>3–7 business days</strong>.</p><p>For high-volume launches, limited drops, memorial collections, or preorder items, processing may take <strong>2–4 weeks</strong>. Updated timelines are always posted on the product page if extended production is required.</p>"
+          }
+        },
+        "faq_iqzwBV": {
+          "type": "faq",
+          "settings": {
+            "question": "When Can I expect my order?",
+            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+          }
+        },
+        "faq_LgmEmB": {
+          "type": "faq",
+          "settings": {
+            "question": "When Can I expect my order?",
+            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+          }
+        },
+        "faq_6r8tET": {
+          "type": "faq",
+          "settings": {
+            "question": "When Can I expect my order?",
+            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+          }
+        },
+        "faq_C4hnGh": {
+          "type": "faq",
+          "settings": {
+            "question": "When Can I expect my order?",
+            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+          }
+        },
+        "faq_fWUqTf": {
+          "type": "faq",
+          "settings": {
+            "question": "When Can I expect my order?",
+            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_Tjh7mg",
+        "faq_iqzwBV",
+        "faq_LgmEmB",
+        "faq_6r8tET",
+        "faq_C4hnGh",
+        "faq_fWUqTf"
+      ],
+      "name": "Two-Column FAQ",
+      "settings": {
+        "heading": "Frequently Asked Questions Cowgirl Armor",
+        "close_others": true,
+        "watermark_image": "shopify://shop_images/IMG_2436.png",
+        "watermark_opacity": 15,
+        "bg_color": "#EBEBEB",
+        "text_color": "#1A1A1A",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
     }
   },
   "order": [
     "main",
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
-    "image_with_text_UAJ3AJ"
+    "image_with_text_UAJ3AJ",
+    "premium_two_column_faq_KbH6U7"
   ]
 }
