@@ -1,0 +1,474 @@
+<style>
+  .faq2-{{ section.id }} {
+    position: relative;
+    background-color: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top_desktop }}px 0 {{ section.settings.padding_bottom_desktop }}px;
+    overflow: hidden;
+  }
+
+  /* ── Watermark ── */
+  .faq2-{{ section.id }} .faq2__watermark {
+    position: absolute;
+    bottom: {{ section.settings.watermark_bottom }}px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp(80px, {{ section.settings.watermark_size }}vw, 260px);
+    font-weight: {{ section.settings.watermark_weight }};
+    letter-spacing: {{ section.settings.watermark_ls | divided_by: 100.0 }}em;
+    color: {{ section.settings.watermark_color }};
+    opacity: {{ section.settings.watermark_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+    user-select: none;
+    text-transform: uppercase;
+    line-height: 1;
+    z-index: 0;
+  }
+
+  /* ── Background images ── */
+  .faq2-{{ section.id }} .faq2__bg-images {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .faq2-{{ section.id }} .faq2__bg-img {
+    position: absolute;
+    opacity: {{ section.settings.bg_img_opacity | divided_by: 100.0 }};
+    width: {{ section.settings.bg_img_size }}px;
+    height: auto;
+    object-fit: contain;
+  }
+  .faq2-{{ section.id }} .faq2__bg-img--left {
+    left: {{ section.settings.bg_img_left_x }}px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .faq2-{{ section.id }} .faq2__bg-img--right {
+    right: {{ section.settings.bg_img_right_x }}px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* ── Container ── */
+  .faq2-{{ section.id }} .faq2__container {
+    position: relative;
+    z-index: 1;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.padding_h_desktop }}px;
+  }
+
+  /* ── Header ── */
+  .faq2-{{ section.id }} .faq2__header {
+    text-align: {{ section.settings.title_align }};
+    margin-bottom: {{ section.settings.header_gap }}px;
+  }
+  .faq2-{{ section.id }} .faq2__eyebrow {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 12px;
+  }
+  .faq2-{{ section.id }} .faq2__title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_min }}px, 3.5vw, {{ section.settings.title_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: 1.15;
+    letter-spacing: {{ section.settings.title_ls | divided_by: 100.0 }}em;
+    color: {{ section.settings.text_color }};
+    margin: 0;
+  }
+
+  /* ── 2-col grid ── */
+  .faq2-{{ section.id }} .faq2__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 {{ section.settings.col_gap }}px;
+  }
+
+  /* ── Column ── */
+  .faq2-{{ section.id }} .faq2__col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── FAQ Item ── */
+  .faq2-{{ section.id }} .faq2__item {
+    border-top: {{ section.settings.divider_width }}px solid {{ section.settings.divider_color }};
+  }
+  .faq2-{{ section.id }} .faq2__item:last-child {
+    border-bottom: {{ section.settings.divider_width }}px solid {{ section.settings.divider_color }};
+  }
+
+  .faq2-{{ section.id }} .faq2__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: {{ section.settings.item_padding_v }}px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: {{ section.settings.text_color }};
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp({{ section.settings.question_min }}px, 1.4vw, {{ section.settings.question_max }}px);
+    font-weight: {{ section.settings.question_weight }};
+    line-height: {{ section.settings.question_lh | divided_by: 100.0 }};
+    transition: opacity 0.2s;
+  }
+  .faq2-{{ section.id }} .faq2__trigger:hover { opacity: 0.65; }
+
+  /* +/× icon */
+  .faq2-{{ section.id }} .faq2__icon {
+    flex-shrink: 0;
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    position: relative;
+    color: {{ section.settings.icon_color }};
+  }
+  .faq2-{{ section.id }} .faq2__icon::before,
+  .faq2-{{ section.id }} .faq2__icon::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  }
+  /* Horizontal bar */
+  .faq2-{{ section.id }} .faq2__icon::before {
+    width: 100%;
+    height: {{ section.settings.icon_thickness }}px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+  /* Vertical bar */
+  .faq2-{{ section.id }} .faq2__icon::after {
+    width: {{ section.settings.icon_thickness }}px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
+  /* When open — vertical bar rotates to make × */
+  .faq2-{{ section.id }} .faq2__item.is-open .faq2__icon::after {
+    transform: translateX(-50%) rotate(90deg);
+    opacity: 0;
+  }
+  .faq2-{{ section.id }} .faq2__item.is-open .faq2__icon::before {
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  /* Answer */
+  .faq2-{{ section.id }} .faq2__body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease,
+                padding-bottom 0.3s ease;
+    opacity: 0;
+    padding-bottom: 0;
+  }
+  .faq2-{{ section.id }} .faq2__item.is-open .faq2__body {
+    max-height: 600px;
+    opacity: 1;
+    padding-bottom: {{ section.settings.item_padding_v }}px;
+  }
+  .faq2-{{ section.id }} .faq2__answer {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp({{ section.settings.answer_min }}px, 1.2vw, {{ section.settings.answer_max }}px);
+    line-height: {{ section.settings.answer_lh | divided_by: 100.0 }};
+    color: {{ section.settings.answer_color }};
+    font-weight: {{ section.settings.answer_weight }};
+  }
+  .faq2-{{ section.id }} .faq2__answer p { margin: 0 0 0.75em; }
+  .faq2-{{ section.id }} .faq2__answer p:last-child { margin: 0; }
+  .faq2-{{ section.id }} .faq2__answer strong { font-weight: 700; color: {{ section.settings.text_color }}; }
+  .faq2-{{ section.id }} .faq2__answer a { color: {{ section.settings.accent_color }}; text-decoration: underline; text-underline-offset: 3px; }
+  .faq2-{{ section.id }} .faq2__answer ul,
+  .faq2-{{ section.id }} .faq2__answer ol { padding-left: 1.3em; margin: 0 0 0.75em; }
+  .faq2-{{ section.id }} .faq2__answer li { margin-bottom: 0.4em; }
+
+  /* ── Responsive ── */
+  @media screen and (max-width: 767px) {
+    .faq2-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+    .faq2-{{ section.id }} .faq2__container {
+      padding: 0 {{ section.settings.padding_h_mobile }}px;
+    }
+    .faq2-{{ section.id }} .faq2__grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .faq2-{{ section.id }} .faq2__watermark {
+      font-size: clamp(40px, 20vw, 100px);
+    }
+    .faq2-{{ section.id }} .faq2__bg-img { display: none; }
+  }
+</style>
+
+<section class="faq2-{{ section.id }}">
+
+  {%- comment -%} ── Background images ── {%- endcomment -%}
+  {%- if section.settings.bg_image_left != blank or section.settings.bg_image_right != blank -%}
+    <div class="faq2__bg-images">
+      {%- if section.settings.bg_image_left != blank -%}
+        <img src="{{ section.settings.bg_image_left | image_url: width: 600 }}"
+             alt="" class="faq2__bg-img faq2__bg-img--left"
+             aria-hidden="true" loading="lazy">
+      {%- endif -%}
+      {%- if section.settings.bg_image_right != blank -%}
+        <img src="{{ section.settings.bg_image_right | image_url: width: 600 }}"
+             alt="" class="faq2__bg-img faq2__bg-img--right"
+             aria-hidden="true" loading="lazy">
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Watermark ── {%- endcomment -%}
+  {%- if section.settings.watermark_text != blank -%}
+    <div class="faq2__watermark" aria-hidden="true">{{ section.settings.watermark_text }}</div>
+  {%- endif -%}
+
+  <div class="faq2__container">
+
+    {%- comment -%} ── Header ── {%- endcomment -%}
+    {%- if section.settings.title != blank or section.settings.eyebrow != blank -%}
+      <div class="faq2__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="faq2__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="faq2__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} ── Split blocks into 2 columns ── {%- endcomment -%}
+    {%- assign faq_blocks = section.blocks -%}
+    {%- assign total = faq_blocks.size -%}
+    {%- assign col1_count = total | divided_by: 2 | ceil -%}
+
+    <div class="faq2__grid">
+
+      {%- comment -%} Left column {%- endcomment -%}
+      <div class="faq2__col">
+        {%- for block in faq_blocks -%}
+          {%- if forloop.index <= col1_count -%}
+            <div class="faq2__item" {{ block.shopify_attributes }}>
+              <button class="faq2__trigger" aria-expanded="false" aria-controls="faq2-body-{{ block.id }}">
+                <span>{{ block.settings.question }}</span>
+                <span class="faq2__icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq2__body" id="faq2-body-{{ block.id }}" role="region">
+                {%- if block.settings.answer != blank -%}
+                  <div class="faq2__answer">{{ block.settings.answer }}</div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Right column {%- endcomment -%}
+      <div class="faq2__col">
+        {%- for block in faq_blocks -%}
+          {%- if forloop.index > col1_count -%}
+            <div class="faq2__item" {{ block.shopify_attributes }}>
+              <button class="faq2__trigger" aria-expanded="false" aria-controls="faq2-body-{{ block.id }}">
+                <span>{{ block.settings.question }}</span>
+                <span class="faq2__icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq2__body" id="faq2-body-{{ block.id }}" role="region">
+                {%- if block.settings.answer != blank -%}
+                  <div class="faq2__answer">{{ block.settings.answer }}</div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var section = document.querySelector('.faq2-{{ section.id }}');
+  if (!section) return;
+
+  var items = section.querySelectorAll('.faq2__item');
+
+  items.forEach(function(item) {
+    var trigger = item.querySelector('.faq2__trigger');
+    var body    = item.querySelector('.faq2__body');
+    if (!trigger || !body) return;
+
+    trigger.addEventListener('click', function() {
+      var isOpen = item.classList.contains('is-open');
+
+      {%- if section.settings.close_others -%}
+      items.forEach(function(other) {
+        if (other !== item && other.classList.contains('is-open')) {
+          other.classList.remove('is-open');
+          var t = other.querySelector('.faq2__trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        }
+      });
+      {%- endif -%}
+
+      item.classList.toggle('is-open', !isOpen);
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ 2-Column",
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "When can I expect my order?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    { "type": "color", "id": "bg_color",      "label": "Background",       "default": "#E2E2E2" },
+    { "type": "color", "id": "text_color",    "label": "Text Color",       "default": "#1A1A1A" },
+    { "type": "color", "id": "accent_color",  "label": "Accent Color",     "default": "#8BA4AC" },
+    { "type": "color", "id": "answer_color",  "label": "Answer Text Color","default": "#444444" },
+    { "type": "color", "id": "divider_color", "label": "Divider Color",    "default": "#cccccc" },
+    { "type": "color", "id": "icon_color",    "label": "Icon Color",       "default": "#1A1A1A" },
+
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    { "type": "text",   "id": "eyebrow",      "label": "Eyebrow Text",       "info": "Leave blank to hide" },
+    { "type": "text",   "id": "title",        "label": "Title",              "default": "Frequently Asked Questions Cowgirl Armor" },
+    { "type": "select", "id": "title_align",  "label": "Title Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ], "default": "center"
+    },
+    { "type": "range", "id": "title_min",    "label": "Title Size — Min", "min": 16, "max": 40, "step": 2, "unit": "px", "default": 22 },
+    { "type": "range", "id": "title_max",    "label": "Title Size — Max", "min": 24, "max": 64, "step": 2, "unit": "px", "default": 38 },
+    { "type": "range", "id": "title_weight", "label": "Title Weight",     "min": 300,"max": 900,"step": 100, "default": 600 },
+    { "type": "range", "id": "title_ls",     "label": "Title Letter Spacing", "min": -5, "max": 10, "step": 1, "default": -1, "info": "Divide by 100 — e.g. -1 = -0.01em" },
+    { "type": "range", "id": "header_gap",   "label": "Gap Below Header", "min": 16, "max": 80, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow Size",     "min": 9,  "max": 14, "step": 1, "unit": "px", "default": 11 },
+
+    {
+      "type": "header",
+      "content": "FAQ Items"
+    },
+    { "type": "checkbox", "id": "close_others",   "label": "Close others when one opens", "default": false },
+    { "type": "range",    "id": "col_gap",         "label": "Column Gap",         "min": 20, "max": 120, "step": 4,  "unit": "px", "default": 60 },
+    { "type": "range",    "id": "item_padding_v",  "label": "Item Vertical Padding","min": 12,"max": 40,  "step": 2,  "unit": "px", "default": 22 },
+    { "type": "range",    "id": "divider_width",   "label": "Divider Thickness",  "min": 1,  "max": 3,   "step": 1,  "unit": "px", "default": 1 },
+
+    {
+      "type": "header",
+      "content": "Question Style"
+    },
+    { "type": "range", "id": "question_min",    "label": "Question Size — Min", "min": 13, "max": 22, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "question_max",    "label": "Question Size — Max", "min": 14, "max": 28, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "question_weight", "label": "Question Weight",     "min": 300,"max": 700,"step": 100, "default": 400 },
+    { "type": "range", "id": "question_lh",     "label": "Question Line Height","min": 110,"max": 180,"step": 5,  "unit": "%", "default": 135 },
+
+    {
+      "type": "header",
+      "content": "Icon (+)"
+    },
+    { "type": "range", "id": "icon_size",      "label": "Icon Size",      "min": 12, "max": 28, "step": 2, "unit": "px", "default": 18 },
+    { "type": "range", "id": "icon_thickness", "label": "Icon Thickness", "min": 1,  "max": 4,  "step": 1, "unit": "px", "default": 1 },
+
+    {
+      "type": "header",
+      "content": "Answer Style"
+    },
+    { "type": "range", "id": "answer_min",    "label": "Answer Size — Min", "min": 12, "max": 18, "step": 1, "unit": "px", "default": 14 },
+    { "type": "range", "id": "answer_max",    "label": "Answer Size — Max", "min": 13, "max": 22, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "answer_weight", "label": "Answer Weight",     "min": 300,"max": 500,"step": 100, "default": 400 },
+    { "type": "range", "id": "answer_lh",     "label": "Answer Line Height","min": 140,"max": 210,"step": 5, "unit": "%", "default": 170 },
+
+    {
+      "type": "header",
+      "content": "Watermark Text"
+    },
+    { "type": "text",  "id": "watermark_text",    "label": "Watermark Text",    "default": "COWGIRL ARMOR", "info": "Large background text. Leave blank to hide." },
+    { "type": "color", "id": "watermark_color",   "label": "Watermark Color",   "default": "#1A1A1A" },
+    { "type": "range", "id": "watermark_opacity", "label": "Watermark Opacity", "min": 1,  "max": 20,  "step": 1, "unit": "%", "default": 6 },
+    { "type": "range", "id": "watermark_size",    "label": "Watermark Size (vw)","min": 10, "max": 30, "step": 1, "default": 18, "info": "Relative to viewport width" },
+    { "type": "range", "id": "watermark_weight",  "label": "Watermark Weight",  "min": 300,"max": 900,"step": 100, "default": 700 },
+    { "type": "range", "id": "watermark_ls",      "label": "Watermark Letter Spacing","min": -5,"max": 20,"step": 1, "default": 2, "info": "Divide by 100" },
+    { "type": "range", "id": "watermark_bottom",  "label": "Watermark Bottom Position","min": -100,"max": 100,"step": 4, "unit": "px", "default": -20 },
+
+    {
+      "type": "header",
+      "content": "Background Images"
+    },
+    { "type": "image_picker", "id": "bg_image_left",   "label": "Left Background Image",  "info": "Faded decorative image on the left" },
+    { "type": "image_picker", "id": "bg_image_right",  "label": "Right Background Image", "info": "Faded decorative image on the right" },
+    { "type": "range", "id": "bg_img_opacity", "label": "Image Opacity",   "min": 2,   "max": 40,  "step": 2, "unit": "%", "default": 12 },
+    { "type": "range", "id": "bg_img_size",    "label": "Image Size",      "min": 100, "max": 600, "step": 20, "unit": "px","default": 320 },
+    { "type": "range", "id": "bg_img_left_x",  "label": "Left Image X",    "min": -200,"max": 200, "step": 10, "unit": "px","default": 20 },
+    { "type": "range", "id": "bg_img_right_x", "label": "Right Image X",   "min": -200,"max": 200, "step": 10, "unit": "px","default": 20 },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    { "type": "range", "id": "max_width",           "label": "Max Width",          "min": 800, "max": 1600, "step": 20, "unit": "px", "default": 1280 },
+    { "type": "range", "id": "padding_top_desktop", "label": "Padding Top Desktop","min": 0,   "max": 160,  "step": 4,  "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom_desktop","label": "Padding Bottom Desktop","min": 0,"max": 160, "step": 4,  "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_h_desktop",   "label": "Side Padding Desktop","min": 0,  "max": 100,  "step": 4,  "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_top_mobile",  "label": "Padding Top Mobile", "min": 0,   "max": 100,  "step": 4,  "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom_mobile","label": "Padding Bottom Mobile","min": 0, "max": 100, "step": 4,  "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_h_mobile",    "label": "Side Padding Mobile","min": 0,   "max": 40,   "step": 4,  "unit": "px", "default": 20 }
+  ],
+  "presets": [
+    {
+      "name": "FAQ 2-Column",
+      "blocks": [
+        { "type": "faq_item", "settings": { "question": "When can I expect my order?" } },
+        { "type": "faq_item", "settings": { "question": "I placed multiple items in one order. Will they ship together?" } },
+        { "type": "faq_item", "settings": { "question": "What is your return policy?" } },
+        { "type": "faq_item", "settings": { "question": "Why do some items have extended turnaround times?" } },
+        { "type": "faq_item", "settings": { "question": "How can I contact Cowgirl Armor?" } },
+        { "type": "faq_item", "settings": { "question": "Do you offer size exchanges?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
