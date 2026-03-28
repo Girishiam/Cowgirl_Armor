@@ -92,36 +92,36 @@
         "faq_iqzwBV": {
           "type": "faq",
           "settings": {
-            "question": "When Can I expect my order?",
-            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+            "question": "Why do some items have extended turnaround times?",
+            "answer": "<p>When the Cowgirl Armor community rallies around a special collection, the response can be overwhelming. As a small business, we produce with care and integrity — which may extend production timelines during high demand periods.</p><p>We deeply appreciate your patience and grace during these moments.</p>"
           }
         },
         "faq_LgmEmB": {
           "type": "faq",
           "settings": {
-            "question": "When Can I expect my order?",
-            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+            "question": "I placed multiple items in one order. Will they ship together?",
+            "answer": "<p>Not always.</p><p>Some items are fulfilled from different production partners or warehouses. If that’s the case, your order may arrive in multiple shipments with separate tracking numbers.</p><p><strong>Memorial caps and specialty caps will ship separately from other merchandise</strong>, even if purchased in the same order.</p>"
           }
         },
         "faq_6r8tET": {
           "type": "faq",
           "settings": {
-            "question": "When Can I expect my order?",
-            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+            "question": "How can I contact Cowgirl Armor?",
+            "answer": "<p>For all customer service inquiries, please email:</p><p>📧 <strong>hello@cowgirlarmor.com</strong></p><p>Please allow 1–2 business days for a response during normal operations. Response times may be longer during major launches.</p>"
           }
         },
         "faq_C4hnGh": {
           "type": "faq",
           "settings": {
-            "question": "When Can I expect my order?",
-            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+            "question": "What is your return policy?",
+            "answer": "<p>Due to the nature of limited releases and specialty collections, all sales are generally <strong>final sale</strong>.</p><p>However, if your item arrives damaged or incorrect, please contact us within <strong>5 days of delivery</strong> at:</p><p>📧 <strong>hello@cowgirlarmor.com</strong></p>"
           }
         },
         "faq_fWUqTf": {
           "type": "faq",
           "settings": {
-            "question": "When Can I expect my order?",
-            "answer": "<p>Provide the answer to the frequently asked question here.</p>"
+            "question": "Do you offer size exchanges?",
+            "answer": "<p>We do <strong>not offer exchanges for sizing</strong>.</p><p>Many of our items are produced in limited quantities or made-to-order, which prevents us from holding inventory for exchanges.</p><p>Please review sizing charts carefully before placing your order. If you have questions about fit before purchasing, we are happy to help — just email us at:</p><p>📧 <strong>hello@cowgirlarmor.com</strong></p>"
           }
         }
       },
@@ -139,8 +139,8 @@
         "close_others": true,
         "watermark_image": "shopify://shop_images/IMG_2436.png",
         "watermark_opacity": 15,
-        "bg_color": "#EBEBEB",
-        "text_color": "#1A1A1A",
+        "bg_color": "#ebebeb",
+        "text_color": "#1a1a1a",
         "padding_top": 100,
         "padding_bottom": 100
       }
