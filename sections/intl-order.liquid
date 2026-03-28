@@ -1,0 +1,696 @@
+<style>
+  .iof-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  /* ── Hero ── */
+  .iof-{{ section.id }} .iof__hero {
+    position: relative;
+    width: 100%;
+    height: {{ section.settings.hero_height }}px;
+    overflow: hidden;
+    margin-bottom: {{ section.settings.hero_gap }}px;
+  }
+  .iof-{{ section.id }} .iof__hero img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.hero_focal }};
+    display: block;
+  }
+  .iof-{{ section.id }} .iof__hero-overlay {
+    position: absolute; inset: 0;
+    {%- assign hr = section.settings.hero_overlay_color | color_extract: 'red' -%}
+    {%- assign hg = section.settings.hero_overlay_color | color_extract: 'green' -%}
+    {%- assign hb = section.settings.hero_overlay_color | color_extract: 'blue' -%}
+    {%- assign ha = section.settings.hero_overlay_opacity | divided_by: 100.0 -%}
+    background: rgba({{ hr }},{{ hg }},{{ hb }},{{ ha }});
+  }
+  .iof-{{ section.id }} .iof__hero-badge {
+    position: absolute;
+    bottom: {{ section.settings.badge_bottom }}px;
+    right: {{ section.settings.badge_right }}px;
+    background: {{ section.settings.badge_bg }};
+    color: {{ section.settings.badge_text_color }};
+    font-family: var(--font-heading-family, serif);
+    font-size: {{ section.settings.badge_size }}px;
+    font-weight: 700;
+    padding: {{ section.settings.badge_pv }}px {{ section.settings.badge_ph }}px;
+    border-radius: {{ section.settings.badge_radius }}px;
+  }
+
+  /* ── Page header ── */
+  .iof-{{ section.id }} .iof__page-header {
+    text-align: {{ section.settings.header_align }};
+    padding: {{ section.settings.header_pt }}px {{ section.settings.padding_h }}px {{ section.settings.header_pb }}px;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+  .iof-{{ section.id }} .iof__eyebrow {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 6px;
+  }
+  .iof-{{ section.id }} .iof__page-title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_min }}px, 4vw, {{ section.settings.title_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: 1.1;
+    letter-spacing: {{ section.settings.title_ls | divided_by: 100.0 }}em;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+  }
+  .iof-{{ section.id }} .iof__page-subtitle {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp(14px, 1.3vw, {{ section.settings.subtitle_size }}px);
+    color: {{ section.settings.text_color }};
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  /* ── Body grid ── */
+  .iof-{{ section.id }} .iof__container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.padding_h }}px {{ section.settings.padding_bottom }}px;
+  }
+  .iof-{{ section.id }} .iof__grid {
+    display: grid;
+    grid-template-columns: {{ section.settings.left_col }}fr {{ section.settings.right_col }}fr;
+    gap: {{ section.settings.col_gap }}px;
+    align-items: start;
+  }
+
+  /* ── Left: info ── */
+  .iof-{{ section.id }} .iof__left {}
+  .iof-{{ section.id }} .iof__left-eyebrow {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 8px;
+  }
+  .iof-{{ section.id }} .iof__left-title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.left_title_min }}px, 2.5vw, {{ section.settings.left_title_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    color: {{ section.settings.text_color }};
+    margin: 0 0 16px;
+    line-height: 1.2;
+  }
+  .iof-{{ section.id }} .iof__left-body {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp(13px, 1.2vw, {{ section.settings.body_size }}px);
+    line-height: 1.7;
+    color: {{ section.settings.text_color }};
+    opacity: 0.8;
+  }
+  .iof-{{ section.id }} .iof__left-body p { margin: 0 0 0.75em; }
+  .iof-{{ section.id }} .iof__left-body p:last-child { margin: 0; }
+  .iof-{{ section.id }} .iof__left-body strong { font-weight: 700; opacity: 1; color: {{ section.settings.text_color }}; }
+  .iof-{{ section.id }} .iof__left-body ul { padding-left: 1.2em; margin: 0 0 0.75em; }
+  .iof-{{ section.id }} .iof__left-body li { margin-bottom: 0.3em; }
+  .iof-{{ section.id }} .iof__left-body a { color: {{ section.settings.accent_color }}; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ── Right: form ── */
+  .iof-{{ section.id }} .iof__form {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.field_gap }}px;
+  }
+
+  /* Field */
+  .iof-{{ section.id }} .iof__field { display: flex; flex-direction: column; gap: {{ section.settings.label_gap }}px; }
+  .iof-{{ section.id }} .iof__label {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.label_size }}px;
+    font-weight: {{ section.settings.label_weight }};
+    color: {{ section.settings.text_color }};
+    display: flex; align-items: center; gap: 6px;
+  }
+  .iof-{{ section.id }} .iof__req {
+    font-size: {{ section.settings.label_size | minus: 1 }}px;
+    font-weight: 400; opacity: 0.45;
+  }
+
+  /* Name row */
+  .iof-{{ section.id }} .iof__row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.name_gap }}px;
+  }
+
+  /* Input */
+  .iof-{{ section.id }} .iof__input,
+  .iof-{{ section.id }} .iof__textarea,
+  .iof-{{ section.id }} .iof__select {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.input_size }}px;
+    color: {{ section.settings.input_text }};
+    background: {{ section.settings.input_bg }};
+    border: {{ section.settings.input_border_w }}px solid {{ section.settings.input_border_c }};
+    border-radius: {{ section.settings.input_radius }}px;
+    padding: {{ section.settings.input_pv }}px {{ section.settings.input_ph }}px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .iof-{{ section.id }} .iof__input::placeholder,
+  .iof-{{ section.id }} .iof__textarea::placeholder {
+    color: {{ section.settings.input_placeholder }};
+    opacity: 1;
+  }
+  .iof-{{ section.id }} .iof__input:focus,
+  .iof-{{ section.id }} .iof__textarea:focus,
+  .iof-{{ section.id }} .iof__select:focus {
+    border-color: {{ section.settings.input_focus }};
+    box-shadow: 0 0 0 3px {{ section.settings.input_focus | color_modify: 'alpha', 0.12 }};
+  }
+  .iof-{{ section.id }} .iof__textarea {
+    min-height: {{ section.settings.textarea_height }}px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  .iof-{{ section.id }} .iof__select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  /* Phone row: country code + number */
+  .iof-{{ section.id }} .iof__phone-row {
+    display: grid;
+    grid-template-columns: {{ section.settings.country_col_width }}px 1fr;
+    gap: 8px;
+  }
+  .iof-{{ section.id }} .iof__phone-row .iof__select { width: 100%; }
+
+  /* Submit */
+  .iof-{{ section.id }} .iof__submit {
+    width: 100%;
+    padding: {{ section.settings.btn_pv }}px {{ section.settings.btn_ph }}px;
+    background: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_color }};
+    border: {{ section.settings.btn_border_w }}px solid {{ section.settings.btn_border_c }};
+    border-radius: {{ section.settings.btn_radius }}px;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.btn_size }}px;
+    font-weight: {{ section.settings.btn_weight }};
+    letter-spacing: 0.04em;
+    text-transform: {{ section.settings.btn_transform }};
+    cursor: pointer;
+    transition: background-color 0.22s ease, color 0.22s ease, transform 0.18s ease;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: {{ section.settings.btn_gap }}px;
+  }
+  .iof-{{ section.id }} .iof__submit:hover:not(:disabled) {
+    background: {{ section.settings.btn_bg_hover }};
+    color: {{ section.settings.btn_color_hover }};
+    transform: translateY(-1px);
+  }
+  .iof-{{ section.id }} .iof__submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .iof-{{ section.id }} .iof__spinner {
+    display: none; width: 16px; height: 16px;
+    border: 2px solid currentColor; border-top-color: transparent;
+    border-radius: 50%; animation: iofSpin 0.7s linear infinite;
+  }
+  .iof-{{ section.id }} .iof__submit.is-loading .iof__spinner { display: block; }
+  .iof-{{ section.id }} .iof__submit.is-loading .iof__btn-text { opacity: 0.7; }
+  @keyframes iofSpin { to { transform: rotate(360deg); } }
+
+  /* Messages */
+  .iof-{{ section.id }} .iof__msg {
+    padding: 14px 18px;
+    border-radius: {{ section.settings.input_radius }}px;
+    font-size: 14px;
+    display: none;
+  }
+  .iof-{{ section.id }} .iof__msg.is-visible { display: block; }
+  .iof-{{ section.id }} .iof__msg--success { background: #f0faf4; border: 1px solid #a3d9b8; color: #1a6e3c; }
+  .iof-{{ section.id }} .iof__msg--error   { background: #fdf2f2; border: 1px solid #f5c6c6; color: #9b1c1c; }
+
+  /* ── Responsive ── */
+  @media screen and (max-width: 768px) {
+    .iof-{{ section.id }} .iof__grid { grid-template-columns: 1fr; gap: {{ section.settings.col_gap | divided_by: 2 }}px; }
+    .iof-{{ section.id }} .iof__container { padding: 0 {{ section.settings.padding_h_mobile }}px {{ section.settings.padding_bottom }}px; }
+    .iof-{{ section.id }} .iof__page-header { padding-left: {{ section.settings.padding_h_mobile }}px; padding-right: {{ section.settings.padding_h_mobile }}px; }
+    .iof-{{ section.id }} .iof__phone-row { grid-template-columns: 160px 1fr; }
+    .iof-{{ section.id }} .iof__row-2 { grid-template-columns: 1fr; }
+  }
+</style>
+
+{%- comment -%} ── Success check ── {%- endcomment -%}
+{%- assign show_success = false -%}
+{%- if form.posted_successfully? -%}{%- assign show_success = true -%}{%- endif -%}
+
+<div class="iof-{{ section.id }}">
+
+  {%- comment -%} ── Page header ── {%- endcomment -%}
+  {%- if section.settings.page_title != blank or section.settings.page_subtitle != blank -%}
+    <div class="iof__page-header">
+      {%- if section.settings.page_eyebrow != blank -%}
+        <p class="iof__eyebrow">{{ section.settings.page_eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.page_title != blank -%}
+        <h1 class="iof__page-title">{{ section.settings.page_title }}</h1>
+      {%- endif -%}
+      {%- if section.settings.page_subtitle != blank -%}
+        <p class="iof__page-subtitle">{{ section.settings.page_subtitle }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Hero image ── {%- endcomment -%}
+  {%- if section.settings.hero_image != blank -%}
+    <div class="iof__hero">
+      <img
+        src="{{ section.settings.hero_image | image_url: width: 1400 }}"
+        srcset="{{ section.settings.hero_image | image_url: width: 700 }} 700w,
+                {{ section.settings.hero_image | image_url: width: 1100 }} 1100w,
+                {{ section.settings.hero_image | image_url: width: 1400 }} 1400w"
+        sizes="(max-width: {{ section.settings.max_width }}px) 100vw, {{ section.settings.max_width }}px"
+        alt="{{ section.settings.hero_image.alt | default: section.settings.page_title | escape }}"
+        loading="lazy"
+      >
+      {%- if section.settings.hero_overlay_opacity > 0 -%}
+        <div class="iof__hero-overlay"></div>
+      {%- endif -%}
+      {%- if section.settings.badge_text != blank -%}
+        <span class="iof__hero-badge">{{ section.settings.badge_text }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="iof__container">
+    <div class="iof__grid">
+
+      {%- comment -%} ── Left: description ── {%- endcomment -%}
+      <div class="iof__left">
+        {%- if section.settings.left_eyebrow != blank -%}
+          <p class="iof__left-eyebrow">{{ section.settings.left_eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.left_title != blank -%}
+          <h2 class="iof__left-title">{{ section.settings.left_title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.left_body != blank -%}
+          <div class="iof__left-body">{{ section.settings.left_body }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ── Right: form ── {%- endcomment -%}
+      <div class="iof__right">
+
+        <div class="iof__msg iof__msg--success{% if show_success %} is-visible{% endif %}">
+          {{ section.settings.success_msg }}
+        </div>
+        <div class="iof__msg iof__msg--error" id="iof-error-{{ section.id }}"></div>
+
+        {%- form 'contact', id: 'iof-form-{{ section.id }}', class: 'iof__form' -%}
+
+          {%- comment -%} Name row ── {%- endcomment -%}
+          <div class="iof__field">
+            <label class="iof__label">{{ section.settings.name_label }}</label>
+            <div class="iof__row-2">
+              <div class="iof__field">
+                <label class="iof__label" for="iof-first-{{ section.id }}">
+                  {{ section.settings.first_name_label }}
+                  <span class="iof__req">({{ section.settings.required_text }})</span>
+                </label>
+                <input type="text" id="iof-first-{{ section.id }}"
+                       name="contact[first_name]" class="iof__input"
+                       autocomplete="given-name" required
+                       placeholder="{{ section.settings.first_name_placeholder }}">
+              </div>
+              <div class="iof__field">
+                <label class="iof__label" for="iof-last-{{ section.id }}">
+                  {{ section.settings.last_name_label }}
+                  <span class="iof__req">({{ section.settings.required_text }})</span>
+                </label>
+                <input type="text" id="iof-last-{{ section.id }}"
+                       name="contact[last_name]" class="iof__input"
+                       autocomplete="family-name" required
+                       placeholder="{{ section.settings.last_name_placeholder }}">
+              </div>
+            </div>
+          </div>
+
+          {%- comment -%} Email ── {%- endcomment -%}
+          <div class="iof__field">
+            <label class="iof__label" for="iof-email-{{ section.id }}">
+              {{ section.settings.email_label }}
+              <span class="iof__req">({{ section.settings.required_text }})</span>
+            </label>
+            <input type="email" id="iof-email-{{ section.id }}"
+                   name="contact[email]" class="iof__input"
+                   autocomplete="email" required
+                   placeholder="{{ section.settings.email_placeholder }}"
+                   value="{{ form.email }}">
+          </div>
+
+          {%- comment -%} Phone: country code + number ── {%- endcomment -%}
+          <div class="iof__field">
+            <label class="iof__label">{{ section.settings.phone_label }}</label>
+            <div class="iof__phone-row">
+              <select name="contact[country_code]" class="iof__select" id="iof-country-{{ section.id }}" aria-label="Country code">
+                <option value="+61" selected>🇦🇺 Australia (+61)</option>
+                <option value="+1-US">🇺🇸 United States (+1)</option>
+                <option value="+1-CA">🇨🇦 Canada (+1)</option>
+                <option value="+44">🇬🇧 United Kingdom (+44)</option>
+                <option value="+64">🇳🇿 New Zealand (+64)</option>
+                <option value="+353">🇮🇪 Ireland (+353)</option>
+                <option value="+27">🇿🇦 South Africa (+27)</option>
+                <option value="+33">🇫🇷 France (+33)</option>
+                <option value="+49">🇩🇪 Germany (+49)</option>
+                <option value="+31">🇳🇱 Netherlands (+31)</option>
+                <option value="+32">🇧🇪 Belgium (+32)</option>
+                <option value="+41">🇨🇭 Switzerland (+41)</option>
+                <option value="+43">🇦🇹 Austria (+43)</option>
+                <option value="+34">🇪🇸 Spain (+34)</option>
+                <option value="+39">🇮🇹 Italy (+39)</option>
+                <option value="+351">🇵🇹 Portugal (+351)</option>
+                <option value="+46">🇸🇪 Sweden (+46)</option>
+                <option value="+47">🇳🇴 Norway (+47)</option>
+                <option value="+45">🇩🇰 Denmark (+45)</option>
+                <option value="+358">🇫🇮 Finland (+358)</option>
+                <option value="+48">🇵🇱 Poland (+48)</option>
+                <option value="+420">🇨🇿 Czech Republic (+420)</option>
+                <option value="+36">🇭🇺 Hungary (+36)</option>
+                <option value="+40">🇷🇴 Romania (+40)</option>
+                <option value="+30">🇬🇷 Greece (+30)</option>
+                <option value="+90">🇹🇷 Turkey (+90)</option>
+                <option value="+7">🇷🇺 Russia (+7)</option>
+                <option value="+380">🇺🇦 Ukraine (+380)</option>
+                <option value="+81">🇯🇵 Japan (+81)</option>
+                <option value="+82">🇰🇷 South Korea (+82)</option>
+                <option value="+86">🇨🇳 China (+86)</option>
+                <option value="+852">🇭🇰 Hong Kong (+852)</option>
+                <option value="+886">🇹🇼 Taiwan (+886)</option>
+                <option value="+65">🇸🇬 Singapore (+65)</option>
+                <option value="+60">🇲🇾 Malaysia (+60)</option>
+                <option value="+66">🇹🇭 Thailand (+66)</option>
+                <option value="+63">🇵🇭 Philippines (+63)</option>
+                <option value="+62">🇮🇩 Indonesia (+62)</option>
+                <option value="+84">🇻🇳 Vietnam (+84)</option>
+                <option value="+91">🇮🇳 India (+91)</option>
+                <option value="+92">🇵🇰 Pakistan (+92)</option>
+                <option value="+880">🇧🇩 Bangladesh (+880)</option>
+                <option value="+94">🇱🇰 Sri Lanka (+94)</option>
+                <option value="+977">🇳🇵 Nepal (+977)</option>
+                <option value="+971">🇦🇪 UAE (+971)</option>
+                <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
+                <option value="+972">🇮🇱 Israel (+972)</option>
+                <option value="+20">🇪🇬 Egypt (+20)</option>
+                <option value="+234">🇳🇬 Nigeria (+234)</option>
+                <option value="+254">🇰🇪 Kenya (+254)</option>
+                <option value="+233">🇬🇭 Ghana (+233)</option>
+                <option value="+55">🇧🇷 Brazil (+55)</option>
+                <option value="+54">🇦🇷 Argentina (+54)</option>
+                <option value="+56">🇨🇱 Chile (+56)</option>
+                <option value="+57">🇨🇴 Colombia (+57)</option>
+                <option value="+51">🇵🇪 Peru (+51)</option>
+                <option value="+52">🇲🇽 Mexico (+52)</option>
+                <option value="+53">🇨🇺 Cuba (+53)</option>
+                <option value="+58">🇻🇪 Venezuela (+58)</option>
+              </select>
+              <input type="tel" id="iof-phone-{{ section.id }}"
+                     name="contact[phone]" class="iof__input"
+                     autocomplete="tel-national"
+                     placeholder="{{ section.settings.phone_placeholder }}">
+            </div>
+          </div>
+
+          {%- comment -%} Custom fields from blocks ── {%- endcomment -%}
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+
+              {%- when 'text_field' -%}
+                <div class="iof__field" {{ block.shopify_attributes }}>
+                  <label class="iof__label" for="iof-field-{{ block.id }}">
+                    {{ block.settings.label }}
+                    {%- if block.settings.required -%}
+                      <span class="iof__req">({{ section.settings.required_text }})</span>
+                    {%- endif -%}
+                  </label>
+                  <input
+                    type="{{ block.settings.field_type }}"
+                    id="iof-field-{{ block.id }}"
+                    name="contact[{{ block.settings.label | handleize }}]"
+                    class="iof__input"
+                    placeholder="{{ block.settings.placeholder }}"
+                    {% if block.settings.required %}required{% endif %}
+                  >
+                </div>
+
+              {%- when 'textarea_field' -%}
+                <div class="iof__field" {{ block.shopify_attributes }}>
+                  <label class="iof__label" for="iof-ta-{{ block.id }}">
+                    {{ block.settings.label }}
+                    {%- if block.settings.required -%}
+                      <span class="iof__req">({{ section.settings.required_text }})</span>
+                    {%- endif -%}
+                  </label>
+                  <textarea
+                    id="iof-ta-{{ block.id }}"
+                    name="contact[{{ block.settings.label | handleize }}]"
+                    class="iof__textarea"
+                    placeholder="{{ block.settings.placeholder }}"
+                    {% if block.settings.required %}required{% endif %}
+                  ></textarea>
+                </div>
+
+              {%- when 'select_field' -%}
+                <div class="iof__field" {{ block.shopify_attributes }}>
+                  <label class="iof__label" for="iof-sel-{{ block.id }}">
+                    {{ block.settings.label }}
+                    {%- if block.settings.required -%}
+                      <span class="iof__req">({{ section.settings.required_text }})</span>
+                    {%- endif -%}
+                  </label>
+                  <select
+                    id="iof-sel-{{ block.id }}"
+                    name="contact[{{ block.settings.label | handleize }}]"
+                    class="iof__select"
+                    {% if block.settings.required %}required{% endif %}
+                  >
+                    <option value="">{{ block.settings.placeholder }}</option>
+                    {%- assign options = block.settings.options | split: ',' -%}
+                    {%- for opt in options -%}
+                      <option value="{{ opt | strip }}">{{ opt | strip }}</option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+
+            {%- endcase -%}
+          {%- endfor -%}
+
+          {%- comment -%} Submit ── {%- endcomment -%}
+          <button type="submit" class="iof__submit">
+            <span class="iof__spinner" aria-hidden="true"></span>
+            <span class="iof__btn-text">{{ section.settings.btn_label }}</span>
+          </button>
+
+        {%- endform -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "International Order Form",
+  "blocks": [
+    {
+      "type": "text_field",
+      "name": "Text Field",
+      "settings": [
+        { "type": "text",     "id": "label",       "label": "Field Label",   "default": "Field" },
+        { "type": "text",     "id": "placeholder", "label": "Placeholder" },
+        { "type": "select",   "id": "field_type",  "label": "Input Type",
+          "options": [
+            { "value": "text",   "label": "Text"   },
+            { "value": "number", "label": "Number" },
+            { "value": "url",    "label": "URL"    }
+          ], "default": "text"
+        },
+        { "type": "checkbox", "id": "required",    "label": "Required", "default": false }
+      ]
+    },
+    {
+      "type": "textarea_field",
+      "name": "Textarea Field",
+      "settings": [
+        { "type": "text",     "id": "label",       "label": "Field Label",   "default": "Message" },
+        { "type": "text",     "id": "placeholder", "label": "Placeholder" },
+        { "type": "checkbox", "id": "required",    "label": "Required",      "default": false }
+      ]
+    },
+    {
+      "type": "select_field",
+      "name": "Dropdown Field",
+      "settings": [
+        { "type": "text", "id": "label",       "label": "Field Label",              "default": "Choose one" },
+        { "type": "text", "id": "placeholder", "label": "Placeholder option",       "default": "Select..." },
+        { "type": "text", "id": "options",     "label": "Options (comma separated)","default": "Option 1, Option 2, Option 3" },
+        { "type": "checkbox", "id": "required","label": "Required",                 "default": false }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color",    "label": "Background",    "default": "#ffffff" },
+    { "type": "color", "id": "text_color",  "label": "Text Color",    "default": "#1A1A1A" },
+    { "type": "color", "id": "accent_color","label": "Accent Color",  "default": "#8BA4AC" },
+
+    { "type": "header", "content": "Page Header" },
+    { "type": "text",   "id": "page_eyebrow",  "label": "Eyebrow",   "info": "e.g. AU" },
+    { "type": "text",   "id": "page_title",    "label": "Page Title","default": "For Australia Orders" },
+    { "type": "text",   "id": "page_subtitle", "label": "Subtitle",  "default": "Oaklynn Rae Domer" },
+    { "type": "select", "id": "header_align",  "label": "Header Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" }
+      ], "default": "center"
+    },
+    { "type": "range",  "id": "header_pt",  "label": "Header Padding Top",   "min": 0,"max": 80,"step": 4,"unit": "px","default": 48 },
+    { "type": "range",  "id": "header_pb",  "label": "Header Padding Bottom", "min": 0,"max": 80,"step": 4,"unit": "px","default": 32 },
+
+    { "type": "header", "content": "Hero Image" },
+    { "type": "image_picker", "id": "hero_image",          "label": "Hero Image" },
+    { "type": "range",        "id": "hero_height",         "label": "Hero Height",         "min": 200,"max": 700,"step": 20,"unit": "px","default": 360 },
+    { "type": "range",        "id": "hero_gap",            "label": "Gap Below Hero",       "min": 0,  "max": 80, "step": 4, "unit": "px","default": 48 },
+    { "type": "select",       "id": "hero_focal",          "label": "Image Focal Point",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "top center",    "label": "Top"    },
+        { "value": "bottom center", "label": "Bottom" }
+      ], "default": "center center"
+    },
+    { "type": "color", "id": "hero_overlay_color",   "label": "Overlay Color",   "default": "#000000" },
+    { "type": "range", "id": "hero_overlay_opacity", "label": "Overlay Opacity", "min": 0,"max": 70,"step": 5,"unit": "%","default": 0 },
+
+    { "type": "header", "content": "Hero Badge" },
+    { "type": "text",  "id": "badge_text",       "label": "Badge Text",         "info": "Leave blank to hide",  "default": "Be The Light" },
+    { "type": "color", "id": "badge_bg",          "label": "Badge Background",   "default": "#8BA4AC" },
+    { "type": "color", "id": "badge_text_color",  "label": "Badge Text Color",   "default": "#ffffff" },
+    { "type": "range", "id": "badge_size",        "label": "Badge Font Size",    "min": 10,"max": 24,"step": 1,"unit": "px","default": 14 },
+    { "type": "range", "id": "badge_pv",          "label": "Badge Padding V",    "min": 4, "max": 20,"step": 2,"unit": "px","default": 10 },
+    { "type": "range", "id": "badge_ph",          "label": "Badge Padding H",    "min": 8, "max": 40,"step": 2,"unit": "px","default": 20 },
+    { "type": "range", "id": "badge_radius",      "label": "Badge Radius",       "min": 0, "max": 30,"step": 2,"unit": "px","default": 4 },
+    { "type": "range", "id": "badge_bottom",      "label": "Badge Position Bottom","min": 0,"max": 80,"step": 4,"unit": "px","default": 16 },
+    { "type": "range", "id": "badge_right",       "label": "Badge Position Right", "min": 0,"max": 120,"step": 4,"unit": "px","default": 40 },
+
+    { "type": "header", "content": "Left Column" },
+    { "type": "text",    "id": "left_eyebrow", "label": "Left Eyebrow",  "info": "e.g. AU" },
+    { "type": "text",    "id": "left_title",   "label": "Left Title",    "default": "For Australia Orders" },
+    { "type": "richtext","id": "left_body",    "label": "Left Body Text","info": "Supports bold, lists, links" },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "title_min",       "label": "Page Title Min",  "min": 20,"max": 48,"step": 2,"unit": "px","default": 26 },
+    { "type": "range", "id": "title_max",       "label": "Page Title Max",  "min": 28,"max": 72,"step": 2,"unit": "px","default": 52 },
+    { "type": "range", "id": "title_weight",    "label": "Title Weight",    "min": 300,"max": 900,"step": 100,"default": 700 },
+    { "type": "range", "id": "title_ls",        "label": "Title Letter Spacing","min": -5,"max": 10,"step": 1,"default": -1,"info": "Divide by 100" },
+    { "type": "range", "id": "subtitle_size",   "label": "Subtitle Size",   "min": 13,"max": 24,"step": 1,"unit": "px","default": 18 },
+    { "type": "range", "id": "left_title_min",  "label": "Left Title Min",  "min": 16,"max": 32,"step": 2,"unit": "px","default": 18 },
+    { "type": "range", "id": "left_title_max",  "label": "Left Title Max",  "min": 20,"max": 48,"step": 2,"unit": "px","default": 28 },
+    { "type": "range", "id": "body_size",       "label": "Body Size",       "min": 13,"max": 20,"step": 1,"unit": "px","default": 16 },
+    { "type": "range", "id": "eyebrow_size",    "label": "Eyebrow Size",    "min": 10,"max": 18,"step": 1,"unit": "px","default": 13 },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range",  "id": "max_width",       "label": "Max Width",      "min": 800,"max": 1600,"step": 20,"unit": "px","default": 1100 },
+    { "type": "range",  "id": "left_col",        "label": "Left Col Weight","min": 1,"max": 3,"step": 1,"default": 1 },
+    { "type": "range",  "id": "right_col",       "label": "Right Col Weight","min": 1,"max": 3,"step": 1,"default": 2 },
+    { "type": "range",  "id": "col_gap",         "label": "Column Gap",     "min": 20,"max": 100,"step": 4,"unit": "px","default": 60 },
+    { "type": "range",  "id": "padding_h",       "label": "Side Padding",   "min": 0,"max": 80,"step": 4,"unit": "px","default": 40 },
+    { "type": "range",  "id": "padding_h_mobile","label": "Side Padding Mobile","min": 0,"max": 40,"step": 4,"unit": "px","default": 20 },
+    { "type": "range",  "id": "padding_bottom",  "label": "Bottom Padding", "min": 0,"max": 120,"step": 4,"unit": "px","default": 60 },
+
+    { "type": "header", "content": "Form Fields" },
+    { "type": "text",  "id": "required_text",        "label": "Required label",        "default": "required" },
+    { "type": "text",  "id": "name_label",            "label": "Name Group Label",      "default": "Name" },
+    { "type": "text",  "id": "first_name_label",      "label": "First Name Label",      "default": "First Name" },
+    { "type": "text",  "id": "first_name_placeholder","label": "First Name Placeholder" },
+    { "type": "text",  "id": "last_name_label",       "label": "Last Name Label",       "default": "Last Name" },
+    { "type": "text",  "id": "last_name_placeholder", "label": "Last Name Placeholder" },
+    { "type": "text",  "id": "email_label",           "label": "Email Label",           "default": "Email" },
+    { "type": "text",  "id": "email_placeholder",     "label": "Email Placeholder" },
+    { "type": "text",  "id": "phone_label",           "label": "Phone Label",           "default": "Phone" },
+    { "type": "text",  "id": "phone_placeholder",     "label": "Phone Number Placeholder","default": "Phone number" },
+    { "type": "range", "id": "country_col_width",     "label": "Country Selector Width","min": 120,"max": 280,"step": 10,"unit": "px","default": 200 },
+
+    { "type": "header", "content": "Input Style" },
+    { "type": "color", "id": "input_bg",          "label": "Input Background",  "default": "#ffffff" },
+    { "type": "color", "id": "input_text",        "label": "Input Text",        "default": "#1A1A1A" },
+    { "type": "color", "id": "input_placeholder", "label": "Input Placeholder", "default": "#aaaaaa" },
+    { "type": "color", "id": "input_border_c",    "label": "Input Border",      "default": "#cccccc" },
+    { "type": "color", "id": "input_focus",       "label": "Input Focus Color", "default": "#8BA4AC" },
+    { "type": "range", "id": "input_border_w",    "label": "Border Width",      "min": 0,"max": 3,"step": 1,"unit": "px","default": 1 },
+    { "type": "range", "id": "input_radius",      "label": "Input Radius",      "min": 0,"max": 12,"step": 2,"unit": "px","default": 4 },
+    { "type": "range", "id": "input_pv",          "label": "Input Padding V",   "min": 8,"max": 20,"step": 2,"unit": "px","default": 12 },
+    { "type": "range", "id": "input_ph",          "label": "Input Padding H",   "min": 8,"max": 24,"step": 2,"unit": "px","default": 14 },
+    { "type": "range", "id": "input_size",        "label": "Input Font Size",   "min": 13,"max": 18,"step": 1,"unit": "px","default": 15 },
+    { "type": "range", "id": "label_size",        "label": "Label Font Size",   "min": 11,"max": 16,"step": 1,"unit": "px","default": 14 },
+    { "type": "range", "id": "label_weight",      "label": "Label Font Weight", "min": 300,"max": 700,"step": 100,"default": 400 },
+    { "type": "range", "id": "label_gap",         "label": "Label to Input Gap","min": 4,"max": 12,"step": 2,"unit": "px","default": 6 },
+    { "type": "range", "id": "field_gap",         "label": "Gap Between Fields","min": 12,"max": 40,"step": 4,"unit": "px","default": 24 },
+    { "type": "range", "id": "name_gap",          "label": "First/Last Name Gap","min": 8,"max": 32,"step": 4,"unit": "px","default": 16 },
+    { "type": "range", "id": "textarea_height",   "label": "Textarea Min Height","min": 80,"max": 240,"step": 10,"unit": "px","default": 120 },
+
+    { "type": "header", "content": "Submit Button" },
+    { "type": "text",   "id": "btn_label",      "label": "Button Label",        "default": "Submit" },
+    { "type": "color",  "id": "btn_bg",         "label": "Button Background",   "default": "#ffffff" },
+    { "type": "color",  "id": "btn_color",      "label": "Button Text",         "default": "#1A1A1A" },
+    { "type": "color",  "id": "btn_bg_hover",   "label": "Button Hover Bg",     "default": "#1A1A1A" },
+    { "type": "color",  "id": "btn_color_hover","label": "Button Hover Text",   "default": "#ffffff" },
+    { "type": "color",  "id": "btn_border_c",   "label": "Button Border Color", "default": "#1A1A1A" },
+    { "type": "range",  "id": "btn_border_w",   "label": "Button Border Width", "min": 0,"max": 4,"step": 1,"unit": "px","default": 1 },
+    { "type": "range",  "id": "btn_radius",     "label": "Button Radius",       "min": 0,"max": 30,"step": 2,"unit": "px","default": 4 },
+    { "type": "range",  "id": "btn_pv",         "label": "Button Padding V",    "min": 10,"max": 28,"step": 2,"unit": "px","default": 14 },
+    { "type": "range",  "id": "btn_ph",         "label": "Button Padding H",    "min": 16,"max": 60,"step": 4,"unit": "px","default": 24 },
+    { "type": "range",  "id": "btn_size",       "label": "Button Font Size",    "min": 12,"max": 18,"step": 1,"unit": "px","default": 15 },
+    { "type": "range",  "id": "btn_weight",     "label": "Button Font Weight",  "min": 400,"max": 700,"step": 100,"default": 500 },
+    { "type": "select", "id": "btn_transform",  "label": "Button Transform",
+      "options": [
+        { "value": "none",      "label": "None"      },
+        { "value": "uppercase", "label": "Uppercase" }
+      ], "default": "none"
+    },
+    { "type": "range",  "id": "btn_gap",        "label": "Gap Above Button",    "min": 0,"max": 32,"step": 4,"unit": "px","default": 8 },
+
+    { "type": "header", "content": "Messages" },
+    { "type": "text", "id": "success_msg", "label": "Success Message", "default": "Thank you! Your order request has been received." }
+  ],
+  "presets": [
+    {
+      "name": "International Order Form",
+      "blocks": [
+        {
+          "type": "textarea_field",
+          "settings": {
+            "label": "Quantity of caps requested",
+            "placeholder": "e.g. Pink Adult ×2, Black Youth ×2",
+            "required": true
+          }
+        },
+        {
+          "type": "textarea_field",
+          "settings": {
+            "label": "Questions",
+            "placeholder": "Any questions or special requests",
+            "required": false
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
