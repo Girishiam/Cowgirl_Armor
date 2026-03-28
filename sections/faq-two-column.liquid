@@ -26,29 +26,17 @@
     z-index: 0;
   }
 
-  /* ── Background images ── */
-  .faq2-{{ section.id }} .faq2__bg-images {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
+  /* ── Background image ── */
   .faq2-{{ section.id }} .faq2__bg-img {
     position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.bg_img_fit }};
+    object-position: {{ section.settings.bg_img_position }};
     opacity: {{ section.settings.bg_img_opacity | divided_by: 100.0 }};
-    width: {{ section.settings.bg_img_size }}px;
-    height: auto;
-    object-fit: contain;
-  }
-  .faq2-{{ section.id }} .faq2__bg-img--left {
-    left: {{ section.settings.bg_img_left_x }}px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  .faq2-{{ section.id }} .faq2__bg-img--right {
-    right: {{ section.settings.bg_img_right_x }}px;
-    top: 50%;
-    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* ── Container ── */
@@ -218,20 +206,19 @@
 
 <section class="faq2-{{ section.id }}">
 
-  {%- comment -%} ── Background images ── {%- endcomment -%}
-  {%- if section.settings.bg_image_left != blank or section.settings.bg_image_right != blank -%}
-    <div class="faq2__bg-images">
-      {%- if section.settings.bg_image_left != blank -%}
-        <img src="{{ section.settings.bg_image_left | image_url: width: 600 }}"
-             alt="" class="faq2__bg-img faq2__bg-img--left"
-             aria-hidden="true" loading="lazy">
-      {%- endif -%}
-      {%- if section.settings.bg_image_right != blank -%}
-        <img src="{{ section.settings.bg_image_right | image_url: width: 600 }}"
-             alt="" class="faq2__bg-img faq2__bg-img--right"
-             aria-hidden="true" loading="lazy">
-      {%- endif -%}
-    </div>
+  {%- comment -%} ── Background image ── {%- endcomment -%}
+  {%- if section.settings.bg_image != blank -%}
+    <img
+      src="{{ section.settings.bg_image | image_url: width: 1600 }}"
+      srcset="{{ section.settings.bg_image | image_url: width: 800 }} 800w,
+              {{ section.settings.bg_image | image_url: width: 1200 }} 1200w,
+              {{ section.settings.bg_image | image_url: width: 1600 }} 1600w"
+      sizes="100vw"
+      alt=""
+      class="faq2__bg-img"
+      aria-hidden="true"
+      loading="lazy"
+    >
   {%- endif -%}
 
   {%- comment -%} ── Watermark ── {%- endcomment -%}
@@ -436,14 +423,25 @@
 
     {
       "type": "header",
-      "content": "Background Images"
+      "content": "Background Image"
     },
-    { "type": "image_picker", "id": "bg_image_left",   "label": "Left Background Image",  "info": "Faded decorative image on the left" },
-    { "type": "image_picker", "id": "bg_image_right",  "label": "Right Background Image", "info": "Faded decorative image on the right" },
-    { "type": "range", "id": "bg_img_opacity", "label": "Image Opacity",   "min": 2,   "max": 40,  "step": 2, "unit": "%", "default": 12 },
-    { "type": "range", "id": "bg_img_size",    "label": "Image Size",      "min": 100, "max": 600, "step": 20, "unit": "px","default": 320 },
-    { "type": "range", "id": "bg_img_left_x",  "label": "Left Image X",    "min": -200,"max": 200, "step": 10, "unit": "px","default": 20 },
-    { "type": "range", "id": "bg_img_right_x", "label": "Right Image X",   "min": -200,"max": 200, "step": 10, "unit": "px","default": 20 },
+    { "type": "image_picker", "id": "bg_image",      "label": "Background Image",  "info": "Faded image behind the FAQ content" },
+    { "type": "range",        "id": "bg_img_opacity","label": "Image Opacity",     "min": 2, "max": 50, "step": 2, "unit": "%", "default": 14 },
+    { "type": "select",       "id": "bg_img_fit",    "label": "Image Fit",
+      "options": [
+        { "value": "cover",   "label": "Cover (fills section)" },
+        { "value": "contain", "label": "Contain (full image visible)" }
+      ], "default": "cover"
+    },
+    { "type": "select", "id": "bg_img_position", "label": "Image Position",
+      "options": [
+        { "value": "center center", "label": "Center"       },
+        { "value": "top center",    "label": "Top"          },
+        { "value": "bottom center", "label": "Bottom"       },
+        { "value": "left center",   "label": "Left"         },
+        { "value": "right center",  "label": "Right"        }
+      ], "default": "center center"
+    },
 
     {
       "type": "header",
