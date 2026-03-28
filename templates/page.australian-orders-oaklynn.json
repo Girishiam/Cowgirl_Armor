@@ -24,6 +24,7 @@
     },
     "image_with_text_LXxzEk": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with text",
       "settings": {
         "layout": "image_first",
@@ -42,6 +43,7 @@
     },
     "image_with_text_PBqPNK": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with Text",
       "settings": {
         "layout": "image_first",
@@ -60,6 +62,7 @@
     },
     "image_with_text_UAJ3AJ": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "Image with Text",
       "settings": {
         "layout": "image_first",
@@ -75,12 +78,126 @@
         "background_color": "#d9d9d9",
         "text_color": "#1a1a1a"
       }
+    },
+    "intl_order_enALVj": {
+      "type": "intl-order",
+      "blocks": {
+        "textarea_field_yerkrp": {
+          "type": "textarea_field",
+          "settings": {
+            "label": "Quantity of caps requested",
+            "placeholder": "e.g. Pink Adult ×2, Black Youth ×2",
+            "required": true
+          }
+        },
+        "textarea_field_NJgxCG": {
+          "type": "textarea_field",
+          "settings": {
+            "label": "Questions",
+            "placeholder": "Any questions or special requests",
+            "required": false
+          }
+        }
+      },
+      "block_order": [
+        "textarea_field_yerkrp",
+        "textarea_field_NJgxCG"
+      ],
+      "name": "International Order Form",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#1A1A1A",
+        "accent_color": "#8BA4AC",
+        "page_eyebrow": "",
+        "page_title": "For Australia Orders",
+        "page_subtitle": "Oaklynn Rae Domer",
+        "header_align": "center",
+        "header_pt": 48,
+        "header_pb": 32,
+        "hero_image": "shopify://shop_images/OaklynnRae2.jpg",
+        "hero_height": 700,
+        "hero_gap": 48,
+        "hero_focal": "center center",
+        "hero_overlay_color": "#000000",
+        "hero_overlay_opacity": 0,
+        "badge_text": "Be The Light",
+        "badge_bg": "#8BA4AC",
+        "badge_text_color": "#ffffff",
+        "badge_size": 14,
+        "badge_pv": 10,
+        "badge_ph": 20,
+        "badge_radius": 4,
+        "badge_bottom": 16,
+        "badge_right": 40,
+        "left_eyebrow": "",
+        "left_title": "For Australia Orders",
+        "left_body": "",
+        "title_min": 26,
+        "title_max": 52,
+        "title_weight": 700,
+        "title_ls": -1,
+        "subtitle_size": 18,
+        "left_title_min": 18,
+        "left_title_max": 28,
+        "body_size": 16,
+        "eyebrow_size": 13,
+        "max_width": 1100,
+        "left_col": 1,
+        "right_col": 2,
+        "col_gap": 60,
+        "padding_h": 40,
+        "padding_h_mobile": 20,
+        "padding_bottom": 60,
+        "required_text": "required",
+        "name_label": "Name",
+        "first_name_label": "First Name",
+        "first_name_placeholder": "",
+        "last_name_label": "Last Name",
+        "last_name_placeholder": "",
+        "email_label": "Email",
+        "email_placeholder": "",
+        "phone_label": "Phone",
+        "phone_placeholder": "Phone number",
+        "country_col_width": 200,
+        "input_bg": "#ffffff",
+        "input_text": "#1A1A1A",
+        "input_placeholder": "#aaaaaa",
+        "input_border_c": "#cccccc",
+        "input_focus": "#8BA4AC",
+        "input_border_w": 1,
+        "input_radius": 4,
+        "input_pv": 12,
+        "input_ph": 14,
+        "input_size": 15,
+        "label_size": 14,
+        "label_weight": 400,
+        "label_gap": 6,
+        "field_gap": 24,
+        "name_gap": 16,
+        "textarea_height": 120,
+        "btn_label": "Submit",
+        "btn_bg": "#ffffff",
+        "btn_color": "#1A1A1A",
+        "btn_bg_hover": "#1A1A1A",
+        "btn_color_hover": "#ffffff",
+        "btn_border_c": "#1A1A1A",
+        "btn_border_w": 1,
+        "btn_radius": 4,
+        "btn_pv": 14,
+        "btn_ph": 24,
+        "btn_size": 15,
+        "btn_weight": 500,
+        "btn_transform": "none",
+        "btn_gap": 8,
+        "success_msg": "Thank you! Your order request has been received."
+      }
     }
   },
   "order": [
     "main",
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
-    "image_with_text_UAJ3AJ"
+    "image_with_text_UAJ3AJ",
+    "intl_order_enALVj"
   ]
 }
