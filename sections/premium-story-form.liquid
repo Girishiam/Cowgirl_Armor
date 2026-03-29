@@ -24,7 +24,6 @@
     }
   }
 
-  /* --- Left Column: Content --- */
   .premium-story__content-col {
     position: sticky;
     top: 120px;
@@ -46,14 +45,9 @@
     color: inherit;
   }
 
-  .premium-story__text p {
-    margin-bottom: 1.5rem;
-  }
-  .premium-story__text p:last-child {
-    margin-bottom: 0;
-  }
+  .premium-story__text p { margin-bottom: 1.5rem; }
+  .premium-story__text p:last-child { margin-bottom: 0; }
 
-  /* --- Right Column: Form --- */
   .premium-story__form-col {
     display: flex;
     flex-direction: column;
@@ -65,7 +59,6 @@
     gap: 2rem;
   }
 
-  /* Form Status Messages */
   .premium-form__message {
     padding: 1rem;
     font-size: 1rem;
@@ -83,7 +76,6 @@
     border: 1px solid #c0392b;
   }
 
-  /* Input Styling */
   .premium-form__row {
     display: grid;
     grid-template-columns: 1fr;
@@ -91,9 +83,7 @@
   }
 
   @media screen and (min-width: 768px) {
-    .premium-form__row {
-      grid-template-columns: 1fr 1fr;
-    }
+    .premium-form__row { grid-template-columns: 1fr 1fr; }
   }
 
   .premium-form__field {
@@ -140,16 +130,14 @@
     border-bottom-color: {{ section.settings.text_color }};
   }
 
-  /* Custom Premium Radio Buttons (Pill Style) */
+  /* Radio pill buttons */
   .premium-form__radio-group {
     display: flex;
     gap: 1rem;
     margin-top: 0.5rem;
   }
 
-  .premium-form__radio-input {
-    display: none; /* Hide default radio button */
-  }
+  .premium-form__radio-input { display: none; }
 
   .premium-form__radio-label {
     padding: 0.6rem 2rem;
@@ -163,14 +151,12 @@
     font-family: var(--font-heading);
   }
 
-  /* When the hidden radio is checked, style the label next to it */
   .premium-form__radio-input:checked + .premium-form__radio-label {
     background-color: {{ section.settings.text_color }};
     color: {{ section.settings.bg_color }};
     border-color: {{ section.settings.text_color }};
   }
 
-  /* Submit Button */
   .premium-form__submit {
     align-self: flex-start;
     background: transparent;
@@ -191,14 +177,12 @@
     color: {{ section.settings.bg_color }};
   }
 
-  /* Sub-text for form fields */
   .premium-form__subtext {
     font-size: 0.8rem;
     opacity: 0.6;
     margin-top: 0.5rem;
   }
 
-  /* Animation */
   .fade-up-anim {
     opacity: 0;
     transform: translateY(20px);
@@ -206,125 +190,130 @@
   }
 
   @keyframes fadeUpAnim {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 
 <div class="premium-story-{{ section.id }}">
   <div class="premium-story__container">
+
     <div class="premium-story__content-col fade-up-anim">
       {%- if section.settings.heading != blank -%}
         <h2 class="premium-story__heading">{{ section.settings.heading }}</h2>
       {%- endif -%}
-
       {%- if section.settings.text != blank -%}
-        <div class="premium-story__text">
-          {{ section.settings.text }}
-        </div>
+        <div class="premium-story__text">{{ section.settings.text }}</div>
       {%- endif -%}
     </div>
 
     <div class="premium-story__form-col fade-up-anim" style="animation-delay: 200ms;">
-      {%- form 'contact', id: 'PremiumStoryForm', class: 'premium-form' -%}
-        <input type="hidden" name="contact[tags]" value="story_submission">
+      {%- form 'contact', id: 'PremiumStoryForm-{{ section.id }}', class: 'premium-form' -%}
 
         {%- if form.posted_successfully? -%}
           <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
             {{ section.settings.success_message }}
           </div>
-        {%- elsif form.errors -%}
-          <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
-            Please adjust the following fields: {{ form.errors | default_errors }}
+
+        {%- else -%}
+
+          {%- if form.errors -%}
+            <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
+              Please adjust the following fields: {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="premium-form__row">
+            <div class="premium-form__field">
+              <label class="premium-form__label" for="StoryForm-first-{{ section.id }}">
+                {{ section.settings.label_first_name | default: 'First Name' }}
+                <span>{{ section.settings.label_required | default: '(required)' }}</span>
+              </label>
+              <input type="text" id="StoryForm-first-{{ section.id }}"
+                     class="premium-form__input"
+                     name="contact[First Name]"
+                     autocomplete="given-name" required>
+            </div>
+            <div class="premium-form__field">
+              <label class="premium-form__label" for="StoryForm-last-{{ section.id }}">
+                {{ section.settings.label_last_name | default: 'Last Name' }}
+              </label>
+              <input type="text" id="StoryForm-last-{{ section.id }}"
+                     class="premium-form__input"
+                     name="contact[Last Name]"
+                     autocomplete="family-name">
+            </div>
           </div>
+
+          <div class="premium-form__field">
+            <label class="premium-form__label" for="StoryForm-email-{{ section.id }}">
+              {{ section.settings.label_email | default: 'Email' }}
+              <span>{{ section.settings.label_required | default: '(required)' }}</span>
+            </label>
+            <input type="email" id="StoryForm-email-{{ section.id }}"
+                   class="premium-form__input"
+                   name="contact[email]"
+                   autocomplete="email" required>
+          </div>
+
+          <div class="premium-form__field">
+            <label class="premium-form__label" for="StoryForm-story-{{ section.id }}">
+              {{ section.settings.label_story | default: 'Your Cowgirl Story:' }}
+              <span>{{ section.settings.label_required | default: '(required)' }}</span>
+            </label>
+            <textarea id="StoryForm-story-{{ section.id }}"
+                      class="premium-form__textarea"
+                      name="contact[Story]"
+                      style="min-height: 150px;"
+                      required></textarea>
+          </div>
+
+          <div class="premium-form__field">
+            <label class="premium-form__label">
+              {{ section.settings.label_permission | default: 'Can we share this on our Cowgirl Stories?' }}
+              <span>{{ section.settings.label_required | default: '(required)' }}</span>
+            </label>
+            <div class="premium-form__subtext">
+              {{ section.settings.subtext_permission | default: 'If always anonymous, please note that in the message above.' }}
+            </div>
+            <div class="premium-form__radio-group">
+              <input type="radio" id="StoryForm-yes-{{ section.id }}"
+                     class="premium-form__radio-input"
+                     name="contact[Permission to Share]"
+                     value="{{ section.settings.label_yes | default: 'Yes' }}"
+                     required>
+              <label for="StoryForm-yes-{{ section.id }}" class="premium-form__radio-label">
+                {{ section.settings.label_yes | default: 'Yes' }}
+              </label>
+
+              <input type="radio" id="StoryForm-no-{{ section.id }}"
+                     class="premium-form__radio-input"
+                     name="contact[Permission to Share]"
+                     value="{{ section.settings.label_no | default: 'No' }}"
+                     required>
+              <label for="StoryForm-no-{{ section.id }}" class="premium-form__radio-label">
+                {{ section.settings.label_no | default: 'No' }}
+              </label>
+            </div>
+          </div>
+
+          <div class="premium-form__field">
+            <label class="premium-form__label" for="StoryForm-prayer-{{ section.id }}">
+              {{ section.settings.label_prayer | default: 'How can we be praying for you?' }}
+            </label>
+            <input type="text" id="StoryForm-prayer-{{ section.id }}"
+                   class="premium-form__input"
+                   name="contact[Prayer Request]">
+          </div>
+
+          <button type="submit" class="premium-form__submit">
+            {{ section.settings.button_label }}
+          </button>
+
         {%- endif -%}
 
-        <div class="premium-form__row">
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="StoryForm-first_name">{{ section.settings.label_first_name | default: 'First Name' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
-            <input
-              type="text"
-              id="StoryForm-first_name"
-              class="premium-form__input"
-              name="contact[First Name]"
-              required
-              autocomplete="given-name"
-            >
-          </div>
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="StoryForm-last_name">{{ section.settings.label_last_name | default: 'Last Name' }}</label>
-            <input
-              type="text"
-              id="StoryForm-last_name"
-              class="premium-form__input"
-              name="contact[Last Name]"
-              autocomplete="family-name"
-            >
-          </div>
-        </div>
-
-        <div class="premium-form__field">
-          <label class="premium-form__label" for="StoryForm-email">{{ section.settings.label_email | default: 'Email' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
-          <input
-            type="email"
-            id="StoryForm-email"
-            class="premium-form__input"
-            name="contact[email]"
-            required
-            autocomplete="email"
-          >
-        </div>
-
-        <div class="premium-form__field">
-          <label class="premium-form__label" for="StoryForm-story">{{ section.settings.label_story | default: 'Your Cowgirl Story:' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
-          <textarea
-            id="StoryForm-story"
-            class="premium-form__textarea"
-            name="contact[Story]"
-            style="min-height: 150px;"
-            required
-          ></textarea>
-        </div>
-
-        <div class="premium-form__field">
-          <label class="premium-form__label">{{ section.settings.label_permission | default: 'Can we share this on our Cowgirl Stories?' }} <span>{{ section.settings.label_required | default: '(required)' }}</span></label>
-          <div class="premium-form__subtext">{{ section.settings.subtext_permission | default: 'If always anonymous, please note that in the message above.' }}</div>
-
-          <div class="premium-form__radio-group">
-            <input
-              type="radio"
-              id="StoryForm-permission-yes"
-              class="premium-form__radio-input"
-              name="contact[Permission to Share]"
-              value="{{ section.settings.label_yes | default: 'Yes' }}"
-              required
-            >
-            <label for="StoryForm-permission-yes" class="premium-form__radio-label">{{ section.settings.label_yes | default: 'Yes' }}</label>
-
-            <input
-              type="radio"
-              id="StoryForm-permission-no"
-              class="premium-form__radio-input"
-              name="contact[Permission to Share]"
-              value="{{ section.settings.label_no | default: 'No' }}"
-              required
-            >
-            <label for="StoryForm-permission-no" class="premium-form__radio-label">{{ section.settings.label_no | default: 'No' }}</label>
-          </div>
-        </div>
-
-        <div class="premium-form__field">
-          <label class="premium-form__label" for="StoryForm-prayer">{{ section.settings.label_prayer | default: 'How can we be praying for you?' }}</label>
-          <input type="text" id="StoryForm-prayer" class="premium-form__input" name="contact[Prayer Request]">
-        </div>
-
-        <button type="submit" class="premium-form__submit">
-          {{ section.settings.button_label }}
-        </button>
       {%- endform -%}
     </div>
+
   </div>
 </div>
 
@@ -332,136 +321,29 @@
 {
   "name": "Story Submission Form",
   "settings": [
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#F9F9F9"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#1A1A1A"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Share your Cowgirl Story!"
-    },
-    {
-      "type": "richtext",
-      "id": "text",
-      "label": "Text",
+    { "type": "color", "id": "bg_color",   "label": "Background Color", "default": "#F9F9F9" },
+    { "type": "color", "id": "text_color", "label": "Text Color",       "default": "#1A1A1A" },
+    { "type": "text",    "id": "heading", "label": "Heading", "default": "Share your Cowgirl Story!" },
+    { "type": "richtext","id": "text",    "label": "Text",
       "default": "<p>We are all in this journey together, and we are anonymous sharing other inspirational Cowgirl Stories on our blog, with \"Signed A Cowgirl.\" If it's on your heart to share your story, please send it to us here, and we will get back to you asap! We are all in this together cowgirls!</p>"
     },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Submit Button Label",
-      "default": "Send it!"
-    },
-    {
-      "type": "text",
-      "id": "success_message",
-      "label": "Success Message",
-      "default": "Thank you for sharing your story with us!"
-    },
-    {
-      "type": "header",
-      "content": "Form Labels"
-    },
-    {
-      "type": "text",
-      "id": "label_first_name",
-      "label": "First Name Label",
-      "default": "First Name"
-    },
-    {
-      "type": "text",
-      "id": "label_last_name",
-      "label": "Last Name Label",
-      "default": "Last Name"
-    },
-    {
-      "type": "text",
-      "id": "label_email",
-      "label": "Email Label",
-      "default": "Email"
-    },
-    {
-      "type": "text",
-      "id": "label_story",
-      "label": "Story Label",
-      "default": "Your Cowgirl Story:"
-    },
-    {
-      "type": "text",
-      "id": "label_permission",
-      "label": "Permission Label",
-      "default": "Can we share this on our Cowgirl Stories?"
-    },
-    {
-      "type": "text",
-      "id": "subtext_permission",
-      "label": "Permission Subtext",
-      "default": "If always anonymous, please note that in the message above."
-    },
-    {
-      "type": "text",
-      "id": "label_yes",
-      "label": "Yes Option",
-      "default": "Yes"
-    },
-    {
-      "type": "text",
-      "id": "label_no",
-      "label": "No Option",
-      "default": "No"
-    },
-    {
-      "type": "text",
-      "id": "label_prayer",
-      "label": "Prayer Label",
-      "default": "How can we be praying for you?"
-    },
-    {
-      "type": "text",
-      "id": "label_required",
-      "label": "Required text",
-      "default": "(required)"
-    },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "unit": "px",
-      "label": "Top Padding",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "unit": "px",
-      "label": "Bottom Padding",
-      "default": 100
-    }
+    { "type": "text", "id": "button_label",    "label": "Submit Button Label", "default": "Send it!" },
+    { "type": "text", "id": "success_message", "label": "Success Message",     "default": "Thank you for sharing your story with us!" },
+    { "type": "header", "content": "Form Labels" },
+    { "type": "text", "id": "label_first_name",    "label": "First Name Label",    "default": "First Name" },
+    { "type": "text", "id": "label_last_name",     "label": "Last Name Label",     "default": "Last Name"  },
+    { "type": "text", "id": "label_email",         "label": "Email Label",         "default": "Email"      },
+    { "type": "text", "id": "label_story",         "label": "Story Label",         "default": "Your Cowgirl Story:" },
+    { "type": "text", "id": "label_permission",    "label": "Permission Label",    "default": "Can we share this on our Cowgirl Stories?" },
+    { "type": "text", "id": "subtext_permission",  "label": "Permission Subtext",  "default": "If always anonymous, please note that in the message above." },
+    { "type": "text", "id": "label_yes",           "label": "Yes Option",          "default": "Yes" },
+    { "type": "text", "id": "label_no",            "label": "No Option",           "default": "No"  },
+    { "type": "text", "id": "label_prayer",        "label": "Prayer Label",        "default": "How can we be praying for you?" },
+    { "type": "text", "id": "label_required",      "label": "Required text",       "default": "(required)" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top",    "label": "Top Padding",    "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80  },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom Padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 100 }
   ],
-  "presets": [
-    {
-      "name": "Story Submission Form",
-      "category": "Form"
-    }
-  ]
+  "presets": [{ "name": "Story Submission Form" }]
 }
 {% endschema %}
