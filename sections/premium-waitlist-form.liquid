@@ -24,7 +24,6 @@
     }
   }
 
-  /* --- Left Column: Content --- */
   .premium-waitlist__content-col {
     position: sticky;
     top: 120px;
@@ -46,14 +45,9 @@
     color: inherit;
   }
 
-  .premium-waitlist__text p {
-    margin-bottom: 1.5rem;
-  }
-  .premium-waitlist__text p:last-child {
-    margin-bottom: 0;
-  }
+  .premium-waitlist__text p { margin-bottom: 1.5rem; }
+  .premium-waitlist__text p:last-child { margin-bottom: 0; }
 
-  /* --- Right Column: Form --- */
   .premium-waitlist__form-col {
     display: flex;
     flex-direction: column;
@@ -65,7 +59,6 @@
     gap: 2rem;
   }
 
-  /* Form Status Messages */
   .premium-form__message {
     padding: 1rem;
     font-size: 1rem;
@@ -83,7 +76,6 @@
     border: 1px solid #c0392b;
   }
 
-  /* Input Styling */
   .premium-form__row {
     display: grid;
     grid-template-columns: 1fr;
@@ -91,9 +83,7 @@
   }
 
   @media screen and (min-width: 768px) {
-    .premium-form__row {
-      grid-template-columns: 1fr 1fr;
-    }
+    .premium-form__row { grid-template-columns: 1fr 1fr; }
   }
 
   .premium-form__field {
@@ -133,7 +123,6 @@
     border-bottom-color: {{ section.settings.text_color }};
   }
 
-  /* Custom Phone Input Group */
   .premium-form__phone-group {
     display: flex;
     align-items: center;
@@ -155,15 +144,17 @@
     cursor: pointer;
     outline: none;
     opacity: 0.9;
+    -webkit-appearance: none;
+    appearance: none;
+    max-width: 200px;
   }
 
   .premium-form__phone-group .premium-form__input {
-    border-bottom: none; /* Let the group handle the border */
+    border-bottom: none;
     flex-grow: 1;
     padding-left: 0.5rem;
   }
 
-  /* Submit Button */
   .premium-form__submit {
     align-self: flex-start;
     background: transparent;
@@ -184,7 +175,6 @@
     color: {{ section.settings.bg_color }};
   }
 
-  /* Animation */
   .fade-up-anim {
     opacity: 0;
     transform: translateY(20px);
@@ -192,104 +182,172 @@
   }
 
   @keyframes fadeUpAnim {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 
 <div class="premium-waitlist-{{ section.id }}">
   <div class="premium-waitlist__container">
+
     <div class="premium-waitlist__content-col fade-up-anim">
       {%- if section.settings.heading != blank -%}
         <h2 class="premium-waitlist__heading">{{ section.settings.heading }}</h2>
       {%- endif -%}
-
       {%- if section.settings.text != blank -%}
-        <div class="premium-waitlist__text">
-          {{ section.settings.text }}
-        </div>
+        <div class="premium-waitlist__text">{{ section.settings.text }}</div>
       {%- endif -%}
     </div>
 
     <div class="premium-waitlist__form-col fade-up-anim" style="animation-delay: 200ms;">
-      {%- form 'customer', id: 'PremiumWaitlistForm', class: 'premium-form' -%}
-        <input type="hidden" name="contact[tags]" value="waitlist, prospect">
+      {%- comment -%}
+        Uses {% form 'customer' %} so the person is saved as a Shopify customer
+        with accepts_marketing: true and tagged as waitlist/prospect.
+        This feeds directly into Shopify Email and Klaviyo.
+      {%- endcomment -%}
+      {%- form 'customer', id: 'PremiumWaitlistForm-{{ section.id }}', class: 'premium-form' -%}
+
+        {%- comment -%} These hidden fields tag and subscribe the customer {%- endcomment -%}
+        <input type="hidden" name="customer[tags]"              value="waitlist,prospect">
+        <input type="hidden" name="customer[accepts_marketing]" value="true">
 
         {%- if form.posted_successfully? -%}
           <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
             {{ section.settings.success_message }}
           </div>
-        {%- elsif form.errors -%}
-          <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
-            {{ section.settings.error_message_prefix }} {{ form.errors | default_errors }}
+
+        {%- else -%}
+
+          {%- if form.errors -%}
+            <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
+              {{ section.settings.error_message_prefix }} {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="premium-form__row">
+            <div class="premium-form__field">
+              <label class="premium-form__label" for="WaitlistForm-first-{{ section.id }}">
+                {{ section.settings.first_name_label }}
+                {%- if section.settings.required_text != blank -%}
+                  <span>{{ section.settings.required_text }}</span>
+                {%- endif -%}
+              </label>
+              <input type="text" id="WaitlistForm-first-{{ section.id }}"
+                     class="premium-form__input"
+                     name="contact[first_name]"
+                     autocomplete="given-name" required>
+            </div>
+            <div class="premium-form__field">
+              <label class="premium-form__label" for="WaitlistForm-last-{{ section.id }}">
+                {{ section.settings.last_name_label }}
+              </label>
+              <input type="text" id="WaitlistForm-last-{{ section.id }}"
+                     class="premium-form__input"
+                     name="contact[last_name]"
+                     autocomplete="family-name">
+            </div>
           </div>
+
+          <div class="premium-form__field">
+            <label class="premium-form__label" for="WaitlistForm-email-{{ section.id }}">
+              {{ section.settings.email_label }}
+              {%- if section.settings.required_text != blank -%}
+                <span>{{ section.settings.required_text }}</span>
+              {%- endif -%}
+            </label>
+            <input type="email" id="WaitlistForm-email-{{ section.id }}"
+                   class="premium-form__input"
+                   name="contact[email]"
+                   autocomplete="email"
+                   pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                   required>
+          </div>
+
+          <div class="premium-form__field">
+            <label class="premium-form__label" for="WaitlistForm-phone-{{ section.id }}">
+              {{ section.settings.phone_label }}
+              {%- if section.settings.required_text != blank -%}
+                <span>{{ section.settings.required_text }}</span>
+              {%- endif -%}
+            </label>
+            <div class="premium-form__phone-group">
+              <select class="premium-form__country-code"
+                      name="contact[country_code]"
+                      aria-label="Country Code">
+                <option value="+1-US">🇺🇸 US (+1)</option>
+                <option value="+1-CA">🇨🇦 Canada (+1)</option>
+                <option value="+61" selected>🇦🇺 Australia (+61)</option>
+                <option value="+64">🇳🇿 New Zealand (+64)</option>
+                <option value="+44">🇬🇧 UK (+44)</option>
+                <option value="+353">🇮🇪 Ireland (+353)</option>
+                <option value="+27">🇿🇦 South Africa (+27)</option>
+                <option value="+33">🇫🇷 France (+33)</option>
+                <option value="+49">🇩🇪 Germany (+49)</option>
+                <option value="+31">🇳🇱 Netherlands (+31)</option>
+                <option value="+32">🇧🇪 Belgium (+32)</option>
+                <option value="+41">🇨🇭 Switzerland (+41)</option>
+                <option value="+43">🇦🇹 Austria (+43)</option>
+                <option value="+34">🇪🇸 Spain (+34)</option>
+                <option value="+39">🇮🇹 Italy (+39)</option>
+                <option value="+351">🇵🇹 Portugal (+351)</option>
+                <option value="+46">🇸🇪 Sweden (+46)</option>
+                <option value="+47">🇳🇴 Norway (+47)</option>
+                <option value="+45">🇩🇰 Denmark (+45)</option>
+                <option value="+358">🇫🇮 Finland (+358)</option>
+                <option value="+48">🇵🇱 Poland (+48)</option>
+                <option value="+420">🇨🇿 Czech Republic (+420)</option>
+                <option value="+36">🇭🇺 Hungary (+36)</option>
+                <option value="+40">🇷🇴 Romania (+40)</option>
+                <option value="+30">🇬🇷 Greece (+30)</option>
+                <option value="+90">🇹🇷 Turkey (+90)</option>
+                <option value="+7">🇷🇺 Russia (+7)</option>
+                <option value="+380">🇺🇦 Ukraine (+380)</option>
+                <option value="+81">🇯🇵 Japan (+81)</option>
+                <option value="+82">🇰🇷 South Korea (+82)</option>
+                <option value="+86">🇨🇳 China (+86)</option>
+                <option value="+852">🇭🇰 Hong Kong (+852)</option>
+                <option value="+886">🇹🇼 Taiwan (+886)</option>
+                <option value="+65">🇸🇬 Singapore (+65)</option>
+                <option value="+60">🇲🇾 Malaysia (+60)</option>
+                <option value="+66">🇹🇭 Thailand (+66)</option>
+                <option value="+63">🇵🇭 Philippines (+63)</option>
+                <option value="+62">🇮🇩 Indonesia (+62)</option>
+                <option value="+84">🇻🇳 Vietnam (+84)</option>
+                <option value="+91">🇮🇳 India (+91)</option>
+                <option value="+92">🇵🇰 Pakistan (+92)</option>
+                <option value="+880">🇧🇩 Bangladesh (+880)</option>
+                <option value="+94">🇱🇰 Sri Lanka (+94)</option>
+                <option value="+977">🇳🇵 Nepal (+977)</option>
+                <option value="+971">🇦🇪 UAE (+971)</option>
+                <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
+                <option value="+972">🇮🇱 Israel (+972)</option>
+                <option value="+20">🇪🇬 Egypt (+20)</option>
+                <option value="+234">🇳🇬 Nigeria (+234)</option>
+                <option value="+254">🇰🇪 Kenya (+254)</option>
+                <option value="+233">🇬🇭 Ghana (+233)</option>
+                <option value="+55">🇧🇷 Brazil (+55)</option>
+                <option value="+54">🇦🇷 Argentina (+54)</option>
+                <option value="+56">🇨🇱 Chile (+56)</option>
+                <option value="+57">🇨🇴 Colombia (+57)</option>
+                <option value="+51">🇵🇪 Peru (+51)</option>
+                <option value="+52">🇲🇽 Mexico (+52)</option>
+              </select>
+              <input type="tel" id="WaitlistForm-phone-{{ section.id }}"
+                     class="premium-form__input"
+                     name="contact[phone]"
+                     autocomplete="tel"
+                     placeholder="{{ section.settings.phone_placeholder }}">
+            </div>
+          </div>
+
+          <button type="submit" class="premium-form__submit">
+            {{ section.settings.button_label }}
+          </button>
+
         {%- endif -%}
 
-        <div class="premium-form__row">
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="WaitlistForm-first_name">{{ section.settings.first_name_label }} {%- if section.settings.required_text != blank -%}<span>{{ section.settings.required_text }}</span>{%- endif -%}</label>
-            <input
-              type="text"
-              id="WaitlistForm-first_name"
-              class="premium-form__input"
-              name="contact[first_name]"
-              required
-              autocomplete="given-name"
-            >
-          </div>
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="WaitlistForm-last_name">{{ section.settings.last_name_label }}</label>
-            <input
-              type="text"
-              id="WaitlistForm-last_name"
-              class="premium-form__input"
-              name="contact[last_name]"
-              autocomplete="family-name"
-            >
-          </div>
-        </div>
-
-        <div class="premium-form__field">
-          <label class="premium-form__label" for="WaitlistForm-email">{{ section.settings.email_label }} {%- if section.settings.required_text != blank -%}<span>{{ section.settings.required_text }}</span>{%- endif -%}</label>
-          <input
-            type="email"
-            id="WaitlistForm-email"
-            class="premium-form__input"
-            name="contact[email]"
-            required
-            autocomplete="email"
-            pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-          >
-        </div>
-
-        <div class="premium-form__field">
-          <label class="premium-form__label" for="WaitlistForm-phone">{{ section.settings.phone_label }} {%- if section.settings.required_text != blank -%}<span>{{ section.settings.required_text }}</span>{%- endif -%}</label>
-          <div class="premium-form__phone-group">
-            <select class="premium-form__country-code" name="contact[country_code]" aria-label="Country Code">
-              <option value="US">United States (+1)</option>
-              <option value="CA">Canada (+1)</option>
-              <option value="UK">United Kingdom (+44)</option>
-              <option value="AU">Australia (+61)</option>
-            </select>
-            <input
-              type="tel"
-              id="WaitlistForm-phone"
-              class="premium-form__input"
-              name="contact[phone]"
-              required
-              autocomplete="tel"
-              placeholder="{{ section.settings.phone_placeholder }}"
-            >
-          </div>
-        </div>
-
-        <button type="submit" class="premium-form__submit">
-          {{ section.settings.button_label }}
-        </button>
       {%- endform -%}
     </div>
+
   </div>
 </div>
 
@@ -297,118 +355,26 @@
 {
   "name": "Premium Waitlist Form",
   "settings": [
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#F9F9F9"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#1A1A1A"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "We have exciting news in March... but until then"
-    },
-    {
-      "type": "richtext",
-      "id": "text",
-      "label": "Text",
+    { "type": "color", "id": "bg_color",   "label": "Background Color", "default": "#F9F9F9" },
+    { "type": "color", "id": "text_color", "label": "Text Color",       "default": "#1A1A1A" },
+    { "type": "text",    "id": "heading", "label": "Heading", "default": "We have exciting news in March... but until then" },
+    { "type": "richtext","id": "text",    "label": "Text",
       "default": "<p>Some things aren't meant to be missed. The pieces that speak to your faith, your fire, and the cowgirl you're becoming — they don't always stay on the shelf long.</p><p>Join the Cowgirl Armor first-come, first-served list and be first in line for every drop, every restock, and every piece created to remind you who you are and whose you are.</p>"
     },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Submit Button Label",
-      "default": "I want in!"
-    },
-    {
-      "type": "text",
-      "id": "success_message",
-      "label": "Success Message",
-      "default": "You're on the list! Keep an eye on your inbox."
-    },
-    {
-      "type": "text",
-      "id": "error_message_prefix",
-      "label": "Error Message Prefix",
-      "default": "Please adjust the following fields:"
-    },
-    {
-      "type": "header",
-      "content": "Form Text & Labels"
-    },
-    {
-      "type": "text",
-      "id": "first_name_label",
-      "label": "First Name Label",
-      "default": "First Name"
-    },
-    {
-      "type": "text",
-      "id": "last_name_label",
-      "label": "Last Name Label",
-      "default": "Last Name"
-    },
-    {
-      "type": "text",
-      "id": "email_label",
-      "label": "Email Label",
-      "default": "Email"
-    },
-    {
-      "type": "text",
-      "id": "phone_label",
-      "label": "Phone Label",
-      "default": "Phone"
-    },
-    {
-      "type": "text",
-      "id": "phone_placeholder",
-      "label": "Phone Placeholder",
-      "default": "(555) 000-0000"
-    },
-    {
-      "type": "text",
-      "id": "required_text",
-      "label": "Required Field Text",
-      "default": "(required)"
-    },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "unit": "px",
-      "label": "Top Padding",
-      "default": 100
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "unit": "px",
-      "label": "Bottom Padding",
-      "default": 100
-    }
+    { "type": "text", "id": "button_label",        "label": "Submit Button Label",  "default": "I want in!" },
+    { "type": "text", "id": "success_message",     "label": "Success Message",       "default": "You're on the list! Keep an eye on your inbox." },
+    { "type": "text", "id": "error_message_prefix","label": "Error Message Prefix",  "default": "Please adjust the following fields:" },
+    { "type": "header", "content": "Form Labels" },
+    { "type": "text", "id": "first_name_label",  "label": "First Name Label",     "default": "First Name" },
+    { "type": "text", "id": "last_name_label",   "label": "Last Name Label",      "default": "Last Name"  },
+    { "type": "text", "id": "email_label",       "label": "Email Label",          "default": "Email"      },
+    { "type": "text", "id": "phone_label",       "label": "Phone Label",          "default": "Phone"      },
+    { "type": "text", "id": "phone_placeholder", "label": "Phone Placeholder",    "default": "(555) 000-0000" },
+    { "type": "text", "id": "required_text",     "label": "Required Field Text",  "default": "(required)" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top",    "label": "Top Padding",    "min": 0, "max": 160, "step": 4, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom Padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 100 }
   ],
-  "presets": [
-    {
-      "name": "Premium Waitlist Form",
-      "category": "Form"
-    }
-  ]
+  "presets": [{ "name": "Premium Waitlist Form" }]
 }
 {% endschema %}
