@@ -12,7 +12,6 @@
     padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 4vw, 3rem);
   }
 
-  /* ── Top grid ── */
   .footer__grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -22,9 +21,7 @@
   }
 
   @media screen and (min-width: 600px) {
-    .footer__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .footer__grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media screen and (min-width: 1024px) {
@@ -34,7 +31,6 @@
     }
   }
 
-  /* ── Brand column ── */
   .footer__brand-logo {
     display: inline-block;
     text-decoration: none;
@@ -65,7 +61,6 @@
     max-width: 280px;
   }
 
-  /* ── Social icons ── */
   .footer__socials {
     display: flex;
     flex-wrap: wrap;
@@ -97,7 +92,6 @@
     fill: currentColor;
   }
 
-  /* ── Nav columns ── */
   .footer__col-title {
     font-family: var(--font-heading);
     font-size: 0.8rem;
@@ -126,11 +120,8 @@
     display: inline-block;
   }
 
-  .footer__nav-link:hover {
-    opacity: 1;
-  }
+  .footer__nav-link:hover { opacity: 1; }
 
-  /* ── Newsletter column ── */
   .footer__newsletter-text {
     font-size: 0.95rem;
     opacity: 0.8;
@@ -161,9 +152,7 @@
     min-width: 0;
   }
 
-  .footer__email-input:focus {
-    outline: none;
-  }
+  .footer__email-input:focus { outline: none; }
 
   .footer__email-input::placeholder {
     color: {{ section.settings.text_color }};
@@ -185,9 +174,7 @@
     letter-spacing: 0.05em;
   }
 
-  .footer__submit-btn:hover {
-    opacity: 0.85;
-  }
+  .footer__submit-btn:hover { opacity: 0.85; }
 
   .footer__form-note {
     font-size: 0.8rem;
@@ -195,7 +182,13 @@
     line-height: 1.5;
   }
 
-  /* ── Bottom bar ── */
+  .footer__form-success {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    padding: 0.5rem 0;
+    line-height: 1.5;
+  }
+
   .footer__bottom {
     display: flex;
     flex-wrap: wrap;
@@ -227,9 +220,7 @@
     transition: opacity 0.2s ease;
   }
 
-  .footer__legal-link:hover {
-    opacity: 1;
-  }
+  .footer__legal-link:hover { opacity: 1; }
 
   .footer__payment-icons {
     display: flex;
@@ -257,7 +248,6 @@
 <footer class="site-footer" role="contentinfo">
   <div class="footer__inner">
 
-    <!-- Top grid -->
     <div class="footer__grid">
 
       <!-- Column 1: Brand -->
@@ -280,7 +270,6 @@
           <p class="footer__tagline">{{ section.settings.tagline }}</p>
         {%- endif -%}
 
-        <!-- Social icons -->
         <div class="footer__socials">
           {%- if settings.social_instagram_link != blank -%}
             <a href="{{ settings.social_instagram_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="Instagram">
@@ -289,7 +278,7 @@
           {%- endif -%}
           {%- if settings.social_facebook_link != blank -%}
             <a href="{{ settings.social_facebook_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="Facebook">
-              <svg viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.48-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.67c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10.05 10.05 0 008.44-9.9c0-5.54-4.5-10.02-10-10.02z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
             </a>
           {%- endif -%}
           {%- if settings.social_twitter_link != blank -%}
@@ -334,7 +323,7 @@
         {%- endif -%}
       </div>
 
-      <!-- Column 3: Help / Policies -->
+      <!-- Column 3: Help -->
       <div class="footer__col">
         <h3 class="footer__col-title">{{ section.settings.col3_title | default: 'Help' }}</h3>
         {%- if section.settings.menu_2 != blank -%}
@@ -361,31 +350,43 @@
         {%- if section.settings.newsletter_text != blank -%}
           <p class="footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
         {%- endif -%}
+
+        {%- comment -%}
+          Uses customer form so subscriber is saved in Shopify Customers
+          with accepts_marketing: true — feeds Shopify Email + Klaviyo.
+          contact[tags] does NOT work here — customer[tags] does.
+        {%- endcomment -%}
         {% form 'customer', class: 'footer__form' %}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          <div class="footer__input-row">
-            <input
-              type="email"
-              name="contact[email]"
-              class="footer__email-input"
-              placeholder="{{ section.settings.email_placeholder | default: 'Your email' | escape }}"
-              required
-              autocomplete="email"
-            >
-            <button type="submit" class="footer__submit-btn">
-              {{ section.settings.subscribe_label | default: 'Join' | escape }}
-            </button>
-          </div>
-          <p class="footer__form-note">{{ section.settings.newsletter_note | default: 'No spam. Unsubscribe anytime.' }}</p>
+          <input type="hidden" name="customer[tags]"              value="newsletter">
+          <input type="hidden" name="customer[accepts_marketing]" value="true">
+          {%- if form.posted_successfully? -%}
+            <p class="footer__form-success">{{ section.settings.success_message | default: "You're in! Check your inbox." }}</p>
+          {%- else -%}
+            {%- if form.errors -%}
+              <p style="font-size:0.8rem;color:#c0392b;margin-bottom:0.5rem;">{{ form.errors | default_errors }}</p>
+            {%- endif -%}
+            <div class="footer__input-row">
+              <input
+                type="email"
+                name="contact[email]"
+                class="footer__email-input"
+                placeholder="{{ section.settings.email_placeholder | default: 'Your email' | escape }}"
+                required
+                autocomplete="email"
+              >
+              <button type="submit" class="footer__submit-btn">
+                {{ section.settings.subscribe_label | default: 'Join' | escape }}
+              </button>
+            </div>
+            <p class="footer__form-note">{{ section.settings.newsletter_note | default: 'No spam. Unsubscribe anytime.' }}</p>
+          {%- endif -%}
         {% endform %}
       </div>
 
-    </div><!-- /.footer__grid -->
+    </div>
 
     <!-- Bottom bar -->
     <div class="footer__bottom">
-
-      <!-- Copyright — fully customizable -->
       <p class="footer__copyright">
         {%- if section.settings.copyright_override != blank -%}
           {{ section.settings.copyright_override }}
@@ -402,7 +403,6 @@
         {%- endif -%}
       </p>
 
-      <!-- Legal links — use custom menu if set, otherwise fall back to shop policies -->
       {%- if section.settings.legal_menu != blank -%}
         <ul class="footer__legal-links">
           {%- for link in linklists[section.settings.legal_menu].links -%}
@@ -430,169 +430,42 @@
       {%- endif -%}
     </div>
 
-  </div><!-- /.footer__inner -->
+  </div>
 </footer>
 
 {% schema %}
 {
   "name": "Footer",
   "settings": [
-    {
-      "type": "header",
-      "content": "Colors"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background color",
-      "default": "#1A1A1A"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text color",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "color",
-      "id": "border_color",
-      "label": "Border color",
-      "default": "#333333"
-    },
-    {
-      "type": "header",
-      "content": "Brand column"
-    },
-    {
-      "type": "image_picker",
-      "id": "footer_logo",
-      "label": "Footer logo",
-      "info": "Upload a logo just for the footer. Leave blank to use your theme's global logo."
-    },
-    {
-      "type": "range",
-      "id": "logo_width",
-      "label": "Logo width (px)",
-      "min": 60,
-      "max": 300,
-      "step": 10,
-      "default": 160
-    },
-    {
-      "type": "textarea",
-      "id": "tagline",
-      "label": "Tagline / description",
-      "default": "Equipped with the Armor of God. Built for the Cowgirl who stands firm in faith."
-    },
-    {
-      "type": "header",
-      "content": "Navigation columns"
-    },
-    {
-      "type": "text",
-      "id": "col2_title",
-      "label": "Column 2 heading",
-      "default": "Quick Links"
-    },
-    {
-      "type": "link_list",
-      "id": "menu_1",
-      "label": "Column 2 menu",
-      "default": "main-menu"
-    },
-    {
-      "type": "text",
-      "id": "col3_title",
-      "label": "Column 3 heading",
-      "default": "Help"
-    },
-    {
-      "type": "link_list",
-      "id": "menu_2",
-      "label": "Column 3 menu",
-      "default": "footer"
-    },
-    {
-      "type": "header",
-      "content": "Newsletter"
-    },
-    {
-      "type": "text",
-      "id": "newsletter_title",
-      "label": "Newsletter heading",
-      "default": "Stay Connected"
-    },
-    {
-      "type": "text",
-      "id": "newsletter_text",
-      "label": "Newsletter subtext",
-      "default": "Join our community for inspiration, updates, and faith-filled encouragement."
-    },
-    {
-      "type": "text",
-      "id": "email_placeholder",
-      "label": "Email placeholder",
-      "default": "Your email address"
-    },
-    {
-      "type": "text",
-      "id": "subscribe_label",
-      "label": "Subscribe button label",
-      "default": "Join"
-    },
-    {
-      "type": "text",
-      "id": "newsletter_note",
-      "label": "Newsletter fine print",
-      "default": "No spam. Unsubscribe anytime."
-    },
-    {
-      "type": "header",
-      "content": "Bottom bar — Copyright"
-    },
-    {
-      "type": "text",
-      "id": "copyright_name",
-      "label": "Copyright name",
-      "info": "Replaces the shop name in '© 2026 [name]'. Leave blank to use your shop name automatically."
-    },
-    {
-      "type": "text",
-      "id": "copyright_text",
-      "label": "Copyright suffix",
-      "info": "Appears after the name, e.g. 'All rights reserved.'"
-    },
-    {
-      "type": "textarea",
-      "id": "copyright_override",
-      "label": "Full copyright override",
-      "info": "Optional. If filled in, this replaces the entire copyright line exactly as written (year, name, suffix are all ignored)."
-    },
-    {
-      "type": "header",
-      "content": "Bottom bar — Legal links"
-    },
-    {
-      "type": "link_list",
-      "id": "legal_menu",
-      "label": "Legal links menu",
-      "info": "Create a navigation menu (e.g. 'footer-legal') and add links like Privacy Policy, Terms, etc. Leave blank to auto-show your shop's policies."
-    },
-    {
-      "type": "header",
-      "content": "Bottom bar — Payment icons"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "Show payment icons",
-      "default": true
-    }
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color",     "label": "Background color", "default": "#1A1A1A" },
+    { "type": "color", "id": "text_color",   "label": "Text color",       "default": "#FFFFFF" },
+    { "type": "color", "id": "border_color", "label": "Border color",     "default": "#333333" },
+    { "type": "header", "content": "Brand column" },
+    { "type": "image_picker", "id": "footer_logo", "label": "Footer logo", "info": "Leave blank to use your theme's global logo." },
+    { "type": "range", "id": "logo_width", "label": "Logo width (px)", "min": 60, "max": 300, "step": 10, "default": 160 },
+    { "type": "textarea", "id": "tagline", "label": "Tagline / description", "default": "Equipped with the Armor of God. Built for the Cowgirl who stands firm in faith." },
+    { "type": "header", "content": "Navigation columns" },
+    { "type": "text",      "id": "col2_title", "label": "Column 2 heading", "default": "Quick Links" },
+    { "type": "link_list", "id": "menu_1",     "label": "Column 2 menu",    "default": "main-menu"   },
+    { "type": "text",      "id": "col3_title", "label": "Column 3 heading", "default": "Help"        },
+    { "type": "link_list", "id": "menu_2",     "label": "Column 3 menu",    "default": "footer"      },
+    { "type": "header", "content": "Newsletter" },
+    { "type": "text", "id": "newsletter_title",  "label": "Newsletter heading",       "default": "Stay Connected" },
+    { "type": "text", "id": "newsletter_text",   "label": "Newsletter subtext",        "default": "Join our community for inspiration, updates, and faith-filled encouragement." },
+    { "type": "text", "id": "email_placeholder", "label": "Email placeholder",         "default": "Your email address" },
+    { "type": "text", "id": "subscribe_label",   "label": "Subscribe button label",    "default": "Join" },
+    { "type": "text", "id": "newsletter_note",   "label": "Newsletter fine print",     "default": "No spam. Unsubscribe anytime." },
+    { "type": "text", "id": "success_message",   "label": "Success message",           "default": "You're in! Check your inbox." },
+    { "type": "header", "content": "Bottom bar — Copyright" },
+    { "type": "text",     "id": "copyright_name",     "label": "Copyright name",     "info": "Replaces shop name. Leave blank to use shop name." },
+    { "type": "text",     "id": "copyright_text",     "label": "Copyright suffix",   "info": "e.g. 'All rights reserved.'" },
+    { "type": "textarea", "id": "copyright_override", "label": "Full copyright override", "info": "Replaces entire copyright line if filled." },
+    { "type": "header", "content": "Bottom bar — Legal links" },
+    { "type": "link_list", "id": "legal_menu", "label": "Legal links menu", "info": "Leave blank to auto-show shop policies." },
+    { "type": "header", "content": "Bottom bar — Payment icons" },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true }
   ],
-  "presets": [
-    {
-      "name": "Footer"
-    }
-  ]
+  "presets": [{ "name": "Footer" }]
 }
 {% endschema %}
