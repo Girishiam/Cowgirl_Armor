@@ -49,16 +49,8 @@
   }
 
   /* ─── Logo ──────────────────────────────────────────────── */
-  .header__logo {
-    flex-shrink: 0;
-    line-height: 1;
-  }
-  .logo-link {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    align-items: center;
-  }
+  .header__logo { flex-shrink: 0; line-height: 1; }
+  .logo-link { text-decoration: none; color: inherit; display: flex; align-items: center; }
   .logo-image {
     display: block;
     height: auto;
@@ -68,9 +60,7 @@
     object-fit: contain;
     transition: max-width {{ section.settings.sticky_transition }}s ease;
   }
-  .site-header.is-sticky .logo-image {
-    max-height: 44px;
-  }
+  .site-header.is-sticky .logo-image { max-height: 44px; }
   .logo-text {
     font-size: clamp({{ section.settings.logo_text_min }}px, 2.5vw, {{ section.settings.logo_text_max }}px);
     font-weight: {{ section.settings.logo_font_weight }};
@@ -80,18 +70,12 @@
   }
 
   /* ─── Desktop Nav ───────────────────────────────────────── */
-  .site-nav {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    justify-content: center;
-  }
+  .site-nav { display: flex; align-items: center; flex: 1; justify-content: center; }
   .site-nav__list {
     display: flex;
     align-items: center;
     list-style: none;
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     gap: clamp(0.6rem, 1.5vw, {{ section.settings.nav_gap_max }}rem);
     flex-wrap: nowrap;
   }
@@ -105,33 +89,25 @@
     font-size: clamp(12px, 1.1vw, {{ section.settings.nav_font_size }}px);
     font-weight: {{ section.settings.nav_font_weight }};
     white-space: nowrap;
-    padding: 8px 2px;
+    padding: 8px 2px 14px;
+    margin-bottom: -8px;
     position: relative;
     transition: opacity 0.2s ease;
-    /* Extend hover area downward to bridge gap to dropdown */
-    padding-bottom: 14px;
-    margin-bottom: -8px;
   }
   .site-nav__link::after {
     content: '';
     position: absolute;
-    bottom: 8px;
-    left: 0;
-    right: 0;
+    bottom: 8px; left: 0; right: 0;
     height: 1.5px;
     background: currentColor;
     transform: scaleX(0);
     transition: transform 0.25s ease;
     transform-origin: left;
   }
-  /* Only show underline on non-dropdown links */
   .site-nav__item:not(.site-nav__item--has-dropdown) .site-nav__link:hover::after,
   .site-nav__item:not(.site-nav__item--has-dropdown) .site-nav__link--active::after { transform: scaleX(1); }
-  /* Explicitly kill underline on dropdown parents */
   .site-nav__item--has-dropdown .site-nav__link::after { display: none !important; }
   .site-nav__link:hover { opacity: 0.75; }
-
-
 
   /* ─── Dropdown ──────────────────────────────────────────── */
   .site-nav__dropdown {
@@ -142,9 +118,8 @@
     transform: translateX(-50%) translateY(-6px);
     min-width: 180px;
     list-style: none;
-    margin: 0;
-    padding: 8px 0;
-    background-color: {{ section.settings.header_bg }};
+    margin: 0; padding: 8px 0;
+    background-color: {{ section.settings.dropdown_bg }};
     border-radius: {{ section.settings.dropdown_radius }}px;
     box-shadow: {{ section.settings.dropdown_shadow }};
     border: 1px solid rgba(0,0,0,0.08);
@@ -154,19 +129,15 @@
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
     z-index: 300;
   }
-  /* Dropdown arrow */
   .site-nav__dropdown::before {
     content: '';
     position: absolute;
-    top: -7px;
-    left: 50%;
+    top: -7px; left: 50%;
     transform: translateX(-50%);
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
-    border-bottom: 7px solid {{ section.settings.header_bg }};
+    border-bottom: 7px solid {{ section.settings.dropdown_bg }};
   }
-
-  /* ── HOVER open — CSS only, no JS needed ── */
   .site-nav__item--has-dropdown:hover .site-nav__dropdown,
   .site-nav__item--has-dropdown:focus-within .site-nav__dropdown,
   .site-nav__item--has-dropdown.is-open .site-nav__dropdown {
@@ -175,7 +146,6 @@
     visibility: visible;
     transform: translateX(-50%) translateY(0);
   }
-
   .site-nav__dropdown li { display: block; }
   .site-nav__dropdown-link {
     display: block;
@@ -186,13 +156,8 @@
     white-space: nowrap;
     transition: background-color 0.15s ease, padding-left 0.15s ease;
   }
-  .site-nav__dropdown-link:hover {
-    background-color: rgba(0,0,0,0.05);
-    padding-left: 26px;
-  }
-  .site-nav__dropdown-link--active {
-    font-weight: 600;
-  }
+  .site-nav__dropdown-link:hover { background-color: rgba(0,0,0,0.05); padding-left: 26px; }
+  .site-nav__dropdown-link--active { font-weight: 600; }
 
   /* ─── Right Controls ────────────────────────────────────── */
   .header__right {
@@ -230,16 +195,11 @@
   .header__cart { position: relative; }
   .cart-count {
     position: absolute;
-    top: -7px;
-    right: -7px;
-    min-width: 17px;
-    height: 17px;
+    top: -7px; right: -7px;
+    min-width: 17px; height: 17px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; line-height: 1;
     padding: 2px 4px;
     background-color: {{ section.settings.cart_badge_bg }};
     color: {{ section.settings.cart_badge_text }};
@@ -261,15 +221,16 @@
     padding: {{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
     font-size: clamp(11px, 1vw, {{ section.settings.button_font_size }}px);
     font-weight: {{ section.settings.button_font_weight }};
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     flex-shrink: 0;
   }
   .header__btn:hover {
-    background-color: {{ section.settings.button_text_color }};
-    color: {{ section.settings.header_bg }};
+    background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+    color: #FFFFFF;
+    border-color: transparent;
   }
 
-  /* Social icons — desktop only */
+  /* Social icons */
   .header__socials {
     display: flex;
     align-items: center;
@@ -277,23 +238,18 @@
     flex-shrink: 0;
   }
 
-  /* ─── Hamburger — mobile only ───────────────────────────── */
+  /* ─── Hamburger ─────────────────────────────────────────── */
   .mobile-menu-btn {
     display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
+    background: none; border: none; cursor: pointer;
     padding: 6px;
     color: {{ section.settings.header_text_color }};
     flex-shrink: 0;
   }
 
-  /* ─── Responsive Breakpoints ────────────────────────────── */
+  /* ─── Responsive ────────────────────────────────────────── */
   @media screen and (max-width: 1023px) {
-    .site-nav,
-    .header__socials,
-    .header__btn,
-    .header__search-toggle { display: none !important; }
+    .site-nav, .header__socials, .header__btn, .header__search-toggle { display: none !important; }
     .mobile-menu-btn { display: inline-flex; }
   }
   @media screen and (min-width: 1024px) {
@@ -303,8 +259,7 @@
   /* ─── Mobile Drawer ─────────────────────────────────────── */
   .mobile-drawer {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     width: min(320px, 85vw);
     height: 100%;
     z-index: 500;
@@ -317,22 +272,15 @@
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .mobile-drawer.mobile-drawer--active {
-    transform: translateX(0);
-  }
+  .mobile-drawer.mobile-drawer--active { transform: translateX(0); }
+
   .mobile-drawer-overlay {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: rgba(0,0,0,0.4);
-    z-index: 499;
-    opacity: 0;
-    pointer-events: none;
+    z-index: 499; opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
   }
-  .mobile-drawer-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .mobile-drawer-overlay.active { opacity: 1; pointer-events: auto; }
 
   .mobile-drawer__header {
     display: flex;
@@ -341,29 +289,16 @@
     margin-bottom: 2rem;
   }
   .mobile-drawer__close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: inherit;
-    padding: 4px;
-    margin-left: auto;
-    opacity: 0.7;
-    transition: opacity 0.2s;
+    background: none; border: none; cursor: pointer;
+    color: inherit; padding: 4px; margin-left: auto;
+    opacity: 0.7; transition: opacity 0.2s;
   }
   .mobile-drawer__close:hover { opacity: 1; }
 
-  .mobile-drawer__nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
-  .mobile-drawer__nav > ul > li {
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-  }
-  .mobile-drawer__nav > ul > li:last-child {
-    border-bottom: none;
-  }
+  .mobile-drawer__nav ul { list-style: none; padding: 0; margin: 0; width: 100%; }
+  .mobile-drawer__nav > ul > li { border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .mobile-drawer__nav > ul > li:last-child { border-bottom: none; }
+
   .drawer-link {
     display: flex;
     align-items: center;
@@ -374,10 +309,7 @@
     color: inherit;
     font-size: clamp({{ section.settings.drawer_font_min }}px, 5vw, {{ section.settings.drawer_font_max }}px);
     font-weight: {{ section.settings.drawer_font_weight }};
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-align: left;
+    background: none; border: none; cursor: pointer; text-align: left;
     transition: opacity 0.2s;
   }
   .drawer-link:hover { opacity: 0.65; }
@@ -390,27 +322,13 @@
     padding: 14px 4px;
     font-size: clamp({{ section.settings.drawer_font_min }}px, 5vw, {{ section.settings.drawer_font_max }}px);
     font-weight: {{ section.settings.drawer_font_weight }};
-    background: none;
-    border: none;
-    color: inherit;
-    cursor: pointer;
-    text-align: left;
+    background: none; border: none; color: inherit; cursor: pointer; text-align: left;
   }
-  .drawer-accordion__icon {
-    transition: transform 0.25s ease;
-    flex-shrink: 0;
-  }
-  .drawer-accordion__toggle[aria-expanded="true"] .drawer-accordion__icon {
-    transform: rotate(180deg);
-  }
-  .drawer-accordion__body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-  }
-  .drawer-accordion__body.open {
-    max-height: 500px;
-  }
+  .drawer-accordion__icon { transition: transform 0.25s ease; flex-shrink: 0; }
+  .drawer-accordion__toggle[aria-expanded="true"] .drawer-accordion__icon { transform: rotate(180deg); }
+  .drawer-accordion__body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .drawer-accordion__body.open { max-height: 500px; }
+
   .drawer-sublink {
     display: block;
     padding: 10px 12px;
@@ -430,22 +348,13 @@
     gap: 1.25rem;
     align-items: center;
   }
-  .drawer-socials {
-    display: flex;
-    gap: {{ section.settings.social_gap }}px;
-    align-items: center;
-  }
-  .drawer-socials a {
-    color: inherit;
-    opacity: 0.8;
-    transition: opacity 0.2s;
-  }
+  .drawer-socials { display: flex; gap: {{ section.settings.social_gap }}px; align-items: center; }
+  .drawer-socials a { color: inherit; opacity: 0.8; transition: opacity 0.2s; }
   .drawer-socials a:hover { opacity: 1; }
 
   /* ─── Search Overlay ────────────────────────────────────── */
   .search-overlay {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: rgba(0,0,0,{{ section.settings.search_overlay_opacity | divided_by: 100.0 }});
     backdrop-filter: blur({{ section.settings.search_overlay_blur }}px);
     z-index: 600;
@@ -453,37 +362,18 @@
     align-items: {{ section.settings.search_position }};
     justify-content: center;
     padding: 4rem 2rem 2rem;
-    opacity: 0;
-    visibility: hidden;
+    opacity: 0; visibility: hidden;
     transition: opacity {{ section.settings.search_transition }}s ease, visibility {{ section.settings.search_transition }}s ease;
   }
-  .search-overlay.is-open {
-    opacity: 1;
-    visibility: visible;
-  }
-  .search-overlay__content {
-    position: relative;
-    width: 100%;
-    max-width: {{ section.settings.search_max_width }}px;
-  }
+  .search-overlay.is-open { opacity: 1; visibility: visible; }
+  .search-overlay__content { position: relative; width: 100%; max-width: {{ section.settings.search_max_width }}px; }
   .search-overlay__close {
-    position: absolute;
-    top: -3rem;
-    right: 0;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 8px;
-    opacity: 0.8;
-    transition: opacity 0.2s;
+    position: absolute; top: -3rem; right: 0;
+    background: none; border: none; color: white; cursor: pointer;
+    padding: 8px; opacity: 0.8; transition: opacity 0.2s;
   }
   .search-overlay__close:hover { opacity: 1; }
-  .search-form {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
+  .search-form { position: relative; display: flex; align-items: center; }
   .search-input {
     width: 100%;
     padding: {{ section.settings.search_input_padding }}px;
@@ -496,11 +386,8 @@
     outline: none;
   }
   .search-submit {
-    position: absolute;
-    right: 12px;
-    background: none;
-    border: none;
-    cursor: pointer;
+    position: absolute; right: 12px;
+    background: none; border: none; cursor: pointer;
     padding: 8px;
     color: {{ section.settings.search_input_text }};
   }
@@ -607,7 +494,7 @@
       <div class="header__socials">
         {%- if section.settings.social_facebook_link != blank -%}
           <a href="{{ section.settings.social_facebook_link }}" class="header__icon" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
               <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
             </svg>
           </a>
@@ -637,7 +524,7 @@
       {%- endif -%}
     </div>
 
-  </div><!-- /.header__inner -->
+  </div>
 </header>
 
 <!-- ─── Search Overlay ──────────────────────────────────── -->
@@ -698,9 +585,7 @@
               <div class="drawer-accordion__body">
                 <ul style="list-style:none;padding:0 0 0.5rem 1rem;margin:0;">
                   {%- for childlink in link.links -%}
-                    <li>
-                      <a href="{{ childlink.url }}" class="drawer-sublink">{{ childlink.title }}</a>
-                    </li>
+                    <li><a href="{{ childlink.url }}" class="drawer-sublink">{{ childlink.title }}</a></li>
                   {%- endfor -%}
                 </ul>
               </div>
@@ -717,9 +602,9 @@
     {%- if section.settings.button_label != blank -%}
       <a href="{{ section.settings.button_link }}"
          style="display:inline-flex;align-items:center;text-decoration:none;
-                background-color:{{ section.settings.button_bg_color }};
-                color:{{ section.settings.button_text_color }};
-                border:{{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
+                background:linear-gradient(135deg,#3A6FE8 0%,#8B52D4 55%,#CC72E8 100%);
+                color:#FFFFFF;
+                border:none;
                 border-radius:{{ section.settings.button_border_radius }}px;
                 padding:{{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
                 font-size:{{ section.settings.button_font_size }}px;
@@ -732,7 +617,7 @@
       <div class="drawer-socials">
         {%- if section.settings.social_facebook_link != blank -%}
           <a href="{{ section.settings.social_facebook_link }}" target="_blank" rel="noopener" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" width="{{ section.settings.drawer_social_size }}" height="{{ section.settings.drawer_social_size }}" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 24 24" width="{{ section.settings.drawer_social_size }}" height="{{ section.settings.drawer_social_size }}" fill="currentColor">
               <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
             </svg>
           </a>
@@ -752,8 +637,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-  // ── Sticky header ──────────────────────────────────────
-  var header = document.getElementById('site-header');
+  var header       = document.getElementById('site-header');
   var announcement = document.querySelector('.announcement-bar');
 
   function setHeights() {
@@ -777,27 +661,22 @@ document.addEventListener('DOMContentLoaded', function() {
   }, { passive: true });
   {%- endif -%}
 
-  // ── Desktop dropdown — hover with leave-delay so mouse can travel to dropdown ──
   var dropdownItems = document.querySelectorAll('.site-nav__item--has-dropdown');
   dropdownItems.forEach(function(item) {
     var leaveTimer = null;
-
     item.addEventListener('mouseenter', function() {
       clearTimeout(leaveTimer);
       item.classList.add('is-open');
       var link = item.querySelector('.site-nav__link');
       if (link) link.setAttribute('aria-expanded', 'true');
     });
-
     item.addEventListener('mouseleave', function() {
       leaveTimer = setTimeout(function() {
         item.classList.remove('is-open');
         var link = item.querySelector('.site-nav__link');
         if (link) link.setAttribute('aria-expanded', 'false');
-      }, 100); // 100ms grace period — enough to move mouse into dropdown
+      }, 100);
     });
-
-    // Keyboard: toggle on Enter/Space on the parent link
     var parentLink = item.querySelector('.site-nav__link');
     if (parentLink) {
       parentLink.addEventListener('keydown', function(e) {
@@ -814,8 +693,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     }
-
-    // Close on Escape from within dropdown
     item.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         item.classList.remove('is-open');
@@ -825,7 +702,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Close all dropdowns when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.site-nav__item--has-dropdown')) {
       dropdownItems.forEach(function(item) {
@@ -836,7 +712,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // ── Mobile drawer ──────────────────────────────────────
   var menuBtn  = document.querySelector('.mobile-menu-btn');
   var drawer   = document.getElementById('mobile-drawer');
   var closeBtn = document.querySelector('.mobile-drawer__close');
@@ -850,7 +725,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.style.overflow = 'hidden';
     if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
   }
-
   function closeDrawer() {
     if (!drawer) return;
     drawer.classList.remove('mobile-drawer--active');
@@ -863,14 +737,10 @@ document.addEventListener('DOMContentLoaded', function() {
   if (menuBtn)  menuBtn.addEventListener('click', openDrawer);
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
   if (overlay)  overlay.addEventListener('click', closeDrawer);
-
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && drawer && drawer.classList.contains('mobile-drawer--active')) {
-      closeDrawer();
-    }
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('mobile-drawer--active')) closeDrawer();
   });
 
-  // ── Drawer accordion ────────────────────────────────────
   if (drawer) {
     drawer.querySelectorAll('.drawer-accordion__toggle').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -882,7 +752,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // ── Search overlay ───────────────────────────────────────
   {%- if section.settings.show_search -%}
   var searchToggle  = document.querySelector('[data-search-toggle]');
   var searchOverlay = document.getElementById('search-overlay');
@@ -911,14 +780,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   {%- endif -%}
 
-  // ── Cart count ───────────────────────────────────────────
   var cartCount = document.querySelector('.cart-count');
   if (cartCount) {
     document.addEventListener('cart:updated', function(e) {
       var n = (e.detail && e.detail.item_count) || 0;
       cartCount.textContent = n;
-      if (n === 0) { cartCount.setAttribute('hidden', ''); }
-      else { cartCount.removeAttribute('hidden'); }
+      if (n === 0) cartCount.setAttribute('hidden', '');
+      else cartCount.removeAttribute('hidden');
     });
   }
 
@@ -930,103 +798,104 @@ document.addEventListener('DOMContentLoaded', function() {
   "name": "Header (Enhanced)",
   "settings": [
     { "type": "header", "content": "Header Appearance" },
-    { "type": "color",  "id": "header_bg",           "label": "Background Color",      "default": "#d9d9d9" },
-    { "type": "color",  "id": "header_text_color",   "label": "Text Color",            "default": "#1A1A1A" },
-    { "type": "text",   "id": "header_shadow",        "label": "Header Shadow",         "default": "none" },
-    { "type": "range",  "id": "padding_top",          "label": "Top Padding",           "min": 8,  "max": 40, "step": 2, "unit": "px", "default": 16 },
-    { "type": "range",  "id": "padding_bottom",       "label": "Bottom Padding",        "min": 8,  "max": 40, "step": 2, "unit": "px", "default": 16 },
-    { "type": "range",  "id": "padding_h",            "label": "Side Padding",          "min": 0, "max": 60, "step": 4, "unit": "px", "default": 12 },
-    { "type": "range",  "id": "border_bottom_width",  "label": "Border Bottom Width",   "min": 0,  "max": 5,  "step": 1, "unit": "px", "default": 0 },
-    { "type": "color",  "id": "border_bottom_color",  "label": "Border Bottom Color",   "default": "#0000001a" },
+    { "type": "color",  "id": "header_bg",            "label": "Background Color",      "default": "#F8F6F4" },
+    { "type": "color",  "id": "header_text_color",    "label": "Text Color",            "default": "#1A1A1A" },
+    { "type": "text",   "id": "header_shadow",         "label": "Header Shadow",         "default": "none" },
+    { "type": "range",  "id": "padding_top",           "label": "Top Padding",           "min": 8,  "max": 40, "step": 2,   "unit": "px",  "default": 16 },
+    { "type": "range",  "id": "padding_bottom",        "label": "Bottom Padding",        "min": 8,  "max": 40, "step": 2,   "unit": "px",  "default": 16 },
+    { "type": "range",  "id": "padding_h",             "label": "Side Padding",          "min": 0,  "max": 60, "step": 4,   "unit": "px",  "default": 12 },
+    { "type": "range",  "id": "border_bottom_width",   "label": "Border Bottom Width",   "min": 0,  "max": 5,  "step": 1,   "unit": "px",  "default": 0 },
+    { "type": "color",  "id": "border_bottom_color",   "label": "Border Bottom Color",   "default": "#0000001a" },
 
     { "type": "header", "content": "Logo" },
-    { "type": "image_picker", "id": "logo",           "label": "Logo Image" },
-    { "type": "range",  "id": "logo_width",           "label": "Logo Max Width",        "min": 60, "max": 300, "step": 10, "unit": "px", "default": 160 },
-    { "type": "range",  "id": "logo_text_min",        "label": "Logo Text Min Size",    "min": 14, "max": 28,  "step": 1,  "unit": "px", "default": 18 },
-    { "type": "range",  "id": "logo_text_max",        "label": "Logo Text Max Size",    "min": 20, "max": 48,  "step": 2,  "unit": "px", "default": 26 },
-    { "type": "range",  "id": "logo_font_weight",     "label": "Logo Font Weight",      "min": 300,"max": 900, "step": 100,"default": 700 },
-    { "type": "range",  "id": "logo_letter_spacing",  "label": "Logo Letter Spacing",   "min": 0,  "max": 5,   "step": 1,  "unit": "px", "default": 1 },
+    { "type": "image_picker", "id": "logo",            "label": "Logo Image" },
+    { "type": "range",  "id": "logo_width",            "label": "Logo Max Width",        "min": 60, "max": 300, "step": 10, "unit": "px",  "default": 160 },
+    { "type": "range",  "id": "logo_text_min",         "label": "Logo Text Min Size",    "min": 14, "max": 28,  "step": 1,  "unit": "px",  "default": 18 },
+    { "type": "range",  "id": "logo_text_max",         "label": "Logo Text Max Size",    "min": 20, "max": 48,  "step": 2,  "unit": "px",  "default": 26 },
+    { "type": "range",  "id": "logo_font_weight",      "label": "Logo Font Weight",      "min": 300, "max": 900, "step": 100, "default": 700 },
+    { "type": "range",  "id": "logo_letter_spacing",   "label": "Logo Letter Spacing",   "min": 0,  "max": 5,   "step": 1,  "unit": "px",  "default": 1 },
 
     { "type": "header", "content": "Navigation" },
-    { "type": "link_list","id": "menu",              "label": "Menu",                  "default": "main-menu" },
-    { "type": "range",  "id": "nav_font_size",        "label": "Nav Font Size",         "min": 11, "max": 18,  "step": 1, "unit": "px", "default": 14 },
-    { "type": "range",  "id": "nav_font_weight",      "label": "Nav Font Weight",       "min": 300,"max": 700, "step": 100,"default": 400 },
-    { "type": "range",  "id": "nav_gap_max",          "label": "Nav Gap Max",           "min": 1,  "max": 4,   "step": 1,  "unit": "rem","default": 2 },
-    { "type": "range",  "id": "caret_size",           "label": "Dropdown Caret Size",   "min": 8,  "max": 14,  "step": 1, "unit": "px", "default": 10 },
+    { "type": "link_list", "id": "menu",               "label": "Menu",                  "default": "main-menu" },
+    { "type": "range",  "id": "nav_font_size",          "label": "Nav Font Size",         "min": 11, "max": 18,  "step": 1,  "unit": "px",  "default": 14 },
+    { "type": "range",  "id": "nav_font_weight",        "label": "Nav Font Weight",       "min": 300, "max": 700, "step": 100, "default": 400 },
+    { "type": "range",  "id": "nav_gap_max",            "label": "Nav Gap Max",           "min": 1,  "max": 4,   "step": 1,  "unit": "rem", "default": 2 },
+    { "type": "range",  "id": "caret_size",             "label": "Dropdown Caret Size",   "min": 8,  "max": 14,  "step": 1,  "unit": "px",  "default": 10 },
 
     { "type": "header", "content": "Dropdown" },
-    { "type": "color",  "id": "dropdown_bg",          "label": "Dropdown Background",   "default": "#d9d9d9" },
-    { "type": "range",  "id": "dropdown_font_size",   "label": "Dropdown Font Size",    "min": 12, "max": 18,  "step": 1, "unit": "px", "default": 14 },
-    { "type": "range",  "id": "dropdown_radius",      "label": "Dropdown Border Radius","min": 0,  "max": 20,  "step": 2, "unit": "px", "default": 6 },
-    { "type": "text",   "id": "dropdown_shadow",      "label": "Dropdown Shadow",       "default": "0 8px 30px rgba(0,0,0,0.12)" },
+    { "type": "color",  "id": "dropdown_bg",            "label": "Dropdown Background",   "default": "#F8F6F4" },
+    { "type": "range",  "id": "dropdown_font_size",     "label": "Dropdown Font Size",    "min": 12, "max": 18,  "step": 1,  "unit": "px",  "default": 14 },
+    { "type": "range",  "id": "dropdown_radius",        "label": "Dropdown Border Radius","min": 0,  "max": 20,  "step": 2,  "unit": "px",  "default": 6 },
+    { "type": "text",   "id": "dropdown_shadow",        "label": "Dropdown Shadow",       "default": "0 8px 30px rgba(0,0,0,0.12)" },
 
     { "type": "header", "content": "Icons & Cart" },
-    { "type": "range",  "id": "icon_size",            "label": "Icon Size",             "min": 18, "max": 30,  "step": 2, "unit": "px", "default": 22 },
-    { "type": "range",  "id": "icon_gap",             "label": "Header Icons Gap",      "min": 4,  "max": 32,  "step": 4, "unit": "px", "default": 8  },
-    { "type": "range",  "id": "social_gap",           "label": "Social Icons Gap",      "min": 4,  "max": 24,  "step": 4, "unit": "px", "default": 8  },
-    { "type": "color",  "id": "cart_badge_bg",        "label": "Cart Badge Background", "default": "#DC2626" },
-    { "type": "color",  "id": "cart_badge_text",      "label": "Cart Badge Text",       "default": "#ffffff" },
-    { "type": "range",  "id": "cart_badge_size",      "label": "Cart Badge Font Size",  "min": 9,  "max": 14,  "step": 1, "unit": "px", "default": 10 },
+    { "type": "range",  "id": "icon_size",              "label": "Icon Size",             "min": 18, "max": 30,  "step": 2,  "unit": "px",  "default": 22 },
+    { "type": "range",  "id": "icon_gap",               "label": "Header Icons Gap",      "min": 4,  "max": 32,  "step": 4,  "unit": "px",  "default": 8 },
+    { "type": "range",  "id": "social_gap",             "label": "Social Icons Gap",      "min": 4,  "max": 24,  "step": 4,  "unit": "px",  "default": 8 },
+    { "type": "color",  "id": "cart_badge_bg",          "label": "Cart Badge Background", "default": "#3A6FE8" },
+    { "type": "color",  "id": "cart_badge_text",        "label": "Cart Badge Text",       "default": "#FFFFFF" },
+    { "type": "range",  "id": "cart_badge_size",        "label": "Cart Badge Font Size",  "min": 9,  "max": 14,  "step": 1,  "unit": "px",  "default": 10 },
 
     { "type": "header", "content": "Search" },
-    { "type": "checkbox","id": "show_search",         "label": "Show Search",           "default": false },
-    { "type": "text",   "id": "search_placeholder",   "label": "Search Placeholder",    "default": "Search..." },
-    { "type": "range",  "id": "search_overlay_opacity","label": "Overlay Opacity",      "min": 50, "max": 95,  "step": 5,  "unit": "%", "default": 85 },
-    { "type": "range",  "id": "search_overlay_blur",  "label": "Overlay Blur",          "min": 0,  "max": 20,  "step": 2,  "unit": "px","default": 10 },
-    { "type": "select", "id": "search_position",      "label": "Search Position",
+    { "type": "checkbox", "id": "show_search",          "label": "Show Search",           "default": false },
+    { "type": "text",   "id": "search_placeholder",     "label": "Search Placeholder",    "default": "Search..." },
+    { "type": "range",  "id": "search_overlay_opacity", "label": "Overlay Opacity",       "min": 50, "max": 95,  "step": 5,  "unit": "%",   "default": 85 },
+    { "type": "range",  "id": "search_overlay_blur",    "label": "Overlay Blur",          "min": 0,  "max": 20,  "step": 2,  "unit": "px",  "default": 10 },
+    { "type": "select", "id": "search_position",        "label": "Search Position",
       "options": [
-        { "value": "flex-start", "label": "Top" },
+        { "value": "flex-start", "label": "Top"    },
         { "value": "center",     "label": "Center" },
         { "value": "flex-end",   "label": "Bottom" }
-      ], "default": "flex-start" },
-    { "type": "range",  "id": "search_max_width",     "label": "Search Max Width",      "min": 400,"max": 800, "step": 50, "unit": "px","default": 600 },
-    { "type": "range",  "id": "search_input_padding", "label": "Input Padding",         "min": 10, "max": 28,  "step": 2,  "unit": "px","default": 18 },
-    { "type": "range",  "id": "search_input_size",    "label": "Input Font Size",       "min": 16, "max": 32,  "step": 2,  "unit": "px","default": 22 },
-    { "type": "range",  "id": "search_input_border",  "label": "Input Border Width",    "min": 0,  "max": 3,   "step": 1,  "unit": "px","default": 1 },
-    { "type": "color",  "id": "search_input_border_color","label":"Input Border Color", "default": "#cccccc" },
-    { "type": "range",  "id": "search_input_radius",  "label": "Input Border Radius",   "min": 0,  "max": 50,  "step": 2,  "unit": "px","default": 8 },
-    { "type": "color",  "id": "search_input_bg",      "label": "Input Background",      "default": "#ffffff" },
-    { "type": "color",  "id": "search_input_text",    "label": "Input Text Color",      "default": "#1A1A1A" },
-    { "type": "text",   "id": "search_transition",    "label": "Transition Speed (s)",  "default": "0.3", "info": "In seconds, e.g. 0.3" },
+      ], "default": "flex-start"
+    },
+    { "type": "range",  "id": "search_max_width",       "label": "Search Max Width",      "min": 400, "max": 800, "step": 50, "unit": "px",  "default": 600 },
+    { "type": "range",  "id": "search_input_padding",   "label": "Input Padding",         "min": 10, "max": 28,  "step": 2,  "unit": "px",  "default": 18 },
+    { "type": "range",  "id": "search_input_size",      "label": "Input Font Size",       "min": 16, "max": 32,  "step": 2,  "unit": "px",  "default": 22 },
+    { "type": "range",  "id": "search_input_border",    "label": "Input Border Width",    "min": 0,  "max": 3,   "step": 1,  "unit": "px",  "default": 1 },
+    { "type": "color",  "id": "search_input_border_color", "label": "Input Border Color", "default": "#CCCCCC" },
+    { "type": "range",  "id": "search_input_radius",    "label": "Input Border Radius",   "min": 0,  "max": 50,  "step": 2,  "unit": "px",  "default": 8 },
+    { "type": "color",  "id": "search_input_bg",        "label": "Input Background",      "default": "#FFFFFF" },
+    { "type": "color",  "id": "search_input_text",      "label": "Input Text Color",      "default": "#1A1A1A" },
+    { "type": "text",   "id": "search_transition",      "label": "Transition Speed (s)",  "default": "0.3", "info": "In seconds, e.g. 0.3" },
 
     { "type": "header", "content": "Sticky Header" },
-    { "type": "checkbox","id": "enable_sticky",       "label": "Enable Sticky Header",  "default": true },
-    { "type": "range",  "id": "sticky_threshold",     "label": "Scroll Threshold",      "min": 0,  "max": 200, "step": 10, "unit": "px","default": 50 },
-    { "type": "color",  "id": "sticky_bg",            "label": "Sticky Background",     "default": "#d9d9d9" },
-    { "type": "text",   "id": "sticky_shadow",        "label": "Sticky Shadow",         "default": "0 4px 20px rgba(0,0,0,0.08)" },
-    { "type": "range",  "id": "sticky_padding",       "label": "Sticky Padding",        "min": 6,  "max": 24,  "step": 1,  "unit": "px","default": 10 },
-    { "type": "text",   "id": "sticky_transition",    "label": "Sticky Transition (s)", "default": "0.3", "info": "In seconds, e.g. 0.3" },
+    { "type": "checkbox", "id": "enable_sticky",        "label": "Enable Sticky Header",  "default": true },
+    { "type": "range",  "id": "sticky_threshold",       "label": "Scroll Threshold",      "min": 0,  "max": 200, "step": 10, "unit": "px",  "default": 50 },
+    { "type": "color",  "id": "sticky_bg",              "label": "Sticky Background",     "default": "#F8F6F4f2" },
+    { "type": "text",   "id": "sticky_shadow",          "label": "Sticky Shadow",         "default": "0 4px 20px rgba(58,111,232,0.10)" },
+    { "type": "range",  "id": "sticky_padding",         "label": "Sticky Padding",        "min": 6,  "max": 24,  "step": 1,  "unit": "px",  "default": 10 },
+    { "type": "text",   "id": "sticky_transition",      "label": "Sticky Transition (s)", "default": "0.3", "info": "In seconds, e.g. 0.3" },
 
     { "type": "header", "content": "Mobile Menu" },
-    { "type": "range",  "id": "hamburger_size",       "label": "Hamburger Size",        "min": 20, "max": 32,  "step": 2,  "unit": "px","default": 24 },
-    { "type": "range",  "id": "hamburger_thickness",  "label": "Hamburger Thickness",   "min": 1,  "max": 3,   "step": 0.5,"default": 2 },
-    { "type": "color",  "id": "drawer_bg",            "label": "Drawer Background",     "default": "#d9d9d9" },
-    { "type": "color",  "id": "drawer_text_color",    "label": "Drawer Text Color",     "default": "#1A1A1A" },
-    { "type": "image_picker","id": "drawer_logo",     "label": "Drawer Logo (optional)" },
-    { "type": "range",  "id": "drawer_logo_width",    "label": "Drawer Logo Width",     "min": 60, "max": 220, "step": 10, "unit": "px","default": 120 },
-    { "type": "range",  "id": "drawer_font_min",      "label": "Link Font Min",         "min": 16, "max": 28,  "step": 2,  "unit": "px","default": 20 },
-    { "type": "range",  "id": "drawer_font_max",      "label": "Link Font Max",         "min": 24, "max": 40,  "step": 2,  "unit": "px","default": 28 },
-    { "type": "range",  "id": "drawer_font_weight",   "label": "Link Font Weight",      "min": 300,"max": 800, "step": 100,"default": 600 },
-    { "type": "range",  "id": "drawer_subfont_size",  "label": "Sub-link Font Size",    "min": 13, "max": 20,  "step": 1,  "unit": "px","default": 15 },
-    { "type": "checkbox","id": "show_drawer_socials", "label": "Show Socials in Drawer","default": true },
-    { "type": "range",  "id": "drawer_social_size",   "label": "Drawer Social Size",    "min": 22, "max": 36,  "step": 2,  "unit": "px","default": 26 },
+    { "type": "range",  "id": "hamburger_size",         "label": "Hamburger Size",        "min": 20, "max": 32,  "step": 2,  "unit": "px",  "default": 24 },
+    { "type": "range",  "id": "hamburger_thickness",    "label": "Hamburger Thickness",   "min": 1,  "max": 3,   "step": 0.5, "default": 2 },
+    { "type": "color",  "id": "drawer_bg",              "label": "Drawer Background",     "default": "#F8F6F4" },
+    { "type": "color",  "id": "drawer_text_color",      "label": "Drawer Text Color",     "default": "#1A1A1A" },
+    { "type": "image_picker", "id": "drawer_logo",      "label": "Drawer Logo (optional)" },
+    { "type": "range",  "id": "drawer_logo_width",      "label": "Drawer Logo Width",     "min": 60, "max": 220, "step": 10, "unit": "px",  "default": 120 },
+    { "type": "range",  "id": "drawer_font_min",        "label": "Link Font Min",         "min": 16, "max": 28,  "step": 2,  "unit": "px",  "default": 20 },
+    { "type": "range",  "id": "drawer_font_max",        "label": "Link Font Max",         "min": 24, "max": 40,  "step": 2,  "unit": "px",  "default": 28 },
+    { "type": "range",  "id": "drawer_font_weight",     "label": "Link Font Weight",      "min": 300, "max": 800, "step": 100, "default": 600 },
+    { "type": "range",  "id": "drawer_subfont_size",    "label": "Sub-link Font Size",    "min": 13, "max": 20,  "step": 1,  "unit": "px",  "default": 15 },
+    { "type": "checkbox", "id": "show_drawer_socials",  "label": "Show Socials in Drawer","default": true },
+    { "type": "range",  "id": "drawer_social_size",     "label": "Drawer Social Size",    "min": 22, "max": 36,  "step": 2,  "unit": "px",  "default": 26 },
 
     { "type": "header", "content": "Social Links" },
-    { "type": "url",    "id": "social_facebook_link", "label": "Facebook URL" },
-    { "type": "url",    "id": "social_instagram_link","label": "Instagram URL" },
+    { "type": "url",    "id": "social_facebook_link",   "label": "Facebook URL" },
+    { "type": "url",    "id": "social_instagram_link",  "label": "Instagram URL" },
 
     { "type": "header", "content": "CTA Button" },
-    { "type": "text",   "id": "button_label",         "label": "Button Label",          "default": "Get on THE LIST" },
-    { "type": "url",    "id": "button_link",          "label": "Button Link" },
-    { "type": "color",  "id": "button_bg_color",      "label": "Button Background",     "default": "#00000000" },
-    { "type": "color",  "id": "button_text_color",    "label": "Button Text Color",     "default": "#1A1A1A" },
-    { "type": "color",  "id": "button_border_color",  "label": "Button Border Color",   "default": "#1A1A1A" },
-    { "type": "range",  "id": "button_border_width",  "label": "Button Border Width",   "min": 0,  "max": 4,   "step": 0.5,"unit": "px","default": 2 },
-    { "type": "range",  "id": "button_border_radius", "label": "Button Border Radius",  "min": 0,  "max": 30,  "step": 2,  "unit": "px","default": 4 },
-    { "type": "range",  "id": "button_padding_v",     "label": "Button V Padding",      "min": 6,  "max": 18,  "step": 1,  "unit": "px","default": 9 },
-    { "type": "range",  "id": "button_padding_h",     "label": "Button H Padding",      "min": 12, "max": 36,  "step": 2,  "unit": "px","default": 18 },
-    { "type": "range",  "id": "button_font_size",     "label": "Button Font Size",      "min": 11, "max": 18,  "step": 1,  "unit": "px","default": 13 },
-    { "type": "range",  "id": "button_font_weight",   "label": "Button Font Weight",    "min": 400,"max": 700, "step": 100,"default": 500 }
+    { "type": "text",   "id": "button_label",           "label": "Button Label",          "default": "Get on THE LIST" },
+    { "type": "url",    "id": "button_link",            "label": "Button Link" },
+    { "type": "color",  "id": "button_bg_color",        "label": "Button Background",     "default": "#00000000" },
+    { "type": "color",  "id": "button_text_color",      "label": "Button Text Color",     "default": "#1A1A1A" },
+    { "type": "color",  "id": "button_border_color",    "label": "Button Border Color",   "default": "#1A1A1A" },
+    { "type": "range",  "id": "button_border_width",    "label": "Button Border Width",   "min": 0,  "max": 4,   "step": 0.5, "unit": "px", "default": 2 },
+    { "type": "range",  "id": "button_border_radius",   "label": "Button Border Radius",  "min": 0,  "max": 30,  "step": 2,  "unit": "px",  "default": 4 },
+    { "type": "range",  "id": "button_padding_v",       "label": "Button V Padding",      "min": 6,  "max": 18,  "step": 1,  "unit": "px",  "default": 9 },
+    { "type": "range",  "id": "button_padding_h",       "label": "Button H Padding",      "min": 12, "max": 36,  "step": 2,  "unit": "px",  "default": 18 },
+    { "type": "range",  "id": "button_font_size",       "label": "Button Font Size",      "min": 11, "max": 18,  "step": 1,  "unit": "px",  "default": 13 },
+    { "type": "range",  "id": "button_font_weight",     "label": "Button Font Weight",    "min": 400, "max": 700, "step": 100, "default": 500 }
   ],
   "presets": [{ "name": "Header (Enhanced)" }]
 }
