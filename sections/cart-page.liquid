@@ -1,7 +1,5 @@
 {% comment %}
-  Cart page template — save as templates/cart.liquid
-  Also create templates/cart.json pointing to this section,
-  OR use this as a section in sections/main-cart.liquid
+  Cart page — sections/main-cart.liquid
 {% endcomment %}
 
 <style>
@@ -17,38 +15,28 @@
     margin: 0 0 2.5rem;
     letter-spacing: -0.02em;
   }
-  .cart-page__empty {
-    text-align: center;
-    padding: 4rem 0;
-  }
+  .cart-page__empty { text-align: center; padding: 4rem 0; }
   .cart-page__empty p { opacity: 0.5; margin-bottom: 1.5rem; }
   .cart-page__continue {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    background: var(--color-button, #3A6FE8);
-    color: var(--color-button-text, #FFFFFF);
+    color: #FFFFFF;
     padding: 13px 28px;
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 600;
-    transition: background-color 0.2s, transform 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
   }
-  .cart-page__continue:hover {
-    background: var(--color-button-hover, #8B52D4);
-    transform: translateY(-1px);
-  }
+  .cart-page__continue:hover { opacity: 0.85; transform: translateY(-1px); }
 
-  /* 2-col layout: items left, summary right */
   .cart-page__grid {
     display: grid;
     grid-template-columns: 1fr 360px;
     gap: 3rem;
     align-items: start;
   }
-
-  /* Items */
   .cart-page__items { display: flex; flex-direction: column; }
   .cart-page__item {
     display: grid;
@@ -59,41 +47,25 @@
     align-items: start;
   }
   .cart-page__item-img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    background: rgba(0,0,0,0.04);
-    display: block;
+    width: 100px; height: 100px;
+    object-fit: cover; border-radius: 8px;
+    background: rgba(0,0,0,0.04); display: block;
   }
   .cart-page__item-info { display: flex; flex-direction: column; gap: 6px; }
   .cart-page__item-title {
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: none;
-    color: inherit;
-    line-height: 1.35;
+    font-size: 0.95rem; font-weight: 600;
+    text-decoration: none; color: inherit; line-height: 1.35;
   }
   .cart-page__item-variant { font-size: 0.82rem; opacity: 0.5; margin: 0; }
   .cart-page__item-price   { font-size: 0.9rem; font-weight: 600; margin: 0; }
 
-  /* Qty stepper */
-  .cart-page__qty {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-  }
+  .cart-page__qty { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
   .cart-page__qty-btn {
     width: 30px; height: 30px;
     border: 1px solid rgba(0,0,0,0.18);
-    border-radius: 4px;
-    background: none;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex; align-items: center; justify-content: center;
-    color: inherit;
-    transition: background 0.15s, border-color 0.15s;
+    border-radius: 4px; background: none; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    color: inherit; transition: background 0.15s, border-color 0.15s;
   }
   .cart-page__qty-btn:hover {
     background: rgba(139,82,212,0.08);
@@ -107,12 +79,10 @@
   .cart-page__remove {
     background: none; border: none; cursor: pointer;
     font-size: 0.78rem; opacity: 0.4; color: inherit;
-    text-decoration: underline; padding: 0;
-    transition: opacity 0.2s;
+    text-decoration: underline; padding: 0; transition: opacity 0.2s;
   }
   .cart-page__remove:hover { opacity: 0.8; }
 
-  /* Summary */
   .cart-page__summary {
     background: var(--color-base-bg, #F8F6F4);
     border: 1px solid var(--color-border, #CCCCCC);
@@ -123,51 +93,31 @@
   }
   .cart-page__summary-title {
     font-family: var(--font-heading-family, serif);
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0 0 1.25rem;
+    font-size: 1.1rem; font-weight: 700; margin: 0 0 1.25rem;
   }
   .cart-page__summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-    margin-bottom: 0.75rem;
+    display: flex; justify-content: space-between;
+    align-items: center; font-size: 0.9rem; margin-bottom: 0.75rem;
   }
   .cart-page__summary-row--total {
-    font-size: 1rem;
-    font-weight: 700;
-    padding-top: 0.75rem;
-    margin-top: 0.75rem;
+    font-size: 1rem; font-weight: 700;
+    padding-top: 0.75rem; margin-top: 0.75rem;
     border-top: 1px solid var(--color-border, rgba(0,0,0,0.1));
   }
   .cart-page__summary-label { opacity: 0.6; }
+
   .cart-page__checkout-btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 15px;
-    background: var(--color-button, #3A6FE8);
-    color: var(--color-button-text, #FFFFFF);
-    border: none;
-    border-radius: 6px;
+    display: block; width: 100%; text-align: center;
+    padding: 15px; border: none; border-radius: 6px;
     font-family: var(--font-body-family, sans-serif);
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    margin-top: 1.25rem;
-    transition: background-color 0.2s, transform 0.2s;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; margin-top: 1.25rem; color: #FFFFFF;
+    transition: opacity 0.2s, transform 0.2s;
   }
-  .cart-page__checkout-btn:hover {
-    background: var(--color-button-hover, #8B52D4);
-    transform: translateY(-1px);
-  }
+  .cart-page__checkout-btn:hover { opacity: 0.85; transform: translateY(-1px); }
   .cart-page__summary-note {
-    font-size: 0.75rem;
-    text-align: center;
-    opacity: 0.4;
-    margin: 0.75rem 0 0;
+    font-size: 0.75rem; text-align: center;
+    opacity: 0.4; margin: 0.75rem 0 0;
   }
 
   @media (max-width: 768px) {
@@ -187,13 +137,12 @@
   {%- if cart.item_count == 0 -%}
     <div class="cart-page__empty">
       <p>Your cart is currently empty.</p>
-      <a href="/collections/all" class="cart-page__continue">Continue Shopping</a>
+      <a href="/collections/all" class="cart-page__continue" data-gradient="true">Continue Shopping</a>
     </div>
 
   {%- else -%}
     <div class="cart-page__grid">
 
-      <!-- Items -->
       <div class="cart-page__items" id="cart-page-items">
         {%- for item in cart.items -%}
           <div class="cart-page__item" data-variant-id="{{ item.variant_id }}">
@@ -221,7 +170,6 @@
         {%- endfor -%}
       </div>
 
-      <!-- Summary -->
       <div class="cart-page__summary">
         <h2 class="cart-page__summary-title">Order Summary</h2>
         <div class="cart-page__summary-row">
@@ -236,7 +184,7 @@
           <span>Total</span>
           <span id="cart-page-total">{{ cart.total_price | money }}</span>
         </div>
-        <a href="/checkout" class="cart-page__checkout-btn">Proceed to Checkout</a>
+        <a href="/checkout" class="cart-page__checkout-btn" data-gradient="true">Proceed to Checkout</a>
         <p class="cart-page__summary-note">Taxes and shipping calculated at checkout</p>
       </div>
 
