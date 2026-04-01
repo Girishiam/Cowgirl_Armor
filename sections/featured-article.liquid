@@ -1,20 +1,394 @@
+<style>
+  .featured-article-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    {%- if section.settings.use_gradient -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  .featured-article-{{ section.id }} .featured-article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.col_gap }}px;
+    align-items: center;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.padding_h }}px;
+  }
+
+  /* ── Image ── */
+  .featured-article-{{ section.id }} .featured-article__image {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.image_radius }}px;
+    aspect-ratio: {{ section.settings.image_ratio }};
+    background: rgba(0,0,0,0.06);
+  }
+
+  .featured-article-{{ section.id }} .featured-article__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .featured-article-{{ section.id }} .featured-article__image:hover img {
+    transform: scale(1.04);
+  }
+
+  /* ── Content ── */
+  .featured-article-{{ section.id }} .featured-article__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
+  }
+
+  /* ── Tag / Eyebrow ── */
+  .featured-article-{{ section.id }} .featured-article__tag {
+    display: inline-block;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    {%- if section.settings.use_gradient -%}
+      color: rgba(255,255,255,0.75);
+    {%- else -%}
+      color: {{ section.settings.accent_color }};
+    {%- endif -%}
+  }
+
+  /* ── Date ── */
+  .featured-article-{{ section.id }} .featured-article__date {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.8rem;
+    opacity: 0.5;
+    margin: 0;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Title ── */
+  .featured-article-{{ section.id }} .featured-article__title {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp({{ section.settings.title_min }}px, 3vw, {{ section.settings.title_max }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .featured-article-{{ section.id }} .featured-article__title a {
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+  }
+
+  .featured-article-{{ section.id }} .featured-article__title a:hover {
+    opacity: 0.7;
+  }
+
+  /* ── Excerpt ── */
+  .featured-article-{{ section.id }} .featured-article__excerpt {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp(0.9rem, 1.5vw, {{ section.settings.excerpt_size }}px);
+    line-height: 1.7;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  /* ── Button ── */
+  .featured-article-{{ section.id }} .featured-article__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: flex-start;
+    text-decoration: none;
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1.75rem;
+    border-radius: {{ section.settings.btn_radius }}px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,0.4);
+    {%- elsif section.settings.btn_style == 'gradient' -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+      color: #FFFFFF;
+      border: none;
+    {%- elsif section.settings.btn_style == 'outline' -%}
+      background: transparent;
+      color: {{ section.settings.text_color }};
+      border: 1.5px solid {{ section.settings.text_color }};
+    {%- else -%}
+      background: {{ section.settings.btn_bg }};
+      color: {{ section.settings.btn_text }};
+      border: none;
+    {%- endif -%}
+  }
+
+  .featured-article-{{ section.id }} .featured-article__btn:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+  }
+
+  /* ── Image right variant ── */
+  {%- if section.settings.image_position == 'right' -%}
+    .featured-article-{{ section.id }} .featured-article {
+      direction: rtl;
+    }
+    .featured-article-{{ section.id }} .featured-article > * {
+      direction: ltr;
+    }
+  {%- endif -%}
+
+  /* ── Responsive ── */
+  @media screen and (max-width: 767px) {
+    .featured-article-{{ section.id }} .featured-article {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
+    .featured-article-{{ section.id }} .featured-article__image {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>
+
 {% assign blog = blogs[section.settings.blog] %}
 {% assign article = blog.articles.first %}
 
-<div class="featured-article">
-  <div class="featured-article__image">
-    <a href="{{ article.url }}">
-      <img src="{{ article.image | image_url: width: 1000 }}" alt="{{ article.title }}">
-    </a>
-  </div>
+{%- if article != blank -%}
+  <div class="featured-article-{{ section.id }}">
+    <div class="featured-article">
 
-  <div class="featured-article__content">
-    <span class="featured-article__tag">{{ blog.title }}</span>
-    <p class="featured-article__date">{{ article.published_at | date: "%m/%d/%y" }}</p>
-    <h2 class="featured-article__title">
-      <a href="{{ article.url }}">{{ article.title }}</a>
-    </h2>
-    <p class="featured-article__excerpt">{{ article.excerpt | strip_html | truncate: 120 }}</p>
-    <a href="{{ article.url }}" class="featured-article__btn">Read More →</a>
+      {%- comment -%} ── Image ── {%- endcomment -%}
+      <div class="featured-article__image">
+        <a href="{{ article.url }}">
+          {%- if article.image != blank -%}
+            <img
+              src="{{ article.image | image_url: width: 1000 }}"
+              srcset="{{ article.image | image_url: width: 600 }} 600w,
+                      {{ article.image | image_url: width: 1000 }} 1000w"
+              sizes="(max-width: 767px) 100vw, 50vw"
+              alt="{{ article.image.alt | default: article.title | escape }}"
+              loading="lazy"
+              width="1000"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </a>
+      </div>
+
+      {%- comment -%} ── Content ── {%- endcomment -%}
+      <div class="featured-article__content">
+        <span class="featured-article__tag">{{ blog.title }}</span>
+        <p class="featured-article__date">{{ article.published_at | date: "%B %d, %Y" }}</p>
+        <h2 class="featured-article__title">
+          <a href="{{ article.url }}">{{ article.title }}</a>
+        </h2>
+        {%- if article.excerpt != blank -%}
+          <p class="featured-article__excerpt">{{ article.excerpt | strip_html | truncate: 160 }}</p>
+        {%- else -%}
+          <p class="featured-article__excerpt">{{ article.content | strip_html | truncate: 160 }}</p>
+        {%- endif -%}
+        <a href="{{ article.url }}" class="featured-article__btn">
+          {{ section.settings.btn_label }} →
+        </a>
+      </div>
+
+    </div>
   </div>
-</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Featured Article",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "Read More"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        { "value": "left",  "label": "Left"  },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image Aspect Ratio",
+      "options": [
+        { "value": "1 / 1",  "label": "Square 1:1"    },
+        { "value": "4 / 3",  "label": "Landscape 4:3" },
+        { "value": "3 / 4",  "label": "Portrait 3:4"  },
+        { "value": "16 / 9", "label": "Wide 16:9"     }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image Corner Radius",
+      "min": 0, "max": 24, "step": 2, "unit": "px", "default": 8
+    },
+    {
+      "type": "range",
+      "id": "col_gap",
+      "label": "Column Gap",
+      "min": 20, "max": 120, "step": 4, "unit": "px", "default": 60
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800, "max": 1600, "step": 20, "unit": "px", "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_h",
+      "label": "Side Padding",
+      "min": 0, "max": 80, "step": 4, "unit": "px", "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_min",
+      "label": "Title Size — Min",
+      "min": 18, "max": 40, "step": 2, "unit": "px", "default": 24
+    },
+    {
+      "type": "range",
+      "id": "title_max",
+      "label": "Title Size — Max",
+      "min": 28, "max": 64, "step": 2, "unit": "px", "default": 42
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title Weight",
+      "min": 300, "max": 900, "step": 100, "default": 700
+    },
+    {
+      "type": "range",
+      "id": "excerpt_size",
+      "label": "Excerpt Size (max)",
+      "min": 14, "max": 20, "step": 1, "unit": "px", "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Applies the blue→purple→pink gradient to the section background"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background (if not gradient)",
+      "default": "#F8F6F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Tag / Accent Color",
+      "default": "#8B52D4"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "select",
+      "id": "btn_style",
+      "label": "Button Style",
+      "info": "Ignored when brand gradient background is on",
+      "options": [
+        { "value": "gradient", "label": "Brand Gradient" },
+        { "value": "solid",    "label": "Solid Color"    },
+        { "value": "outline",  "label": "Outline"        }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background (solid only)",
+      "default": "#3A6FE8"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Button Text (solid only)",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button Corner Radius",
+      "min": 0, "max": 30, "step": 2, "unit": "px", "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Article"
+    }
+  ]
+}
+{% endschema %}
