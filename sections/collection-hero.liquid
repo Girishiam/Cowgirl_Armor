@@ -2,7 +2,6 @@
   .collection-hero-{{ section.id }} {
     position: relative;
     width: 100%;
-    /* Premium proportions: scales between 300px and 500px based on screen height/width */
     min-height: clamp(300px, 40vh, 500px);
     display: flex;
     align-items: center;
@@ -21,7 +20,6 @@
     object-fit: cover;
     object-position: center;
     z-index: 1;
-    /* Subtle zoom-out effect for a premium feel */
     animation: bgSettle 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
 
@@ -126,7 +124,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Fallback Background Color",
-      "default": "#1A1A1A"
+      "default": "#8B52D4"
     },
     {
       "type": "color",
@@ -138,7 +136,7 @@
       "type": "color",
       "id": "overlay_color",
       "label": "Overlay Color",
-      "default": "#000000"
+      "default": "#3A6FE8"
     },
     {
       "type": "range",
@@ -148,7 +146,7 @@
       "step": 5,
       "unit": "%",
       "label": "Overlay Opacity",
-      "default": 60
+      "default": 40
     },
     {
       "type": "header",
