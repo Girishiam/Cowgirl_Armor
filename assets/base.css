@@ -530,6 +530,22 @@ h6 { font-size: var(--font-heading-h6); }
    BRAND GRADIENT UTILITIES — Cowgirl Armor
    ============================================ */
 
+/* Universal gradient attribute — add data-gradient="true" to ANY element */
+[data-gradient="true"] {
+  background: var(--color-brand-gradient) !important;
+  color: #FFFFFF;
+}
+[data-gradient="animated"] {
+  background: linear-gradient(135deg, #3A6FE8, #8B52D4, #CC72E8, #8B52D4, #3A6FE8);
+  background-size: 300% 300%;
+  animation: gradientShift 6s ease infinite;
+  color: #FFFFFF;
+}
+[data-gradient="radial"] {
+  background: var(--color-brand-gradient-radial) !important;
+  color: #FFFFFF;
+}
+
 /* Backgrounds */
 .bg-brand          { background: var(--color-brand-gradient); }
 .bg-brand-vertical { background: var(--color-brand-gradient-vertical); }
