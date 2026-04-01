@@ -13,19 +13,19 @@
     overflow: hidden;
   }
 
-  /* ── Decorative top accent line ── */
+  /* ── Decorative top accent line — brand gradient ── */
   .ca-footer::before {
     content: '';
     display: block;
-    height: 1px;
+    height: 2px;
     background: linear-gradient(
       to right,
       transparent 0%,
-      {{ section.settings.accent_color }} 30%,
-      {{ section.settings.accent_color }} 70%,
+      #3A6FE8 20%,
+      #8B52D4 50%,
+      #CC72E8 80%,
       transparent 100%
     );
-    opacity: 0.6;
   }
 
   /* ── Subtle grain texture overlay ── */
@@ -42,13 +42,13 @@
   .ca-footer__inner {
     position: relative;
     z-index: 1;
-    max-width: var(--page-width, 1600px);
+    max-width: var(--page-width, 1400px);
     margin: 0 auto;
     padding: clamp(3rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 4rem) 0;
   }
 
   /* ═══════════════════════════════════════════
-     SINGLE UNIFIED ROW
+     LOGO & BRAND
   ═══════════════════════════════════════════ */
   .ca-footer__logo-wrap {
     text-decoration: none;
@@ -90,6 +90,7 @@
     flex-direction: column;
   }
 
+  /* ── Socials ── */
   .ca-footer__socials {
     display: flex;
     gap: 8px;
@@ -113,9 +114,9 @@
   }
 
   .ca-footer__social:hover {
-    background-color: {{ section.settings.accent_color }};
-    border-color: {{ section.settings.accent_color }};
-    color: {{ section.settings.bg_color }};
+    background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+    border-color: transparent;
+    color: #FFFFFF;
     transform: translateY(-2px);
   }
 
@@ -127,7 +128,7 @@
   }
 
   /* ═══════════════════════════════════════════
-     SINGLE ROW — Brand + 2 nav cols + newsletter
+     GRID
   ═══════════════════════════════════════════ */
   .ca-footer__grid {
     display: grid;
@@ -231,9 +232,10 @@
   .ca-footer__email:focus { outline: none; }
   .ca-footer__email::placeholder { color: {{ section.settings.text_color }}; opacity: 0.35; }
 
+  /* Submit button — brand gradient ── */
   .ca-footer__submit {
-    background: {{ section.settings.accent_color }};
-    color: {{ section.settings.bg_color }};
+    background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+    color: #FFFFFF;
     border: none;
     padding: 0.85rem 1.25rem;
     font-family: var(--font-body-family, sans-serif);
@@ -243,7 +245,7 @@
     text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
-    transition: opacity 0.2s ease, background-color 0.2s ease;
+    transition: opacity 0.2s ease;
   }
 
   .ca-footer__submit:hover { opacity: 0.85; }
@@ -329,14 +331,13 @@
   ═══════════════════════════════════════════ */
   @media screen and (max-width: 599px) {
     .ca-footer__bottom { flex-direction: column; align-items: flex-start; }
-    .ca-footer__grid { grid-template-columns: 1fr; }
+    .ca-footer__grid   { grid-template-columns: 1fr; }
   }
 </style>
 
 <footer class="ca-footer" role="contentinfo">
   <div class="ca-footer__inner">
 
-    <!-- ── Single unified row ── -->
     <div class="ca-footer__grid">
 
       <!-- Brand col -->
@@ -357,36 +358,36 @@
         {%- endif -%}
 
         <div class="ca-footer__socials">
-        {%- if settings.social_instagram_link != blank -%}
-          <a href="{{ settings.social_instagram_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/></svg>
-          </a>
-        {%- endif -%}
-        {%- if settings.social_facebook_link != blank -%}
-          <a href="{{ settings.social_facebook_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="Facebook">
-            <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-          </a>
-        {%- endif -%}
-        {%- if settings.social_twitter_link != blank -%}
-          <a href="{{ settings.social_twitter_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="X / Twitter">
-            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-        {%- endif -%}
-        {%- if settings.social_pinterest_link != blank -%}
-          <a href="{{ settings.social_pinterest_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="Pinterest">
-            <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
-          </a>
-        {%- endif -%}
-        {%- if settings.social_tiktok_link != blank -%}
-          <a href="{{ settings.social_tiktok_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="TikTok">
-            <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.26 8.26 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>
-          </a>
-        {%- endif -%}
-        {%- if settings.social_youtube_link != blank -%}
-          <a href="{{ settings.social_youtube_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="YouTube">
-            <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
-          </a>
-        {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <a href="{{ settings.social_instagram_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}
+            <a href="{{ settings.social_facebook_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if settings.social_twitter_link != blank -%}
+            <a href="{{ settings.social_twitter_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="X / Twitter">
+              <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if settings.social_pinterest_link != blank -%}
+            <a href="{{ settings.social_pinterest_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="Pinterest">
+              <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if settings.social_tiktok_link != blank -%}
+            <a href="{{ settings.social_tiktok_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="TikTok">
+              <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.26 8.26 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if settings.social_youtube_link != blank -%}
+            <a href="{{ settings.social_youtube_link }}" class="ca-footer__social" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+            </a>
+          {%- endif -%}
         </div>
       </div>
 
@@ -401,10 +402,10 @@
           </ul>
         {%- else -%}
           <ul class="ca-footer__nav">
-            <li><a href="{{ routes.root_url }}" class="ca-footer__nav-link">Home</a></li>
+            <li><a href="{{ routes.root_url }}"        class="ca-footer__nav-link">Home</a></li>
             <li><a href="{{ routes.collections_url }}" class="ca-footer__nav-link">Shop</a></li>
-            <li><a href="/pages/about" class="ca-footer__nav-link">About</a></li>
-            <li><a href="/pages/contact" class="ca-footer__nav-link">Contact</a></li>
+            <li><a href="/pages/about"                 class="ca-footer__nav-link">About</a></li>
+            <li><a href="/pages/contact"               class="ca-footer__nav-link">Contact</a></li>
           </ul>
         {%- endif -%}
       </div>
@@ -464,7 +465,7 @@
         {% endform %}
       </div>
 
-    </div><!-- /.ca-footer__grid -->
+    </div>
 
     <!-- ── Bottom bar ── -->
     <div class="ca-footer__bottom">
@@ -518,40 +519,166 @@
 {
   "name": "Footer",
   "settings": [
-    { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "bg_color",     "label": "Background",    "default": "#1A1A1A" },
-    { "type": "color", "id": "text_color",   "label": "Text Color",    "default": "#FFFFFF" },
-    { "type": "color", "id": "border_color", "label": "Border Color",  "default": "#2e2e2e" },
-    { "type": "color", "id": "accent_color", "label": "Accent Color",  "default": "#8BA4AC" },
-
-    { "type": "header", "content": "Brand" },
-    { "type": "image_picker", "id": "footer_logo", "label": "Footer Logo", "info": "Leave blank to use global logo." },
-    { "type": "range", "id": "logo_width", "label": "Logo Width", "min": 60, "max": 300, "step": 10, "unit": "px", "default": 180 },
-    { "type": "textarea", "id": "tagline", "label": "Tagline", "default": "Equipped with the Armor of God. Built for the Cowgirl who stands firm in faith." },
-
-    { "type": "header", "content": "Navigation" },
-    { "type": "text",      "id": "col2_title", "label": "Column 2 Heading", "default": "Quick Links" },
-    { "type": "link_list", "id": "menu_1",     "label": "Column 2 Menu",    "default": "main-menu"   },
-    { "type": "text",      "id": "col3_title", "label": "Column 3 Heading", "default": "Help"        },
-    { "type": "link_list", "id": "menu_2",     "label": "Column 3 Menu",    "default": "footer"      },
-
-    { "type": "header", "content": "Newsletter" },
-    { "type": "text", "id": "newsletter_title",  "label": "Heading",          "default": "Stay Connected" },
-    { "type": "text", "id": "newsletter_text",   "label": "Subtext",           "default": "Join our community for inspiration, updates, and faith-filled encouragement." },
-    { "type": "text", "id": "email_placeholder", "label": "Email Placeholder", "default": "Your email address" },
-    { "type": "text", "id": "subscribe_label",   "label": "Button Label",      "default": "Join" },
-    { "type": "text", "id": "newsletter_note",   "label": "Fine Print",        "default": "No spam. Unsubscribe anytime." },
-    { "type": "text", "id": "success_message",   "label": "Success Message",   "default": "You're in! Welcome to the Cowgirl Army." },
-
-    { "type": "header", "content": "Copyright" },
-    { "type": "text",     "id": "copyright_name",     "label": "Copyright Name",     "info": "Leave blank to use shop name." },
-    { "type": "text",     "id": "copyright_text",     "label": "Copyright Suffix" },
-    { "type": "textarea", "id": "copyright_override", "label": "Full Override",       "info": "Replaces entire copyright line." },
-
-    { "type": "header", "content": "Legal & Payments" },
-    { "type": "link_list", "id": "legal_menu",          "label": "Legal Links Menu",   "info": "Leave blank to auto-show policies." },
-    { "type": "checkbox",  "id": "show_payment_icons",  "label": "Show Payment Icons", "default": true }
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#8B52D4"
+    },
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "Footer Logo",
+      "info": "Leave blank to use global logo."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo Width",
+      "min": 60, "max": 300, "step": 10, "unit": "px", "default": 180
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Equipped with the Armor of God. Built for the Cowgirl who stands firm in faith."
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "text",
+      "id": "col2_title",
+      "label": "Column 2 Heading",
+      "default": "Quick Links"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "Column 2 Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "col3_title",
+      "label": "Column 3 Heading",
+      "default": "Help"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Column 3 Menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Heading",
+      "default": "Stay Connected"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Subtext",
+      "default": "Join our community for inspiration, updates, and faith-filled encouragement."
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email Placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "Button Label",
+      "default": "Join"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_note",
+      "label": "Fine Print",
+      "default": "No spam. Unsubscribe anytime."
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "You're in! Welcome to the Cowgirl Army."
+    },
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "text",
+      "id": "copyright_name",
+      "label": "Copyright Name",
+      "info": "Leave blank to use shop name."
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Suffix"
+    },
+    {
+      "type": "textarea",
+      "id": "copyright_override",
+      "label": "Full Override",
+      "info": "Replaces entire copyright line."
+    },
+    {
+      "type": "header",
+      "content": "Legal & Payments"
+    },
+    {
+      "type": "link_list",
+      "id": "legal_menu",
+      "label": "Legal Links Menu",
+      "info": "Leave blank to auto-show policies."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show Payment Icons",
+      "default": true
+    }
   ],
-  "presets": [{ "name": "Footer" }]
+  "presets": [
+    {
+      "name": "Footer"
+    }
+  ]
 }
 {% endschema %}
