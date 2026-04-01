@@ -1,31 +1,43 @@
 /* Cowgirl Armor Global CSS */
 /* Variables */
 :root {
+  /* =============================================
+     BRAND IDENTITY — Cowgirl Armor
+     Blue → Purple → Pink gradient system
+     ============================================= */
+  --color-brand-blue:     #3A6FE8;
+  --color-brand-purple:   #8B52D4;
+  --color-brand-pink:     #CC72E8;
+  --color-brand-gradient: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+  --color-brand-gradient-hover: linear-gradient(135deg, #2D5FD6 0%, #7A44C2 55%, #BB61D7 100%);
+  --color-brand-gradient-vertical: linear-gradient(180deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+  --color-brand-gradient-radial: radial-gradient(ellipse at top left, #3A6FE8, #8B52D4 50%, #CC72E8);
+
   /* Colors */
-  --color-base-bg: var(--color-bg, #d9d9d9);
-  --color-accent: var(--color-accent, #8BA4AC);
-  --color-secondary: var(--color-secondary, #6B8E95);
-  --color-text: var(--color-text, #1A1A1A);
-  --color-border: var(--color-border, #CCCCCC);
-  --color-error: var(--color-error, #DC2626);
-  --color-success: var(--color-success, #16A34A);
+  --color-base-bg:   var(--color-bg, #F8F6F4);
+  --color-accent:    var(--color-accent, #8B52D4);
+  --color-secondary: var(--color-secondary, #CC72E8);
+  --color-text:      var(--color-text, #1A1A1A);
+  --color-border:    var(--color-border, #CCCCCC);
+  --color-error:     var(--color-error, #DC2626);
+  --color-success:   var(--color-success, #16A34A);
 
   /* Button Colors */
-  --color-button: var(--color-button, #1A1A1A);
-  --color-button-text: var(--color-button-text, #FFFFFF);
-  --color-button-hover: var(--color-button-hover, #333333);
+  --color-button:       var(--color-button, #3A6FE8);
+  --color-button-text:  var(--color-button-text, #FFFFFF);
+  --color-button-hover: var(--color-button-hover, #8B52D4);
 
   /* Typography */
   --font-heading: var(--font-heading-family, sans-serif);
-  --font-body: var(--font-body-family, sans-serif);
+  --font-body:    var(--font-body-family, sans-serif);
   --heading-scale: var(--heading-scale, 1);
-  --body-scale: var(--body-scale, 1);
+  --body-scale:    var(--body-scale, 1);
 
   /* Font Sizes */
   --font-size-base: calc(var(--font-size-base-px, 16px) * var(--body-scale));
-  --font-size-sm: calc(0.875 * var(--font-size-base));
-  --font-size-lg: calc(1.125 * var(--font-size-base));
-  --font-size-xl: calc(1.25 * var(--font-size-base));
+  --font-size-sm:   calc(0.875 * var(--font-size-base));
+  --font-size-lg:   calc(1.125 * var(--font-size-base));
+  --font-size-xl:   calc(1.25 * var(--font-size-base));
 
   --font-heading-h1: calc(2.5rem * var(--heading-scale));
   --font-heading-h2: calc(2rem * var(--heading-scale));
@@ -35,32 +47,35 @@
   --font-heading-h6: calc(1rem * var(--heading-scale));
 
   /* Spacing */
-  --spacing-sections: var(--spacing-sections, 60px);
-  --spacing-grid-horizontal: var(--spacing-grid-horizontal, 20px);
-  --spacing-grid-vertical: var(--spacing-grid-vertical, 20px);
-  --section-padding: clamp(3rem, 10vw, 6rem);
+  --spacing-sections:          var(--spacing-sections, 60px);
+  --spacing-grid-horizontal:   var(--spacing-grid-horizontal, 20px);
+  --spacing-grid-vertical:     var(--spacing-grid-vertical, 20px);
+  --section-padding:           clamp(3rem, 10vw, 6rem);
 
   /* Border & Corners */
-  --border-radius: var(--border-radius, 0px);
-  --border-width: var(--border-thickness, 1px);
-  --border-opacity: var(--border-opacity, 1);
-  --buttons-radius: var(--buttons-radius, 4px);
+  --border-radius:            var(--border-radius, 0px);
+  --border-width:             var(--border-thickness, 1px);
+  --border-opacity:           var(--border-opacity, 1);
+  --buttons-radius:           var(--buttons-radius, 4px);
   --buttons-border-thickness: var(--buttons-border-thickness, 1px);
 
   /* Shadows */
-  --shadow-opacity: var(--shadow-opacity, 0.1);
-  --shadow-blur: var(--shadow-blur, 20px);
-  --shadow-default: 0 4px var(--shadow-blur) rgba(0, 0, 0, var(--shadow-opacity));
-  --shadow-hover: 0 8px calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, calc(var(--shadow-opacity) * 1.2));
+  --shadow-opacity:  var(--shadow-opacity, 0.1);
+  --shadow-blur:     var(--shadow-blur, 20px);
+  --shadow-default:  0 4px var(--shadow-blur) rgba(0, 0, 0, var(--shadow-opacity));
+  --shadow-hover:    0 8px calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, calc(var(--shadow-opacity) * 1.2));
+  --shadow-brand:    0 4px 24px rgba(139, 82, 212, 0.25);
+  --shadow-brand-hover: 0 8px 40px rgba(139, 82, 212, 0.4);
 
   /* Layout */
+  --page-width:        1400px;
   --page-width-margin: 2rem;
 
   /* Transitions */
-  --duration-short: 100ms;
+  --duration-short:   100ms;
   --duration-default: 200ms;
-  --duration-long: 500ms;
-  --ease-out-slow: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-long:    500ms;
+  --ease-out-slow:    cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ============================================
@@ -105,7 +120,7 @@ h6 { font-size: var(--font-heading-h6); }
   left: -9999px;
   z-index: 9999;
   padding: 10px 20px;
-  background: var(--color-button, #1a1a1a);
+  background: var(--color-button, #3A6FE8);
   color: var(--color-button-text, #fff);
   font-weight: 600;
   text-decoration: none;
@@ -237,29 +252,60 @@ h6 { font-size: var(--font-heading-h6); }
   appearance: none;
 }
 .btn:hover { background-color: var(--color-text); color: var(--color-base-bg); }
+
 .btn--primary {
   background-color: var(--color-button);
   color: var(--color-button-text);
   border-color: var(--color-button);
 }
-.btn--primary:hover { background-color: var(--color-button-hover); border-color: var(--color-button-hover); }
+.btn--primary:hover {
+  background-color: var(--color-button-hover);
+  border-color: var(--color-button-hover);
+}
+
 .btn--secondary {
   background-color: transparent;
   color: var(--color-text);
   border: var(--buttons-border-thickness) solid var(--color-text);
 }
 .btn--secondary:hover { background-color: var(--color-text); color: var(--color-base-bg); }
+
 .btn--accent {
   background-color: var(--color-accent);
-  color: var(--color-text);
+  color: #FFFFFF;
   border-color: var(--color-accent);
 }
 .btn--accent:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn--full-width { width: 100%; }
-.btn--shadow { box-shadow: var(--shadow-default); }
-.btn--shadow:hover { box-shadow: var(--shadow-hover); }
-.btn--uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* Brand gradient button — Cowgirl Armor signature CTA */
+.btn--brand {
+  background: var(--color-brand-gradient);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: var(--shadow-brand);
+  position: relative;
+  overflow: hidden;
+}
+.btn--brand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-brand-gradient-hover);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.btn--brand:hover::after { opacity: 1; }
+.btn--brand:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-brand-hover);
+}
+.btn--brand span { position: relative; z-index: 1; }
+
+.btn--full-width  { width: 100%; }
+.btn--shadow      { box-shadow: var(--shadow-default); }
+.btn--shadow:hover{ box-shadow: var(--shadow-hover); }
+.btn--uppercase   { text-transform: uppercase; letter-spacing: 0.05em; }
+.btn:disabled     { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
 /* ============================================
    PRODUCT CARD
@@ -274,21 +320,31 @@ h6 { font-size: var(--font-heading-h6); }
 }
 .product-card__image { width: 100%; height: auto; display: block; transition: transform var(--duration-long) var(--ease-out-slow); }
 .product-card:hover .product-card__image { transform: scale(1.05); }
-.product-card__image-secondary { position: absolute; top: 0; left: 0; opacity: 0; transition: opacity var(--duration-default) ease; width: 100%; height: 100%; object-fit: cover; }
+.product-card__image-secondary {
+  position: absolute; top: 0; left: 0;
+  opacity: 0;
+  transition: opacity var(--duration-default) ease;
+  width: 100%; height: 100%; object-fit: cover;
+}
 .product-card:hover .product-card__image-secondary { opacity: 1; }
 .product-card__badge {
   position: absolute; top: 0.75rem; left: 0.75rem;
-  background-color: var(--color-error); color: white;
-  padding: 0.25rem 0.75rem; border-radius: var(--border-radius);
-  font-size: var(--font-size-sm); font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em;
+  background: var(--color-brand-gradient);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
-.product-card__info { padding: 0.25rem 0; }
-.product-card__title { font-family: var(--font-heading); font-size: 0.95rem; margin-bottom: 0.35rem; font-weight: 600; }
-.product-card__vendor { font-size: var(--font-size-sm); opacity: 0.6; margin-bottom: 0.35rem; }
-.product-card__price { font-weight: 600; }
-.product-card__price--on-sale { color: var(--color-error); }
-.product-card__price--compare { text-decoration: line-through; opacity: 0.5; margin-left: 0.5rem; font-weight: 400; }
+.product-card__badge--sale { background: var(--color-error); }
+.product-card__info    { padding: 0.25rem 0; }
+.product-card__title   { font-family: var(--font-heading); font-size: 0.95rem; margin-bottom: 0.35rem; font-weight: 600; }
+.product-card__vendor  { font-size: var(--font-size-sm); opacity: 0.6; margin-bottom: 0.35rem; }
+.product-card__price   { font-weight: 600; }
+.product-card__price--on-sale  { color: var(--color-error); }
+.product-card__price--compare  { text-decoration: line-through; opacity: 0.5; margin-left: 0.5rem; font-weight: 400; }
 
 /* ============================================
    CARD
@@ -302,9 +358,10 @@ h6 { font-size: var(--font-heading-h6); }
 }
 .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
 .card--shadow { box-shadow: var(--shadow-default); }
-.card__image { width: 100%; height: auto; display: block; border-radius: var(--border-radius); }
-.card__title { font-family: var(--font-heading); font-size: var(--font-heading-h4); margin-bottom: 0.5rem; }
-.card__text { opacity: 0.8; }
+.card--brand-shadow:hover { box-shadow: var(--shadow-brand-hover); }
+.card__image  { width: 100%; height: auto; display: block; border-radius: var(--border-radius); }
+.card__title  { font-family: var(--font-heading); font-size: var(--font-heading-h4); margin-bottom: 0.5rem; }
+.card__text   { opacity: 0.8; }
 
 /* ============================================
    FORMS
@@ -332,11 +389,11 @@ h6 { font-size: var(--font-heading-h6); }
 .form-input:focus, .form-textarea:focus, .form-select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(139,164,172,0.15);
+  box-shadow: 0 0 0 3px rgba(139, 82, 212, 0.15);
 }
 .form-textarea { min-height: 120px; resize: vertical; }
-.form-error  { color: var(--color-error);   font-size: var(--font-size-sm); margin-top: 0.25rem; }
-.form-success{ color: var(--color-success); font-size: var(--font-size-sm); margin-top: 0.25rem; }
+.form-error    { color: var(--color-error);   font-size: var(--font-size-sm); margin-top: 0.25rem; }
+.form-success  { color: var(--color-success); font-size: var(--font-size-sm); margin-top: 0.25rem; }
 
 /* ============================================
    PLACEHOLDER SVG
@@ -356,18 +413,20 @@ h6 { font-size: var(--font-heading-h6); }
   font-size: var(--font-size-sm); font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.05em;
   border-radius: var(--border-radius);
-  background-color: var(--color-accent); color: var(--color-text);
+  background: var(--color-brand-gradient);
+  color: #FFFFFF;
 }
-.badge--sale    { background-color: var(--color-error);   color: white; }
-.badge--new     { background-color: var(--color-success); color: white; }
-.badge--sold-out{ background-color: var(--color-text);    color: var(--color-base-bg); }
+.badge--sale     { background: var(--color-error);   color: white; }
+.badge--new      { background: var(--color-success); color: white; }
+.badge--sold-out { background: var(--color-text);    color: var(--color-base-bg); }
+.badge--accent   { background: var(--color-accent);  color: #FFFFFF; }
 
 /* ============================================
    LAYOUT UTILITIES
    ============================================ */
 .container, .page-width {
   width: 100%;
-  max-width: var(--page-width, 1600px);
+  max-width: var(--page-width, 1400px);
   margin: 0 auto;
   padding: 0 var(--page-width-margin, 2rem);
 }
@@ -390,11 +449,11 @@ h6 { font-size: var(--font-heading-h6); }
 /* ============================================
    FLEX / DISPLAY UTILITIES
    ============================================ */
-.hidden { display: none !important; }
-.flex { display: flex; }
-.inline-flex { display: inline-flex; }
-.flex-col { flex-direction: column; }
-.flex-wrap { flex-wrap: wrap; }
+.hidden       { display: none !important; }
+.flex         { display: flex; }
+.inline-flex  { display: inline-flex; }
+.flex-col     { flex-direction: column; }
+.flex-wrap    { flex-wrap: wrap; }
 .items-center { align-items: center; }
 .items-start  { align-items: flex-start; }
 .justify-center  { justify-content: center; }
@@ -438,14 +497,23 @@ h6 { font-size: var(--font-heading-h6); }
 /* ============================================
    ANIMATIONS
    ============================================ */
-@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fadeUp  { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes bgSettle{ from { transform: scale(1.05); } to { transform: scale(1); } }
-@keyframes spin    { to { transform: rotate(360deg); } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bgSettle { from { transform: scale(1.05); } to { transform: scale(1); } }
+@keyframes spin     { to { transform: rotate(360deg); } }
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
 
-.animate-fade-in { animation: fadeIn  var(--duration-long) ease-in; }
-.animate-slide-up { animation: fadeUp var(--duration-long) var(--ease-out-slow); }
-.fade-up-anim { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in  { animation: fadeIn  var(--duration-long) ease-in; }
+.animate-slide-up { animation: fadeUp  var(--duration-long) var(--ease-out-slow); }
+.fade-up-anim     { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 /* Loading */
 .loading { opacity: 0.6; pointer-events: none; cursor: wait; }
@@ -457,6 +525,59 @@ h6 { font-size: var(--font-heading-h6); }
   animation: spin 0.8s linear infinite;
   margin: 0 auto;
 }
+
+/* ============================================
+   BRAND GRADIENT UTILITIES — Cowgirl Armor
+   ============================================ */
+
+/* Backgrounds */
+.bg-brand          { background: var(--color-brand-gradient); }
+.bg-brand-vertical { background: var(--color-brand-gradient-vertical); }
+.bg-brand-radial   { background: var(--color-brand-gradient-radial); }
+.bg-brand-animate  {
+  background: linear-gradient(135deg, #3A6FE8, #8B52D4, #CC72E8, #8B52D4, #3A6FE8);
+  background-size: 300% 300%;
+  animation: gradientShift 6s ease infinite;
+}
+.bg-accent    { background-color: var(--color-accent); }
+.bg-secondary { background-color: var(--color-secondary); }
+
+/* Text gradient */
+.text-gradient {
+  background: var(--color-brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-shimmer {
+  background: linear-gradient(90deg, var(--color-brand-blue), var(--color-brand-pink), var(--color-brand-blue));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Brand borders */
+.border-brand {
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+.border-brand::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: var(--color-brand-gradient);
+  z-index: -1;
+}
+.border-accent   { border-color: var(--color-accent); }
+.border-brand-solid { border-color: var(--color-brand-purple); }
+
+/* Brand shadow utilities */
+.shadow-brand      { box-shadow: var(--shadow-brand); }
+.shadow-brand-hover:hover { box-shadow: var(--shadow-brand-hover); }
 
 /* ============================================
    HERO
@@ -483,9 +604,18 @@ h6 { font-size: var(--font-heading-h6); }
   z-index: 2;
   background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
 }
+.premium-hero__overlay--brand {
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg,
+    rgba(58,111,232,0.3) 0%,
+    rgba(139,82,212,0.4) 50%,
+    rgba(204,114,232,0.5) 100%
+  );
+}
 .premium-hero__content-container {
   position: relative; z-index: 3;
-  width: 100%; max-width: 1600px; padding: 2rem;
+  width: 100%; max-width: 1400px; padding: 2rem;
 }
 
 /* ============================================
@@ -500,7 +630,12 @@ h6 { font-size: var(--font-heading-h6); }
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 1rem;
 }
-.category-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+.category-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-brand-hover); }
+.category-card--gradient {
+  background: var(--color-brand-gradient);
+  border: none;
+  color: #FFFFFF;
+}
 
 /* ============================================
    NEWSLETTER FORM
@@ -519,11 +654,11 @@ h6 { font-size: var(--font-heading-h6); }
 /* ============================================
    LINKS
    ============================================ */
-.link-underline { text-decoration: underline; text-underline-offset: 0.2em; }
-.link-hover-underline { text-decoration: none; }
+.link-underline        { text-decoration: underline; text-underline-offset: 0.2em; }
+.link-hover-underline  { text-decoration: none; }
 .link-hover-underline:hover { text-decoration: underline; text-underline-offset: 0.2em; }
-.list-unstyled { list-style: none; padding: 0; margin: 0; }
-.list-inline { list-style: none; padding: 0; margin: 0; display: flex; gap: 1rem; flex-wrap: wrap; }
+.list-unstyled         { list-style: none; padding: 0; margin: 0; }
+.list-inline           { list-style: none; padding: 0; margin: 0; display: flex; gap: 1rem; flex-wrap: wrap; }
 
 /* ============================================
    IMAGE UTILITIES
@@ -533,7 +668,7 @@ h6 { font-size: var(--font-heading-h6); }
 .img-contain { width: 100%; height: 100%; object-fit: contain; object-position: center; }
 
 /* ============================================
-   SHIELD CONTAINER
+   SHIELD CONTAINER — Cowgirl Armor brand shape
    ============================================ */
 .shield-container {
   border: var(--border-width) solid var(--color-text);
@@ -545,6 +680,15 @@ h6 { font-size: var(--font-heading-h6); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.shield-container--brand {
+  background: var(--color-brand-gradient);
+  border: none;
+  color: #FFFFFF;
+}
+.shield-container--outline {
+  border: 3px solid var(--color-brand-purple);
+  background: transparent;
 }
 
 /* ============================================
@@ -570,7 +714,7 @@ h6 { font-size: var(--font-heading-h6); }
    ============================================ */
 .icon-grid-section {
   padding: 5rem 2rem;
-  max-width: 1600px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -585,6 +729,10 @@ h6 { font-size: var(--font-heading-h6); }
   background-color: var(--color-text);
   color: var(--color-base-bg);
   text-align: center;
+}
+.form-section--brand {
+  background: var(--color-brand-gradient);
+  color: #FFFFFF;
 }
 .form-overlay {
   position: absolute;
@@ -602,6 +750,10 @@ h6 { font-size: var(--font-heading-h6); }
   background: var(--color-base-bg);
   color: var(--color-text);
   border: none;
+}
+.form-section--brand .newsletter-form button {
+  background: #FFFFFF;
+  color: var(--color-brand-purple);
 }
 
 /* ============================================
@@ -673,13 +825,16 @@ h6 { font-size: var(--font-heading-h6); }
 .text-left    { text-align: left; }
 .text-center  { text-align: center; }
 .text-right   { text-align: right; }
-.font-bold      { font-weight: 700; }
-.font-semibold  { font-weight: 600; }
-.font-medium    { font-weight: 500; }
-.font-normal    { font-weight: 400; }
-.uppercase      { text-transform: uppercase; }
-.capitalize     { text-transform: capitalize; }
-.lowercase      { text-transform: lowercase; }
+.font-bold     { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.font-medium   { font-weight: 500; }
+.font-normal   { font-weight: 400; }
+.uppercase     { text-transform: uppercase; }
+.capitalize    { text-transform: capitalize; }
+.lowercase     { text-transform: lowercase; }
+.text-white    { color: #FFFFFF; }
+.text-accent   { color: var(--color-accent); }
+.text-brand    { color: var(--color-brand-purple); }
 
 /* ============================================
    DISPLAY UTILITIES (full set)
@@ -701,3 +856,20 @@ h6 { font-size: var(--font-heading-h6); }
 .mb-0 { margin-bottom: 0; }
 .pt-0 { padding-top: 0; }
 .pb-0 { padding-bottom: 0; }
+
+/* ============================================
+   DIVIDER UTILITIES — Cowgirl Armor
+   ============================================ */
+.divider-brand {
+  height: 3px;
+  background: var(--color-brand-gradient);
+  border: none;
+  border-radius: 2px;
+  margin: 2rem 0;
+}
+.divider-thin {
+  height: 1px;
+  background-color: var(--color-border);
+  border: none;
+  margin: 1.5rem 0;
+}
