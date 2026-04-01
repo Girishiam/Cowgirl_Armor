@@ -29,10 +29,10 @@
   {
     "name": "Colors",
     "settings": [
-      { "type": "color", "id": "color_bg",        "label": "Page Background", "default": "#E2E2E2" },
+      { "type": "color", "id": "color_bg",        "label": "Page Background", "default": "#F8F6F4" },
       { "type": "color", "id": "color_text",       "label": "Body Text",       "default": "#1A1A1A" },
-      { "type": "color", "id": "color_accent",     "label": "Accent",          "default": "#8BA4AC" },
-      { "type": "color", "id": "color_secondary",  "label": "Secondary",       "default": "#6B8E95" },
+      { "type": "color", "id": "color_accent",     "label": "Accent",          "default": "#8B52D4" },
+      { "type": "color", "id": "color_secondary",  "label": "Secondary",       "default": "#CC72E8" },
       { "type": "color", "id": "color_border",     "label": "Border",          "default": "#CCCCCC" },
       { "type": "color", "id": "color_error",      "label": "Error",           "default": "#DC2626" },
       { "type": "color", "id": "color_success",    "label": "Success",         "default": "#16A34A" }
@@ -130,9 +130,9 @@
   {
     "name": "Buttons",
     "settings": [
-      { "type": "color", "id": "color_button",       "label": "Button Background", "default": "#1A1A1A" },
+      { "type": "color", "id": "color_button",       "label": "Button Background", "default": "#3A6FE8" },
       { "type": "color", "id": "color_button_text",  "label": "Button Text",       "default": "#FFFFFF" },
-      { "type": "color", "id": "color_button_hover", "label": "Button Hover",      "default": "#333333" },
+      { "type": "color", "id": "color_button_hover", "label": "Button Hover",      "default": "#8B52D4" },
       { "type": "checkbox", "id": "buttons_uppercase", "label": "Uppercase button text", "default": false },
       { "type": "checkbox", "id": "buttons_shadow",    "label": "Button shadow",         "default": false },
       {
@@ -151,7 +151,7 @@
     "settings": [
       {
         "type": "range", "id": "page_width",
-        "label": "Page Max Width", "min": 1000, "max": 1920, "step": 20, "unit": "px", "default": 1600
+        "label": "Page Max Width", "min": 1000, "max": 1920, "step": 20, "unit": "px", "default": 1400
       },
       {
         "type": "range", "id": "content_width",
@@ -254,18 +254,18 @@
         ],
         "default": "notification"
       },
-      { "type": "checkbox", "id": "show_cart_note",               "label": "Show order note in cart",        "default": false },
-      { "type": "checkbox", "id": "cart_free_shipping_threshold", "label": "Show free shipping progress bar","default": false },
-      { "type": "text",     "id": "cart_free_shipping_amount",    "label": "Free shipping threshold ($)",    "default": "50"  }
+      { "type": "checkbox", "id": "show_cart_note",               "label": "Show order note in cart",         "default": false },
+      { "type": "checkbox", "id": "cart_free_shipping_threshold", "label": "Show free shipping progress bar", "default": false },
+      { "type": "text",     "id": "cart_free_shipping_amount",    "label": "Free shipping threshold ($)",     "default": "50"  }
     ]
   },
 
   {
     "name": "Search",
     "settings": [
-      { "type": "checkbox", "id": "predictive_search_enabled",     "label": "Enable predictive search",      "default": true  },
-      { "type": "checkbox", "id": "predictive_search_show_vendor", "label": "Show vendor in results",        "default": false },
-      { "type": "checkbox", "id": "predictive_search_show_price",  "label": "Show price in results",         "default": true  }
+      { "type": "checkbox", "id": "predictive_search_enabled",     "label": "Enable predictive search", "default": true  },
+      { "type": "checkbox", "id": "predictive_search_show_vendor", "label": "Show vendor in results",   "default": false },
+      { "type": "checkbox", "id": "predictive_search_show_price",  "label": "Show price in results",    "default": true  }
     ]
   },
 
@@ -284,10 +284,10 @@
   {
     "name": "Badges",
     "settings": [
-      { "type": "color", "id": "badge_sale_bg",       "label": "Sale Badge Background",     "default": "#DC2626" },
-      { "type": "color", "id": "badge_sale_text",     "label": "Sale Badge Text",           "default": "#FFFFFF" },
-      { "type": "color", "id": "badge_sold_out_bg",   "label": "Sold Out Background",       "default": "#1A1A1A" },
-      { "type": "color", "id": "badge_sold_out_text", "label": "Sold Out Text",             "default": "#FFFFFF" },
+      { "type": "color", "id": "badge_sale_bg",       "label": "Sale Badge Background", "default": "#DC2626" },
+      { "type": "color", "id": "badge_sale_text",     "label": "Sale Badge Text",       "default": "#FFFFFF" },
+      { "type": "color", "id": "badge_sold_out_bg",   "label": "Sold Out Background",   "default": "#1A1A1A" },
+      { "type": "color", "id": "badge_sold_out_text", "label": "Sold Out Text",         "default": "#FFFFFF" },
       {
         "type": "range", "id": "badge_corner_radius",
         "label": "Badge Corner Radius", "min": 0, "max": 20, "step": 2, "unit": "px", "default": 4
@@ -306,9 +306,9 @@
         "type": "range", "id": "inputs_border_thickness",
         "label": "Input Border Thickness", "min": 1, "max": 4, "step": 1, "unit": "px", "default": 1
       },
-      { "type": "color", "id": "inputs_bg",           "label": "Input Background",   "default": "#FFFFFF" },
-      { "type": "color", "id": "inputs_border_color", "label": "Input Border",       "default": "#CCCCCC" },
-      { "type": "color", "id": "inputs_focus_color",  "label": "Input Focus Color",  "default": "#1A1A1A" }
+      { "type": "color", "id": "inputs_bg",           "label": "Input Background",  "default": "#FFFFFF" },
+      { "type": "color", "id": "inputs_border_color", "label": "Input Border",      "default": "#CCCCCC" },
+      { "type": "color", "id": "inputs_focus_color",  "label": "Input Focus Color", "default": "#8B52D4" }
     ]
   },
 
@@ -338,8 +338,8 @@
         "type": "range", "id": "popup_overlay_opacity",
         "label": "Overlay Opacity", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 50
       },
-      { "type": "color",    "id": "popup_overlay_color", "label": "Overlay Color",           "default": "#000000" },
-      { "type": "checkbox", "id": "popup_show_overlay",  "label": "Show overlay behind popup","default": true     }
+      { "type": "color",    "id": "popup_overlay_color", "label": "Overlay Color",            "default": "#000000" },
+      { "type": "checkbox", "id": "popup_show_overlay",  "label": "Show overlay behind popup", "default": true     }
     ]
   },
 
