@@ -13,19 +13,28 @@
       backface-visibility: hidden;
     }
   </style>
-  <div class="announcement-bar" role="region" aria-label="Announcement" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
+
+  <div class="announcement-bar"
+    role="region"
+    aria-label="Announcement"
+    {% if section.settings.use_gradient %}
+      data-gradient="true"
+    {% else %}
+      style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};"
+    {% endif %}>
+
     <div class="announcement-bar__content">
       {%- if section.settings.link != blank -%}
-        <a href="{{ section.settings.link }}" class="announcement-bar__link" style="color: {{ section.settings.text_color }};">
+        <a href="{{ section.settings.link }}" class="announcement-bar__link">
       {%- endif -%}
-          <p class="announcement-bar__message">{{ section.settings.text }}</p>
+        <p class="announcement-bar__message">{{ section.settings.text }}</p>
       {%- if section.settings.link != blank -%}
         </a>
       {%- endif -%}
     </div>
 
     {%- if section.settings.show_close -%}
-      <button type="button" class="announcement-bar__close" aria-label="Close announcement" style="color: {{ section.settings.text_color }};">
+      <button type="button" class="announcement-bar__close" aria-label="Close announcement">
         <svg aria-hidden="true" focusable="false" role="presentation" viewBox="0 0 14 14" width="12" height="12">
           <path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
@@ -56,9 +65,15 @@
       "label": "Link (Optional)"
     },
     {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": true
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Background Color",
+      "label": "Background Color (if not gradient)",
       "default": "#3A6FE8"
     },
     {
