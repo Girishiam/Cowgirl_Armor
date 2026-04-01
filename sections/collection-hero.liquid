@@ -8,15 +8,17 @@
     justify-content: center;
     padding: {{ section.settings.padding_top }}px 2rem {{ section.settings.padding_bottom }}px;
     overflow: hidden;
-    background-color: {{ section.settings.bg_color }};
+    {%- if section.settings.use_gradient and section.settings.image == blank -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
   }
 
   .collection-hero__bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     object-fit: cover;
     object-position: center;
     z-index: 1;
@@ -25,12 +27,14 @@
 
   .collection-hero__overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     z-index: 2;
-    background-color: {{ section.settings.overlay_color }};
+    {%- if section.settings.use_gradient and section.settings.image != blank -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+    {%- else -%}
+      background-color: {{ section.settings.overlay_color }};
+    {%- endif -%}
     opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
   }
 
@@ -69,7 +73,9 @@
       class="collection-hero__bg"
     >
   {%- else -%}
-    {{ 'lifestyle-2' | placeholder_svg_tag: 'collection-hero__bg placeholder-svg' }}
+    {%- unless section.settings.use_gradient -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'collection-hero__bg placeholder-svg' }}
+    {%- endunless -%}
   {%- endif -%}
 
   <div class="collection-hero__overlay"></div>
@@ -121,9 +127,16 @@
       "content": "Colors & Overlays"
     },
     {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient",
+      "info": "No image = gradient background. With image = gradient overlay tint.",
+      "default": true
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Fallback Background Color",
+      "label": "Fallback Background Color (if not gradient)",
       "default": "#8B52D4"
     },
     {
@@ -135,7 +148,7 @@
     {
       "type": "color",
       "id": "overlay_color",
-      "label": "Overlay Color",
+      "label": "Overlay Color (if not gradient)",
       "default": "#3A6FE8"
     },
     {
