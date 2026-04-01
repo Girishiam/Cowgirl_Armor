@@ -1,26 +1,94 @@
 {%- style -%}
   #FeaturedCollection-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-    color: {{ section.settings.text_color }};
+    {%- if section.settings.use_gradient -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+      color: #FFFFFF;
+    {%- else -%}
+      background-color: {{ section.settings.background_color }};
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
   }
+
+  #FeaturedCollection-{{ section.id }} .section-header h2 {
+    font-family: var(--font-heading-family, serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  #FeaturedCollection-{{ section.id }} .section-header .rte {
+    opacity: 0.75;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  #FeaturedCollection-{{ section.id }} .mb-4 {
+    margin-bottom: 2.5rem;
+  }
+
+  #FeaturedCollection-{{ section.id }} .mt-5 {
+    margin-top: 3rem;
+  }
+
+  /* ── View All button inherits brand from base.css ── */
+  #FeaturedCollection-{{ section.id }} .btn--primary {
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,0.4);
+    {%- elsif section.settings.btn_gradient -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+      color: #FFFFFF;
+      border: none;
+    {%- else -%}
+      background-color: var(--color-button, #3A6FE8);
+      color: var(--color-button-text, #FFFFFF);
+      border-color: var(--color-button, #3A6FE8);
+    {%- endif -%}
+  }
+
+  #FeaturedCollection-{{ section.id }} .btn--primary:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+  }
+
+  /* ── Product card overrides for gradient bg ── */
+  {%- if section.settings.use_gradient -%}
+    #FeaturedCollection-{{ section.id }} .product-card__title a { color: #FFFFFF; }
+    #FeaturedCollection-{{ section.id }} .product-card__vendor  { color: rgba(255,255,255,0.6); }
+    #FeaturedCollection-{{ section.id }} .product-card__price   { color: #FFFFFF; }
+    #FeaturedCollection-{{ section.id }} .product-card__image-wrapper {
+      border-radius: {{ section.settings.image_radius }}px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+  {%- else -%}
+    #FeaturedCollection-{{ section.id }} .product-card__image-wrapper {
+      border-radius: {{ section.settings.image_radius }}px;
+    }
+  {%- endif -%}
 {%- endstyle -%}
 
 <div class="featured-collection section" id="FeaturedCollection-{{ section.id }}">
   <div class="page-width">
-    <div class="section-header text-center mb-4">
-      {%- if section.settings.title != blank -%}
-        <h2 class="h2">
-          {{ section.settings.title }}
-        </h2>
-      {%- endif -%}
 
-      {%- if section.settings.description != blank -%}
-        <div class="rte">
-          {{ section.settings.description }}
-        </div>
-      {%- endif -%}
-    </div>
+    {%- comment -%} ── Section header ── {%- endcomment -%}
+    {%- if section.settings.title != blank or section.settings.description != blank -%}
+      <div class="section-header text-center mb-4">
+        {%- if section.settings.title != blank -%}
+          <h2 class="h2">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="rte">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
 
+    {%- comment -%} ── Collection products ── {%- endcomment -%}
     {%- liquid
       assign collection = collections[section.settings.collection]
       assign products_to_display = section.settings.products_to_show
@@ -34,7 +102,11 @@
               {%- if product.featured_image != blank -%}
                 <img
                   src="{{ product.featured_image | image_url: width: 600 }}"
-                  alt="{{ product.featured_image.alt | escape }}"
+                  srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                          {{ product.featured_image | image_url: width: 600 }} 600w,
+                          {{ product.featured_image | image_url: width: 800 }} 800w"
+                  sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                  alt="{{ product.featured_image.alt | default: product.title | escape }}"
                   loading="lazy"
                   class="product-card__image"
                   width="{{ product.featured_image.width }}"
@@ -47,7 +119,13 @@
               {%- endif -%}
 
               {%- if product.compare_at_price > product.price -%}
-                <span class="product-card__badge badge--sale">Sale</span>
+                <span class="product-card__badge badge--sale">
+                  {%- if settings.sale_badge_style == 'percent' -%}
+                    {{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price }}% off
+                  {%- else -%}
+                    Sale
+                  {%- endif -%}
+                </span>
               {%- endif -%}
             </a>
 
@@ -62,12 +140,8 @@
 
               <div class="product-card__price">
                 {%- if product.compare_at_price > product.price -%}
-                  <span class="product-card__price--on-sale">
-                    {{ product.price | money }}
-                  </span>
-                  <span class="product-card__price--compare">
-                    {{ product.compare_at_price | money }}
-                  </span>
+                  <span class="product-card__price--on-sale">{{ product.price | money }}</span>
+                  <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
                 {%- else -%}
                   {{ product.price | money }}
                 {%- endif -%}
@@ -75,14 +149,14 @@
             </div>
           </div>
         </div>
+
       {%- else -%}
+        {%- comment -%} ── Placeholder cards when no collection set ── {%- endcomment -%}
         {%- for i in (1..products_to_display) -%}
           <div class="grid__item">
             <div class="product-card">
               <div class="product-card__image-wrapper">
-                <div class="placeholder-svg">
-                  {{ 'product-1' | placeholder_svg_tag }}
-                </div>
+                <div class="placeholder-svg">{{ 'product-1' | placeholder_svg_tag }}</div>
               </div>
               <div class="product-card__info">
                 <h3 class="product-card__title">Product Title</h3>
@@ -91,16 +165,19 @@
             </div>
           </div>
         {%- endfor -%}
+
       {%- endfor -%}
     </div>
 
+    {%- comment -%} ── View All button ── {%- endcomment -%}
     {%- if section.settings.show_view_all and collection.products_count > products_to_display -%}
       <div class="text-center mt-5">
         <a href="{{ collection.url }}" class="btn btn--primary">
-          View All
+          {{ section.settings.view_all_label | default: 'View All' }}
         </a>
       </div>
     {%- endif -%}
+
   </div>
 </div>
 
@@ -110,6 +187,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
     {
       "type": "text",
       "id": "title",
@@ -127,6 +208,16 @@
       "label": "Collection"
     },
     {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View All Button Label",
+      "default": "View All"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
       "type": "range",
       "id": "products_to_show",
       "min": 2,
@@ -142,7 +233,41 @@
       "max": 4,
       "step": 1,
       "default": 4,
-      "label": "Number of columns on desktop"
+      "label": "Columns on Desktop"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Image Corner Radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Product Card"
     },
     {
       "type": "checkbox",
@@ -153,7 +278,7 @@
     {
       "type": "checkbox",
       "id": "show_view_all",
-      "label": "Show 'View All' Button",
+      "label": "Show View All Button",
       "default": true
     },
     {
@@ -161,16 +286,30 @@
       "content": "Colors"
     },
     {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Applies the blue→purple→pink gradient to the section background"
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background Color",
-      "default": "#FFFFFF"
+      "label": "Background Color (if not gradient)",
+      "default": "#F8F6F4"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text Color",
+      "label": "Text Color (if not gradient)",
       "default": "#1A1A1A"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_gradient",
+      "label": "Use brand gradient on View All button",
+      "default": true,
+      "info": "Ignored when section background is gradient"
     }
   ],
   "presets": [
