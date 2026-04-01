@@ -114,10 +114,11 @@
     font-size: clamp({{ section.settings.question_size_min }}px, 1.4vw, {{ section.settings.question_size_max }}px);
     font-weight: {{ section.settings.question_weight }};
     line-height: 1.4;
-    transition: opacity 0.2s ease;
+    transition: color 0.2s ease, opacity 0.2s ease;
   }
   .faq-split-{{ section.id }} .faq-trigger:hover {
-    opacity: 0.7;
+    color: {{ section.settings.caret_color }};
+    opacity: 0.8;
   }
 
   /* Caret icon */
@@ -219,36 +220,37 @@
 
     <!-- Right: FAQ Accordion -->
     <div class="fs__right">
-    <ul class="faq-list" role="list">
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'faq_item' -%}
-          <li class="faq-item{% if block.settings.open_by_default %} is-open{% endif %}"
-              {{ block.shopify_attributes }}>
-            <button
-              class="faq-trigger"
-              aria-expanded="{{ block.settings.open_by_default }}"
-              aria-controls="faq-body-{{ block.id }}">
-              <span>{{ block.settings.question }}</span>
-              <svg class="faq-caret" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round"
-                   aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="faq-body"
-                 id="faq-body-{{ block.id }}"
-                 role="region">
-              {%- if block.settings.answer != blank -%}
-                <div class="faq-answer rte">{{ block.settings.answer }}</div>
-              {%- endif -%}
-            </div>
-          </li>
-        {%- endif -%}
-      {%- endfor -%}
-    </ul>
-  </div>
+      <ul class="faq-list" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'faq_item' -%}
+            <li class="faq-item{% if block.settings.open_by_default %} is-open{% endif %}"
+                {{ block.shopify_attributes }}>
+              <button
+                class="faq-trigger"
+                aria-expanded="{{ block.settings.open_by_default }}"
+                aria-controls="faq-body-{{ block.id }}">
+                <span>{{ block.settings.question }}</span>
+                <svg class="faq-caret" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.5"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+              <div class="faq-body"
+                   id="faq-body-{{ block.id }}"
+                   role="region">
+                {%- if block.settings.answer != blank -%}
+                  <div class="faq-answer rte">{{ block.settings.answer }}</div>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
 
+  </div>
 </section>
 
 <script>
@@ -346,7 +348,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Section Background",
-      "default": "#f5f5f5"
+      "default": "#F8F6F4"
     },
     {
       "type": "header",
@@ -362,11 +364,11 @@
       "id": "image_focal",
       "label": "Image Focal Point",
       "options": [
-        { "value": "center center", "label": "Center"       },
-        { "value": "top center",    "label": "Top"          },
-        { "value": "bottom center", "label": "Bottom"       },
-        { "value": "left center",   "label": "Left"         },
-        { "value": "right center",  "label": "Right"        }
+        { "value": "center center", "label": "Center" },
+        { "value": "top center",    "label": "Top"    },
+        { "value": "bottom center", "label": "Bottom" },
+        { "value": "left center",   "label": "Left"   },
+        { "value": "right center",  "label": "Right"  }
       ],
       "default": "center center"
     },
@@ -374,7 +376,7 @@
       "type": "color",
       "id": "overlay_color",
       "label": "Overlay Color",
-      "default": "#000000"
+      "default": "#3A6FE8"
     },
     {
       "type": "range",
@@ -425,7 +427,7 @@
       "type": "color",
       "id": "title_color",
       "label": "Title Color",
-      "default": "#ffffff"
+      "default": "#FFFFFF"
     },
     {
       "type": "range",
@@ -473,13 +475,13 @@
       "type": "color",
       "id": "faq_bg",
       "label": "FAQ Panel Color",
-      "default": "#ffffff"
+      "default": "#F8F6F4"
     },
     {
       "type": "range",
       "id": "faq_panel_opacity",
       "label": "FAQ Panel Opacity",
-      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 0,
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 95,
       "info": "0 = fully transparent (shows bg image), 100 = solid color"
     },
     {
@@ -508,7 +510,7 @@
       "type": "color",
       "id": "divider_color",
       "label": "Divider Color",
-      "default": "#cccccc"
+      "default": "#CCCCCC"
     },
     {
       "type": "range",
@@ -524,7 +526,7 @@
       "type": "color",
       "id": "question_color",
       "label": "Question Color",
-      "default": "#1a1a1a"
+      "default": "#1A1A1A"
     },
     {
       "type": "range",
@@ -558,7 +560,7 @@
       "type": "color",
       "id": "caret_color",
       "label": "Caret Color",
-      "default": "#1a1a1a"
+      "default": "#8B52D4"
     },
     {
       "type": "range",
@@ -605,7 +607,7 @@
       "type": "color",
       "id": "answer_link_color",
       "label": "Answer Link Color",
-      "default": "#1a1a1a"
+      "default": "#8B52D4"
     }
   ],
   "presets": [
