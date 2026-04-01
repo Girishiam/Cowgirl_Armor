@@ -16,7 +16,7 @@
     pointer-events: auto;
   }
   .cart-notif__panel {
-    background: {{ section.settings.bg | default: '#1a1a1a' }};
+    background: {{ section.settings.bg | default: '#8B52D4' }};
     color: {{ section.settings.text | default: '#ffffff' }};
     border-radius: 10px;
     padding: 14px 16px;
@@ -24,7 +24,7 @@
     align-items: center;
     gap: 14px;
     width: min(340px, 90vw);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 32px rgba(139,82,212,0.35);
   }
   .cart-notif__img {
     width: 52px;
@@ -95,8 +95,8 @@
   "settings": [
     { "type": "text",  "id": "added_text", "label": "Added Text",     "default": "Added to cart" },
     { "type": "text",  "id": "view_text",  "label": "View Cart Text", "default": "View cart" },
-    { "type": "color", "id": "bg",         "label": "Background",     "default": "#1a1a1a" },
-    { "type": "color", "id": "text",       "label": "Text Color",     "default": "#ffffff" }
+    { "type": "color", "id": "bg",         "label": "Background",     "default": "#8B52D4" },
+    { "type": "color", "id": "text",       "label": "Text Color",     "default": "#FFFFFF" }
   ],
   "presets": [{ "name": "Cart Notification" }]
 }
