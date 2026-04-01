@@ -22,8 +22,8 @@
     width: min(420px, 92vw);
     height: 100%;
     z-index: 801;
-    background: {{ section.settings.drawer_bg | default: '#ffffff' }};
-    color: {{ section.settings.drawer_text | default: '#1a1a1a' }};
+    background: {{ section.settings.drawer_bg | default: '#F8F6F4' }};
+    color: {{ section.settings.drawer_text | default: '#1A1A1A' }};
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
@@ -161,8 +161,8 @@
     transition: background-color 0.15s, border-color 0.15s;
   }
   .cart-item__qty-btn:hover {
-    background: rgba(0,0,0,0.06);
-    border-color: rgba(0,0,0,0.4);
+    background: rgba(139,82,212,0.08);
+    border-color: rgba(139,82,212,0.4);
   }
   .cart-item__qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .cart-item__qty-num { font-size: 0.88rem; min-width: 20px; text-align: center; }
@@ -208,7 +208,7 @@
     width: 100%;
     text-align: center;
     padding: 15px 20px;
-    background: {{ section.settings.btn_bg | default: '#1a1a1a' }};
+    background: {{ section.settings.btn_bg | default: '#3A6FE8' }};
     color: {{ section.settings.btn_text | default: '#ffffff' }};
     border: none;
     border-radius: {{ section.settings.btn_radius | default: 6 }}px;
@@ -291,18 +291,18 @@
   "name": "Cart Drawer",
   "limit": 1,
   "settings": [
-    { "type": "text",  "id": "heading",         "label": "Drawer Heading",      "default": "Your Cart" },
-    { "type": "text",  "id": "empty_text",       "label": "Empty Cart Text",     "default": "Your cart is empty" },
-    { "type": "text",  "id": "subtotal_label",   "label": "Subtotal Label",      "default": "Subtotal" },
-    { "type": "text",  "id": "checkout_label",   "label": "Checkout Button",     "default": "Checkout" },
-    { "type": "text",  "id": "view_cart_label",  "label": "View Cart Link",      "default": "View full cart" },
-    { "type": "checkbox", "id": "show_note",     "label": "Show checkout note",  "default": true },
-    { "type": "text",  "id": "note_text",        "label": "Checkout Note",       "default": "Taxes and shipping calculated at checkout" },
-    { "type": "color", "id": "drawer_bg",        "label": "Drawer Background",   "default": "#ffffff" },
-    { "type": "color", "id": "drawer_text",      "label": "Drawer Text Color",   "default": "#1a1a1a" },
-    { "type": "color", "id": "btn_bg",           "label": "Checkout Button Bg",  "default": "#1a1a1a" },
-    { "type": "color", "id": "btn_text",         "label": "Checkout Button Text","default": "#ffffff" },
-    { "type": "range", "id": "btn_radius",       "label": "Button Radius", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 6 }
+    { "type": "text",     "id": "heading",        "label": "Drawer Heading",       "default": "Your Cart" },
+    { "type": "text",     "id": "empty_text",      "label": "Empty Cart Text",      "default": "Your cart is empty" },
+    { "type": "text",     "id": "subtotal_label",  "label": "Subtotal Label",       "default": "Subtotal" },
+    { "type": "text",     "id": "checkout_label",  "label": "Checkout Button",      "default": "Checkout" },
+    { "type": "text",     "id": "view_cart_label", "label": "View Cart Link",       "default": "View full cart" },
+    { "type": "checkbox", "id": "show_note",       "label": "Show checkout note",   "default": true },
+    { "type": "text",     "id": "note_text",       "label": "Checkout Note",        "default": "Taxes and shipping calculated at checkout" },
+    { "type": "color",    "id": "drawer_bg",       "label": "Drawer Background",    "default": "#F8F6F4" },
+    { "type": "color",    "id": "drawer_text",     "label": "Drawer Text Color",    "default": "#1A1A1A" },
+    { "type": "color",    "id": "btn_bg",          "label": "Checkout Button Bg",   "default": "#3A6FE8" },
+    { "type": "color",    "id": "btn_text",        "label": "Checkout Button Text", "default": "#FFFFFF" },
+    { "type": "range",    "id": "btn_radius",      "label": "Button Radius", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 6 }
   ],
   "presets": [{ "name": "Cart Drawer" }]
 }
