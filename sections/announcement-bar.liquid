@@ -23,14 +23,14 @@
         </a>
       {%- endif -%}
     </div>
-    
+
     {%- if section.settings.show_close -%}
-  <button type="button" class="announcement-bar__close" aria-label="Close announcement" style="color: {{ section.settings.text_color }};">
-    <svg aria-hidden="true" focusable="false" role="presentation" viewBox="0 0 14 14" width="12" height="12">
-      <path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-  </button>
-{%- endif -%}
+      <button type="button" class="announcement-bar__close" aria-label="Close announcement" style="color: {{ section.settings.text_color }};">
+        <svg aria-hidden="true" focusable="false" role="presentation" viewBox="0 0 14 14" width="12" height="12">
+          <path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    {%- endif -%}
   </div>
 {%- endif -%}
 
@@ -59,13 +59,13 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#7d7d7d"
+      "default": "#3A6FE8"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text Color",
-      "default": "#ffffff"
+      "default": "#FFFFFF"
     },
     {
       "type": "checkbox",
