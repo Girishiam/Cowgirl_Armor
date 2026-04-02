@@ -11,6 +11,7 @@
   "current": {
     "favicon": "shopify://shop_images/IMG_1768_1.png",
     "share_image": "shopify://shop_images/IMG_1768_1.png",
+    "enable_gradient": true,
     "gradient_direction": "135deg",
     "gradient_header": true,
     "color_bg": "#cccccc",
