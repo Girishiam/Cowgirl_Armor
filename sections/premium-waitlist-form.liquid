@@ -1,10 +1,24 @@
 <style>
+  /* ── Outer wrapper — full width, background lives here ── */
+  .premium-waitlist-outer-{{ section.id }} {
+    width: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  /* ── Inner — layout + color only ── */
   .premium-waitlist-{{ section.id }} {
-    background-color: {{ section.settings.bg_color }};
-    color: {{ section.settings.text_color }};
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
     font-family: var(--font-body);
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
   .premium-waitlist__container {
@@ -33,7 +47,7 @@
     font-family: var(--font-heading);
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.1;
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1.5rem;
     color: inherit;
     letter-spacing: -0.01em;
   }
@@ -41,18 +55,15 @@
   .premium-waitlist__text {
     font-size: clamp(1rem, 2vw, 1.15rem);
     line-height: 1.8;
-    opacity: 0.9;
+    opacity: 0.88;
     color: inherit;
   }
-
   .premium-waitlist__text p { margin-bottom: 1.5rem; }
   .premium-waitlist__text p:last-child { margin-bottom: 0; }
 
-  .premium-waitlist__form-col {
-    display: flex;
-    flex-direction: column;
-  }
+  .premium-waitlist__form-col { display: flex; flex-direction: column; }
 
+  /* ── Form ── */
   .premium-form {
     display: flex;
     flex-direction: column;
@@ -62,18 +73,18 @@
   .premium-form__message {
     padding: 1rem;
     font-size: 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     margin-bottom: 1rem;
   }
   .premium-form__message--success {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: #27ae60;
-    border: 1px solid #27ae60;
+    background-color: rgba(46,204,113,0.15);
+    border: 1px solid rgba(46,204,113,0.5);
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;{%- else -%}color: #27ae60;{%- endif -%}
   }
   .premium-form__message--error {
-    background-color: rgba(231, 76, 60, 0.1);
+    background-color: rgba(231,76,60,0.12);
+    border: 1px solid rgba(231,76,60,0.4);
     color: #c0392b;
-    border: 1px solid #c0392b;
   }
 
   .premium-form__row {
@@ -81,16 +92,11 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-
   @media screen and (min-width: 768px) {
     .premium-form__row { grid-template-columns: 1fr 1fr; }
   }
 
-  .premium-form__field {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
+  .premium-form__field { display: flex; flex-direction: column; position: relative; }
 
   .premium-form__label {
     font-size: 0.85rem;
@@ -99,80 +105,113 @@
     color: inherit;
     opacity: 0.9;
   }
+  .premium-form__label span { font-weight: normal; opacity: 0.6; margin-left: 0.25rem; }
 
-  .premium-form__label span {
-    font-weight: normal;
-    opacity: 0.6;
-    margin-left: 0.25rem;
-  }
-
-  .premium-form__input {
+  /* ── Inputs — full bordered box, crisp on any bg ── */
+  .premium-form__input,
+  .premium-form__country-code {
     width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-    color: inherit;
     font-family: inherit;
     font-size: 1rem;
-    padding: 0.5rem 0;
-    transition: border-color 0.3s ease;
+    color: inherit;
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.35);
+      caret-color: #FFFFFF;
+    {%- else -%}
+      background: transparent;
+      border: 1.5px solid rgba(0,0,0,0.18);
+    {%- endif -%}
   }
 
-  .premium-form__input:focus {
+  .premium-form__input:focus,
+  .premium-form__country-code:focus {
     outline: none;
-    border-bottom-color: {{ section.settings.text_color }};
+    {%- if section.settings.use_gradient -%}
+      border-color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+    {%- else -%}
+      border-color: {{ section.settings.text_color }};
+      box-shadow: 0 0 0 3px rgba(139,82,212,0.12);
+    {%- endif -%}
   }
 
+  .premium-form__input::placeholder {
+    {%- if section.settings.use_gradient -%}
+      color: rgba(255,255,255,0.45);
+    {%- else -%}
+      color: rgba(0,0,0,0.35);
+    {%- endif -%}
+  }
+
+  /* ── Phone group — two inputs side by side in one row ── */
   .premium-form__phone-group {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-    transition: border-color 0.3s ease;
-  }
-
-  .premium-form__phone-group:focus-within {
-    border-bottom-color: {{ section.settings.text_color }};
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: start;
   }
 
   .premium-form__country-code {
-    background: transparent;
-    border: none;
-    color: inherit;
-    font-family: inherit;
-    font-size: 1rem;
-    padding: 0.5rem 0.5rem 0.5rem 0;
+    width: auto;
     cursor: pointer;
-    outline: none;
-    opacity: 0.9;
-    -webkit-appearance: none;
-    appearance: none;
-    max-width: 200px;
+    flex-shrink: 0;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.12);
+    {%- else -%}
+      background: transparent;
+    {%- endif -%}
   }
 
+  /* override: phone input inside group doesn't need extra width */
   .premium-form__phone-group .premium-form__input {
-    border-bottom: none;
-    flex-grow: 1;
-    padding-left: 0.5rem;
+    width: 100%;
   }
 
+  /* ── Submit ── */
   .premium-form__submit {
     align-self: flex-start;
-    background: transparent;
-    border: 1px solid {{ section.settings.text_color }};
-    color: {{ section.settings.text_color }};
     padding: 1rem 3.5rem;
     font-family: var(--font-heading);
     font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: opacity 0.25s ease, transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
     margin-top: 1rem;
+    border-radius: 4px;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,0.5);
+    {%- elsif section.settings.btn_use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      color: #FFFFFF;
+      border: none;
+    {%- else -%}
+      background: transparent;
+      color: {{ section.settings.text_color }};
+      border: 1.5px solid {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
   .premium-form__submit:hover {
-    background-color: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
+    transform: translateY(-2px);
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.28);
+      border-color: #FFFFFF;
+    {%- elsif section.settings.btn_use_gradient -%}
+      opacity: 0.85;
+    {%- else -%}
+      background-color: {{ section.settings.text_color }};
+      color: {{ section.settings.bg_color }};
+    {%- endif -%}
   }
 
   .fade-up-anim {
@@ -180,174 +219,133 @@
     transform: translateY(20px);
     animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-
-  @keyframes fadeUpAnim {
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUpAnim { to { opacity: 1; transform: translateY(0); } }
 </style>
 
-<div class="premium-waitlist-{{ section.id }}">
-  <div class="premium-waitlist__container">
+<div class="premium-waitlist-outer-{{ section.id }}">
+  <div class="premium-waitlist-{{ section.id }}">
+    <div class="premium-waitlist__container">
 
-    <div class="premium-waitlist__content-col fade-up-anim">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="premium-waitlist__heading">{{ section.settings.heading }}</h2>
-      {%- endif -%}
-      {%- if section.settings.text != blank -%}
-        <div class="premium-waitlist__text">{{ section.settings.text }}</div>
-      {%- endif -%}
-    </div>
+      <div class="premium-waitlist__content-col fade-up-anim">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="premium-waitlist__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="premium-waitlist__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
 
-    <div class="premium-waitlist__form-col fade-up-anim" style="animation-delay: 200ms;">
-      {%- comment -%}
-        Uses {% form 'customer' %} so the person is saved as a Shopify customer
-        with accepts_marketing: true and tagged as waitlist/prospect.
-        This feeds directly into Shopify Email and Klaviyo.
-      {%- endcomment -%}
-      {%- form 'customer', id: 'PremiumWaitlistForm-{{ section.id }}', class: 'premium-form' -%}
+      <div class="premium-waitlist__form-col fade-up-anim" style="animation-delay: 200ms;">
+        {%- form 'customer', id: 'PremiumWaitlistForm-{{ section.id }}', class: 'premium-form' -%}
 
-        {%- comment -%} These hidden fields tag and subscribe the customer {%- endcomment -%}
-        <input type="hidden" name="customer[tags]"              value="waitlist,prospect">
-        <input type="hidden" name="customer[accepts_marketing]" value="true">
+          <input type="hidden" name="customer[tags]"              value="waitlist,prospect">
+          <input type="hidden" name="customer[accepts_marketing]" value="true">
 
-        {%- if form.posted_successfully? -%}
-          <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
-            {{ section.settings.success_message }}
-          </div>
-
-        {%- else -%}
-
-          {%- if form.errors -%}
-            <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
-              {{ section.settings.error_message_prefix }} {{ form.errors | default_errors }}
+          {%- if form.posted_successfully? -%}
+            <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
+              {{ section.settings.success_message }}
             </div>
-          {%- endif -%}
 
-          <div class="premium-form__row">
+          {%- else -%}
+
+            {%- if form.errors -%}
+              <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
+                {{ section.settings.error_message_prefix }} {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+
+            <div class="premium-form__row">
+              <div class="premium-form__field">
+                <label class="premium-form__label" for="WaitlistForm-first-{{ section.id }}">
+                  {{ section.settings.first_name_label }}
+                  {%- if section.settings.required_text != blank -%}
+                    <span>{{ section.settings.required_text }}</span>
+                  {%- endif -%}
+                </label>
+                <input type="text" id="WaitlistForm-first-{{ section.id }}"
+                       class="premium-form__input"
+                       name="contact[first_name]"
+                       autocomplete="given-name" required>
+              </div>
+              <div class="premium-form__field">
+                <label class="premium-form__label" for="WaitlistForm-last-{{ section.id }}">
+                  {{ section.settings.last_name_label }}
+                </label>
+                <input type="text" id="WaitlistForm-last-{{ section.id }}"
+                       class="premium-form__input"
+                       name="contact[last_name]"
+                       autocomplete="family-name">
+              </div>
+            </div>
+
             <div class="premium-form__field">
-              <label class="premium-form__label" for="WaitlistForm-first-{{ section.id }}">
-                {{ section.settings.first_name_label }}
+              <label class="premium-form__label" for="WaitlistForm-email-{{ section.id }}">
+                {{ section.settings.email_label }}
                 {%- if section.settings.required_text != blank -%}
                   <span>{{ section.settings.required_text }}</span>
                 {%- endif -%}
               </label>
-              <input type="text" id="WaitlistForm-first-{{ section.id }}"
+              <input type="email" id="WaitlistForm-email-{{ section.id }}"
                      class="premium-form__input"
-                     name="contact[first_name]"
-                     autocomplete="given-name" required>
+                     name="contact[email]"
+                     autocomplete="email"
+                     pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                     required>
             </div>
+
             <div class="premium-form__field">
-              <label class="premium-form__label" for="WaitlistForm-last-{{ section.id }}">
-                {{ section.settings.last_name_label }}
+              <label class="premium-form__label" for="WaitlistForm-phone-{{ section.id }}">
+                {{ section.settings.phone_label }}
               </label>
-              <input type="text" id="WaitlistForm-last-{{ section.id }}"
-                     class="premium-form__input"
-                     name="contact[last_name]"
-                     autocomplete="family-name">
+              <div class="premium-form__phone-group">
+                <select class="premium-form__country-code"
+                        name="contact[country_code]"
+                        aria-label="Country Code">
+                  <option value="+1-US">🇺🇸 US (+1)</option>
+                  <option value="+1-CA">🇨🇦 Canada (+1)</option>
+                  <option value="+61">🇦🇺 Australia (+61)</option>
+                  <option value="+64">🇳🇿 New Zealand (+64)</option>
+                  <option value="+44">🇬🇧 UK (+44)</option>
+                  <option value="+353">🇮🇪 Ireland (+353)</option>
+                  <option value="+27">🇿🇦 South Africa (+27)</option>
+                  <option value="+33">🇫🇷 France (+33)</option>
+                  <option value="+49">🇩🇪 Germany (+49)</option>
+                  <option value="+31">🇳🇱 Netherlands (+31)</option>
+                  <option value="+32">🇧🇪 Belgium (+32)</option>
+                  <option value="+41">🇨🇭 Switzerland (+41)</option>
+                  <option value="+43">🇦🇹 Austria (+43)</option>
+                  <option value="+34">🇪🇸 Spain (+34)</option>
+                  <option value="+39">🇮🇹 Italy (+39)</option>
+                  <option value="+351">🇵🇹 Portugal (+351)</option>
+                  <option value="+46">🇸🇪 Sweden (+46)</option>
+                  <option value="+47">🇳🇴 Norway (+47)</option>
+                  <option value="+45">🇩🇰 Denmark (+45)</option>
+                  <option value="+358">🇫🇮 Finland (+358)</option>
+                  <option value="+48">🇵🇱 Poland (+48)</option>
+                  <option value="+91">🇮🇳 India (+91)</option>
+                  <option value="+971">🇦🇪 UAE (+971)</option>
+                  <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
+                  <option value="+55">🇧🇷 Brazil (+55)</option>
+                  <option value="+52">🇲🇽 Mexico (+52)</option>
+                </select>
+                <input type="tel" id="WaitlistForm-phone-{{ section.id }}"
+                       class="premium-form__input"
+                       name="contact[phone]"
+                       autocomplete="tel"
+                       placeholder="{{ section.settings.phone_placeholder }}">
+              </div>
             </div>
-          </div>
 
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="WaitlistForm-email-{{ section.id }}">
-              {{ section.settings.email_label }}
-              {%- if section.settings.required_text != blank -%}
-                <span>{{ section.settings.required_text }}</span>
-              {%- endif -%}
-            </label>
-            <input type="email" id="WaitlistForm-email-{{ section.id }}"
-                   class="premium-form__input"
-                   name="contact[email]"
-                   autocomplete="email"
-                   pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-                   required>
-          </div>
+            <button type="submit" class="premium-form__submit">
+              {{ section.settings.button_label }}
+            </button>
 
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="WaitlistForm-phone-{{ section.id }}">
-              {{ section.settings.phone_label }}
-              {%- if section.settings.required_text != blank -%}
-                <span>{{ section.settings.required_text }}</span>
-              {%- endif -%}
-            </label>
-            <div class="premium-form__phone-group">
-              <select class="premium-form__country-code"
-                      name="contact[country_code]"
-                      aria-label="Country Code">
-                <option value="+1-US">🇺🇸 US (+1)</option>
-                <option value="+1-CA">🇨🇦 Canada (+1)</option>
-                <option value="+61" selected>🇦🇺 Australia (+61)</option>
-                <option value="+64">🇳🇿 New Zealand (+64)</option>
-                <option value="+44">🇬🇧 UK (+44)</option>
-                <option value="+353">🇮🇪 Ireland (+353)</option>
-                <option value="+27">🇿🇦 South Africa (+27)</option>
-                <option value="+33">🇫🇷 France (+33)</option>
-                <option value="+49">🇩🇪 Germany (+49)</option>
-                <option value="+31">🇳🇱 Netherlands (+31)</option>
-                <option value="+32">🇧🇪 Belgium (+32)</option>
-                <option value="+41">🇨🇭 Switzerland (+41)</option>
-                <option value="+43">🇦🇹 Austria (+43)</option>
-                <option value="+34">🇪🇸 Spain (+34)</option>
-                <option value="+39">🇮🇹 Italy (+39)</option>
-                <option value="+351">🇵🇹 Portugal (+351)</option>
-                <option value="+46">🇸🇪 Sweden (+46)</option>
-                <option value="+47">🇳🇴 Norway (+47)</option>
-                <option value="+45">🇩🇰 Denmark (+45)</option>
-                <option value="+358">🇫🇮 Finland (+358)</option>
-                <option value="+48">🇵🇱 Poland (+48)</option>
-                <option value="+420">🇨🇿 Czech Republic (+420)</option>
-                <option value="+36">🇭🇺 Hungary (+36)</option>
-                <option value="+40">🇷🇴 Romania (+40)</option>
-                <option value="+30">🇬🇷 Greece (+30)</option>
-                <option value="+90">🇹🇷 Turkey (+90)</option>
-                <option value="+7">🇷🇺 Russia (+7)</option>
-                <option value="+380">🇺🇦 Ukraine (+380)</option>
-                <option value="+81">🇯🇵 Japan (+81)</option>
-                <option value="+82">🇰🇷 South Korea (+82)</option>
-                <option value="+86">🇨🇳 China (+86)</option>
-                <option value="+852">🇭🇰 Hong Kong (+852)</option>
-                <option value="+886">🇹🇼 Taiwan (+886)</option>
-                <option value="+65">🇸🇬 Singapore (+65)</option>
-                <option value="+60">🇲🇾 Malaysia (+60)</option>
-                <option value="+66">🇹🇭 Thailand (+66)</option>
-                <option value="+63">🇵🇭 Philippines (+63)</option>
-                <option value="+62">🇮🇩 Indonesia (+62)</option>
-                <option value="+84">🇻🇳 Vietnam (+84)</option>
-                <option value="+91">🇮🇳 India (+91)</option>
-                <option value="+92">🇵🇰 Pakistan (+92)</option>
-                <option value="+880">🇧🇩 Bangladesh (+880)</option>
-                <option value="+94">🇱🇰 Sri Lanka (+94)</option>
-                <option value="+977">🇳🇵 Nepal (+977)</option>
-                <option value="+971">🇦🇪 UAE (+971)</option>
-                <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
-                <option value="+972">🇮🇱 Israel (+972)</option>
-                <option value="+20">🇪🇬 Egypt (+20)</option>
-                <option value="+234">🇳🇬 Nigeria (+234)</option>
-                <option value="+254">🇰🇪 Kenya (+254)</option>
-                <option value="+233">🇬🇭 Ghana (+233)</option>
-                <option value="+55">🇧🇷 Brazil (+55)</option>
-                <option value="+54">🇦🇷 Argentina (+54)</option>
-                <option value="+56">🇨🇱 Chile (+56)</option>
-                <option value="+57">🇨🇴 Colombia (+57)</option>
-                <option value="+51">🇵🇪 Peru (+51)</option>
-                <option value="+52">🇲🇽 Mexico (+52)</option>
-              </select>
-              <input type="tel" id="WaitlistForm-phone-{{ section.id }}"
-                     class="premium-form__input"
-                     name="contact[phone]"
-                     autocomplete="tel"
-                     placeholder="{{ section.settings.phone_placeholder }}">
-            </div>
-          </div>
+          {%- endif -%}
 
-          <button type="submit" class="premium-form__submit">
-            {{ section.settings.button_label }}
-          </button>
+        {%- endform -%}
+      </div>
 
-        {%- endif -%}
-
-      {%- endform -%}
     </div>
-
   </div>
 </div>
 
@@ -355,23 +353,77 @@
 {
   "name": "Premium Waitlist Form",
   "settings": [
-    { "type": "color", "id": "bg_color",   "label": "Background Color", "default": "#F9F9F9" },
-    { "type": "color", "id": "text_color", "label": "Text Color",       "default": "#1A1A1A" },
-    { "type": "text",    "id": "heading", "label": "Heading", "default": "We have exciting news in March... but until then" },
-    { "type": "richtext","id": "text",    "label": "Text",
-      "default": "<p>Some things aren't meant to be missed. The pieces that speak to your faith, your fire, and the cowgirl you're becoming — they don't always stay on the shelf long.</p><p>Join the Cowgirl Armor first-come, first-served list and be first in line for every drop, every restock, and every piece created to remind you who you are and whose you are.</p>"
+    {
+      "type": "header",
+      "content": "Colors"
     },
-    { "type": "text", "id": "button_label",        "label": "Submit Button Label",  "default": "I want in!" },
-    { "type": "text", "id": "success_message",     "label": "Success Message",       "default": "You're on the list! Keep an eye on your inbox." },
-    { "type": "text", "id": "error_message_prefix","label": "Error Message Prefix",  "default": "Please adjust the following fields:" },
-    { "type": "header", "content": "Form Labels" },
-    { "type": "text", "id": "first_name_label",  "label": "First Name Label",     "default": "First Name" },
-    { "type": "text", "id": "last_name_label",   "label": "Last Name Label",      "default": "Last Name"  },
-    { "type": "text", "id": "email_label",       "label": "Email Label",          "default": "Email"      },
-    { "type": "text", "id": "phone_label",       "label": "Phone Label",          "default": "Phone"      },
-    { "type": "text", "id": "phone_placeholder", "label": "Phone Placeholder",    "default": "(555) 000-0000" },
-    { "type": "text", "id": "required_text",     "label": "Required Field Text",  "default": "(required)" },
-    { "type": "header", "content": "Spacing" },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Spans full width. All text and inputs auto-switch to white frosted glass."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color (if not gradient)",
+      "default": "#F8F6F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color (if not gradient)",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We have exciting news in March... but until then"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Some things aren't meant to be missed. Join the Cowgirl Armor first-come, first-served list and be first in line for every drop, every restock, and every piece created to remind you who you are and whose you are.</p>"
+    },
+    {
+      "type": "text", "id": "button_label",         "label": "Submit Button Label",  "default": "I want in!" },
+    { "type": "text", "id": "success_message",      "label": "Success Message",       "default": "You're on the list! Keep an eye on your inbox." },
+    { "type": "text", "id": "error_message_prefix", "label": "Error Message Prefix",  "default": "Please adjust the following fields:" },
+
+    {
+      "type": "header",
+      "content": "Button Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_use_gradient",
+      "label": "Use brand gradient on button",
+      "default": true,
+      "info": "Ignored when section background is gradient — button auto-adapts to frosted glass."
+    },
+
+    {
+      "type": "header",
+      "content": "Form Labels"
+    },
+    { "type": "text", "id": "first_name_label",  "label": "First Name Label",    "default": "First Name" },
+    { "type": "text", "id": "last_name_label",   "label": "Last Name Label",     "default": "Last Name"  },
+    { "type": "text", "id": "email_label",       "label": "Email Label",         "default": "Email"      },
+    { "type": "text", "id": "phone_label",       "label": "Phone Label",         "default": "Phone"      },
+    { "type": "text", "id": "phone_placeholder", "label": "Phone Placeholder",   "default": "(555) 000-0000" },
+    { "type": "text", "id": "required_text",     "label": "Required Field Text", "default": "(required)" },
+
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
     { "type": "range", "id": "padding_top",    "label": "Top Padding",    "min": 0, "max": 160, "step": 4, "unit": "px", "default": 100 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom Padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 100 }
   ],
