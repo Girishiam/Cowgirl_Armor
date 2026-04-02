@@ -22,7 +22,6 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
-    {%- comment -%} Social / OG tags {%- endcomment -%}
     <meta property="og:site_name" content="{{ shop.name }}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:title" content="{{ page_title | escape }}">
@@ -45,12 +44,10 @@
 
     {{ content_for_header }}
 
-    {%- comment -%} Performance: preconnect {%- endcomment -%}
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
 
-    {%- comment -%} Font preloads {%- endcomment -%}
     {%- unless settings.type_header_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
     {%- endunless -%}
@@ -85,6 +82,14 @@
         --color-button:             {{ settings.color_button }};
         --color-button-text:        {{ settings.color_button_text }};
         --color-button-hover:       {{ settings.color_button_hover }};
+
+        /* ── Brand Gradient — built from theme settings ── */
+        --gradient-color-1:         {{ settings.gradient_color_1 }};
+        --gradient-color-2:         {{ settings.gradient_color_2 }};
+        --gradient-color-3:         {{ settings.gradient_color_3 }};
+        --gradient-direction:       {{ settings.gradient_direction }};
+        --brand-gradient:           linear-gradient({{ settings.gradient_direction }}, {{ settings.gradient_color_1 }} 0%, {{ settings.gradient_color_2 }} 55%, {{ settings.gradient_color_3 }} 100%);
+        --brand-gradient-hover:     linear-gradient({{ settings.gradient_direction }}, {{ settings.gradient_color_1 | color_darken: 10 }} 0%, {{ settings.gradient_color_2 | color_darken: 10 }} 55%, {{ settings.gradient_color_3 | color_darken: 10 }} 100%);
 
         /* ── Typography ── */
         --font-heading-family:      {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
@@ -199,37 +204,61 @@
       {% endif %}
       {% endif %}
 
-      /* ── Image hover zoom ── */
       {% if settings.animations_hover_images %}
-      .card__media img, .product-card img {
-        transition: transform 0.4s ease;
-      }
-      .card__media:hover img, .product-card:hover img {
-        transform: scale(1.05);
-      }
+      .card__media img, .product-card img { transition: transform 0.4s ease; }
+      .card__media:hover img, .product-card:hover img { transform: scale(1.05); }
       {% endif %}
 
-      /* ── Skip to content ── */
       .skip-to-content {
-        position: absolute;
-        left: -9999px;
-        z-index: 9999;
-        padding: 10px 20px;
-        background: var(--color-bg, #fff);
-        color: var(--color-text, #000);
-        font-weight: 600;
-        text-decoration: none;
-        border-radius: 4px;
+        position: absolute; left: -9999px; z-index: 9999;
+        padding: 10px 20px; background: var(--color-bg, #fff);
+        color: var(--color-text, #000); font-weight: 600;
+        text-decoration: none; border-radius: 4px;
       }
       .skip-to-content:focus { left: 10px; top: 10px; }
+
+      /* ── Global gradient header — applied when settings.gradient_header is true ── */
+      {% if settings.enable_gradient and settings.gradient_header %}
+      .site-header {
+        background: var(--brand-gradient) !important;
+        color: #FFFFFF !important;
+      }
+      .site-header.is-sticky {
+        background: linear-gradient(
+          {{ settings.gradient_direction }},
+          {{ settings.gradient_color_1 }}f2 0%,
+          {{ settings.gradient_color_2 }}f2 55%,
+          {{ settings.gradient_color_3 }}f2 100%
+        ) !important;
+      }
+      .site-header .site-nav__link,
+      .site-header .header__icon,
+      .site-header .logo-text,
+      .site-header .mobile-menu-btn { color: #FFFFFF !important; }
+      .site-header .header__btn {
+        background: rgba(255,255,255,0.15) !important;
+        color: #FFFFFF !important;
+        border-color: rgba(255,255,255,0.5) !important;
+      }
+      .site-header .header__btn:hover {
+        background: rgba(255,255,255,0.28) !important;
+        border-color: #FFFFFF !important;
+      }
+      .site-header .site-nav__dropdown {
+        background-color: {{ settings.gradient_color_2 }} !important;
+      }
+      .site-header .site-nav__dropdown::before {
+        border-bottom-color: {{ settings.gradient_color_2 }} !important;
+      }
+      .site-header .site-nav__dropdown-link { color: #FFFFFF !important; }
+      .site-header .site-nav__dropdown-link:hover {
+        background-color: rgba(255,255,255,0.12) !important;
+      }
+      {% endif %}
     </style>
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
 
-    {%- comment -%}
-      Expose routes BEFORE cart.js loads so Cart object can read them.
-      cart.js defines CartDrawer custom element — must load before main.js.
-    {%- endcomment -%}
     <script>
       window.shopUrl = '{{ request.origin }}';
       window.routes = {
@@ -249,7 +278,6 @@
       };
     </script>
 
-    {%- comment -%} cart.js before main.js — defines CartDrawer custom element {%- endcomment -%}
     <script src="{{ 'cart.js' | asset_url }}" defer></script>
     <script src="{{ 'main.js' | asset_url }}" defer></script>
   </head>
@@ -267,26 +295,17 @@
 
     {% section 'footer' %}
 
-    {%- comment -%}
-      ── Cart UI ──────────────────────────────────────────────
-      Use cart-drawer for a slide-in panel (recommended).
-      Swap for cart-notification if you prefer a toast bubble.
-      Check which one matches settings.cart_type below.
-    {%- endcomment -%}
     {%- if settings.cart_type == 'drawer' -%}
       {% section 'cart-drawer' %}
     {%- elsif settings.cart_type == 'notification' -%}
       {% section 'cart-notification' %}
     {%- else -%}
-      {%- comment -%} 'page' type — no overlay needed {%- endcomment -%}
     {%- endif -%}
 
-    {%- comment -%} Accessibility {%- endcomment -%}
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
     </ul>
 
-    {%- comment -%} Scroll-reveal IntersectionObserver {%- endcomment -%}
     {% if settings.animations_reveal_on_scroll %}
     <script>
       (function() {
