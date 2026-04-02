@@ -18,7 +18,7 @@
         "logo": "shopify://shop_images/IMG_1760_1.png",
         "logo_width": 420,
         "title": "",
-        "text_align": "left",
+        "text_align": "center",
         "padding_top": 80,
         "padding_bottom": 60
       }
@@ -43,6 +43,7 @@
       "type": "massive-cta-banner",
       "name": "Massive CTA Banner",
       "settings": {
+        "use_gradient": true,
         "bg_color": "#8a8a8a",
         "text_color": "#ffffff",
         "text": "JOIN THE COWGIRL ARMY",
