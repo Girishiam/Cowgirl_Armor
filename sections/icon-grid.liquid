@@ -3,7 +3,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: {{ section.settings.grid_gap }}px;
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
@@ -17,6 +17,7 @@
       grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
     }
   }
+
   .armor-grid__item {
     position: relative;
     aspect-ratio: 5 / 4;
@@ -40,7 +41,15 @@
 
 <div
   class="icon-grid-section"
-  style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+  style="
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
 >
   <div class="armor-grid-{{ section.id }}">
     {%- for block in section.blocks -%}
@@ -54,6 +63,7 @@
             src="{{ block.settings.image | image_url: width: 600 }}"
             alt="{{ block.settings.image.alt | escape }}"
             class="armor-grid__image"
+            loading="lazy"
           >
         {%- else -%}
           {{ 'image' | placeholder_svg_tag: 'placeholder-svg armor-grid__image' }}
@@ -68,47 +78,43 @@
   "name": "Armor Category Grid",
   "settings": [
     {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Applies the brand gradient to the section background"
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Section Background",
-      "default": "transparent"
+      "label": "Section Background (if not gradient)",
+      "default": "#F8F6F4"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
+      "min": 0, "max": 120, "step": 4, "unit": "px",
       "label": "Top Padding",
       "default": 40
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
+      "min": 0, "max": 120, "step": 4, "unit": "px",
       "label": "Bottom Padding",
       "default": 80
     },
     {
       "type": "range",
       "id": "grid_gap",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
+      "min": 0, "max": 40, "step": 2, "unit": "px",
       "label": "Grid Gap",
       "default": 20
     },
     {
       "type": "range",
       "id": "columns_desktop",
-      "min": 2,
-      "max": 4,
-      "step": 1,
+      "min": 2, "max": 4, "step": 1,
       "label": "Columns on Desktop",
       "default": 3
     }
@@ -118,8 +124,17 @@
       "type": "card",
       "name": "Grid Item",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "color", "id": "card_bg", "label": "Card Background Color", "default": "#8BA4AC" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "color",
+          "id": "card_bg",
+          "label": "Card Background Color",
+          "default": "#8B52D4"
+        }
       ]
     }
   ],
@@ -128,12 +143,12 @@
       "name": "Armor Category Grid",
       "category": "Grid",
       "blocks": [
-        { "type": "card", "settings": { "card_bg": "#8BA4AC" } },
-        { "type": "card", "settings": { "card_bg": "#6B858D" } },
-        { "type": "card", "settings": { "card_bg": "#8BA4AC" } },
-        { "type": "card", "settings": { "card_bg": "#6B858D" } },
-        { "type": "card", "settings": { "card_bg": "#8BA4AC" } },
-        { "type": "card", "settings": { "card_bg": "#6B858D" } }
+        { "type": "card", "settings": { "card_bg": "#3A6FE8" } },
+        { "type": "card", "settings": { "card_bg": "#8B52D4" } },
+        { "type": "card", "settings": { "card_bg": "#CC72E8" } },
+        { "type": "card", "settings": { "card_bg": "#3A6FE8" } },
+        { "type": "card", "settings": { "card_bg": "#8B52D4" } },
+        { "type": "card", "settings": { "card_bg": "#CC72E8" } }
       ]
     }
   ]
