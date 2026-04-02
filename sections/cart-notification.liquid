@@ -15,7 +15,16 @@
     transform: translateY(0);
     pointer-events: auto;
   }
+
+  /* ── Panel — gradient applied directly in CSS ── */
   .cart-notif__panel {
+    {%- if section.settings.use_gradient -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+      color: #FFFFFF;
+    {%- else -%}
+      background: {{ section.settings.bg | default: '#8B52D4' }};
+      color: {{ section.settings.text | default: '#FFFFFF' }};
+    {%- endif -%}
     border-radius: 10px;
     padding: 14px 16px;
     display: flex;
@@ -24,6 +33,7 @@
     width: min(340px, 90vw);
     box-shadow: 0 8px 32px rgba(139,82,212,0.35);
   }
+
   .cart-notif__img {
     width: 52px;
     height: 52px;
@@ -49,11 +59,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .cart-notif__price {
-    font-size: 0.82rem;
-    opacity: 0.7;
-    margin: 0;
-  }
+  .cart-notif__price { font-size: 0.82rem; opacity: 0.7; margin: 0; }
   .cart-notif__view {
     display: inline-block;
     background: rgba(255,255,255,0.15);
@@ -75,12 +81,7 @@
 </style>
 
 <cart-notification>
-  <div class="cart-notif__panel"
-    {% if section.settings.use_gradient %}
-      data-gradient="true"
-    {% else %}
-      style="background: {{ section.settings.bg | default: '#8B52D4' }}; color: {{ section.settings.text | default: '#ffffff' }};"
-    {% endif %}>
+  <div class="cart-notif__panel">
     <img src="" alt="" class="cart-notif__img" width="52" height="52">
     <div class="cart-notif__info">
       <p class="cart-notif__added">{{ section.settings.added_text | default: 'Added to cart' }}</p>
@@ -96,11 +97,11 @@
   "name": "Cart Notification",
   "limit": 1,
   "settings": [
-    { "type": "text",     "id": "added_text",    "label": "Added Text",                      "default": "Added to cart" },
-    { "type": "text",     "id": "view_text",     "label": "View Cart Text",                  "default": "View cart" },
-    { "type": "checkbox", "id": "use_gradient",  "label": "Use brand gradient background",   "default": true },
-    { "type": "color",    "id": "bg",            "label": "Background (if not gradient)",    "default": "#8B52D4" },
-    { "type": "color",    "id": "text",          "label": "Text Color",                      "default": "#FFFFFF" }
+    { "type": "text",     "id": "added_text",   "label": "Added Text",                    "default": "Added to cart" },
+    { "type": "text",     "id": "view_text",    "label": "View Cart Text",                "default": "View cart" },
+    { "type": "checkbox", "id": "use_gradient", "label": "Use brand gradient background", "default": true },
+    { "type": "color",    "id": "bg",           "label": "Background (if not gradient)",  "default": "#8B52D4" },
+    { "type": "color",    "id": "text",         "label": "Text Color",                    "default": "#FFFFFF" }
   ],
   "presets": [{ "name": "Cart Notification" }]
 }
