@@ -729,9 +729,9 @@ h6 { font-size: var(--font-heading-h6); }
    ICON / CATEGORY GRID SECTION
    ============================================ */
 .icon-grid-section {
-  padding: 5rem 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  /* Full-width outer wrapper — no max-width here.
+     The inner .armor-grid handles centering and constraint. */
+  width: 100%;
 }
 
 /* ============================================
