@@ -110,25 +110,27 @@
     margin-left: 0.25rem;
   }
 
-  /* ── Inputs — underline style, adapts to bg ── */
+  /* ── Inputs — solid border style, crisp on any bg ── */
   .premium-form__input,
   .premium-form__textarea {
     width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid
-      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.4)
-      {%- else -%} rgba(0,0,0,0.2){%- endif -%};
-    color: inherit;
     font-family: var(--font-body);
     font-size: 1rem;
-    padding: 0.5rem 0;
-    transition: border-color 0.3s ease;
+    color: inherit;
+    transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 6px;
     {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.35);
+      padding: 0.85rem 1rem;
       caret-color: #FFFFFF;
+    {%- else -%}
+      background: transparent;
+      border: 1.5px solid rgba(0,0,0,0.18);
+      padding: 0.85rem 1rem;
     {%- endif -%}
   }
-  .premium-form__textarea { resize: vertical; min-height: 120px; }
+  .premium-form__textarea { resize: vertical; min-height: 140px; }
 
   .premium-form__input::placeholder,
   .premium-form__textarea::placeholder {
@@ -142,9 +144,14 @@
   .premium-form__input:focus,
   .premium-form__textarea:focus {
     outline: none;
-    border-bottom-color:
-      {%- if section.settings.use_gradient -%} #FFFFFF
-      {%- else -%} {{ section.settings.text_color }}{%- endif -%};
+    {%- if section.settings.use_gradient -%}
+      border-color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.18);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+    {%- else -%}
+      border-color: {{ section.settings.text_color }};
+      box-shadow: 0 0 0 3px rgba(139,82,212,0.12);
+    {%- endif -%}
   }
 
   /* ── Checkbox ── */
