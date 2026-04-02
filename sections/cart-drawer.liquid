@@ -12,6 +12,7 @@
     opacity: 1;
     pointer-events: auto;
   }
+
   .cart-drawer__panel {
     position: fixed;
     top: 0;
@@ -160,6 +161,7 @@
     margin: 0.75rem 0 0;
   }
 
+  /* ── Checkout button — gradient applied directly ── */
   .cart-drawer__checkout {
     display: block;
     width: 100%;
@@ -174,6 +176,13 @@
     text-decoration: none;
     cursor: pointer;
     transition: opacity 0.2s ease, transform 0.2s ease;
+    {%- if section.settings.use_gradient -%}
+      background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
+      color: #FFFFFF;
+    {%- else -%}
+      background: {{ section.settings.btn_bg | default: '#3A6FE8' }};
+      color: {{ section.settings.btn_text | default: '#FFFFFF' }};
+    {%- endif -%}
   }
   .cart-drawer__checkout:hover { opacity: 0.85; transform: translateY(-1px); }
 
@@ -221,12 +230,7 @@
         <span class="cart-drawer__subtotal-label">{{ section.settings.subtotal_label | default: 'Subtotal' }}</span>
         <span class="cart-drawer__subtotal-amount">$0.00</span>
       </div>
-      <a href="/checkout" class="cart-drawer__checkout"
-        {% if section.settings.use_gradient %}
-          data-gradient="true"
-        {% else %}
-          style="background: {{ section.settings.btn_bg | default: '#3A6FE8' }}; color: {{ section.settings.btn_text | default: '#ffffff' }};"
-        {% endif %}>
+      <a href="/checkout" class="cart-drawer__checkout">
         {{ section.settings.checkout_label | default: 'Checkout' }}
       </a>
       <a href="/cart" class="cart-drawer__view-cart">
@@ -245,18 +249,18 @@
   "name": "Cart Drawer",
   "limit": 1,
   "settings": [
-    { "type": "text",     "id": "heading",        "label": "Drawer Heading",                    "default": "Your Cart" },
-    { "type": "text",     "id": "empty_text",     "label": "Empty Cart Text",                   "default": "Your cart is empty" },
-    { "type": "text",     "id": "subtotal_label", "label": "Subtotal Label",                    "default": "Subtotal" },
-    { "type": "text",     "id": "checkout_label", "label": "Checkout Button",                   "default": "Checkout" },
-    { "type": "text",     "id": "view_cart_label","label": "View Cart Link",                    "default": "View full cart" },
-    { "type": "checkbox", "id": "show_note",      "label": "Show checkout note",                "default": true },
-    { "type": "text",     "id": "note_text",      "label": "Checkout Note",                     "default": "Taxes and shipping calculated at checkout" },
-    { "type": "color",    "id": "drawer_bg",      "label": "Drawer Background",                 "default": "#F8F6F4" },
-    { "type": "color",    "id": "drawer_text",    "label": "Drawer Text Color",                 "default": "#1A1A1A" },
-    { "type": "checkbox", "id": "use_gradient",   "label": "Use brand gradient on checkout btn","default": true },
+    { "type": "text",     "id": "heading",        "label": "Drawer Heading",                     "default": "Your Cart" },
+    { "type": "text",     "id": "empty_text",     "label": "Empty Cart Text",                    "default": "Your cart is empty" },
+    { "type": "text",     "id": "subtotal_label", "label": "Subtotal Label",                     "default": "Subtotal" },
+    { "type": "text",     "id": "checkout_label", "label": "Checkout Button",                    "default": "Checkout" },
+    { "type": "text",     "id": "view_cart_label","label": "View Cart Link",                     "default": "View full cart" },
+    { "type": "checkbox", "id": "show_note",      "label": "Show checkout note",                 "default": true },
+    { "type": "text",     "id": "note_text",      "label": "Checkout Note",                      "default": "Taxes and shipping calculated at checkout" },
+    { "type": "color",    "id": "drawer_bg",      "label": "Drawer Background",                  "default": "#F8F6F4" },
+    { "type": "color",    "id": "drawer_text",    "label": "Drawer Text Color",                  "default": "#1A1A1A" },
+    { "type": "checkbox", "id": "use_gradient",   "label": "Use brand gradient on checkout btn", "default": true },
     { "type": "color",    "id": "btn_bg",         "label": "Checkout Button Bg (if no gradient)","default": "#3A6FE8" },
-    { "type": "color",    "id": "btn_text",       "label": "Checkout Button Text",              "default": "#FFFFFF" },
+    { "type": "color",    "id": "btn_text",       "label": "Checkout Button Text",               "default": "#FFFFFF" },
     { "type": "range",    "id": "btn_radius",     "label": "Button Radius", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 6 }
   ],
   "presets": [{ "name": "Cart Drawer" }]
