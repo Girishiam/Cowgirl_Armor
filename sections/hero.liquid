@@ -2,7 +2,8 @@
   .premium-hero-{{ section.id }} {
     position: relative;
     width: 100%;
-    height: {{ section.settings.hero_height }}vh;
+    /* Subtract nav height so the visible area is truly full viewport */
+    height: calc({{ section.settings.hero_height }}vh - var(--nav-total-height, 80px));
     min-height: 400px;
     overflow: hidden;
     display: flex;
@@ -36,7 +37,6 @@
     {%- endif -%}
   }
 
-  /* ── Content container — position:absolute so it fills the hero and centres reliably ── */
   .premium-hero-{{ section.id }} .premium-hero__content-container {
     position: absolute;
     inset: 0;
@@ -48,16 +48,21 @@
   }
 
   .premium-hero-{{ section.id }} .premium-hero__center-image {
-    perspective: 1000px;
     display: flex;
     justify-content: center;
     align-items: center;
+    perspective: 1000px;
   }
 
   .premium-hero-{{ section.id }} .center-hero-img {
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4));
+    /* Invert logo to white so it shows on gradient/dark backgrounds */
+    {%- if section.settings.invert_image -%}
+      filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4)) brightness(0) invert(1);
+    {%- else -%}
+      filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4));
+    {%- endif -%}
     opacity: 0;
     transform: translateY(50px) scale(0.95);
     animation:
@@ -191,6 +196,13 @@
       "min": 100, "max": 1000, "step": 20, "unit": "px",
       "label": "Image Max Width",
       "default": 400
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_image",
+      "label": "Invert image to white",
+      "default": true,
+      "info": "Turn on for black logos on gradient/dark backgrounds — makes them white."
     }
   ],
   "presets": [
