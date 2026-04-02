@@ -1,15 +1,25 @@
 <style>
+  /* ── Outer wrapper — full width, background lives here ── */
+  .page-hero-outer-{{ section.id }} {
+    width: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  /* ── Inner — constrained width, layout only ── */
   .page-hero-{{ section.id }} {
+    max-width: 1200px;
+    margin: 0 auto;
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    background-color: {{ section.settings.bg_color }};
+    padding-left: 2rem;
+    padding-right: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-left: 2rem;
-    padding-right: 2rem;
   }
 
   .page-hero__logo {
@@ -24,33 +34,49 @@
     width: 100%;
     height: auto;
     object-fit: contain;
+    {%- if section.settings.use_gradient -%}
+      filter: brightness(0) invert(1);
+    {%- endif -%}
   }
 
   .page-hero__title {
     max-width: {{ section.settings.logo_width }}px;
     width: 100%;
     text-align: {{ section.settings.text_align }};
-    justify-content:center;
     font-size: clamp(2.5rem, 5vw, 3rem);
-    color: {{ section.settings.text_color }};
     margin: 0;
     line-height: 1.1;
     white-space: nowrap;
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 </style>
 
-<div class="page-hero-{{ section.id }}">
-  {%- if section.settings.logo != blank -%}
-    <div class="page-hero__logo fade-up-anim">
-      <img src="{{ section.settings.logo | image_url: width: 800 }}" alt="{{ section.settings.logo.alt | default: page.title | escape }}">
-    </div>
-  {%- endif -%}
+<div class="page-hero-outer-{{ section.id }}">
+  <div class="page-hero-{{ section.id }}">
 
-  {%- if section.settings.title != blank -%}
-    <h1 class="page-hero__title fade-up-anim" style="animation-delay: 100ms;">{{ section.settings.title }}</h1>
-  {%- else -%}
-    <h1 class="page-hero__title fade-up-anim" style="animation-delay: 100ms;">{{ page.title }}</h1>
-  {%- endif -%}
+    {%- if section.settings.logo != blank -%}
+      <div class="page-hero__logo fade-up-anim">
+        <img
+          src="{{ section.settings.logo | image_url: width: 800 }}"
+          alt="{{ section.settings.logo.alt | default: page.title | escape }}"
+          loading="eager"
+        >
+      </div>
+    {%- endif -%}
+
+    <h1 class="page-hero__title fade-up-anim" style="animation-delay: 100ms;">
+      {%- if section.settings.title != blank -%}
+        {{ section.settings.title }}
+      {%- else -%}
+        {{ page.title }}
+      {%- endif -%}
+    </h1>
+
+  </div>
 </div>
 
 {% schema %}
@@ -58,15 +84,22 @@
   "name": "Premium Page Hero",
   "settings": [
     {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Spans full width. Logo auto-inverts to white, title auto-switches to white."
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Background Color",
-      "default": "transparent"
+      "label": "Background Color (if not gradient)",
+      "default": "#F8F6F4"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text Color",
+      "label": "Text Color (if not gradient)",
       "default": "#1A1A1A"
     },
     {
@@ -77,10 +110,7 @@
     {
       "type": "range",
       "id": "logo_width",
-      "min": 100,
-      "max": 600,
-      "step": 10,
-      "unit": "px",
+      "min": 100, "max": 600, "step": 10, "unit": "px",
       "label": "Logo Max Width",
       "default": 350
     },
@@ -95,37 +125,27 @@
       "id": "text_align",
       "label": "Title Alignment",
       "options": [
-        { "value": "left", "label": "Left" },
+        { "value": "left",   "label": "Left"   },
         { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
+        { "value": "right",  "label": "Right"  }
       ],
       "default": "center"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
+      "min": 0, "max": 120, "step": 4, "unit": "px",
       "label": "Top Padding",
       "default": 80
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
+      "min": 0, "max": 120, "step": 4, "unit": "px",
       "label": "Bottom Padding",
       "default": 60
     }
   ],
-  "presets": [
-    {
-      "name": "Premium Page Hero"
-    }
-  ]
+  "presets": [{ "name": "Premium Page Hero" }]
 }
 {% endschema %}
