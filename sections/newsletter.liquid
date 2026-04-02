@@ -2,18 +2,22 @@
   .nl-{{ section.id }} {
     position: relative;
     padding: clamp(4rem, 10vw, 8rem) 2rem;
-    background-color: {{ section.settings.bg_color }};
-    color: {{ section.settings.text_color }};
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    {%- if section.settings.use_gradient and section.settings.image == blank -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      color: #FFFFFF;
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
   {%- if section.settings.image != blank -%}
   .nl-{{ section.id }} .nl__bg {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     width: 100%; height: 100%;
     object-fit: cover;
     object-position: {{ section.settings.image_focal }};
@@ -22,32 +26,32 @@
   {%- endif -%}
 
   .nl-{{ section.id }} .nl__overlay {
-    position: absolute;
-    inset: 0;
-    {%- assign ov_r = section.settings.overlay_color | color_extract: 'red' -%}
-    {%- assign ov_g = section.settings.overlay_color | color_extract: 'green' -%}
-    {%- assign ov_b = section.settings.overlay_color | color_extract: 'blue' -%}
-    {%- assign ov_a = section.settings.overlay_opacity | divided_by: 100.0 -%}
-    background: rgba({{ ov_r }}, {{ ov_g }}, {{ ov_b }}, {{ ov_a }});
-    z-index: 1;
+    position: absolute; inset: 0; z-index: 1;
+    {%- if section.settings.use_gradient and section.settings.image != blank -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    {%- else -%}
+      {%- assign ov_r = section.settings.overlay_color | color_extract: 'red' -%}
+      {%- assign ov_g = section.settings.overlay_color | color_extract: 'green' -%}
+      {%- assign ov_b = section.settings.overlay_color | color_extract: 'blue' -%}
+      {%- assign ov_a = section.settings.overlay_opacity | divided_by: 100.0 -%}
+      background: rgba({{ ov_r }}, {{ ov_g }}, {{ ov_b }}, {{ ov_a }});
+    {%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: {{ section.settings.max_width }}px;
+    position: relative; z-index: 2;
+    width: 100%; max-width: {{ section.settings.max_width }}px;
     text-align: {{ section.settings.content_align }};
   }
 
   .nl-{{ section.id }} .nl__eyebrow {
     font-family: var(--font-body-family, sans-serif);
     font-size: {{ section.settings.eyebrow_size }}px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: {{ section.settings.accent_color }};
+    font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
     margin: 0 0 12px;
+    {%- if section.settings.use_gradient -%}color: rgba(255,255,255,0.8);
+    {%- else -%}color: {{ section.settings.accent_color }};{%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__title {
@@ -56,182 +60,145 @@
     font-weight: {{ section.settings.title_weight }};
     letter-spacing: {{ section.settings.title_ls | divided_by: 100.0 }}em;
     text-transform: {{ section.settings.title_transform }};
-    line-height: 1.1;
-    color: {{ section.settings.text_color }};
-    margin: 0 0 16px;
+    line-height: 1.1; margin: 0 0 16px;
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;
+    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__subtitle {
     font-family: var(--font-body-family, sans-serif);
     font-size: clamp(14px, 1.3vw, {{ section.settings.subtitle_size }}px);
-    line-height: 1.6;
-    color: {{ section.settings.text_color }};
-    opacity: 0.75;
-    margin: 0 0 {{ section.settings.form_gap }}px;
-    max-width: 560px;
+    line-height: 1.6; opacity: 0.75;
+    margin: 0 0 {{ section.settings.form_gap }}px; max-width: 560px;
     {%- if section.settings.content_align == 'center' -%}margin-left: auto; margin-right: auto;{%- endif -%}
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;
+    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
   }
 
-  /* ── Form ── */
   .nl-{{ section.id }} .nl__form {
-    display: flex;
-    flex-direction: column;
-    gap: {{ section.settings.field_gap }}px;
+    display: flex; flex-direction: column; gap: {{ section.settings.field_gap }}px;
     {%- if section.settings.content_align == 'center' -%}align-items: center;{%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: {{ section.settings.field_gap }}px;
-    width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.field_gap }}px; width: 100%;
     max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    max-width: {{ section.settings.form_max_width }}px;
+    display: flex; flex-direction: column; gap: 6px;
+    width: 100%; max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__label {
     font-family: var(--font-body-family, sans-serif);
-    font-size: {{ section.settings.label_size }}px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.label_size }}px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;
+    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
   }
-  .nl-{{ section.id }} .nl__req {
-    font-weight: 400;
-    letter-spacing: 0;
-    text-transform: none;
-    opacity: 0.5;
-    font-size: {{ section.settings.label_size | minus: 1 }}px;
-  }
+  .nl-{{ section.id }} .nl__req { font-weight: 400; letter-spacing: 0; text-transform: none; opacity: 0.5; font-size: {{ section.settings.label_size | minus: 1 }}px; }
 
   .nl-{{ section.id }} .nl__input {
-    width: 100%;
-    padding: {{ section.settings.input_pv }}px 0;
-    background: transparent;
-    border: none;
-    border-bottom: {{ section.settings.input_border_w }}px solid {{ section.settings.input_border_c }};
-    color: {{ section.settings.text_color }};
-    font-family: var(--font-body-family, sans-serif);
-    font-size: {{ section.settings.input_size }}px;
+    width: 100%; padding: {{ section.settings.input_pv }}px 0;
+    background: transparent; border: none;
+    border-bottom: {{ section.settings.input_border_w }}px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.5){%- else -%} {{ section.settings.input_border_c }}{%- endif -%};
+    font-family: var(--font-body-family, sans-serif); font-size: {{ section.settings.input_size }}px;
     transition: border-color 0.25s ease, border-width 0.25s ease;
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 0;
+    -webkit-appearance: none; appearance: none; border-radius: 0;
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;
+    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
   }
   .nl-{{ section.id }} .nl__input:focus {
-    outline: none;
-    border-bottom-color: {{ section.settings.text_color }};
-    border-bottom-width: 2px;
+    outline: none; border-bottom-width: 2px;
+    {%- if section.settings.use_gradient -%}border-bottom-color: #FFFFFF;
+    {%- else -%}border-bottom-color: {{ section.settings.text_color }};{%- endif -%}
   }
   .nl-{{ section.id }} .nl__input::placeholder {
-    color: {{ section.settings.text_color }};
-    opacity: 0.4;
+    {%- if section.settings.use_gradient -%}color: rgba(255,255,255,0.5);
+    {%- else -%}color: {{ section.settings.text_color }}; opacity: 0.4;{%- endif -%}
   }
 
-  /* Checkbox */
   .nl-{{ section.id }} .nl__check-wrap {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    width: 100%;
-    max-width: {{ section.settings.form_max_width }}px;
+    display: flex; align-items: flex-start; gap: 10px;
+    width: 100%; max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
     cursor: pointer;
   }
   .nl-{{ section.id }} .nl__checkbox {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px; height: 18px;
-    min-width: 18px;
-    border: 1.5px solid {{ section.settings.input_border_c }};
-    background: transparent;
-    cursor: pointer;
-    position: relative;
-    border-radius: 2px;
-    margin-top: 2px;
-    transition: border-color 0.2s, background-color 0.2s;
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; min-width: 18px;
+    border: 1.5px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.6){%- else -%} {{ section.settings.input_border_c }}{%- endif -%};
+    background: transparent; cursor: pointer; position: relative;
+    border-radius: 2px; margin-top: 2px; transition: border-color 0.2s, background-color 0.2s;
   }
   .nl-{{ section.id }} .nl__checkbox:checked {
-    background: {{ section.settings.text_color }};
-    border-color: {{ section.settings.text_color }};
+    {%- if section.settings.use_gradient -%}background: #FFFFFF; border-color: #FFFFFF;
+    {%- else -%}background: {{ section.settings.text_color }}; border-color: {{ section.settings.text_color }};{%- endif -%}
   }
   .nl-{{ section.id }} .nl__checkbox:checked::after {
-    content: '';
-    position: absolute;
-    top: 2px; left: 5px;
+    content: ''; position: absolute; top: 2px; left: 5px;
     width: 5px; height: 9px;
-    border: 2px solid {{ section.settings.bg_color }};
-    border-top: none; border-left: none;
-    transform: rotate(45deg);
+    border: 2px solid
+      {%- if section.settings.use_gradient -%} {{ section.settings.accent_color }}{%- else -%} {{ section.settings.bg_color }}{%- endif -%};
+    border-top: none; border-left: none; transform: rotate(45deg);
   }
   .nl-{{ section.id }} .nl__check-label {
     font-family: var(--font-body-family, sans-serif);
-    font-size: {{ section.settings.checkbox_size }}px;
-    color: {{ section.settings.text_color }};
-    opacity: 0.8;
-    line-height: 1.5;
-    cursor: pointer;
+    font-size: {{ section.settings.checkbox_size }}px; opacity: 0.8; line-height: 1.5; cursor: pointer;
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;
+    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
   }
 
-  /* Submit */
+  /* ── Submit button ── */
   .nl-{{ section.id }} .nl__submit {
-    background-color: {{ section.settings.btn_bg }};
-    color: {{ section.settings.btn_color }};
-    border: {{ section.settings.btn_border_w }}px solid {{ section.settings.btn_border_c }};
     border-radius: {{ section.settings.btn_radius }}px;
     padding: {{ section.settings.btn_pv }}px {{ section.settings.btn_ph }}px;
     font-family: var(--font-body-family, sans-serif);
-    font-size: {{ section.settings.btn_size }}px;
-    font-weight: {{ section.settings.btn_weight }};
-    text-transform: {{ section.settings.btn_transform }};
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    font-size: {{ section.settings.btn_size }}px; font-weight: {{ section.settings.btn_weight }};
+    text-transform: {{ section.settings.btn_transform }}; letter-spacing: 0.05em;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    transition: opacity 0.25s ease, transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.18); color: #FFFFFF; border: 1.5px solid rgba(255,255,255,0.5);
+    {%- elsif section.settings.btn_use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      color: #FFFFFF; border: none;
+    {%- else -%}
+      background-color: {{ section.settings.btn_bg }}; color: {{ section.settings.btn_color }};
+      border: {{ section.settings.btn_border_w }}px solid {{ section.settings.btn_border_c }};
+    {%- endif -%}
   }
   .nl-{{ section.id }} .nl__submit:hover:not(:disabled) {
-    background-color: {{ section.settings.btn_bg_hover }};
-    color: {{ section.settings.btn_color_hover }};
-    transform: translateY(-1px);
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.28); border-color: #FFFFFF; transform: translateY(-2px);
+    {%- elsif section.settings.btn_use_gradient -%}
+      opacity: 0.85; transform: translateY(-2px);
+    {%- else -%}
+      background-color: {{ section.settings.btn_bg_hover }}; color: {{ section.settings.btn_color_hover }}; transform: translateY(-1px);
+    {%- endif -%}
   }
   .nl-{{ section.id }} .nl__submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* Messages */
   .nl-{{ section.id }} .nl__success {
-    padding: 16px 20px;
-    background: rgba(22,163,74,0.12);
-    border: 1px solid rgba(22,163,74,0.3);
-    border-radius: 4px;
-    color: {{ section.settings.text_color }};
-    font-size: 15px;
-    text-align: center;
+    padding: 16px 20px; background: rgba(22,163,74,0.12); border: 1px solid rgba(22,163,74,0.3);
+    border-radius: 4px; font-size: 15px; text-align: center;
     max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;{%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
   }
   .nl-{{ section.id }} .nl__error {
-    padding: 12px 16px;
-    background: rgba(220,38,38,0.1);
-    border: 1px solid rgba(220,38,38,0.25);
-    border-radius: 4px;
-    color: #dc2626;
-    font-size: 13px;
+    padding: 12px 16px; background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.25);
+    border-radius: 4px; color: #dc2626; font-size: 13px;
     max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
   }
 
-  /* Responsive */
   @media screen and (max-width: 639px) {
     .nl-{{ section.id }} .nl__row { grid-template-columns: 1fr; }
   }
@@ -245,11 +212,7 @@
       srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
               {{ section.settings.image | image_url: width: 1200 }} 1200w,
               {{ section.settings.image | image_url: width: 1600 }} 1600w"
-      sizes="100vw"
-      alt=""
-      class="nl__bg"
-      aria-hidden="true"
-      loading="lazy"
+      sizes="100vw" alt="" class="nl__bg" aria-hidden="true" loading="lazy"
     >
   {%- endif -%}
 
@@ -269,17 +232,7 @@
       <p class="nl__subtitle">{{ section.settings.subtitle }}</p>
     {%- endif -%}
 
-    {%- comment -%}
-      ── WHY {% form 'customer' %} NOT {% form 'contact' %} ──
-      We use the 'customer' form with contact[tags]=newsletter so Shopify
-      creates/updates the customer record AND marks them as accepts_marketing.
-      This feeds directly into Shopify Email, Klaviyo, Omnisend etc.
-      The 'contact' form only sends an email — it does NOT add to your
-      customer/subscriber list.
-    {%- endcomment -%}
     {% form 'customer', id: 'nl-form-{{ section.id }}', class: 'nl__form' %}
-
-      {%- comment -%} Required hidden fields for Shopify newsletter signup {%- endcomment -%}
       <input type="hidden" name="contact[tags]" value="newsletter,prospect,{{ section.settings.tag_extra | escape }}">
       <input type="hidden" name="customer[accepts_marketing]" value="true">
 
@@ -287,82 +240,54 @@
         <div class="nl__success">{{ section.settings.success_message }}</div>
 
       {%- else -%}
-
         {%- if form.errors -%}
           <div class="nl__error">
-            {%- for error in form.errors -%}
-              {{ error | capitalize }} {{ form.errors.messages[error] }}.
-            {%- endfor -%}
+            {%- for error in form.errors -%}{{ error | capitalize }} {{ form.errors.messages[error] }}.{%- endfor -%}
           </div>
         {%- endif -%}
 
-        {%- comment -%} Name row {%- endcomment -%}
         {%- if section.settings.show_name -%}
           <div class="nl__row">
             <div class="nl__field">
               <label class="nl__label" for="nl-first-{{ section.id }}">
                 {{ section.settings.label_first }}
-                {%- if section.settings.show_required_label -%}
-                  <span class="nl__req">({{ section.settings.required_text }})</span>
-                {%- endif -%}
+                {%- if section.settings.show_required_label -%}<span class="nl__req">({{ section.settings.required_text }})</span>{%- endif -%}
               </label>
-              <input type="text" id="nl-first-{{ section.id }}"
-                     name="contact[first_name]"
-                     class="nl__input"
-                     placeholder="{{ section.settings.placeholder_first | escape }}"
-                     autocomplete="given-name"
-                     required>
+              <input type="text" id="nl-first-{{ section.id }}" name="contact[first_name]" class="nl__input"
+                     placeholder="{{ section.settings.placeholder_first | escape }}" autocomplete="given-name" required>
             </div>
             <div class="nl__field">
               <label class="nl__label" for="nl-last-{{ section.id }}">
                 {{ section.settings.label_last }}
-                {%- if section.settings.show_required_label -%}
-                  <span class="nl__req">({{ section.settings.required_text }})</span>
-                {%- endif -%}
+                {%- if section.settings.show_required_label -%}<span class="nl__req">({{ section.settings.required_text }})</span>{%- endif -%}
               </label>
-              <input type="text" id="nl-last-{{ section.id }}"
-                     name="contact[last_name]"
-                     class="nl__input"
-                     placeholder="{{ section.settings.placeholder_last | escape }}"
-                     autocomplete="family-name"
-                     required>
+              <input type="text" id="nl-last-{{ section.id }}" name="contact[last_name]" class="nl__input"
+                     placeholder="{{ section.settings.placeholder_last | escape }}" autocomplete="family-name" required>
             </div>
           </div>
         {%- endif -%}
 
-        {%- comment -%} Email {%- endcomment -%}
         <div class="nl__field">
           <label class="nl__label" for="nl-email-{{ section.id }}">
             {{ section.settings.label_email }}
-            {%- if section.settings.show_required_label -%}
-              <span class="nl__req">({{ section.settings.required_text }})</span>
-            {%- endif -%}
+            {%- if section.settings.show_required_label -%}<span class="nl__req">({{ section.settings.required_text }})</span>{%- endif -%}
           </label>
-          <input type="email" id="nl-email-{{ section.id }}"
-                 name="contact[email]"
-                 class="nl__input"
-                 placeholder="{{ section.settings.placeholder_email | escape }}"
-                 autocomplete="email"
-                 value="{{ form.email }}"
-                 required>
+          <input type="email" id="nl-email-{{ section.id }}" name="contact[email]" class="nl__input"
+                 placeholder="{{ section.settings.placeholder_email | escape }}" autocomplete="email"
+                 value="{{ form.email }}" required>
         </div>
 
-        {%- comment -%} Marketing checkbox {%- endcomment -%}
         {%- if section.settings.show_checkbox -%}
           <label class="nl__check-wrap">
-            <input type="checkbox" name="customer[accepts_marketing]"
-                   class="nl__checkbox" value="true"
+            <input type="checkbox" name="customer[accepts_marketing]" class="nl__checkbox" value="true"
                    {% if section.settings.checkbox_default_checked %}checked{% endif %}>
             <span class="nl__check-label">{{ section.settings.checkbox_text }}</span>
           </label>
         {%- endif -%}
 
-        <button type="submit" class="nl__submit">
-          {{ section.settings.btn_label }}
-        </button>
+        <button type="submit" class="nl__submit">{{ section.settings.btn_label }}</button>
 
       {%- endif -%}
-
     {% endform %}
 
   </div>
@@ -374,99 +299,103 @@
   "settings": [
     { "type": "header", "content": "Content" },
     { "type": "text",     "id": "eyebrow",   "label": "Eyebrow Text" },
-    { "type": "text",     "id": "title",     "label": "Heading",     "default": "Join The Cowgirl Army" },
+    { "type": "text",     "id": "title",     "label": "Heading",   "default": "Join The Cowgirl Army" },
     { "type": "textarea", "id": "subtitle",  "label": "Subtitle" },
-    { "type": "text",     "id": "tag_extra", "label": "Extra Tag",   "default": "cowgirl-army", "info": "Added to subscriber tags in addition to 'newsletter'. Use to segment in Klaviyo/Shopify Email." },
+    { "type": "text",     "id": "tag_extra", "label": "Extra Tag", "default": "cowgirl-army",
+      "info": "Added to subscriber tags in addition to 'newsletter'." },
 
     { "type": "header", "content": "Background" },
-    { "type": "image_picker", "id": "image",         "label": "Background Image" },
-    { "type": "select",       "id": "image_focal",   "label": "Image Focal Point",
+    { "type": "checkbox",     "id": "use_gradient",    "label": "Use brand gradient background", "default": true,
+      "info": "No image = gradient bg. With image = gradient overlay. All text auto-switches to white." },
+    { "type": "image_picker", "id": "image",           "label": "Background Image" },
+    { "type": "select",       "id": "image_focal",     "label": "Image Focal Point",
       "options": [
         { "value": "center center", "label": "Center" },
         { "value": "top center",    "label": "Top"    },
         { "value": "bottom center", "label": "Bottom" }
-      ], "default": "center center"
-    },
-    { "type": "color", "id": "overlay_color",   "label": "Overlay Color",   "default": "#ffffff" },
-    { "type": "range", "id": "overlay_opacity", "label": "Overlay Opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 85 },
+      ], "default": "center center" },
+    { "type": "color", "id": "overlay_color",   "label": "Overlay Color (if not gradient)",   "default": "#FFFFFF" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay Opacity",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 85 },
 
     { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "bg_color",     "label": "Fallback Background", "default": "#e2e2e2" },
-    { "type": "color", "id": "text_color",   "label": "Text Color",          "default": "#1a1a1a" },
-    { "type": "color", "id": "accent_color", "label": "Eyebrow Color",       "default": "#8BA4AC" },
+    { "type": "color", "id": "bg_color",     "label": "Background (if not gradient)", "default": "#F8F6F4" },
+    { "type": "color", "id": "text_color",   "label": "Text Color (if not gradient)", "default": "#1A1A1A" },
+    { "type": "color", "id": "accent_color", "label": "Eyebrow Color (if not gradient)", "default": "#8B52D4" },
 
     { "type": "header", "content": "Layout" },
-    { "type": "range",  "id": "max_width",      "label": "Content Max Width", "min": 400,"max": 1400,"step": 20,"unit": "px","default": 800 },
-    { "type": "range",  "id": "form_max_width",  "label": "Form Max Width",    "min": 300,"max": 800, "step": 20,"unit": "px","default": 560 },
-    { "type": "select", "id": "content_align",   "label": "Alignment",
+    { "type": "range",  "id": "max_width",     "label": "Content Max Width", "min": 400,"max": 1400,"step": 20,"unit": "px","default": 800 },
+    { "type": "range",  "id": "form_max_width","label": "Form Max Width",    "min": 300,"max": 800, "step": 20,"unit": "px","default": 560 },
+    { "type": "select", "id": "content_align", "label": "Alignment",
       "options": [
         { "value": "left",   "label": "Left"   },
         { "value": "center", "label": "Center" }
-      ], "default": "center"
-    },
-    { "type": "range", "id": "form_gap",   "label": "Gap: Text to Form", "min": 16,"max": 60,"step": 4,"unit": "px","default": 32 },
-    { "type": "range", "id": "field_gap",  "label": "Field Gap",         "min": 12,"max": 40,"step": 4,"unit": "px","default": 24 },
+      ], "default": "center" },
+    { "type": "range", "id": "form_gap",  "label": "Gap: Text to Form", "min": 16,"max": 60,"step": 4,"unit": "px","default": 32 },
+    { "type": "range", "id": "field_gap", "label": "Field Gap",         "min": 12,"max": 40,"step": 4,"unit": "px","default": 24 },
 
     { "type": "header", "content": "Typography" },
-    { "type": "range",  "id": "title_min",      "label": "Title Min Size",     "min": 18,"max": 40,"step": 2,"unit": "px","default": 24 },
-    { "type": "range",  "id": "title_max",      "label": "Title Max Size",     "min": 24,"max": 64,"step": 2,"unit": "px","default": 48 },
-    { "type": "range",  "id": "title_weight",   "label": "Title Weight",       "min": 300,"max": 900,"step": 100,"default": 700 },
-    { "type": "range",  "id": "title_ls",       "label": "Title Letter Spacing","min": -5,"max": 10,"step": 1,"default": 0,"info": "Divide by 100" },
-    { "type": "select", "id": "title_transform","label": "Title Transform",
+    { "type": "range",  "id": "title_min",       "label": "Title Min Size",       "min": 18,"max": 40,"step": 2,"unit": "px","default": 24 },
+    { "type": "range",  "id": "title_max",       "label": "Title Max Size",       "min": 24,"max": 64,"step": 2,"unit": "px","default": 48 },
+    { "type": "range",  "id": "title_weight",    "label": "Title Weight",         "min": 300,"max": 900,"step": 100,"default": 700 },
+    { "type": "range",  "id": "title_ls",        "label": "Title Letter Spacing", "min": -5,"max": 10,"step": 1,"default": 0,"info": "Divide by 100" },
+    { "type": "select", "id": "title_transform", "label": "Title Transform",
       "options": [
         { "value": "none",      "label": "None"      },
         { "value": "uppercase", "label": "Uppercase" }
-      ], "default": "uppercase"
-    },
-    { "type": "range", "id": "subtitle_size",  "label": "Subtitle Size", "min": 13,"max": 22,"step": 1,"unit": "px","default": 16 },
-    { "type": "range", "id": "eyebrow_size",   "label": "Eyebrow Size",  "min": 10,"max": 16,"step": 1,"unit": "px","default": 12 },
-    { "type": "range", "id": "label_size",     "label": "Label Size",    "min": 10,"max": 16,"step": 1,"unit": "px","default": 12 },
-    { "type": "range", "id": "input_size",     "label": "Input Size",    "min": 13,"max": 20,"step": 1,"unit": "px","default": 16 },
-    { "type": "range", "id": "checkbox_size",  "label": "Checkbox Label Size","min": 12,"max": 18,"step": 1,"unit": "px","default": 14 },
+      ], "default": "uppercase" },
+    { "type": "range", "id": "subtitle_size", "label": "Subtitle Size",       "min": 13,"max": 22,"step": 1,"unit": "px","default": 16 },
+    { "type": "range", "id": "eyebrow_size",  "label": "Eyebrow Size",        "min": 10,"max": 16,"step": 1,"unit": "px","default": 12 },
+    { "type": "range", "id": "label_size",    "label": "Label Size",          "min": 10,"max": 16,"step": 1,"unit": "px","default": 12 },
+    { "type": "range", "id": "input_size",    "label": "Input Size",          "min": 13,"max": 20,"step": 1,"unit": "px","default": 16 },
+    { "type": "range", "id": "checkbox_size", "label": "Checkbox Label Size", "min": 12,"max": 18,"step": 1,"unit": "px","default": 14 },
 
     { "type": "header", "content": "Form Fields" },
-    { "type": "checkbox", "id": "show_name",           "label": "Show name fields",        "default": true },
-    { "type": "checkbox", "id": "show_required_label", "label": "Show (required) label",   "default": false },
-    { "type": "text",     "id": "required_text",       "label": "Required text",           "default": "required" },
-    { "type": "text",     "id": "label_first",         "label": "First Name Label",        "default": "First Name" },
+    { "type": "checkbox", "id": "show_name",           "label": "Show name fields",      "default": true },
+    { "type": "checkbox", "id": "show_required_label", "label": "Show (required) label", "default": false },
+    { "type": "text",     "id": "required_text",       "label": "Required text",         "default": "required" },
+    { "type": "text",     "id": "label_first",         "label": "First Name Label",      "default": "First Name" },
     { "type": "text",     "id": "placeholder_first",   "label": "First Name Placeholder" },
-    { "type": "text",     "id": "label_last",          "label": "Last Name Label",         "default": "Last Name" },
+    { "type": "text",     "id": "label_last",          "label": "Last Name Label",       "default": "Last Name" },
     { "type": "text",     "id": "placeholder_last",    "label": "Last Name Placeholder" },
-    { "type": "text",     "id": "label_email",         "label": "Email Label",             "default": "Email" },
-    { "type": "text",     "id": "placeholder_email",   "label": "Email Placeholder",       "default": "Your email address" },
+    { "type": "text",     "id": "label_email",         "label": "Email Label",           "default": "Email" },
+    { "type": "text",     "id": "placeholder_email",   "label": "Email Placeholder",     "default": "Your email address" },
 
     { "type": "header", "content": "Input Style" },
-    { "type": "color", "id": "input_border_c", "label": "Input Border Color", "default": "#1a1a1a" },
+    { "type": "color", "id": "input_border_c", "label": "Input Border Color (if not gradient)", "default": "#1A1A1A" },
     { "type": "range", "id": "input_border_w", "label": "Input Border Width", "min": 1,"max": 3,"step": 1,"unit": "px","default": 1 },
     { "type": "range", "id": "input_pv",       "label": "Input Padding V",    "min": 6,"max": 20,"step": 2,"unit": "px","default": 12 },
 
     { "type": "header", "content": "Marketing Checkbox" },
-    { "type": "checkbox", "id": "show_checkbox",           "label": "Show checkbox",          "default": true },
-    { "type": "checkbox", "id": "checkbox_default_checked","label": "Checked by default",     "default": false },
-    { "type": "text",     "id": "checkbox_text",           "label": "Checkbox Label",         "default": "Sign me up for news, inspiration, and faith-filled updates from Cowgirl Armor." },
+    { "type": "checkbox", "id": "show_checkbox",            "label": "Show checkbox",      "default": true },
+    { "type": "checkbox", "id": "checkbox_default_checked", "label": "Checked by default", "default": false },
+    { "type": "text",     "id": "checkbox_text",            "label": "Checkbox Label",
+      "default": "Sign me up for news, inspiration, and faith-filled updates from Cowgirl Armor." },
 
     { "type": "header", "content": "Submit Button" },
-    { "type": "text",   "id": "btn_label",       "label": "Button Label",      "default": "Join The Army" },
-    { "type": "color",  "id": "btn_bg",          "label": "Button Background", "default": "#1a1a1a" },
-    { "type": "color",  "id": "btn_color",       "label": "Button Text",       "default": "#ffffff" },
-    { "type": "color",  "id": "btn_bg_hover",    "label": "Button Hover Bg",   "default": "#ffffff" },
-    { "type": "color",  "id": "btn_color_hover", "label": "Button Hover Text", "default": "#1a1a1a" },
-    { "type": "color",  "id": "btn_border_c",    "label": "Button Border",     "default": "#1a1a1a" },
-    { "type": "range",  "id": "btn_border_w",    "label": "Border Width",      "min": 0,"max": 4,"step": 1,"unit": "px","default": 1 },
-    { "type": "range",  "id": "btn_radius",      "label": "Button Radius",     "min": 0,"max": 30,"step": 2,"unit": "px","default": 0 },
-    { "type": "range",  "id": "btn_pv",          "label": "Button Padding V",  "min": 10,"max": 24,"step": 2,"unit": "px","default": 16 },
-    { "type": "range",  "id": "btn_ph",          "label": "Button Padding H",  "min": 16,"max": 60,"step": 4,"unit": "px","default": 40 },
-    { "type": "range",  "id": "btn_size",        "label": "Button Font Size",  "min": 12,"max": 18,"step": 1,"unit": "px","default": 15 },
-    { "type": "range",  "id": "btn_weight",      "label": "Button Weight",     "min": 400,"max": 700,"step": 100,"default": 600 },
-    { "type": "select", "id": "btn_transform",   "label": "Button Transform",
+    { "type": "text",     "id": "btn_label",       "label": "Button Label",                         "default": "Join The Army" },
+    { "type": "checkbox", "id": "btn_use_gradient","label": "Use brand gradient on button",         "default": true,
+      "info": "Ignored when section background is gradient — button auto-adapts to frosted glass." },
+    { "type": "color",    "id": "btn_bg",          "label": "Button Background (solid only)",       "default": "#1A1A1A" },
+    { "type": "color",    "id": "btn_color",       "label": "Button Text (solid only)",             "default": "#FFFFFF" },
+    { "type": "color",    "id": "btn_bg_hover",    "label": "Button Hover Background (solid only)", "default": "#333333" },
+    { "type": "color",    "id": "btn_color_hover", "label": "Button Hover Text (solid only)",       "default": "#FFFFFF" },
+    { "type": "color",    "id": "btn_border_c",    "label": "Button Border (solid only)",           "default": "#1A1A1A" },
+    { "type": "range",    "id": "btn_border_w",    "label": "Border Width",    "min": 0,"max": 4,"step": 1,"unit": "px","default": 1 },
+    { "type": "range",    "id": "btn_radius",      "label": "Button Radius",   "min": 0,"max": 30,"step": 2,"unit": "px","default": 4 },
+    { "type": "range",    "id": "btn_pv",          "label": "Button Padding V","min": 10,"max": 24,"step": 2,"unit": "px","default": 16 },
+    { "type": "range",    "id": "btn_ph",          "label": "Button Padding H","min": 16,"max": 60,"step": 4,"unit": "px","default": 40 },
+    { "type": "range",    "id": "btn_size",        "label": "Button Font Size","min": 12,"max": 18,"step": 1,"unit": "px","default": 15 },
+    { "type": "range",    "id": "btn_weight",      "label": "Button Weight",   "min": 400,"max": 700,"step": 100,"default": 600 },
+    { "type": "select",   "id": "btn_transform",   "label": "Button Transform",
       "options": [
         { "value": "none",      "label": "None"      },
         { "value": "uppercase", "label": "Uppercase" }
-      ], "default": "uppercase"
-    },
+      ], "default": "uppercase" },
 
     { "type": "header", "content": "Messages" },
-    { "type": "text", "id": "success_message", "label": "Success Message", "default": "Welcome to the Cowgirl Army! Check your inbox for a confirmation." }
+    { "type": "text", "id": "success_message", "label": "Success Message",
+      "default": "Welcome to the Cowgirl Army! Check your inbox for a confirmation." }
   ],
   "presets": [{ "name": "Newsletter Signup" }]
 }
