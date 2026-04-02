@@ -13,6 +13,7 @@
       "type": "premium-page-hero",
       "disabled": true,
       "settings": {
+        "use_gradient": false,
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "logo_width": 350,
@@ -36,8 +37,10 @@
         "button_link": "shopify://pages/god-meets-you",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": true,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_PBqPNK": {
@@ -54,8 +57,10 @@
         "button_link": "shopify://pages/believe-in-yourself",
         "padding_top": 60,
         "padding_bottom": 0,
+        "use_gradient": true,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_UAJ3AJ": {
@@ -72,8 +77,10 @@
         "button_link": "shopify://pages/never-give-up",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": true,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     }
   },
