@@ -1,4 +1,17 @@
 <style>
+  /* ── Outer wrapper — full width, background goes here ── */
+  .armor-section-{{ section.id }} {
+    width: 100%;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  /* ── Inner grid — constrained width, centred ── */
   .armor-grid-{{ section.id }} {
     display: grid;
     grid-template-columns: 1fr;
@@ -8,14 +21,10 @@
     padding: 0 1.5rem;
   }
   @media screen and (min-width: 768px) {
-    .armor-grid-{{ section.id }} {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .armor-grid-{{ section.id }} { grid-template-columns: repeat(2, 1fr); }
   }
   @media screen and (min-width: 1024px) {
-    .armor-grid-{{ section.id }} {
-      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
-    }
+    .armor-grid-{{ section.id }} { grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr); }
   }
 
   .armor-grid__item {
@@ -24,14 +33,12 @@
     overflow: hidden;
     transition: transform 0.3s ease;
   }
-  .armor-grid__item:hover {
-    transform: translateY(-5px);
-  }
+  .armor-grid__item:hover { transform: translateY(-5px); }
+
   .armor-grid__image {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     object-position: center;
     transform: scale(1.75);
@@ -39,18 +46,7 @@
   }
 </style>
 
-<div
-  class="icon-grid-section"
-  style="
-    {%- if section.settings.use_gradient -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
-    {%- else -%}
-      background-color: {{ section.settings.bg_color }};
-    {%- endif -%}
-    padding-top: {{ section.settings.padding_top }}px;
-    padding-bottom: {{ section.settings.padding_bottom }}px;
-  "
->
+<div class="armor-section-{{ section.id }}">
   <div class="armor-grid-{{ section.id }}">
     {%- for block in section.blocks -%}
       <div
@@ -82,7 +78,7 @@
       "id": "use_gradient",
       "label": "Use brand gradient background",
       "default": false,
-      "info": "Applies the brand gradient to the section background"
+      "info": "Applies the brand gradient to the full-width section background"
     },
     {
       "type": "color",
@@ -124,17 +120,8 @@
       "type": "card",
       "name": "Grid Item",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "color",
-          "id": "card_bg",
-          "label": "Card Background Color",
-          "default": "#8B52D4"
-        }
+        { "type": "image_picker", "id": "image",   "label": "Image" },
+        { "type": "color",        "id": "card_bg", "label": "Card Background Color", "default": "#8B52D4" }
       ]
     }
   ],
