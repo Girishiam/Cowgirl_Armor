@@ -110,7 +110,7 @@
         "card_PrbeEV"
       ],
       "settings": {
-        "use_gradient": false,
+        "use_gradient": true,
         "bg_color": "rgba(0,0,0,0)",
         "padding_top": 40,
         "padding_bottom": 80,
@@ -125,6 +125,7 @@
         "title": "Join The Cowgirl Army",
         "subtitle": "",
         "tag_extra": "cowgirl-army",
+        "use_gradient": true,
         "image": "shopify://shop_images/IMG_3789.webp",
         "image_focal": "center center",
         "overlay_color": "#ffffff",
@@ -163,6 +164,7 @@
         "checkbox_default_checked": false,
         "checkbox_text": "Sign up for news and updates",
         "btn_label": "Join The Army",
+        "btn_use_gradient": true,
         "btn_bg": "#1a1a1a",
         "btn_color": "#ffffff",
         "btn_bg_hover": "#ffffff",
