@@ -13,6 +13,7 @@
       "type": "premium-page-hero",
       "disabled": true,
       "settings": {
+        "use_gradient": false,
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "logo_width": 350,
@@ -37,8 +38,10 @@
         "button_link": "shopify://pages/god-meets-you",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_PBqPNK": {
@@ -56,8 +59,10 @@
         "button_link": "shopify://pages/believe-in-yourself",
         "padding_top": 60,
         "padding_bottom": 0,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_UAJ3AJ": {
@@ -75,21 +80,25 @@
         "button_link": "shopify://pages/never-give-up",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "premium_waitlist_form_nhVcVk": {
       "type": "premium-waitlist-form",
       "name": "Premium Waitlist Form",
       "settings": {
-        "bg_color": "#F9F9F9",
-        "text_color": "#1A1A1A",
+        "use_gradient": true,
+        "bg_color": "#f9f9f9",
+        "text_color": "#1a1a1a",
         "heading": "We have exciting news in March... but until then",
         "text": "<p>Some things aren't meant to be missed. The pieces that speak to your faith, your fire, and the cowgirl you're becoming — they don't always stay on the shelf long.</p><p>Join the Cowgirl Armor first-come, first-served list and be first in line for every drop, every restock, and every piece created to remind you who you are and whose you are.</p>",
         "button_label": "I want in!",
         "success_message": "You're on the list! Keep an eye on your inbox.",
         "error_message_prefix": "Please adjust the following fields:",
+        "btn_use_gradient": true,
         "first_name_label": "First Name",
         "last_name_label": "Last Name",
         "email_label": "Email",
@@ -104,8 +113,8 @@
       "type": "premium-story-form",
       "name": "Story Submission Form",
       "settings": {
-        "bg_color": "#F9F9F9",
-        "text_color": "#1A1A1A",
+        "bg_color": "#f9f9f9",
+        "text_color": "#1a1a1a",
         "heading": "Share your Cowgirl Story!",
         "text": "<p>We are all in this journey together, and we are anonymous sharing other inspirational Cowgirl Stories on our blog, with \"Signed A Cowgirl.\" If it's on your heart to share your story, please send it to us here, and we will get back to you asap! We are all in this together cowgirls!</p>",
         "button_label": "Send it!",
@@ -141,9 +150,9 @@
         "label_required": "(required)",
         "button_label": "Submit",
         "success_message": "Thanks for reaching out! We will get back to you shortly.",
-        "bg_color": "#EBEBEB",
-        "card_bg_color": "#FFFFFF",
-        "text_color": "#1A1A1A",
+        "bg_color": "#ebebeb",
+        "card_bg_color": "#ffffff",
+        "text_color": "#1a1a1a",
         "padding_top": 100,
         "padding_bottom": 100
       }
