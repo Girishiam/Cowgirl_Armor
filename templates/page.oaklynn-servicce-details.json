@@ -270,6 +270,9 @@
       ],
       "name": "Service Location & Nav",
       "settings": {
+        "use_gradient": true,
+        "gradient_color_1": "#e7096f",
+        "gradient_color_2": "#ff6bae",
         "bg_color": "#ffffff",
         "title_color": "#1a1a1a",
         "accent_color": "#8ba4ac",
@@ -309,6 +312,7 @@
         "body_max": 17,
         "body_weight": 400,
         "body_lh": 170,
+        "btn_use_gradient": true,
         "btn_bg": "#1a1a1a",
         "btn_color": "#ffffff",
         "btn_bg_hover": "#8ba4ac",
