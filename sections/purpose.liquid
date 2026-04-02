@@ -1,12 +1,16 @@
 <style>
   .purpose-{{ section.id }} {
-    background-color: {{ section.settings.bg_color }};
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
   .purpose-{{ section.id }} .purpose-inner {
-    max-width: 1600px;
+    max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
     padding-left: clamp(1.5rem, 5vw, 7rem);
@@ -20,7 +24,6 @@
   .purpose-{{ section.id }} .purpose-image-col {
     order: {% if section.settings.image_position == 'left' %}1{% else %}2{% endif %};
   }
-
   .purpose-{{ section.id }} .purpose-text-col {
     order: {% if section.settings.image_position == 'left' %}2{% else %}1{% endif %};
   }
@@ -31,58 +34,89 @@
     box-shadow: {{ section.settings.image_shadow }};
     aspect-ratio: {{ section.settings.image_ratio }};
   }
-
   .purpose-{{ section.id }} .purpose-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
   }
 
+  /* ── Label / eyebrow ── */
   .purpose-{{ section.id }} .purpose-label {
     display: inline-block;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: {{ section.settings.label_color }};
     margin-bottom: 1rem;
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+      opacity: 0.8;
+    {%- else -%}
+      color: {{ section.settings.label_color }};
+    {%- endif -%}
   }
 
   .purpose-{{ section.id }} .purpose-heading {
     font-size: clamp(2rem, 4vw, {{ section.settings.heading_size }}px);
     font-weight: {{ section.settings.heading_weight }};
-    color: {{ section.settings.heading_color }};
     line-height: 1.15;
     margin: 0 0 1.5rem;
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.heading_color }};
+    {%- endif -%}
   }
 
   .purpose-{{ section.id }} .purpose-text {
     font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-    color: {{ section.settings.text_color }};
     line-height: 1.8;
     margin: 0 0 2.5rem;
     opacity: 0.85;
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
+  /* ── Button ── */
   .purpose-{{ section.id }} .purpose-btn {
     display: inline-block;
     text-decoration: none;
     padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
-    background-color: {{ section.settings.btn_bg }};
-    color: {{ section.settings.btn_text }};
-    border: 2px solid {{ section.settings.btn_border }};
     border-radius: {{ section.settings.btn_radius }}px;
     font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.05em;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+      border: 2px solid rgba(255,255,255,0.5);
+    {%- elsif section.settings.btn_use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      color: #FFFFFF;
+      border: none;
+    {%- else -%}
+      background-color: {{ section.settings.btn_bg }};
+      color: {{ section.settings.btn_text }};
+      border: 2px solid {{ section.settings.btn_border }};
+    {%- endif -%}
   }
 
   .purpose-{{ section.id }} .purpose-btn:hover {
-    background-color: {{ section.settings.btn_hover_bg }};
-    color: {{ section.settings.btn_hover_text }};
-    border-color: {{ section.settings.btn_hover_bg }};
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.28);
+      border-color: #FFFFFF;
+      transform: translateY(-2px);
+    {%- elsif section.settings.btn_use_gradient -%}
+      opacity: 0.85;
+      transform: translateY(-2px);
+    {%- else -%}
+      background-color: {{ section.settings.btn_hover_bg }};
+      color: {{ section.settings.btn_hover_text }};
+      border-color: {{ section.settings.btn_hover_bg }};
+    {%- endif -%}
   }
 
   @media screen and (max-width: 767px) {
@@ -139,10 +173,7 @@
       {%- endif -%}
 
       {%- if section.settings.btn_label != blank -%}
-        <a
-          href="{{ section.settings.btn_link | default: '#' }}"
-          class="purpose-btn"
-        >
+        <a href="{{ section.settings.btn_link | default: '#' }}" class="purpose-btn">
           {{ section.settings.btn_label }}
         </a>
       {%- endif -%}
@@ -164,7 +195,7 @@
       "id": "image_position",
       "label": "Image Position",
       "options": [
-        { "value": "left", "label": "Left" },
+        { "value": "left",  "label": "Left"  },
         { "value": "right", "label": "Right" }
       ],
       "default": "right"
@@ -180,10 +211,10 @@
       "id": "image_ratio",
       "label": "Image Ratio",
       "options": [
-        { "value": "1 / 1", "label": "Square" },
-        { "value": "4 / 5", "label": "Portrait (4:5)" },
-        { "value": "4 / 3", "label": "Landscape (4:3)" },
-        { "value": "16 / 9", "label": "Wide (16:9)" }
+        { "value": "1 / 1",   "label": "Square"          },
+        { "value": "4 / 5",   "label": "Portrait (4:5)"  },
+        { "value": "4 / 3",   "label": "Landscape (4:3)" },
+        { "value": "16 / 9",  "label": "Wide (16:9)"     }
       ],
       "default": "4 / 5"
     },
@@ -195,21 +226,13 @@
       "type": "range",
       "id": "padding_top",
       "label": "Top Padding",
-      "min": 20,
-      "max": 160,
-      "step": 10,
-      "unit": "px",
-      "default": 100
+      "min": 20, "max": 160, "step": 10, "unit": "px", "default": 100
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "label": "Bottom Padding",
-      "min": 20,
-      "max": 160,
-      "step": 10,
-      "unit": "px",
-      "default": 100
+      "min": 20, "max": 160, "step": 10, "unit": "px", "default": 100
     },
     {
       "type": "header",
@@ -224,11 +247,7 @@
       "type": "range",
       "id": "image_radius",
       "label": "Image Border Radius",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 8
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 8
     },
     {
       "type": "text",
@@ -274,27 +293,34 @@
       "content": "Colors"
     },
     {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Applies gradient to section background. Text and button auto-switch to white."
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Background",
-      "default": "#f5f5f5"
+      "label": "Background (if not gradient)",
+      "default": "#F8F6F4"
     },
     {
       "type": "color",
       "id": "label_color",
-      "label": "Label Color",
-      "default": "#8B7355"
+      "label": "Label Color (if not gradient)",
+      "default": "#8B52D4"
     },
     {
       "type": "color",
       "id": "heading_color",
-      "label": "Heading Color",
+      "label": "Heading Color (if not gradient)",
       "default": "#1A1A1A"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Body Text Color",
+      "label": "Body Text Color (if not gradient)",
       "default": "#1A1A1A"
     },
     {
@@ -305,84 +331,72 @@
       "type": "range",
       "id": "heading_size",
       "label": "Heading Size (Desktop)",
-      "min": 28,
-      "max": 72,
-      "step": 2,
-      "unit": "px",
-      "default": 48
+      "min": 28, "max": 72, "step": 2, "unit": "px", "default": 48
     },
     {
       "type": "range",
       "id": "heading_weight",
       "label": "Heading Weight",
-      "min": 300,
-      "max": 900,
-      "step": 100,
-      "default": 700
+      "min": 300, "max": 900, "step": 100, "default": 700
     },
     {
       "type": "header",
       "content": "Button Style"
     },
     {
+      "type": "checkbox",
+      "id": "btn_use_gradient",
+      "label": "Use brand gradient on button",
+      "default": true,
+      "info": "Ignored when section background is gradient"
+    },
+    {
       "type": "color",
       "id": "btn_bg",
-      "label": "Button Background",
-      "default": "transparent"
+      "label": "Button Background (solid only)",
+      "default": "#F8F6F4"
     },
     {
       "type": "color",
       "id": "btn_text",
-      "label": "Button Text",
+      "label": "Button Text (solid only)",
       "default": "#1A1A1A"
     },
     {
       "type": "color",
       "id": "btn_border",
-      "label": "Button Border",
+      "label": "Button Border (solid only)",
       "default": "#1A1A1A"
     },
     {
       "type": "color",
       "id": "btn_hover_bg",
-      "label": "Button Hover Background",
+      "label": "Button Hover Background (solid only)",
       "default": "#1A1A1A"
     },
     {
       "type": "color",
       "id": "btn_hover_text",
-      "label": "Button Hover Text",
-      "default": "#ffffff"
+      "label": "Button Hover Text (solid only)",
+      "default": "#FFFFFF"
     },
     {
       "type": "range",
       "id": "btn_radius",
       "label": "Button Radius",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 4
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 4
     },
     {
       "type": "range",
       "id": "btn_padding_v",
       "label": "Button Vertical Padding",
-      "min": 8,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "default": 14
+      "min": 8, "max": 24, "step": 2, "unit": "px", "default": 14
     },
     {
       "type": "range",
       "id": "btn_padding_h",
       "label": "Button Horizontal Padding",
-      "min": 16,
-      "max": 60,
-      "step": 4,
-      "unit": "px",
-      "default": 36
+      "min": 16, "max": 60, "step": 4, "unit": "px", "default": 36
     }
   ],
   "presets": [
