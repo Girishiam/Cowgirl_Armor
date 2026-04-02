@@ -27,6 +27,56 @@
   },
 
   {
+    "name": "Brand Gradient",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_gradient",
+        "label": "Enable brand gradient globally",
+        "default": true,
+        "info": "Applies the gradient to buttons, announcement bar, cart, header (if toggled), and more across the whole theme."
+      },
+      {
+        "type": "color",
+        "id": "gradient_color_1",
+        "label": "Gradient Color 1 — Start",
+        "default": "#3A6FE8"
+      },
+      {
+        "type": "color",
+        "id": "gradient_color_2",
+        "label": "Gradient Color 2 — Middle",
+        "default": "#8B52D4"
+      },
+      {
+        "type": "color",
+        "id": "gradient_color_3",
+        "label": "Gradient Color 3 — End",
+        "default": "#CC72E8"
+      },
+      {
+        "type": "select",
+        "id": "gradient_direction",
+        "label": "Gradient Direction",
+        "options": [
+          { "value": "135deg", "label": "Diagonal ↘ (default)" },
+          { "value": "90deg",  "label": "Horizontal →"         },
+          { "value": "180deg", "label": "Vertical ↓"           },
+          { "value": "45deg",  "label": "Diagonal ↗"           }
+        ],
+        "default": "135deg"
+      },
+      {
+        "type": "checkbox",
+        "id": "gradient_header",
+        "label": "Apply gradient to header background",
+        "default": false,
+        "info": "When on, the header nav bar will use the gradient. Text automatically switches to white."
+      }
+    ]
+  },
+
+  {
     "name": "Colors",
     "settings": [
       { "type": "color", "id": "color_bg",        "label": "Page Background", "default": "#F8F6F4" },
