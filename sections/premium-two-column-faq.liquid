@@ -1,30 +1,46 @@
 <style>
+  /* ── Outer wrapper — full width, background lives here ── */
+  .premium-split-faq-outer-{{ section.id }} {
+    width: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  /* ── Inner — padding + color ── */
   .premium-split-faq-{{ section.id }} {
     position: relative;
-    background-color: {{ section.settings.bg_color }};
-    color: {{ section.settings.text_color }};
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
     overflow: hidden;
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
-  /* --- The Branded Watermark --- */
+  /* ── Watermark ── */
   .premium-split-faq__watermark {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    max-width: 1200px; /* Keeps the watermark centered and contained */
+    max-width: 1200px;
     height: 100%;
     object-fit: contain;
     object-position: center;
     opacity: {{ section.settings.watermark_opacity | divided_by: 100.0 }};
     z-index: 1;
-    pointer-events: none; /* Ensures the image doesn't block clicks on the accordions */
+    pointer-events: none;
+    {%- if section.settings.use_gradient -%}
+      filter: brightness(0) invert(1);
+    {%- endif -%}
   }
 
-  /* --- Content Container --- */
+  /* ── Container ── */
   .premium-split-faq__container {
     position: relative;
     z-index: 2;
@@ -33,7 +49,7 @@
     padding: 0 2rem;
   }
 
-  /* --- Header --- */
+  /* ── Header ── */
   .premium-split-faq__header {
     text-align: center;
     margin-bottom: 4rem;
@@ -47,7 +63,7 @@
     color: inherit;
   }
 
-  /* --- Two-Column Grid --- */
+  /* ── Two-column grid ── */
   .premium-split-faq__grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -57,24 +73,24 @@
   @media screen and (min-width: 1024px) {
     .premium-split-faq__grid {
       grid-template-columns: 1fr 1fr;
-      gap: 6rem; /* Large gap between the two columns */
+      gap: 6rem;
       align-items: flex-start;
     }
   }
 
-  .premium-split-faq__column {
-    display: flex;
-    flex-direction: column;
-  }
+  .premium-split-faq__column { display: flex; flex-direction: column; }
 
-  /* --- Minimalist Accordion UI --- */
+  /* ── Accordion ── */
   .premium-faq-item {
-    border-top: 1px solid color-mix(in srgb, {{ section.settings.text_color }} 20%, transparent);
+    border-top: 1px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.25)
+      {%- else -%} color-mix(in srgb, {{ section.settings.text_color }} 20%, transparent){%- endif -%};
   }
 
-  /* Add bottom border only to the very last item in a column to complete the box */
   .premium-faq-item:last-child {
-    border-bottom: 1px solid color-mix(in srgb, {{ section.settings.text_color }} 20%, transparent);
+    border-bottom: 1px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.25)
+      {%- else -%} color-mix(in srgb, {{ section.settings.text_color }} 20%, transparent){%- endif -%};
   }
 
   .premium-faq-btn {
@@ -92,20 +108,15 @@
     text-align: left;
     transition: opacity 0.3s ease;
   }
+  .premium-faq-btn:hover { opacity: 0.7; }
 
-  .premium-faq-btn:hover {
-    opacity: 0.7;
-  }
-
-  /* Thin Cross (+) Icon */
+  /* ── Cross icon ── */
   .premium-faq-icon {
     position: relative;
-    width: 14px;
-    height: 14px;
+    width: 14px; height: 14px;
     flex-shrink: 0;
     margin-left: 1.5rem;
   }
-
   .premium-faq-icon::before,
   .premium-faq-icon::after {
     content: '';
@@ -113,120 +124,99 @@
     background-color: currentColor;
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
+  .premium-faq-icon::before { top: 6px; left: 0; width: 14px; height: 1px; }
+  .premium-faq-icon::after  { top: 0; left: 6px; width: 1px; height: 14px; }
+  .premium-faq-item.is-active .premium-faq-icon::after { transform: rotate(90deg); }
 
-  .premium-faq-icon::before {
-    top: 6px;
-    left: 0;
-    width: 14px;
-    height: 1px; /* Very thin for a minimalist look */
-  }
-
-  .premium-faq-icon::after {
-    top: 0;
-    left: 6px;
-    width: 1px;
-    height: 14px;
-  }
-
-  /* Rotate to Minus (-) when active */
-  .premium-faq-item.is-active .premium-faq-icon::after {
-    transform: rotate(90deg);
-  }
-
-  /* Smooth Grid Animation for the Answer */
+  /* ── Answer expand ── */
   .premium-faq-answer-wrapper {
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
-
-  .premium-faq-item.is-active .premium-faq-answer-wrapper {
-    grid-template-rows: 1fr;
-  }
-
-  .premium-faq-answer-inner {
-    overflow: hidden;
-  }
+  .premium-faq-item.is-active .premium-faq-answer-wrapper { grid-template-rows: 1fr; }
+  .premium-faq-answer-inner { overflow: hidden; }
 
   .premium-faq-answer-content {
     padding-bottom: 1.5rem;
     font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.7;
-    opacity: 0.85;
+    {%- if section.settings.use_gradient -%}
+      opacity: 0.88;
+      color: #FFFFFF;
+    {%- else -%}
+      opacity: 0.85;
+    {%- endif -%}
   }
 
-  /* Load in Animation */
+  /* ── Animations ── */
   .fade-up-anim {
     opacity: 0;
     transform: translateY(20px);
     animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-
-  @keyframes fadeUpAnim {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  @keyframes fadeUpAnim { to { opacity: 1; transform: translateY(0); } }
 </style>
 
-<div class="premium-split-faq-{{ section.id }}">
-  {%- if section.settings.watermark_image != blank -%}
-    <img
-      src="{{ section.settings.watermark_image | image_url: width: 1600 }}"
-      alt=""
-      class="premium-split-faq__watermark"
-      loading="lazy"
-    >
-  {%- endif -%}
+<div class="premium-split-faq-outer-{{ section.id }}">
+  <div class="premium-split-faq-{{ section.id }}">
 
-  <div class="premium-split-faq__container">
-    <div class="premium-split-faq__header fade-up-anim">
-      <h2 class="premium-split-faq__heading">{{ section.settings.heading }}</h2>
-    </div>
+    {%- if section.settings.watermark_image != blank -%}
+      <img
+        src="{{ section.settings.watermark_image | image_url: width: 1600 }}"
+        alt=""
+        class="premium-split-faq__watermark"
+        loading="lazy"
+      >
+    {%- endif -%}
 
-    <div class="premium-split-faq__grid">
-      <div class="premium-split-faq__column fade-up-anim" style="animation-delay: 100ms;">
-        {%- for block in section.blocks -%}
-          {%- assign mod = forloop.index0 | modulo: 2 -%}
-          {%- if mod == 0 -%}
-            <div class="premium-faq-item" {{ block.shopify_attributes }}>
-              <button class="premium-faq-btn" aria-expanded="false">
-                <span>{{ block.settings.question }}</span>
-                <div class="premium-faq-icon"></div>
-              </button>
-              <div class="premium-faq-answer-wrapper">
-                <div class="premium-faq-answer-inner">
-                  <div class="premium-faq-answer-content">
-                    {{ block.settings.answer }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
+    <div class="premium-split-faq__container">
+
+      <div class="premium-split-faq__header fade-up-anim">
+        <h2 class="premium-split-faq__heading">{{ section.settings.heading }}</h2>
       </div>
 
-      <div class="premium-split-faq__column fade-up-anim" style="animation-delay: 200ms;">
-        {%- for block in section.blocks -%}
-          {%- assign mod = forloop.index0 | modulo: 2 -%}
-          {%- if mod != 0 -%}
-            <div class="premium-faq-item" {{ block.shopify_attributes }}>
-              <button class="premium-faq-btn" aria-expanded="false">
-                <span>{{ block.settings.question }}</span>
-                <div class="premium-faq-icon"></div>
-              </button>
-              <div class="premium-faq-answer-wrapper">
-                <div class="premium-faq-answer-inner">
-                  <div class="premium-faq-answer-content">
-                    {{ block.settings.answer }}
+      <div class="premium-split-faq__grid">
+
+        <div class="premium-split-faq__column fade-up-anim" style="animation-delay: 100ms;">
+          {%- for block in section.blocks -%}
+            {%- assign mod = forloop.index0 | modulo: 2 -%}
+            {%- if mod == 0 -%}
+              <div class="premium-faq-item" {{ block.shopify_attributes }}>
+                <button class="premium-faq-btn" aria-expanded="false">
+                  <span>{{ block.settings.question }}</span>
+                  <div class="premium-faq-icon"></div>
+                </button>
+                <div class="premium-faq-answer-wrapper">
+                  <div class="premium-faq-answer-inner">
+                    <div class="premium-faq-answer-content">{{ block.settings.answer }}</div>
                   </div>
                 </div>
               </div>
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <div class="premium-split-faq__column fade-up-anim" style="animation-delay: 200ms;">
+          {%- for block in section.blocks -%}
+            {%- assign mod = forloop.index0 | modulo: 2 -%}
+            {%- if mod != 0 -%}
+              <div class="premium-faq-item" {{ block.shopify_attributes }}>
+                <button class="premium-faq-btn" aria-expanded="false">
+                  <span>{{ block.settings.question }}</span>
+                  <div class="premium-faq-icon"></div>
+                </button>
+                <div class="premium-faq-answer-wrapper">
+                  <div class="premium-faq-answer-inner">
+                    <div class="premium-faq-answer-content">{{ block.settings.answer }}</div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
       </div>
     </div>
   </div>
@@ -234,24 +224,19 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const section = document.querySelector('.premium-split-faq-{{ section.id }}');
+    var section = document.querySelector('.premium-split-faq-{{ section.id }}');
     if (!section) return;
-
-    const faqBtns = section.querySelectorAll('.premium-faq-btn');
-
-    faqBtns.forEach(btn => {
+    var faqBtns = section.querySelectorAll('.premium-faq-btn');
+    faqBtns.forEach(function(btn) {
       btn.addEventListener('click', function() {
-        const item = this.closest('.premium-faq-item');
-        const isActive = item.classList.contains('is-active');
-
-        // Optional: Close all others when one opens (keeps layout tidy)
+        var item = this.closest('.premium-faq-item');
+        var isActive = item.classList.contains('is-active');
         {% if section.settings.close_others %}
-          section.querySelectorAll('.premium-faq-item').forEach(otherItem => {
-            otherItem.classList.remove('is-active');
-            otherItem.querySelector('.premium-faq-btn').setAttribute('aria-expanded', 'false');
+          section.querySelectorAll('.premium-faq-item').forEach(function(other) {
+            other.classList.remove('is-active');
+            other.querySelector('.premium-faq-btn').setAttribute('aria-expanded', 'false');
           });
         {% endif %}
-
         if (!isActive) {
           item.classList.add('is-active');
           this.setAttribute('aria-expanded', 'true');
@@ -282,6 +267,29 @@
     },
     {
       "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Spans full width. Text and dividers auto-switch to white."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color (if not gradient)",
+      "default": "#F8F6F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color (if not gradient)",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
       "content": "Watermark Background"
     },
     {
@@ -292,47 +300,26 @@
     {
       "type": "range",
       "id": "watermark_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
+      "min": 0, "max": 100, "step": 5, "unit": "%",
       "label": "Image Opacity",
       "default": 10,
-      "info": "Keep this low so the text remains readable."
+      "info": "On gradient bg the image is auto-inverted to white. Keep low for readability."
     },
     {
       "type": "header",
-      "content": "Colors & Spacing"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#EBEBEB"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#1A1A1A"
+      "content": "Spacing"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "unit": "px",
+      "min": 0, "max": 160, "step": 4, "unit": "px",
       "label": "Top Padding",
       "default": 100
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "unit": "px",
+      "min": 0, "max": 160, "step": 4, "unit": "px",
       "label": "Bottom Padding",
       "default": 100
     }
