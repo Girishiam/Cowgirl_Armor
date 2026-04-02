@@ -139,9 +139,14 @@
       "type": "premium-contact-general",
       "name": "General Contact & Graphic",
       "settings": {
+        "use_gradient": true,
+        "bg_color": "#ebebeb",
+        "card_bg_color": "#ffffff",
+        "text_color": "#1a1a1a",
         "heading": "Questions?",
         "subtext": "We are here to help!",
         "image": "shopify://shop_images/IMG_1768_1.png",
+        "btn_use_gradient": true,
         "show_checkbox": true,
         "checkbox_label": "Sign up for news and updates",
         "label_first_name": "First Name",
@@ -152,9 +157,6 @@
         "label_required": "(required)",
         "button_label": "Submit",
         "success_message": "Thanks for reaching out! We will get back to you shortly.",
-        "bg_color": "#ebebeb",
-        "card_bg_color": "#ffffff",
-        "text_color": "#1a1a1a",
         "padding_top": 100,
         "padding_bottom": 100
       }
