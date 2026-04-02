@@ -1,398 +1,153 @@
-<div class="premium-hero {{ section.settings.animation_style }}"
-     style="--bg-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
-     data-parallax="{{ section.settings.enable_parallax }}"
-     data-animation-speed="{{ section.settings.animation_speed }}">
+<style>
+  .premium-hero-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    height: {{ section.settings.hero_height }}vh;
+    overflow: hidden;
+    {%- if section.settings.use_gradient and section.settings.bg_image == blank -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  .premium-hero-{{ section.id }} .premium-hero__bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  .premium-hero-{{ section.id }} .premium-hero__overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    transition: opacity 0.8s ease;
+    {%- if section.settings.use_gradient and section.settings.bg_image != blank -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.overlay_color }};
+    {%- endif -%}
+  }
+
+  .premium-hero-{{ section.id }} .premium-hero__content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+    padding: 0 2rem;
+  }
+
+  .premium-hero-{{ section.id }} .premium-hero__center-image {
+    perspective: 1000px;
+  }
+
+  .premium-hero-{{ section.id }} .center-hero-img {
+    filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4));
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+    animation:
+      heroImageEntrance 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards,
+      float 6s ease-in-out 2s infinite alternate;
+  }
+
+  .premium-hero-{{ section.id }} .shield-container {
+    border: 2px solid rgba(255,255,255,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+  }
+
+  .premium-hero-{{ section.id }} .fallback-text {
+    color: #fff;
+    font-size: 2rem;
+    letter-spacing: 4px;
+    font-family: var(--font-heading-family, serif);
+    margin: 0;
+  }
+
+  @keyframes heroImageEntrance {
+    0%   { opacity: 0; transform: translateY(50px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes float {
+    0%   { transform: translateY(0px) scale(1); }
+    100% { transform: translateY(-15px) scale(1.02); }
+  }
+</style>
+
+<div class="premium-hero-{{ section.id }}">
 
   {%- if section.settings.bg_image != blank -%}
     <img
-      src="{{ section.settings.bg_image | img_url: 'master' }}"
-      alt="{{ section.settings.bg_image.alt | default: 'Hero Background' }}"
+      src="{{ section.settings.bg_image | image_url: width: 2000 }}"
+      alt="{{ section.settings.bg_image.alt | default: 'Hero Background' | escape }}"
       class="premium-hero__bg"
-      style="object-position: {{ section.settings.bg_position }};"
       loading="eager"
-      fetchpriority="high"
     >
   {%- endif -%}
 
-  <div class="premium-hero__overlay"
-       style="background: {% if section.settings.use_gradient %}{{ section.settings.overlay_gradient }}{% else %}{{ section.settings.overlay_color }}{% endif %};
-              opacity: var(--bg-overlay-opacity);"></div>
+  {%- if section.settings.overlay_opacity > 0 -%}
+    <div class="premium-hero__overlay"></div>
+  {%- endif -%}
 
-  <div class="premium-hero__content-container"
-       style="justify-content: {{ section.settings.content_horizontal }};
-              align-items: {{ section.settings.content_vertical }};">
-
-    <div class="premium-hero__center-image"
-         style="--shadow-x: {{ section.settings.shadow_x }}px;
-                --shadow-y: {{ section.settings.shadow_y }}px;
-                --shadow-blur: {{ section.settings.shadow_blur }}px;
-                --shadow-opacity: {{ section.settings.shadow_opacity | divided_by: 100.0 }};">
-
+  <div class="premium-hero__content-container">
+    <div class="premium-hero__center-image">
       {%- if section.settings.center_image != blank -%}
         <img
-          src="{{ section.settings.center_image | img_url: 'master' }}"
-          alt="{{ section.settings.center_image.alt | default: 'Center Image' }}"
-          class="center-hero-img floating-anim"
-          style="max-width: min({{ section.settings.image_width }}px, 90vw);
-                 width: 100%;
-                 height: auto;
-                 object-fit: contain;
-                 border-radius: {{ section.settings.image_border_radius }}px;"
+          src="{{ section.settings.center_image | image_url: width: section.settings.image_width }}"
+          alt="{{ section.settings.center_image.alt | default: 'Center Image' | escape }}"
+          class="center-hero-img"
+          style="max-width: {{ section.settings.image_width }}px; width: 100%; height: auto; object-fit: contain;"
           loading="eager"
         >
       {%- else -%}
-        <div class="shield-container center-hero-img floating-anim"
-             style="width: {{ section.settings.image_width }}px;
-                    height: {{ section.settings.image_width | times: 1.25 }}px;
-                    border-radius: {{ section.settings.fallback_border_radius }}px;
-                    background: {{ section.settings.fallback_bg_color }};
-                    border: {{ section.settings.fallback_border_width }}px solid {{ section.settings.fallback_border_color }};
-                    backdrop-filter: blur({{ section.settings.fallback_blur }}px);">
-           <h2 class="fallback-text"
-               style="color: {{ section.settings.fallback_text_color }};
-                      font-size: {{ section.settings.fallback_text_size }}px;
-                      letter-spacing: {{ section.settings.fallback_letter_spacing }}px;">
-             {{ section.settings.fallback_text }}
-           </h2>
+        <div class="shield-container center-hero-img"
+             style="width: {{ section.settings.image_width }}px; height: {{ section.settings.image_width | times: 1.25 }}px;">
+          <h2 class="fallback-text">C.A.</h2>
         </div>
       {%- endif -%}
     </div>
   </div>
 
-  {%- if section.settings.show_scroll_indicator -%}
-    <div class="scroll-indicator" style="color: {{ section.settings.scroll_indicator_color }};">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 5v14M19 12l-7 7-7-7"/>
-      </svg>
-      {%- if section.settings.scroll_indicator_text != blank -%}
-        <span class="scroll-text">{{ section.settings.scroll_indicator_text }}</span>
-      {%- endif -%}
-    </div>
-  {%- endif -%}
 </div>
-
-<style>
-  .premium-hero {
-    position: relative;
-    width: 100%;
-    height: {{ section.settings.hero_height }}vh;
-    min-height: {{ section.settings.min_height }}px;
-    overflow: hidden;
-    background: {{ section.settings.bg_color | default: '#d9d9d9' }};
-  }
-
-  .premium-hero__bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    transition: transform {{ section.settings.bg_transition_speed }}s ease-out;
-  }
-
-  /* Parallax effect */
-  .premium-hero[data-parallax="true"] .premium-hero__bg {
-    transform: scale(1.1);
-  }
-
-  .premium-hero__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    transition: opacity {{ section.settings.overlay_transition }}s ease;
-  }
-
-  .premium-hero__content-container {
-    display: flex;
-    height: 100%;
-    position: relative;
-    z-index: 2;
-    padding: {{ section.settings.content_padding_top }}px {{ section.settings.content_padding_horizontal }}px {{ section.settings.content_padding_bottom }}px;
-  }
-
-  .premium-hero__center-image {
-    perspective: {{ section.settings.perspective }}px;
-  }
-
-  .center-hero-img {
-    filter: drop-shadow(
-      var(--shadow-x, 0)
-      var(--shadow-y, 10px)
-      var(--shadow-blur, 20px)
-      rgba(0, 0, 0, var(--shadow-opacity, 0.15))
-    );
-    opacity: 0;
-    transform: translateY({{ section.settings.entrance_distance }}px) scale({{ section.settings.entrance_scale | divided_by: 100.0 }});
-    animation:
-      heroImageEntrance {{ section.settings.entrance_duration }}s cubic-bezier({{ section.settings.entrance_easing }}) forwards,
-      {% if section.settings.enable_float %}float {{ section.settings.float_duration }}s ease-in-out infinite alternate{% endif %};
-    animation-delay: {{ section.settings.entrance_delay }}s, {{ section.settings.float_delay }}s;
-    transition: transform {{ section.settings.hover_transition }}s ease;
-  }
-
-  {% if section.settings.enable_hover_effect %}
-  .center-hero-img:hover {
-    transform: translateY(-{{ section.settings.hover_lift }}px) scale({{ section.settings.hover_scale | divided_by: 100.0 }}) !important;
-  }
-  {% endif %}
-
-  /* Animation styles */
-  .premium-hero.animation-fade .center-hero-img {
-    animation: heroFadeIn {{ section.settings.entrance_duration }}s ease forwards;
-  }
-
-  .premium-hero.animation-zoom .center-hero-img {
-    animation: heroZoomIn {{ section.settings.entrance_duration }}s ease forwards;
-  }
-
-  .premium-hero.animation-slide-up .center-hero-img {
-    animation: heroSlideUp {{ section.settings.entrance_duration }}s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Mobile Responsive Adjustments */
-  @media screen and (max-width: 767px) {
-    .premium-hero {
-      height: {{ section.settings.mobile_height }}vh;
-      min-height: {{ section.settings.mobile_min_height }}px;
-    }
-    .premium-hero__content-container {
-      padding: {{ section.settings.mobile_padding_top }}px {{ section.settings.mobile_padding_horizontal }}px {{ section.settings.mobile_padding_bottom }}px;
-    }
-    .center-hero-img {
-      max-width: {{ section.settings.mobile_image_width }}vw !important;
-      width: {{ section.settings.mobile_image_width }}vw !important;
-    }
-  }
-
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
-    .premium-hero {
-      height: {{ section.settings.tablet_height }}vh;
-    }
-    .center-hero-img {
-      max-width: {{ section.settings.tablet_image_width }}vw !important;
-    }
-  }
-
-  /* Fallback shield container */
-  .shield-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .fallback-text {
-    font-family: {{ section.settings.fallback_font }}, serif;
-    margin: 0;
-    font-weight: {{ section.settings.fallback_font_weight }};
-  }
-
-  /* Scroll Indicator */
-  .scroll-indicator {
-    position: absolute;
-    bottom: {{ section.settings.scroll_indicator_bottom }}px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    animation: scrollBounce 2s ease-in-out infinite;
-    cursor: pointer;
-    opacity: {{ section.settings.scroll_indicator_opacity | divided_by: 100.0 }};
-    transition: opacity 0.3s ease;
-  }
-
-  .scroll-indicator:hover {
-    opacity: 1;
-  }
-
-  .scroll-text {
-    font-size: {{ section.settings.scroll_text_size }}px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-
-  /* Keyframe Animations */
-  @keyframes heroImageEntrance {
-    0% {
-      opacity: 0;
-      transform: translateY({{ section.settings.entrance_distance }}px) scale({{ section.settings.entrance_scale | divided_by: 100.0 }});
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  @keyframes heroFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes heroZoomIn {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes heroSlideUp {
-    from {
-      opacity: 0;
-      transform: translateY(100px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes float {
-    0% {
-      transform: translateY(0px) scale(1);
-    }
-    100% {
-      transform: translateY(-{{ section.settings.float_distance }}px) scale({{ section.settings.float_scale | divided_by: 100.0 }});
-    }
-  }
-
-  @keyframes scrollBounce {
-    0%, 100% {
-      transform: translateX(-50%) translateY(0);
-    }
-    50% {
-      transform: translateX(-50%) translateY(10px);
-    }
-  }
-</style>
-
-<script>
-  // Parallax effect on scroll
-  {%- if section.settings.enable_parallax -%}
-  document.addEventListener('DOMContentLoaded', function() {
-    const hero = document.querySelector('.premium-hero[data-parallax="true"]');
-    if (!hero) return;
-
-    const bg = hero.querySelector('.premium-hero__bg');
-    const speed = parseFloat(hero.dataset.animationSpeed) || 0.5;
-
-    let ticking = false;
-
-    function updateParallax() {
-      const scrolled = window.pageYOffset;
-      const heroHeight = hero.offsetHeight;
-
-      if (scrolled < heroHeight) {
-        const yPos = scrolled * speed;
-        bg.style.transform = `translateY(${yPos}px) scale(1.1)`;
-      }
-
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', function() {
-      if (!ticking) {
-        window.requestAnimationFrame(updateParallax);
-        ticking = true;
-      }
-    });
-  });
-  {%- endif -%}
-
-  // Smooth scroll indicator
-  {%- if section.settings.show_scroll_indicator -%}
-  document.addEventListener('DOMContentLoaded', function() {
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    if (scrollIndicator) {
-      scrollIndicator.addEventListener('click', function() {
-        window.scrollTo({
-          top: window.innerHeight,
-          behavior: 'smooth'
-        });
-      });
-    }
-  });
-  {%- endif -%}
-</script>
 
 {% schema %}
 {
-  "name": "Premium Hero (Enhanced)",
+  "name": "Premium Center Image Hero",
   "settings": [
-    {
-      "type": "header",
-      "content": "Hero Dimensions"
-    },
     {
       "type": "range",
       "id": "hero_height",
-      "min": 40,
-      "max": 100,
-      "step": 5,
-      "unit": "vh",
-      "label": "Desktop Height",
+      "min": 40, "max": 100, "step": 5, "unit": "vh",
+      "label": "Section Height",
       "default": 90
     },
     {
-      "type": "range",
-      "id": "min_height",
-      "min": 300,
-      "max": 800,
-      "step": 50,
-      "unit": "px",
-      "label": "Minimum Height",
-      "default": 500
-    },
-    {
-      "type": "range",
-      "id": "tablet_height",
-      "min": 40,
-      "max": 100,
-      "step": 5,
-      "unit": "vh",
-      "label": "Tablet Height",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "mobile_height",
-      "min": 40,
-      "max": 100,
-      "step": 5,
-      "unit": "vh",
-      "label": "Mobile Height",
-      "default": 70
-    },
-    {
-      "type": "range",
-      "id": "mobile_min_height",
-      "min": 300,
-      "max": 700,
-      "step": 50,
-      "unit": "px",
-      "label": "Mobile Minimum Height",
-      "default": 500
-    },
-    {
       "type": "header",
-      "content": "Background Settings"
+      "content": "Background"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient",
+      "default": true,
+      "info": "No image = gradient background. With image = gradient overlay tint."
     },
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Background Color",
-      "default": "#d9d9d9"
+      "label": "Background Color (if not gradient)",
+      "default": "#F8F6F4"
     },
     {
       "type": "image_picker",
@@ -400,586 +155,38 @@
       "label": "Background Image"
     },
     {
-      "type": "select",
-      "id": "bg_position",
-      "label": "Background Position",
-      "options": [
-        { "value": "center center", "label": "Center" },
-        { "value": "top center", "label": "Top" },
-        { "value": "bottom center", "label": "Bottom" },
-        { "value": "left center", "label": "Left" },
-        { "value": "right center", "label": "Right" }
-      ],
-      "default": "center center"
-    },
-    {
-      "type": "range",
-      "id": "bg_transition_speed",
-      "min": 0,
-      "max": 3,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Background Transition Speed",
-      "default": 0.8
-    },
-    {
-      "type": "header",
-      "content": "Overlay Settings"
-    },
-    {
-      "type": "checkbox",
-      "id": "use_gradient",
-      "label": "Use Gradient Overlay",
-      "default": false
-    },
-    {
       "type": "color",
       "id": "overlay_color",
-      "label": "Overlay Color",
+      "label": "Overlay Color (if not gradient)",
       "default": "#000000"
-    },
-    {
-      "type": "text",
-      "id": "overlay_gradient",
-      "label": "Gradient CSS",
-      "info": "E.g., linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)",
-      "default": "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%)"
     },
     {
       "type": "range",
       "id": "overlay_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
+      "min": 0, "max": 100, "step": 5, "unit": "%",
       "label": "Overlay Opacity",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "overlay_transition",
-      "min": 0,
-      "max": 2,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Overlay Transition Duration",
-      "default": 0.8
-    },
-    {
-      "type": "header",
-      "content": "Content Positioning"
-    },
-    {
-      "type": "select",
-      "id": "content_horizontal",
-      "label": "Horizontal Alignment",
-      "options": [
-        { "value": "flex-start", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "flex-end", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "content_vertical",
-      "label": "Vertical Alignment",
-      "options": [
-        { "value": "flex-start", "label": "Top" },
-        { "value": "center", "label": "Center" },
-        { "value": "flex-end", "label": "Bottom" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "range",
-      "id": "content_padding_top",
-      "min": 0,
-      "max": 200,
-      "step": 10,
-      "unit": "px",
-      "label": "Content Padding Top",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "content_padding_bottom",
-      "min": 0,
-      "max": 200,
-      "step": 10,
-      "unit": "px",
-      "label": "Content Padding Bottom",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "content_padding_horizontal",
-      "min": 10,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Content Padding Horizontal",
       "default": 30
     },
     {
-      "type": "range",
-      "id": "mobile_padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Mobile Padding Top",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Mobile Padding Bottom",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_horizontal",
-      "min": 10,
-      "max": 50,
-      "step": 5,
-      "unit": "px",
-      "label": "Mobile Padding Horizontal",
-      "default": 15
-    },
-    {
       "type": "header",
-      "content": "Center Image Settings"
+      "content": "Center Image"
     },
     {
       "type": "image_picker",
       "id": "center_image",
-      "label": "Center Image"
+      "label": "Center Overlay Image"
     },
     {
       "type": "range",
       "id": "image_width",
-      "min": 100,
-      "max": 1000,
-      "step": 20,
-      "unit": "px",
-      "label": "Desktop Image Max Width",
+      "min": 100, "max": 1000, "step": 20, "unit": "px",
+      "label": "Image Max Width",
       "default": 400
-    },
-    {
-      "type": "range",
-      "id": "tablet_image_width",
-      "min": 50,
-      "max": 90,
-      "step": 5,
-      "unit": "vw",
-      "label": "Tablet Image Width",
-      "default": 70
-    },
-    {
-      "type": "range",
-      "id": "mobile_image_width",
-      "min": 50,
-      "max": 95,
-      "step": 5,
-      "unit": "vw",
-      "label": "Mobile Image Width",
-      "default": 90
-    },
-    {
-      "type": "range",
-      "id": "image_border_radius",
-      "min": 0,
-      "max": 50,
-      "step": 2,
-      "unit": "px",
-      "label": "Image Border Radius",
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "Shadow Settings"
-    },
-    {
-      "type": "range",
-      "id": "shadow_x",
-      "min": -50,
-      "max": 50,
-      "step": 1,
-      "unit": "px",
-      "label": "Shadow X Offset",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "shadow_y",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "px",
-      "label": "Shadow Y Offset",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "shadow_blur",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Shadow Blur",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "shadow_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Shadow Opacity",
-      "default": 15
-    },
-    {
-      "type": "header",
-      "content": "Animation Settings"
-    },
-    {
-      "type": "select",
-      "id": "animation_style",
-      "label": "Entrance Animation",
-      "options": [
-        { "value": "animation-default", "label": "Fade Up & Scale" },
-        { "value": "animation-fade", "label": "Fade In" },
-        { "value": "animation-zoom", "label": "Zoom In" },
-        { "value": "animation-slide-up", "label": "Slide Up" }
-      ],
-      "default": "animation-default"
-    },
-    {
-      "type": "range",
-      "id": "entrance_duration",
-      "min": 0.3,
-      "max": 3,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Entrance Duration",
-      "default": 1.8
-    },
-    {
-      "type": "range",
-      "id": "entrance_delay",
-      "min": 0,
-      "max": 2,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Entrance Delay",
-      "default": 0.2
-    },
-    {
-      "type": "range",
-      "id": "entrance_distance",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Entrance Distance",
-      "default": 50
-    },
-    {
-      "type": "range",
-      "id": "entrance_scale",
-      "min": 50,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Entrance Scale",
-      "default": 95,
-      "info": "Starting scale of the animation"
-    },
-    {
-      "type": "text",
-      "id": "entrance_easing",
-      "label": "Entrance Easing",
-      "default": "0.16, 1, 0.3, 1",
-      "info": "Cubic bezier values (e.g., 0.16, 1, 0.3, 1)"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_float",
-      "label": "Enable Float Animation",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "float_duration",
-      "min": 2,
-      "max": 10,
-      "step": 0.5,
-      "unit": "s",
-      "label": "Float Duration",
-      "default": 6
-    },
-    {
-      "type": "range",
-      "id": "float_delay",
-      "min": 0,
-      "max": 5,
-      "step": 0.5,
-      "unit": "s",
-      "label": "Float Delay",
-      "default": 2
-    },
-    {
-      "type": "range",
-      "id": "float_distance",
-      "min": 5,
-      "max": 50,
-      "step": 5,
-      "unit": "px",
-      "label": "Float Distance",
-      "default": 15
-    },
-    {
-      "type": "range",
-      "id": "float_scale",
-      "min": 100,
-      "max": 110,
-      "step": 1,
-      "unit": "%",
-      "label": "Float Scale",
-      "default": 102
-    },
-    {
-      "type": "range",
-      "id": "perspective",
-      "min": 500,
-      "max": 2000,
-      "step": 100,
-      "unit": "px",
-      "label": "3D Perspective",
-      "default": 1000
-    },
-    {
-      "type": "header",
-      "content": "Hover Effects"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_hover_effect",
-      "label": "Enable Hover Effect",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "hover_lift",
-      "min": 0,
-      "max": 30,
-      "step": 2,
-      "unit": "px",
-      "label": "Hover Lift Distance",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "hover_scale",
-      "min": 100,
-      "max": 120,
-      "step": 2,
-      "unit": "%",
-      "label": "Hover Scale",
-      "default": 105
-    },
-    {
-      "type": "range",
-      "id": "hover_transition",
-      "min": 0.1,
-      "max": 1,
-      "step": 0.1,
-      "unit": "s",
-      "label": "Hover Transition Speed",
-      "default": 0.4
-    },
-    {
-      "type": "header",
-      "content": "Parallax Effect"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_parallax",
-      "label": "Enable Parallax Scroll",
-      "default": false,
-      "info": "Background moves slower than scroll for depth effect"
-    },
-    {
-      "type": "range",
-      "id": "animation_speed",
-      "min": 0.1,
-      "max": 1,
-      "step": 0.1,
-      "label": "Parallax Speed",
-      "default": 0.5,
-      "info": "Lower = slower movement"
-    },
-    {
-      "type": "header",
-      "content": "Fallback Settings (When No Image)"
-    },
-    {
-      "type": "text",
-      "id": "fallback_text",
-      "label": "Fallback Text",
-      "default": "C.A."
-    },
-    {
-      "type": "color",
-      "id": "fallback_text_color",
-      "label": "Fallback Text Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "fallback_text_size",
-      "min": 16,
-      "max": 80,
-      "step": 2,
-      "unit": "px",
-      "label": "Fallback Text Size",
-      "default": 32
-    },
-    {
-      "type": "range",
-      "id": "fallback_letter_spacing",
-      "min": 0,
-      "max": 10,
-      "step": 1,
-      "unit": "px",
-      "label": "Fallback Letter Spacing",
-      "default": 4
-    },
-    {
-      "type": "select",
-      "id": "fallback_font",
-      "label": "Fallback Font",
-      "options": [
-        { "value": "serif", "label": "Serif" },
-        { "value": "sans-serif", "label": "Sans Serif" },
-        { "value": "monospace", "label": "Monospace" },
-        { "value": "cursive", "label": "Cursive" }
-      ],
-      "default": "serif"
-    },
-    {
-      "type": "range",
-      "id": "fallback_font_weight",
-      "min": 300,
-      "max": 900,
-      "step": 100,
-      "label": "Fallback Font Weight",
-      "default": 400
-    },
-    {
-      "type": "color",
-      "id": "fallback_bg_color",
-      "label": "Fallback Background",
-      "default": "rgba(0,0,0,0.2)"
-    },
-    {
-      "type": "color",
-      "id": "fallback_border_color",
-      "label": "Fallback Border Color",
-      "default": "rgba(255,255,255,0.8)"
-    },
-    {
-      "type": "range",
-      "id": "fallback_border_width",
-      "min": 0,
-      "max": 10,
-      "step": 1,
-      "unit": "px",
-      "label": "Fallback Border Width",
-      "default": 2
-    },
-    {
-      "type": "range",
-      "id": "fallback_border_radius",
-      "min": 0,
-      "max": 50,
-      "step": 2,
-      "unit": "px",
-      "label": "Fallback Border Radius",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "fallback_blur",
-      "min": 0,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "label": "Fallback Backdrop Blur",
-      "default": 5
-    },
-    {
-      "type": "header",
-      "content": "Scroll Indicator"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_scroll_indicator",
-      "label": "Show Scroll Indicator",
-      "default": false
-    },
-    {
-      "type": "color",
-      "id": "scroll_indicator_color",
-      "label": "Indicator Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "scroll_indicator_bottom",
-      "min": 10,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Distance from Bottom",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "scroll_indicator_opacity",
-      "min": 10,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Indicator Opacity",
-      "default": 70
-    },
-    {
-      "type": "text",
-      "id": "scroll_indicator_text",
-      "label": "Indicator Text",
-      "default": "Scroll"
-    },
-    {
-      "type": "range",
-      "id": "scroll_text_size",
-      "min": 10,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "label": "Text Size",
-      "default": 12
     }
   ],
   "presets": [
     {
-      "name": "Premium Hero (Enhanced)",
+      "name": "Premium Root Hero Image",
       "category": "Image"
     }
   ]
