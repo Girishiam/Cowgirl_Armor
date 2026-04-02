@@ -1,9 +1,23 @@
 <style>
+  /* ── Outer wrapper — full width, background lives here ── */
+  .premium-contact-outer-{{ section.id }} {
+    width: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  /* ── Inner — layout only ── */
   .premium-contact-{{ section.id }} {
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    background-color: {{ section.settings.bg_color }};
-    color: {{ section.settings.text_color }};
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
   .premium-contact__container {
@@ -48,6 +62,7 @@
     gap: 2rem;
   }
 
+  /* ── Messages ── */
   .premium-form__message {
     padding: 1rem;
     font-family: var(--font-body);
@@ -56,14 +71,14 @@
     margin-bottom: 1rem;
   }
   .premium-form__message--success {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: #27ae60;
-    border: 1px solid #27ae60;
+    background-color: rgba(46,204,113,0.15);
+    border: 1px solid rgba(46,204,113,0.6);
+    {%- if section.settings.use_gradient -%}color: #FFFFFF;{%- else -%}color: #27ae60;{%- endif -%}
   }
   .premium-form__message--error {
-    background-color: rgba(231, 76, 60, 0.1);
+    background-color: rgba(231,76,60,0.15);
+    border: 1px solid rgba(231,76,60,0.5);
     color: #c0392b;
-    border: 1px solid #c0392b;
   }
 
   .premium-form__row {
@@ -71,11 +86,8 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-
   @media screen and (min-width: 768px) {
-    .premium-form__row {
-      grid-template-columns: 1fr 1fr;
-    }
+    .premium-form__row { grid-template-columns: 1fr 1fr; }
   }
 
   .premium-form__field {
@@ -90,39 +102,52 @@
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: inherit;
-    opacity: 0.9;
+    {%- if section.settings.use_gradient -%}opacity: 0.9;{%- else -%}opacity: 0.9;{%- endif -%}
   }
-
   .premium-form__label span {
     font-weight: normal;
     opacity: 0.6;
     margin-left: 0.25rem;
   }
 
+  /* ── Inputs — underline style, adapts to bg ── */
   .premium-form__input,
   .premium-form__textarea {
     width: 100%;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 1px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.4)
+      {%- else -%} rgba(0,0,0,0.2){%- endif -%};
     color: inherit;
     font-family: var(--font-body);
     font-size: 1rem;
     padding: 0.5rem 0;
     transition: border-color 0.3s ease;
+    {%- if section.settings.use_gradient -%}
+      caret-color: #FFFFFF;
+    {%- endif -%}
   }
+  .premium-form__textarea { resize: vertical; min-height: 120px; }
 
-  .premium-form__textarea {
-    resize: vertical;
-    min-height: 120px;
+  .premium-form__input::placeholder,
+  .premium-form__textarea::placeholder {
+    {%- if section.settings.use_gradient -%}
+      color: rgba(255,255,255,0.45);
+    {%- else -%}
+      color: rgba(0,0,0,0.35);
+    {%- endif -%}
   }
 
   .premium-form__input:focus,
   .premium-form__textarea:focus {
     outline: none;
-    border-bottom-color: {{ section.settings.text_color }};
+    border-bottom-color:
+      {%- if section.settings.use_gradient -%} #FFFFFF
+      {%- else -%} {{ section.settings.text_color }}{%- endif -%};
   }
 
+  /* ── Checkbox ── */
   .premium-form__checkbox-wrapper {
     display: flex;
     align-items: center;
@@ -130,58 +155,83 @@
     cursor: pointer;
     margin-top: -0.5rem;
   }
-
   .premium-form__checkbox {
     appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 1px solid rgba(0,0,0,0.3);
+    width: 18px; height: 18px;
+    border: 1px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.6)
+      {%- else -%} rgba(0,0,0,0.3){%- endif -%};
     background: transparent;
     cursor: pointer;
     position: relative;
     border-radius: 2px;
     transition: all 0.2s ease;
+    flex-shrink: 0;
   }
-
   .premium-form__checkbox:checked {
-    border-color: {{ section.settings.text_color }};
+    {%- if section.settings.use_gradient -%}
+      background: #FFFFFF;
+      border-color: #FFFFFF;
+    {%- else -%}
+      border-color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
-
   .premium-form__checkbox:checked::after {
     content: '✓';
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     font-size: 12px;
-    color: {{ section.settings.text_color }};
+    {%- if section.settings.use_gradient -%}
+      color: #8B52D4;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
-
   .premium-form__checkbox-label {
     font-family: var(--font-body);
     font-size: 0.9rem;
     color: inherit;
-    opacity: 0.8;
+    opacity: 0.85;
   }
 
+  /* ── Submit button ── */
   .premium-form__submit {
     align-self: flex-start;
-    background: transparent;
-    border: 1px solid {{ section.settings.text_color }};
-    color: {{ section.settings.text_color }};
     padding: 1rem 3rem;
     font-family: var(--font-heading);
     font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: opacity 0.25s ease, transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
     margin-top: 1rem;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,0.6);
+    {%- elsif section.settings.btn_use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      color: #FFFFFF;
+      border: none;
+    {%- else -%}
+      background: transparent;
+      color: {{ section.settings.text_color }};
+      border: 1px solid {{ section.settings.text_color }};
+    {%- endif -%}
   }
-
   .premium-form__submit:hover {
-    background-color: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.28);
+      border-color: #FFFFFF;
+      transform: translateY(-2px);
+    {%- elsif section.settings.btn_use_gradient -%}
+      opacity: 0.85;
+      transform: translateY(-2px);
+    {%- else -%}
+      background-color: {{ section.settings.text_color }};
+      color: {{ section.settings.bg_color }};
+    {%- endif -%}
   }
 
   .fade-up-anim {
@@ -189,108 +239,102 @@
     transform: translateY(20px);
     animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-
   @keyframes fadeUpAnim {
     to { opacity: 1; transform: translateY(0); }
   }
 </style>
 
-<div class="premium-contact-{{ section.id }}">
-  <div class="premium-contact__container">
+<div class="premium-contact-outer-{{ section.id }}">
+  <div class="premium-contact-{{ section.id }}">
+    <div class="premium-contact__container">
 
-    <div class="premium-contact__text-col fade-up-anim">
-      <h2 class="premium-contact__heading">{{ section.settings.heading }}</h2>
-    </div>
+      <div class="premium-contact__text-col fade-up-anim">
+        <h2 class="premium-contact__heading">{{ section.settings.heading }}</h2>
+      </div>
 
-    <div class="premium-contact__form-col fade-up-anim" style="animation-delay: 200ms;">
-      {%- form 'contact', id: 'MemorialContactForm-{{ section.id }}', class: 'premium-form' -%}
+      <div class="premium-contact__form-col fade-up-anim" style="animation-delay: 200ms;">
+        {%- form 'contact', id: 'MemorialContactForm-{{ section.id }}', class: 'premium-form' -%}
 
-        {%- if form.posted_successfully? -%}
-          <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
-            {{ section.settings.success_message }}
-          </div>
-        {%- elsif form.errors -%}
-          <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
-            Please adjust the following: {{ form.errors | default_errors }}
-          </div>
-        {%- endif -%}
-
-        {%- unless form.posted_successfully? -%}
-
-          <div class="premium-form__row">
-            <div class="premium-form__field">
-              <label class="premium-form__label" for="ContactForm-first-{{ section.id }}">
-                {{ section.settings.label_first_name | default: 'First Name' }}
-                <span>{{ section.settings.label_required | default: '(required)' }}</span>
-              </label>
-              <input type="text" id="ContactForm-first-{{ section.id }}"
-                     class="premium-form__input"
-                     name="contact[First Name]"
-                     autocomplete="given-name" required>
+          {%- if form.posted_successfully? -%}
+            <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
+              {{ section.settings.success_message }}
             </div>
-            <div class="premium-form__field">
-              <label class="premium-form__label" for="ContactForm-last-{{ section.id }}">
-                {{ section.settings.label_last_name | default: 'Last Name' }}
-                <span>{{ section.settings.label_required | default: '(required)' }}</span>
-              </label>
-              <input type="text" id="ContactForm-last-{{ section.id }}"
-                     class="premium-form__input"
-                     name="contact[Last Name]"
-                     autocomplete="family-name" required>
+          {%- elsif form.errors -%}
+            <div class="premium-form__message premium-form__message--error" tabindex="-1" autofocus>
+              Please adjust the following: {{ form.errors | default_errors }}
             </div>
-          </div>
-
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="ContactForm-email-{{ section.id }}">
-              {{ section.settings.label_email | default: 'Email' }}
-              <span>{{ section.settings.label_required | default: '(required)' }}</span>
-            </label>
-            <input type="email" id="ContactForm-email-{{ section.id }}"
-                   class="premium-form__input"
-                   name="contact[email]"
-                   autocomplete="email"
-                   pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-                   required>
-          </div>
-
-          {%- comment -%}
-            Checkbox fix: contact forms don't support tags.
-            We use contact[Newsletter Signup] so it appears
-            clearly in the email you receive.
-            Value is only sent when checked — so you know
-            who wants updates vs who just sent a message.
-          {%- endcomment -%}
-          {%- if section.settings.show_checkbox -%}
-            <label class="premium-form__checkbox-wrapper">
-              <input type="checkbox"
-                     id="ContactForm-newsletter-{{ section.id }}"
-                     class="premium-form__checkbox"
-                     name="contact[Newsletter Signup]"
-                     value="Yes, sign me up">
-              <span class="premium-form__checkbox-label">{{ section.settings.checkbox_label }}</span>
-            </label>
           {%- endif -%}
 
-          <div class="premium-form__field">
-            <label class="premium-form__label" for="ContactForm-body-{{ section.id }}">
-              {{ section.settings.label_message | default: 'Message and prayers to send to the family:' }}
-              <span>{{ section.settings.label_required | default: '(required)' }}</span>
-            </label>
-            <textarea id="ContactForm-body-{{ section.id }}"
-                      class="premium-form__textarea"
-                      name="contact[Message]"
-                      required></textarea>
-          </div>
+          {%- unless form.posted_successfully? -%}
 
-          <button type="submit" class="premium-form__submit">
-            {{ section.settings.button_label }}
-          </button>
+            <div class="premium-form__row">
+              <div class="premium-form__field">
+                <label class="premium-form__label" for="ContactForm-first-{{ section.id }}">
+                  {{ section.settings.label_first_name | default: 'First Name' }}
+                  <span>{{ section.settings.label_required | default: '(required)' }}</span>
+                </label>
+                <input type="text" id="ContactForm-first-{{ section.id }}"
+                       class="premium-form__input"
+                       name="contact[First Name]"
+                       autocomplete="given-name" required>
+              </div>
+              <div class="premium-form__field">
+                <label class="premium-form__label" for="ContactForm-last-{{ section.id }}">
+                  {{ section.settings.label_last_name | default: 'Last Name' }}
+                  <span>{{ section.settings.label_required | default: '(required)' }}</span>
+                </label>
+                <input type="text" id="ContactForm-last-{{ section.id }}"
+                       class="premium-form__input"
+                       name="contact[Last Name]"
+                       autocomplete="family-name" required>
+              </div>
+            </div>
 
-        {%- endunless -%}
+            <div class="premium-form__field">
+              <label class="premium-form__label" for="ContactForm-email-{{ section.id }}">
+                {{ section.settings.label_email | default: 'Email' }}
+                <span>{{ section.settings.label_required | default: '(required)' }}</span>
+              </label>
+              <input type="email" id="ContactForm-email-{{ section.id }}"
+                     class="premium-form__input"
+                     name="contact[email]"
+                     autocomplete="email"
+                     pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                     required>
+            </div>
 
-      {%- endform -%}
+            {%- if section.settings.show_checkbox -%}
+              <label class="premium-form__checkbox-wrapper">
+                <input type="checkbox"
+                       id="ContactForm-newsletter-{{ section.id }}"
+                       class="premium-form__checkbox"
+                       name="contact[Newsletter Signup]"
+                       value="Yes, sign me up">
+                <span class="premium-form__checkbox-label">{{ section.settings.checkbox_label }}</span>
+              </label>
+            {%- endif -%}
+
+            <div class="premium-form__field">
+              <label class="premium-form__label" for="ContactForm-body-{{ section.id }}">
+                {{ section.settings.label_message | default: 'Message and prayers to send to the family:' }}
+                <span>{{ section.settings.label_required | default: '(required)' }}</span>
+              </label>
+              <textarea id="ContactForm-body-{{ section.id }}"
+                        class="premium-form__textarea"
+                        name="contact[Message]"
+                        required></textarea>
+            </div>
+
+            <button type="submit" class="premium-form__submit">
+              {{ section.settings.button_label }}
+            </button>
+
+          {%- endunless -%}
+
+        {%- endform -%}
+      </div>
+
     </div>
-
   </div>
 </div>
 
@@ -298,19 +342,76 @@
 {
   "name": "Memorial Contact Form",
   "settings": [
-    { "type": "color", "id": "bg_color",   "label": "Background Color", "default": "#FFFFFF" },
-    { "type": "color", "id": "text_color", "label": "Text Color",       "default": "#1A1A1A" },
-    { "type": "text",  "id": "heading",    "label": "Heading",          "default": "Share your love and prayers to the Domer Family:" },
-    { "type": "checkbox", "id": "show_checkbox",  "label": "Show Newsletter Checkbox", "default": true },
-    { "type": "text",     "id": "checkbox_label", "label": "Checkbox Label",           "default": "Sign up for news and updates" },
-    { "type": "text", "id": "label_first_name", "label": "First Name Label", "default": "First Name" },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Spans full width. All text, inputs, and button auto-switch to white."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color (if not gradient)",
+      "default": "#F8F6F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color (if not gradient)",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Share your love and prayers to the Domer Family:"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_checkbox",
+      "label": "Show Newsletter Checkbox",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "checkbox_label",
+      "label": "Checkbox Label",
+      "default": "Sign up for news and updates"
+    },
+    {
+      "type": "text", "id": "label_first_name", "label": "First Name Label", "default": "First Name" },
     { "type": "text", "id": "label_last_name",  "label": "Last Name Label",  "default": "Last Name"  },
     { "type": "text", "id": "label_email",      "label": "Email Label",      "default": "Email"      },
-    { "type": "text", "id": "label_message",    "label": "Message Label",    "default": "Message and prayers to send to the family:" },
+    { "type": "text", "id": "label_message",    "label": "Message Label",
+      "default": "Message and prayers to send to the family:" },
     { "type": "text", "id": "label_required",   "label": "Required Text",    "default": "(required)" },
     { "type": "text", "id": "button_label",     "label": "Submit Button",    "default": "Submit"     },
-    { "type": "text", "id": "success_message",  "label": "Success Message",  "default": "Thank you. Your message has been sent to the family." },
-    { "type": "header", "content": "Spacing" },
+    { "type": "text", "id": "success_message",  "label": "Success Message",
+      "default": "Thank you. Your message has been sent to the family." },
+    {
+      "type": "header",
+      "content": "Button Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_use_gradient",
+      "label": "Use brand gradient on button",
+      "default": true,
+      "info": "Ignored when section background is gradient — button auto-adapts to frosted glass."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
     { "type": "range", "id": "padding_top",    "label": "Top Padding",    "min": 0, "max": 160, "step": 4, "unit": "px", "default": 100 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom Padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 100 }
   ],
