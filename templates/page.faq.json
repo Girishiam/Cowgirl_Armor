@@ -13,6 +13,7 @@
       "type": "premium-page-hero",
       "disabled": true,
       "settings": {
+        "use_gradient": false,
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "logo_width": 350,
@@ -37,8 +38,10 @@
         "button_link": "shopify://pages/god-meets-you",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_PBqPNK": {
@@ -56,8 +59,10 @@
         "button_link": "shopify://pages/believe-in-yourself",
         "padding_top": 60,
         "padding_bottom": 0,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_UAJ3AJ": {
@@ -75,8 +80,10 @@
         "button_link": "shopify://pages/never-give-up",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "premium_two_column_faq_KbH6U7": {
@@ -137,10 +144,10 @@
       "settings": {
         "heading": "Frequently Asked Questions Cowgirl Armor",
         "close_others": true,
-        "watermark_image": "shopify://shop_images/IMG_2436.png",
-        "watermark_opacity": 15,
         "bg_color": "#ebebeb",
         "text_color": "#1a1a1a",
+        "watermark_image": "shopify://shop_images/IMG_2436.png",
+        "watermark_opacity": 20,
         "padding_top": 100,
         "padding_bottom": 100
       }
@@ -223,6 +230,7 @@
         "bg_color": "#f5f5f5",
         "image": "shopify://shop_images/OaklynnDomer3.jpg",
         "image_focal": "center center",
+        "use_gradient": true,
         "overlay_color": "#ffffff",
         "overlay_opacity": 80,
         "left_padding_v": 48,
