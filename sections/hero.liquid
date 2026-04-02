@@ -2,13 +2,9 @@
   .premium-hero-{{ section.id }} {
     position: relative;
     width: 100%;
-    /* Subtract nav height so the visible area is truly full viewport */
     height: calc({{ section.settings.hero_height }}vh - var(--nav-total-height, 80px));
     min-height: 400px;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     {%- if section.settings.use_gradient and section.settings.bg_image == blank -%}
       background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
     {%- else -%}
@@ -37,29 +33,37 @@
     {%- endif -%}
   }
 
+  /* ── Content container — fills full section, centres everything ── */
   .premium-hero-{{ section.id }} .premium-hero__content-container {
     position: absolute;
     inset: 0;
     z-index: 2;
+    width: 100%;
+    height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 2rem;
   }
 
+  /* ── Image wrapper — explicit width so flex centres it correctly ── */
   .premium-hero-{{ section.id }} .premium-hero__center-image {
+    width: 100%;
+    max-width: {{ section.settings.image_width }}px;
     display: flex;
     justify-content: center;
     align-items: center;
-    perspective: 1000px;
   }
 
   .premium-hero-{{ section.id }} .center-hero-img {
+    width: 100%;
+    max-width: {{ section.settings.image_width }}px;
+    height: auto;
+    object-fit: contain;
     display: block;
-    margin: 0 auto;
-    /* Invert logo to white so it shows on gradient/dark backgrounds */
     {%- if section.settings.invert_image -%}
-      filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4)) brightness(0) invert(1);
+      filter: drop-shadow(0 25px 35px rgba(0,0,0,0.3)) brightness(0) invert(1);
     {%- else -%}
       filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4));
     {%- endif -%}
@@ -121,12 +125,11 @@
           src="{{ section.settings.center_image | image_url: width: section.settings.image_width }}"
           alt="{{ section.settings.center_image.alt | default: 'Center Image' | escape }}"
           class="center-hero-img"
-          style="max-width: {{ section.settings.image_width }}px; width: 100%; height: auto; object-fit: contain;"
           loading="eager"
         >
       {%- else -%}
         <div class="shield-container center-hero-img"
-             style="width: {{ section.settings.image_width }}px; height: {{ section.settings.image_width | times: 1.25 }}px;">
+             style="width:{{ section.settings.image_width }}px;height:{{ section.settings.image_width | times: 1.25 }}px;">
           <h2 class="fallback-text">C.A.</h2>
         </div>
       {%- endif -%}
@@ -202,7 +205,7 @@
       "id": "invert_image",
       "label": "Invert image to white",
       "default": true,
-      "info": "Turn on for black logos on gradient/dark backgrounds — makes them white."
+      "info": "Turn on for black logos on gradient/dark backgrounds."
     }
   ],
   "presets": [
