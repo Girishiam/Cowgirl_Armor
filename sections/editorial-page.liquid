@@ -1,18 +1,27 @@
 <style>
+  /* ── Outer wrapper — full width, background lives here ── */
+  .ep-outer-{{ section.id }} {
+    width: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
   /* ── Reset & Vars ── */
   .ep-{{ section.id }} {
     --ep-bg:         {{ section.settings.bg_color }};
-    --ep-text:       {{ section.settings.text_color }};
+    --ep-text:       {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.text_color }} {%- endif -%};
     --ep-accent:     {{ section.settings.quote_border_color }};
-    --ep-quote-bg:   {{ section.settings.quote_bg }};
-    --ep-quote-text: {{ section.settings.quote_color }};
-    background-color: var(--ep-bg);
+    --ep-quote-bg:   {%- if section.settings.use_gradient -%} rgba(255,255,255,0.15) {%- else -%} {{ section.settings.quote_bg }} {%- endif -%};
+    --ep-quote-text: {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.quote_color }} {%- endif -%};
     color: var(--ep-text);
     padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
   /* ════════════════════════════════
-     TITLE BLOCK  (comes first)
+     TITLE BLOCK
   ════════════════════════════════ */
   .ep-{{ section.id }} .ep-title-block {
     width: 100%;
@@ -33,13 +42,13 @@
   }
 
   /* ════════════════════════════════
-     HERO IMAGE  (full-width, below title)
+     HERO IMAGE
   ════════════════════════════════ */
   .ep-{{ section.id }} .ep-hero {
     position: relative;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto 0;
+    margin: 0 auto;
     height: {{ section.settings.hero_height }}px;
     overflow: hidden;
   }
@@ -47,8 +56,7 @@
   .ep-{{ section.id }} .ep-hero img {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     object-position: {{ section.settings.hero_focal }};
     display: block;
@@ -66,7 +74,7 @@
   }
 
   /* ════════════════════════════════
-     CONTENT BODY  (story + blocks)
+     CONTENT BODY
   ════════════════════════════════ */
   .ep-{{ section.id }} .ep-body {
     max-width: 1200px;
@@ -84,10 +92,7 @@
     hyphens: auto;
   }
 
-  .ep-{{ section.id }} .ep-rte p {
-    margin-bottom: 1.75rem;
-    opacity: 0.88;
-  }
+  .ep-{{ section.id }} .ep-rte p { margin-bottom: 1.75rem; opacity: 0.88; }
 
   .ep-{{ section.id }} .ep-rte h2,
   .ep-{{ section.id }} .ep-rte h3,
@@ -104,8 +109,7 @@
   }
 
   .ep-{{ section.id }} .ep-rte img {
-    max-width: 100%;
-    height: auto;
+    max-width: 100%; height: auto;
     margin: 2.5rem 0;
     border-radius: {{ section.settings.image_radius }}px;
   }
@@ -114,7 +118,8 @@
   .ep-{{ section.id }} .ep-pullquote {
     margin: 3rem 0;
     padding: 2.5rem clamp(1.5rem, 5vw, 3.5rem);
-    border-left: {{ section.settings.quote_border_width }}px solid var(--ep-accent);
+    border-left: {{ section.settings.quote_border_width }}px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.7) {%- else -%} var(--ep-accent) {%- endif -%};
     background-color: var(--ep-quote-bg);
     border-radius: 0 {{ section.settings.image_radius }}px {{ section.settings.image_radius }}px 0;
   }
@@ -148,7 +153,8 @@
     gap: 1.25rem;
     margin: 3.5rem 0;
     padding-top: 2.5rem;
-    border-top: 1px solid var(--color-border, rgba(0,0,0,0.1));
+    border-top: 1px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.25) {%- else -%} var(--color-border, rgba(0,0,0,0.1)) {%- endif -%};
   }
 
   .ep-{{ section.id }} .ep-author-avatar {
@@ -161,19 +167,14 @@
   }
 
   .ep-{{ section.id }} .ep-author-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
   }
 
   .ep-{{ section.id }} .ep-author-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0.5;
-    margin-bottom: 0.25rem;
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    opacity: 0.5; margin-bottom: 0.25rem;
   }
 
   .ep-{{ section.id }} .ep-author-name {
@@ -186,9 +187,7 @@
 
   .ep-{{ section.id }} .ep-author-bio {
     font-family: var(--font-body);
-    font-size: 0.88rem;
-    line-height: 1.6;
-    opacity: 0.65;
+    font-size: 0.88rem; line-height: 1.6; opacity: 0.65;
   }
 
   /* ════════════════════════════════
@@ -198,11 +197,10 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 2rem;
-    flex-wrap: wrap;
-    padding: 2.5rem 0 0;
-    margin-top: 2rem;
-    border-top: 1px solid var(--color-border, rgba(0,0,0,0.1));
+    gap: 2rem; flex-wrap: wrap;
+    padding: 2.5rem 0 0; margin-top: 2rem;
+    border-top: 1px solid
+      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.25) {%- else -%} var(--color-border, rgba(0,0,0,0.1)) {%- endif -%};
   }
 
   .ep-{{ section.id }} .ep-pagination a {
@@ -211,8 +209,7 @@
     gap: 0.6rem;
     font-family: var(--font-heading);
     font-size: clamp(0.85rem, 2vw, 1rem);
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    font-weight: 600; letter-spacing: 0.05em;
     text-decoration: none;
     color: var(--ep-text);
     text-transform: uppercase;
@@ -221,144 +218,136 @@
   }
 
   .ep-{{ section.id }} .ep-pagination a:hover {
-    color: var(--color-accent, #8B52D4);
-    opacity: 0.8;
+    {%- if section.settings.use_gradient -%}
+      opacity: 0.75;
+    {%- else -%}
+      color: var(--color-accent, #8B52D4); opacity: 0.8;
+    {%- endif -%}
   }
+
   .ep-{{ section.id }} .ep-pagination a svg { flex-shrink: 0; }
   .ep-{{ section.id }} .ep-pagination .ep-prev { text-align: left; }
   .ep-{{ section.id }} .ep-pagination .ep-next { text-align: right; margin-left: auto; }
 
   .ep-{{ section.id }} .ep-nav-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    opacity: 0.5;
-    display: block;
-    margin-bottom: 0.25rem;
+    font-size: 0.65rem; letter-spacing: 0.15em;
+    opacity: 0.5; display: block; margin-bottom: 0.25rem;
   }
 
   .ep-{{ section.id }} .ep-nav-title {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: block; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
   }
 
-  /* ════════════════════════════════
-     RESPONSIVE
-  ════════════════════════════════ */
   @media screen and (max-width: 600px) {
     .ep-{{ section.id }} .ep-author { flex-direction: column; align-items: flex-start; }
     .ep-{{ section.id }} .ep-pagination a { max-width: 100%; }
   }
 </style>
 
-<div class="ep-{{ section.id }}">
+<div class="ep-outer-{{ section.id }}">
+  <div class="ep-{{ section.id }}">
 
-  {%- comment -%} ── 1. TITLE (always first) ── {%- endcomment -%}
-  {%- if section.settings.title != blank -%}
-    <div class="ep-title-block">
-      <h1>{{ section.settings.title }}</h1>
-    </div>
-  {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <div class="ep-title-block">
+        <h1>{{ section.settings.title }}</h1>
+      </div>
+    {%- endif -%}
 
-  {%- comment -%} ── 2. HERO IMAGE (below title) ── {%- endcomment -%}
-  {%- if section.settings.image != blank -%}
-    <div class="ep-hero">
-      <img
-        src="{{ section.settings.image | image_url: width: 1200 }}"
-        srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
-                {{ section.settings.image | image_url: width: 1200 }} 1200w,
-                {{ section.settings.image | image_url: width: 1200 }} 1600w"
-        sizes="(max-width: 1200px) 100vw, 1200px"
-        alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
-        loading="eager"
-        width="1200"
-      >
-      {%- if section.settings.hero_overlay_opacity > 0 -%}
-        <div class="ep-hero-overlay"></div>
-      {%- endif -%}
-    </div>
-  {%- endif -%}
+    {%- if section.settings.image != blank -%}
+      <div class="ep-hero">
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
+                  {{ section.settings.image | image_url: width: 1200 }} 1200w,
+                  {{ section.settings.image | image_url: width: 1600 }} 1600w"
+          sizes="(max-width: 1200px) 100vw, 1200px"
+          alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+          loading="eager"
+          width="1200"
+        >
+        {%- if section.settings.hero_overlay_opacity > 0 -%}
+          <div class="ep-hero-overlay"></div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
 
-  {%- comment -%} ── 3. STORY BLOCKS + 4. AUTHOR + 5. PAGINATION ── {%- endcomment -%}
-  <div class="ep-body">
+    <div class="ep-body">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
 
-    {%- for block in section.blocks -%}
-      {%- case block.type -%}
-
-        {%- when 'rich_text' -%}
-          {%- if block.settings.content != blank -%}
-            <div class="ep-rte rte" {{ block.shopify_attributes }}>
-              {{ block.settings.content }}
-            </div>
-          {%- endif -%}
-
-        {%- when 'pullquote' -%}
-          {%- if block.settings.quote != blank -%}
-            <div class="ep-pullquote" {{ block.shopify_attributes }}>
-              <blockquote>{{ block.settings.quote }}</blockquote>
-              {%- if block.settings.cite != blank -%}
-                <cite>— {{ block.settings.cite }}</cite>
-              {%- endif -%}
-            </div>
-          {%- endif -%}
-
-        {%- when 'author' -%}
-          <div class="ep-author" {{ block.shopify_attributes }}>
-            {%- if block.settings.avatar != blank -%}
-              <div class="ep-author-avatar">
-                <img
-                  src="{{ block.settings.avatar | image_url: width: 120 }}"
-                  alt="{{ block.settings.name | escape }}"
-                  loading="lazy"
-                  width="120"
-                  height="120"
-                >
+          {%- when 'rich_text' -%}
+            {%- if block.settings.content != blank -%}
+              <div class="ep-rte rte" {{ block.shopify_attributes }}>
+                {{ block.settings.content }}
               </div>
             {%- endif -%}
-            <div class="ep-author-info">
-              {%- if block.settings.label != blank -%}
-                <p class="ep-author-label">{{ block.settings.label }}</p>
-              {%- endif -%}
-              {%- if block.settings.name != blank -%}
-                <p class="ep-author-name">{{ block.settings.name }}</p>
-              {%- endif -%}
-              {%- if block.settings.bio != blank -%}
-                <p class="ep-author-bio">{{ block.settings.bio }}</p>
-              {%- endif -%}
-            </div>
-          </div>
 
-        {%- when 'pagination' -%}
-          {%- if block.settings.prev_label != blank or block.settings.next_label != blank -%}
-            <div class="ep-pagination" {{ block.shopify_attributes }}>
-              {%- if block.settings.prev_link != blank and block.settings.prev_label != blank -%}
-                <a href="{{ block.settings.prev_link }}" class="ep-prev">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>
-                    <span class="ep-nav-label">Previous</span>
-                    <span class="ep-nav-title">{{ block.settings.prev_label }}</span>
-                  </span>
-                </a>
-              {%- endif -%}
-              {%- if block.settings.next_link != blank and block.settings.next_label != blank -%}
-                <a href="{{ block.settings.next_link }}" class="ep-next">
-                  <span>
-                    <span class="ep-nav-label">Next</span>
-                    <span class="ep-nav-title">{{ block.settings.next_label }}</span>
-                  </span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </a>
-              {%- endif -%}
-            </div>
-          {%- endif -%}
+          {%- when 'pullquote' -%}
+            {%- if block.settings.quote != blank -%}
+              <div class="ep-pullquote" {{ block.shopify_attributes }}>
+                <blockquote>{{ block.settings.quote }}</blockquote>
+                {%- if block.settings.cite != blank -%}
+                  <cite>— {{ block.settings.cite }}</cite>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
 
-      {%- endcase -%}
-    {%- endfor -%}
+          {%- when 'author' -%}
+            <div class="ep-author" {{ block.shopify_attributes }}>
+              {%- if block.settings.avatar != blank -%}
+                <div class="ep-author-avatar">
+                  <img
+                    src="{{ block.settings.avatar | image_url: width: 120 }}"
+                    alt="{{ block.settings.name | escape }}"
+                    loading="lazy" width="120" height="120"
+                  >
+                </div>
+              {%- endif -%}
+              <div class="ep-author-info">
+                {%- if block.settings.label != blank -%}
+                  <p class="ep-author-label">{{ block.settings.label }}</p>
+                {%- endif -%}
+                {%- if block.settings.name != blank -%}
+                  <p class="ep-author-name">{{ block.settings.name }}</p>
+                {%- endif -%}
+                {%- if block.settings.bio != blank -%}
+                  <p class="ep-author-bio">{{ block.settings.bio }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+
+          {%- when 'pagination' -%}
+            {%- if block.settings.prev_label != blank or block.settings.next_label != blank -%}
+              <div class="ep-pagination" {{ block.shopify_attributes }}>
+                {%- if block.settings.prev_link != blank and block.settings.prev_label != blank -%}
+                  <a href="{{ block.settings.prev_link }}" class="ep-prev">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>
+                      <span class="ep-nav-label">Previous</span>
+                      <span class="ep-nav-title">{{ block.settings.prev_label }}</span>
+                    </span>
+                  </a>
+                {%- endif -%}
+                {%- if block.settings.next_link != blank and block.settings.next_label != blank -%}
+                  <a href="{{ block.settings.next_link }}" class="ep-next">
+                    <span>
+                      <span class="ep-nav-label">Next</span>
+                      <span class="ep-nav-title">{{ block.settings.next_label }}</span>
+                    </span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
 
   </div>
 </div>
@@ -368,290 +357,88 @@
   "name": "Editorial Page",
   "tag": "section",
   "settings": [
-    {
-      "type": "header",
-      "content": "Title"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Page Title",
-      "default": "God meets you where you are."
-    },
-    {
-      "type": "select",
-      "id": "hero_title_align",
-      "label": "Title Alignment",
+    { "type": "header", "content": "Title" },
+    { "type": "text", "id": "title", "label": "Page Title", "default": "God meets you where you are." },
+    { "type": "select", "id": "hero_title_align", "label": "Title Alignment",
       "options": [
         { "value": "left",   "label": "Left"   },
         { "value": "center", "label": "Center" },
         { "value": "right",  "label": "Right"  }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "header",
-      "content": "Hero Image"
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Hero Image"
-    },
-    {
-      "type": "range",
-      "id": "hero_height",
-      "label": "Hero Image Height",
-      "min": 300,
-      "max": 800,
-      "step": 20,
-      "unit": "px",
-      "default": 560
-    },
-    {
-      "type": "select",
-      "id": "hero_focal",
-      "label": "Image Focus",
+      ], "default": "center" },
+
+    { "type": "header", "content": "Hero Image" },
+    { "type": "image_picker", "id": "image", "label": "Hero Image" },
+    { "type": "range", "id": "hero_height", "label": "Hero Image Height",
+      "min": 300, "max": 800, "step": 20, "unit": "px", "default": 560 },
+    { "type": "select", "id": "hero_focal", "label": "Image Focus",
       "options": [
         { "value": "center center", "label": "Center" },
         { "value": "top center",    "label": "Top"    },
         { "value": "bottom center", "label": "Bottom" },
         { "value": "left center",   "label": "Left"   },
         { "value": "right center",  "label": "Right"  }
-      ],
-      "default": "center center"
-    },
-    {
-      "type": "range",
-      "id": "hero_overlay_opacity",
-      "label": "Hero Overlay Darkness",
-      "min": 0,
-      "max": 80,
-      "step": 5,
-      "unit": "%",
-      "default": 40
-    },
-    {
-      "type": "header",
-      "content": "Typography"
-    },
-    {
-      "type": "range",
-      "id": "title_size",
-      "label": "Title Size (max)",
-      "min": 32,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 64
-    },
-    {
-      "type": "range",
-      "id": "title_weight",
-      "label": "Title Weight",
-      "min": 300,
-      "max": 900,
-      "step": 100,
-      "default": 700
-    },
-    {
-      "type": "range",
-      "id": "body_size",
-      "label": "Body Font Size (max)",
-      "min": 14,
-      "max": 22,
-      "step": 1,
-      "unit": "px",
-      "default": 18
-    },
-    {
-      "type": "range",
-      "id": "body_line_height",
-      "label": "Body Line Height",
-      "min": 14,
-      "max": 22,
-      "step": 1,
-      "default": 18,
-      "info": "Divide by 10 — e.g. 18 = 1.8"
-    },
-    {
-      "type": "header",
-      "content": "Layout"
-    },
-    {
-      "type": "range",
-      "id": "image_radius",
-      "label": "Image / Card Radius",
-      "min": 0,
-      "max": 20,
-      "step": 2,
-      "unit": "px",
-      "default": 4
-    },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Top Padding",
-      "min": 40,
-      "max": 160,
-      "step": 8,
-      "unit": "px",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Bottom Padding",
-      "min": 40,
-      "max": 160,
-      "step": 8,
-      "unit": "px",
-      "default": 80
-    },
-    {
-      "type": "header",
-      "content": "Colors"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background",
-      "default": "#F8F6F4"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#1A1A1A"
-    },
-    {
-      "type": "header",
-      "content": "Pull Quote Style"
-    },
-    {
-      "type": "range",
-      "id": "quote_size",
-      "label": "Quote Font Size (max)",
-      "min": 18,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 28
-    },
-    {
-      "type": "range",
-      "id": "quote_weight",
-      "label": "Quote Font Weight",
-      "min": 300,
-      "max": 800,
-      "step": 100,
-      "default": 500
-    },
-    {
-      "type": "range",
-      "id": "quote_border_width",
-      "label": "Quote Border Width",
-      "min": 1,
-      "max": 8,
-      "step": 1,
-      "unit": "px",
-      "default": 3
-    },
-    {
-      "type": "color",
-      "id": "quote_border_color",
-      "label": "Quote Border Color",
-      "default": "#8B52D4"
-    },
-    {
-      "type": "color",
-      "id": "quote_bg",
-      "label": "Quote Background",
-      "default": "#F0EBF8"
-    },
-    {
-      "type": "color",
-      "id": "quote_color",
-      "label": "Quote Text Color",
-      "default": "#1A1A1A"
-    },
-    {
-      "type": "header",
-      "content": "Author Style"
-    },
-    {
-      "type": "range",
-      "id": "avatar_size",
-      "label": "Avatar Size",
-      "min": 40,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "default": 64
-    }
+      ], "default": "center center" },
+    { "type": "range", "id": "hero_overlay_opacity", "label": "Hero Overlay Darkness",
+      "min": 0, "max": 80, "step": 5, "unit": "%", "default": 40 },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "title_size",        "label": "Title Size (max)",    "min": 32, "max": 96,  "step": 4,   "unit": "px", "default": 64 },
+    { "type": "range", "id": "title_weight",      "label": "Title Weight",        "min": 300,"max": 900, "step": 100, "default": 700 },
+    { "type": "range", "id": "body_size",         "label": "Body Font Size (max)","min": 14, "max": 22,  "step": 1,   "unit": "px", "default": 18 },
+    { "type": "range", "id": "body_line_height",  "label": "Body Line Height",    "min": 14, "max": 22,  "step": 1,   "default": 18,
+      "info": "Divide by 10 — e.g. 18 = 1.8" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "image_radius", "label": "Image / Card Radius",
+      "min": 0, "max": 20, "step": 2, "unit": "px", "default": 4 },
+
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top",    "label": "Top Padding",    "min": 40, "max": 160, "step": 8, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom Padding", "min": 40, "max": 160, "step": 8, "unit": "px", "default": 80 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "checkbox", "id": "use_gradient", "label": "Use brand gradient background", "default": false,
+      "info": "Spans full width. All text, borders, and pull quotes auto-switch to white." },
+    { "type": "color", "id": "bg_color",   "label": "Background (if not gradient)", "default": "#F8F6F4" },
+    { "type": "color", "id": "text_color", "label": "Text Color (if not gradient)", "default": "#1A1A1A" },
+
+    { "type": "header", "content": "Pull Quote Style" },
+    { "type": "range", "id": "quote_size",         "label": "Quote Font Size (max)", "min": 18, "max": 48, "step": 2,   "unit": "px", "default": 28 },
+    { "type": "range", "id": "quote_weight",       "label": "Quote Font Weight",     "min": 300,"max": 800,"step": 100, "default": 500 },
+    { "type": "range", "id": "quote_border_width", "label": "Quote Border Width",    "min": 1,  "max": 8,  "step": 1,   "unit": "px", "default": 3 },
+    { "type": "color", "id": "quote_border_color", "label": "Quote Border Color (if not gradient)", "default": "#8B52D4" },
+    { "type": "color", "id": "quote_bg",           "label": "Quote Background (if not gradient)",  "default": "#F0EBF8" },
+    { "type": "color", "id": "quote_color",        "label": "Quote Text Color (if not gradient)",  "default": "#1A1A1A" },
+
+    { "type": "header", "content": "Author Style" },
+    { "type": "range", "id": "avatar_size", "label": "Avatar Size",
+      "min": 40, "max": 100, "step": 4, "unit": "px", "default": 64 }
   ],
   "blocks": [
     {
       "type": "rich_text",
       "name": "Rich Text",
       "settings": [
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Write your story here. Add as many rich text blocks as you need.</p>"
-        }
+        { "type": "richtext", "id": "content", "label": "Content",
+          "default": "<p>Write your story here. Add as many rich text blocks as you need.</p>" }
       ]
     },
     {
       "type": "pullquote",
       "name": "Pull Quote",
       "settings": [
-        {
-          "type": "textarea",
-          "id": "quote",
-          "label": "Quote Text",
-          "default": "God meets you where you are."
-        },
-        {
-          "type": "text",
-          "id": "cite",
-          "label": "Attribution",
-          "default": "Romans 8:38-39"
-        }
+        { "type": "textarea", "id": "quote", "label": "Quote Text", "default": "God meets you where you are." },
+        { "type": "text",     "id": "cite",  "label": "Attribution", "default": "Romans 8:38-39" }
       ]
     },
     {
       "type": "author",
       "name": "Author Signature",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "avatar",
-          "label": "Author Photo (optional)"
-        },
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Label",
-          "default": "Written by"
-        },
-        {
-          "type": "text",
-          "id": "name",
-          "label": "Author Name",
-          "default": "A Cowgirl, xoxo"
-        },
-        {
-          "type": "text",
-          "id": "bio",
-          "label": "Short Bio / Tagline",
-          "default": "Equipped with the Armor of God."
-        }
+        { "type": "image_picker", "id": "avatar", "label": "Author Photo (optional)" },
+        { "type": "text", "id": "label", "label": "Label",       "default": "Written by" },
+        { "type": "text", "id": "name",  "label": "Author Name", "default": "A Cowgirl, xoxo" },
+        { "type": "text", "id": "bio",   "label": "Short Bio / Tagline", "default": "Equipped with the Armor of God." }
       ]
     },
     {
@@ -659,26 +446,10 @@
       "name": "Prev / Next Links",
       "limit": 1,
       "settings": [
-        {
-          "type": "text",
-          "id": "prev_label",
-          "label": "Previous Page Title"
-        },
-        {
-          "type": "url",
-          "id": "prev_link",
-          "label": "Previous Page Link"
-        },
-        {
-          "type": "text",
-          "id": "next_label",
-          "label": "Next Page Title"
-        },
-        {
-          "type": "url",
-          "id": "next_link",
-          "label": "Next Page Link"
-        }
+        { "type": "text", "id": "prev_label", "label": "Previous Page Title" },
+        { "type": "url",  "id": "prev_link",  "label": "Previous Page Link"  },
+        { "type": "text", "id": "next_label", "label": "Next Page Title"     },
+        { "type": "url",  "id": "next_link",  "label": "Next Page Link"      }
       ]
     }
   ],
@@ -686,10 +457,10 @@
     {
       "name": "Editorial Page",
       "blocks": [
-        { "type": "rich_text"   },
-        { "type": "pullquote"   },
-        { "type": "author"      },
-        { "type": "pagination"  }
+        { "type": "rich_text"  },
+        { "type": "pullquote"  },
+        { "type": "author"     },
+        { "type": "pagination" }
       ]
     }
   ]
