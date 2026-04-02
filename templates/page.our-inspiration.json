@@ -27,6 +27,7 @@
       "type": "premium-split-content",
       "name": "Premium Split Content",
       "settings": {
+        "use_gradient": true,
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "image_position": "left",
