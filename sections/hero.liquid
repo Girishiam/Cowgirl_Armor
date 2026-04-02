@@ -25,7 +25,6 @@
     inset: 0;
     z-index: 1;
     opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-    transition: opacity 0.8s ease;
     {%- if section.settings.use_gradient and section.settings.bg_image != blank -%}
       background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
     {%- else -%}
@@ -33,44 +32,29 @@
     {%- endif -%}
   }
 
+  /* ── Use position:absolute + left:50% + translateX(-50%)
+     This centers based on the IMAGE's rendered width, not its PNG canvas ── */
   .premium-hero-{{ section.id }} .premium-hero__content-container {
     position: absolute;
-    inset: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 2;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-  }
-
-  .premium-hero-{{ section.id }} .premium-hero__center-image {
-    width: 100%;
+    width: fit-content;
     max-width: {{ section.settings.image_width }}px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Offset to correct visually asymmetric PNG transparent padding */
-    {%- if section.settings.image_offset != 0 -%}
-      transform: translateX({{ section.settings.image_offset }}px);
-    {%- endif -%}
   }
 
   .premium-hero-{{ section.id }} .center-hero-img {
-    width: 100%;
-    max-width: {{ section.settings.image_width }}px;
-    height: auto;
-    object-fit: contain;
     display: block;
+    width: {{ section.settings.image_width }}px;
+    max-width: 90vw;
+    height: auto;
     {%- if section.settings.invert_image -%}
       filter: drop-shadow(0 25px 35px rgba(0,0,0,0.3)) brightness(0) invert(1);
     {%- else -%}
       filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4));
     {%- endif -%}
     opacity: 0;
-    transform: translateY(50px) scale(0.95);
     animation:
       heroImageEntrance 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards,
       float 6s ease-in-out 2s infinite alternate;
@@ -121,21 +105,19 @@
   {%- endif -%}
 
   <div class="premium-hero__content-container">
-    <div class="premium-hero__center-image">
-      {%- if section.settings.center_image != blank -%}
-        <img
-          src="{{ section.settings.center_image | image_url: width: section.settings.image_width }}"
-          alt="{{ section.settings.center_image.alt | default: 'Center Image' | escape }}"
-          class="center-hero-img"
-          loading="eager"
-        >
-      {%- else -%}
-        <div class="shield-container center-hero-img"
-             style="width:{{ section.settings.image_width }}px;height:{{ section.settings.image_width | times: 1.25 }}px;">
-          <h2 class="fallback-text">C.A.</h2>
-        </div>
-      {%- endif -%}
-    </div>
+    {%- if section.settings.center_image != blank -%}
+      <img
+        src="{{ section.settings.center_image | image_url: width: section.settings.image_width }}"
+        alt="{{ section.settings.center_image.alt | default: 'Center Image' | escape }}"
+        class="center-hero-img"
+        loading="eager"
+      >
+    {%- else -%}
+      <div class="shield-container center-hero-img"
+           style="width:{{ section.settings.image_width }}px;height:{{ section.settings.image_width | times: 1.25 }}px;">
+        <h2 class="fallback-text">C.A.</h2>
+      </div>
+    {%- endif -%}
   </div>
 
 </div>
@@ -208,14 +190,6 @@
       "label": "Invert image to white",
       "default": true,
       "info": "Turn on for black logos on gradient/dark backgrounds."
-    },
-    {
-      "type": "range",
-      "id": "image_offset",
-      "min": -200, "max": 200, "step": 5, "unit": "px",
-      "label": "Image Horizontal Offset",
-      "default": 0,
-      "info": "Use this if your image PNG has uneven transparent padding and appears off-centre. Positive = right, negative = left."
     }
   ],
   "presets": [
