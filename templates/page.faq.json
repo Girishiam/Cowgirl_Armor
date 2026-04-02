@@ -144,6 +144,7 @@
       "settings": {
         "heading": "Frequently Asked Questions Cowgirl Armor",
         "close_others": true,
+        "use_gradient": true,
         "bg_color": "#ebebeb",
         "text_color": "#1a1a1a",
         "watermark_image": "shopify://shop_images/IMG_2436.png",
