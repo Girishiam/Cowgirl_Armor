@@ -33,7 +33,6 @@
     {%- endif -%}
   }
 
-  /* ── Content container — fills full section, centres everything ── */
   .premium-hero-{{ section.id }} .premium-hero__content-container {
     position: absolute;
     inset: 0;
@@ -47,13 +46,16 @@
     padding: 2rem;
   }
 
-  /* ── Image wrapper — explicit width so flex centres it correctly ── */
   .premium-hero-{{ section.id }} .premium-hero__center-image {
     width: 100%;
     max-width: {{ section.settings.image_width }}px;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Offset to correct visually asymmetric PNG transparent padding */
+    {%- if section.settings.image_offset != 0 -%}
+      transform: translateX({{ section.settings.image_offset }}px);
+    {%- endif -%}
   }
 
   .premium-hero-{{ section.id }} .center-hero-img {
@@ -206,6 +208,14 @@
       "label": "Invert image to white",
       "default": true,
       "info": "Turn on for black logos on gradient/dark backgrounds."
+    },
+    {
+      "type": "range",
+      "id": "image_offset",
+      "min": -200, "max": 200, "step": 5, "unit": "px",
+      "label": "Image Horizontal Offset",
+      "default": 0,
+      "info": "Use this if your image PNG has uneven transparent padding and appears off-centre. Positive = right, negative = left."
     }
   ],
   "presets": [
