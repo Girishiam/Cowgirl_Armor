@@ -331,6 +331,7 @@
       "type": "premium-memorial-form",
       "name": "Memorial Contact Form",
       "settings": {
+        "use_gradient": true,
         "bg_color": "#ffffff",
         "text_color": "#1a1a1a",
         "heading": "Share your love and prayers to the Domer Family:",
@@ -343,6 +344,7 @@
         "label_required": "(required)",
         "button_label": "Submit",
         "success_message": "Thank you. Your message has been sent to the family.",
+        "btn_use_gradient": true,
         "padding_top": 100,
         "padding_bottom": 100
       }
