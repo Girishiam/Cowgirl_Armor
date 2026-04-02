@@ -12,6 +12,7 @@
     "main": {
       "type": "premium-page-hero",
       "settings": {
+        "use_gradient": true,
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "logo": "shopify://shop_images/IMG_1760_1.png",
