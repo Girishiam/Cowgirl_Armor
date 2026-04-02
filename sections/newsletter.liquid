@@ -97,30 +97,51 @@
     font-family: var(--font-body-family, sans-serif);
     font-size: {{ section.settings.label_size }}px; font-weight: 600;
     letter-spacing: 0.06em; text-transform: uppercase;
-    {%- if section.settings.use_gradient -%}color: #FFFFFF;
-    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
+    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
   .nl-{{ section.id }} .nl__req { font-weight: 400; letter-spacing: 0; text-transform: none; opacity: 0.5; font-size: {{ section.settings.label_size | minus: 1 }}px; }
 
   .nl-{{ section.id }} .nl__input {
-    width: 100%; padding: {{ section.settings.input_pv }}px 0;
-    background: transparent; border: none;
-    border-bottom: {{ section.settings.input_border_w }}px solid
-      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.5){%- else -%} {{ section.settings.input_border_c }}{%- endif -%};
-    font-family: var(--font-body-family, sans-serif); font-size: {{ section.settings.input_size }}px;
-    transition: border-color 0.25s ease, border-width 0.25s ease;
-    -webkit-appearance: none; appearance: none; border-radius: 0;
-    {%- if section.settings.use_gradient -%}color: #FFFFFF;
-    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
+    width: 100%;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: {{ section.settings.input_size }}px;
+    -webkit-appearance: none; appearance: none;
+    transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 6px;
+    padding: {{ section.settings.input_pv }}px 1rem;
+    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+      background: rgba(255,255,255,0.14);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #FFFFFF;
+      caret-color: #FFFFFF;
+    {%- else -%}
+      background: transparent;
+      border: 1.5px solid {{ section.settings.input_border_c }};
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
   .nl-{{ section.id }} .nl__input:focus {
-    outline: none; border-bottom-width: 2px;
-    {%- if section.settings.use_gradient -%}border-bottom-color: #FFFFFF;
-    {%- else -%}border-bottom-color: {{ section.settings.text_color }};{%- endif -%}
+    outline: none;
+    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+      border-color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.22);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+    {%- else -%}
+      border-color: {{ section.settings.text_color }};
+      box-shadow: 0 0 0 3px rgba(139,82,212,0.12);
+    {%- endif -%}
   }
   .nl-{{ section.id }} .nl__input::placeholder {
-    {%- if section.settings.use_gradient -%}color: rgba(255,255,255,0.5);
-    {%- else -%}color: {{ section.settings.text_color }}; opacity: 0.4;{%- endif -%}
+    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+      color: rgba(255,255,255,0.5);
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+      opacity: 0.4;
+    {%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__check-wrap {
@@ -133,19 +154,24 @@
     -webkit-appearance: none; appearance: none;
     width: 18px; height: 18px; min-width: 18px;
     border: 1.5px solid
-      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.6){%- else -%} {{ section.settings.input_border_c }}{%- endif -%};
+      {%- if section.settings.use_gradient or section.settings.image != blank -%} rgba(255,255,255,0.6)
+      {%- else -%} {{ section.settings.input_border_c }}{%- endif -%};
     background: transparent; cursor: pointer; position: relative;
     border-radius: 2px; margin-top: 2px; transition: border-color 0.2s, background-color 0.2s;
   }
   .nl-{{ section.id }} .nl__checkbox:checked {
-    {%- if section.settings.use_gradient -%}background: #FFFFFF; border-color: #FFFFFF;
-    {%- else -%}background: {{ section.settings.text_color }}; border-color: {{ section.settings.text_color }};{%- endif -%}
+    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+      background: #FFFFFF; border-color: #FFFFFF;
+    {%- else -%}
+      background: {{ section.settings.text_color }}; border-color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
   .nl-{{ section.id }} .nl__checkbox:checked::after {
     content: ''; position: absolute; top: 2px; left: 5px;
     width: 5px; height: 9px;
     border: 2px solid
-      {%- if section.settings.use_gradient -%} {{ section.settings.accent_color }}{%- else -%} {{ section.settings.bg_color }}{%- endif -%};
+      {%- if section.settings.use_gradient or section.settings.image != blank -%} #8B52D4
+      {%- else -%} {{ section.settings.bg_color }}{%- endif -%};
     border-top: none; border-left: none; transform: rotate(45deg);
   }
   .nl-{{ section.id }} .nl__check-label {
