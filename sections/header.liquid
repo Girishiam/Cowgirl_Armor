@@ -809,6 +809,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     { "type": "header", "content": "Logo" },
     { "type": "image_picker", "id": "logo",            "label": "Logo Image" },
+    { "type": "checkbox", "id": "invert_logo",         "label": "Invert logo to white",
+      "default": false, "info": "Turn on when header background is dark or gradient — makes black logos white." },
+    { "type": "checkbox", "id": "invert_logo_sticky",  "label": "Keep inverted when sticky",
+      "default": false, "info": "If header background changes on scroll (e.g. from gradient to light), turn this OFF to revert logo back to original." },
     { "type": "range",  "id": "logo_width",            "label": "Logo Max Width",        "min": 60, "max": 300, "step": 10, "unit": "px",  "default": 160 },
     { "type": "range",  "id": "logo_text_min",         "label": "Logo Text Min Size",    "min": 14, "max": 28,  "step": 1,  "unit": "px",  "default": 18 },
     { "type": "range",  "id": "logo_text_max",         "label": "Logo Text Max Size",    "min": 20, "max": 48,  "step": 2,  "unit": "px",  "default": 26 },
