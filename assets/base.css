@@ -5,11 +5,11 @@
      BRAND IDENTITY — Cowgirl Armor
      Blue → Purple → Pink gradient system
      ============================================= */
-  --color-brand-blue:     #3A6FE8;
-  --color-brand-purple:   #8B52D4;
-  --color-brand-pink:     #CC72E8;
-  --color-brand-gradient: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
-  --color-brand-gradient-hover: linear-gradient(135deg, #2D5FD6 0%, #7A44C2 55%, #BB61D7 100%);
+  --color-brand-blue:     var(--gradient-color-1, #3A6FE8);
+  --color-brand-purple:   var(--gradient-color-2, #8B52D4);
+  --color-brand-pink:     var(--gradient-color-3, #CC72E8);
+  --color-brand-gradient: var(--brand-gradient);
+  --color-brand-gradient-hover: var(--brand-gradient-hover);
   --color-brand-gradient-vertical: linear-gradient(180deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
   --color-brand-gradient-radial: radial-gradient(ellipse at top left, #3A6FE8, #8B52D4 50%, #CC72E8);
 
