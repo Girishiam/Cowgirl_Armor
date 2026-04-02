@@ -12,7 +12,7 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "hero_height": 90,
+        "hero_height": 100,
         "use_gradient": true,
         "bg_color": "#cccccc",
         "overlay_color": "#000000",
