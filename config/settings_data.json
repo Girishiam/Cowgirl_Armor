@@ -141,7 +141,7 @@
           "social_facebook_link": "https://www.facebook.com",
           "social_instagram_link": "https://www.instagram.com",
           "button_label": "Get on THE LIST",
-          "button_link": "",
+          "button_link": "shopify://pages/contact",
           "button_bg_color": "#8b52d4",
           "button_text_color": "#ffffff",
           "button_border_color": "#8b52d4",
