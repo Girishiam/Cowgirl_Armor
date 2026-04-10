@@ -1,7 +1,8 @@
 <style>
   /* ============================================
-     PREMIUM COLLECTION GRID — Cowgirl Armor
-     Horizontal top filter bar | 1600px wide
+     COLLECTION GRID — Cowgirl Armor
+     Inline dropdown filters | 1600px wide
+     NO sidebar. NO drawer. Click = dropdown panel.
      ============================================ */
 
   .prem-coll-{{ section.id }} {
@@ -9,7 +10,6 @@
     padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
-  /* ── Page width override: 1600px ── */
   .prem-coll__wrap {
     max-width: 1600px;
     margin: 0 auto;
@@ -74,11 +74,10 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
 
-  /* ════════ TOP FILTER BAR ════════ */
+  /* ════════ FILTER BAR — sticky top ════════ */
   .prem-filter-bar {
     background: {{ section.settings.bg_color }};
     border-bottom: 1px solid var(--color-border);
-    padding: 0;
     position: sticky;
     top: var(--nav-total-height, 80px);
     z-index: 200;
@@ -90,53 +89,10 @@
     padding: 0 2rem;
     display: flex;
     align-items: stretch;
-    gap: 0;
-    min-height: 56px;
+    min-height: 54px;
   }
 
-  /* Filter toggle button */
-  .prem-filter-bar__toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0 1.5rem;
-    background: transparent;
-    border: none;
-    border-right: 1px solid var(--color-border);
-    font-family: var(--font-heading-family, sans-serif);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text);
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .prem-filter-bar__toggle:hover {
-    background: var(--brand-gradient);
-    color: #FFFFFF;
-  }
-
-  .prem-filter-bar__toggle.is-active {
-    background: var(--brand-gradient);
-    color: #FFFFFF;
-  }
-
-  /* Filter groups row — horizontal */
-  .prem-filter-bar__groups {
-    display: flex;
-    align-items: stretch;
-    flex-grow: 1;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .prem-filter-bar__groups::-webkit-scrollbar { display: none; }
-
-  /* Individual filter dropdown */
+  /* ── Each filter group is a dropdown trigger ── */
   .prem-filter-dropdown {
     position: relative;
     flex-shrink: 0;
@@ -146,96 +102,143 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0 1.25rem;
+    padding: 0 1.4rem;
     height: 100%;
-    min-height: 56px;
+    min-height: 54px;
     background: transparent;
     border: none;
     border-right: 1px solid var(--color-border);
     font-family: var(--font-heading-family, sans-serif);
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text);
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.18s, color 0.18s;
     white-space: nowrap;
+    user-select: none;
   }
 
-  .prem-filter-dropdown__btn:hover,
-  .prem-filter-dropdown__btn.is-active {
+  /* First button has no left border gap */
+  .prem-filter-dropdown:first-child .prem-filter-dropdown__btn {
+    border-left: 1px solid var(--color-border);
+  }
+
+  .prem-filter-dropdown__btn:hover {
     background: rgba(139,82,212,0.06);
     color: var(--color-accent);
   }
 
-  .prem-filter-dropdown__btn .active-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+  /* Active state — filter is applied */
+  .prem-filter-dropdown__btn.has-value {
+    color: var(--color-accent);
+  }
+
+  /* Open state */
+  .prem-filter-dropdown.is-open .prem-filter-dropdown__btn {
     background: var(--brand-gradient);
-    flex-shrink: 0;
+    color: #FFFFFF;
+    border-right-color: transparent;
   }
 
   .prem-filter-dropdown__caret {
     transition: transform 0.2s ease;
-    opacity: 0.5;
+    opacity: 0.55;
     flex-shrink: 0;
+    width: 10px;
+    height: 10px;
   }
 
   .prem-filter-dropdown.is-open .prem-filter-dropdown__caret {
     transform: rotate(180deg);
+    opacity: 1;
   }
 
-  /* Dropdown panel */
+  /* Active dot when filter is applied */
+  .prem-filter-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    flex-shrink: 0;
+    display: none;
+  }
+
+  .prem-filter-dropdown__btn.has-value .prem-filter-dot { display: block; }
+
+  /* ── Dropdown panel — appears INLINE below bar ── */
   .prem-filter-dropdown__panel {
     display: none;
     position: absolute;
-    top: calc(100% + 1px);
+    top: 100%;
     left: 0;
-    min-width: 220px;
+    min-width: 240px;
     background: {{ section.settings.bg_color }};
     border: 1px solid var(--color-border);
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    z-index: 300;
-    padding: 1rem 1.25rem 1.25rem;
+    border-top: 2px solid var(--color-accent);
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    z-index: 400;
+    padding: 1.25rem 1.25rem 1.5rem;
+    animation: dropdownIn 0.18s ease forwards;
+  }
+
+  @keyframes dropdownIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   .prem-filter-dropdown.is-open .prem-filter-dropdown__panel {
     display: block;
   }
 
-  /* Filter list inside dropdown */
+  /* Panel header */
+  .prem-filter-dropdown__panel-title {
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.38;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* ── Filter list (checkboxes) ── */
   .prem-filter-list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    max-height: 260px;
+    gap: 0.15rem;
+    max-height: 280px;
     overflow-y: auto;
   }
 
   .prem-filter-check__link {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.7rem;
     text-decoration: none;
     color: var(--color-text);
-    font-size: 0.88rem;
-    padding: 0.3rem 0;
-    transition: opacity 0.2s;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.35rem;
+    border-radius: 5px;
+    transition: background 0.15s;
   }
-  .prem-filter-check__link:hover { opacity: 0.65; }
+
+  .prem-filter-check__link:hover {
+    background: rgba(139,82,212,0.06);
+  }
 
   .prem-filter-check__box {
-    width: 16px;
-    height: 16px;
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 4px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -250,46 +253,63 @@
     color: #FFFFFF;
   }
 
+  .prem-filter-check__label { flex: 1; }
+
   .prem-filter-check__count {
-    margin-left: auto;
-    font-size: 0.73rem;
-    opacity: 0.38;
+    font-size: 0.72rem;
+    opacity: 0.35;
+    flex-shrink: 0;
   }
 
-  /* Price range inside dropdown */
+  /* ── Price range inside panel ── */
+  .prem-price-range__label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0.45;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
   .prem-price-range__inputs {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
   }
 
   .prem-price-range__field {
     display: flex;
     align-items: center;
-    border: 1px solid var(--color-border);
-    border-radius: var(--inputs-radius, 4px);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--inputs-radius, 6px);
     overflow: hidden;
     flex: 1;
+    transition: border-color 0.2s;
+  }
+
+  .prem-price-range__field:focus-within {
+    border-color: var(--color-accent);
   }
 
   .prem-price-range__symbol {
-    padding: 0 0.45rem;
-    font-size: 0.8rem;
+    padding: 0 0.5rem;
+    font-size: 0.85rem;
     opacity: 0.4;
     background: rgba(0,0,0,0.03);
     border-right: 1px solid var(--color-border);
     align-self: stretch;
     display: flex;
     align-items: center;
+    font-weight: 500;
   }
 
   .prem-price-range__input {
     border: none;
-    padding: 0.45rem 0.4rem;
+    padding: 0.55rem 0.5rem;
     width: 100%;
     background: transparent;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--color-text);
     font-family: var(--font-body-family, sans-serif);
     -moz-appearance: textfield;
@@ -297,44 +317,62 @@
   .prem-price-range__input::-webkit-outer-spin-button,
   .prem-price-range__input::-webkit-inner-spin-button { -webkit-appearance: none; }
   .prem-price-range__input:focus { outline: none; }
-  .prem-price-range__sep { opacity: 0.35; font-size: 0.9rem; flex-shrink: 0; }
+
+  .prem-price-range__sep {
+    opacity: 0.35;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
 
   .prem-price-apply {
     width: 100%;
-    padding: 0.55rem 1rem;
+    padding: 0.65rem 1rem;
     background: var(--brand-gradient);
     color: #FFFFFF;
     border: none;
-    border-radius: var(--buttons-radius, 4px);
+    border-radius: var(--buttons-radius, 6px);
     font-family: var(--font-heading-family, sans-serif);
     font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: opacity 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
   }
-  .prem-price-apply:hover { opacity: 0.88; transform: translateY(-1px); }
+  .prem-price-apply::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--brand-gradient-hover);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .prem-price-apply:hover { transform: translateY(-1px); }
+  .prem-price-apply:hover::after { opacity: 1; }
+  .prem-price-apply span { position: relative; z-index: 1; }
 
-  /* Sort select — right side of filter bar */
-  .prem-filter-bar__sort {
+  /* ── Sort + count — right side ── */
+  .prem-filter-bar__right {
     display: flex;
     align-items: center;
-    padding: 0 0 0 1.25rem;
+    gap: 1rem;
     margin-left: auto;
+    padding-left: 1.5rem;
     flex-shrink: 0;
-    gap: 0.75rem;
   }
 
   .prem-filter-bar__count {
     font-size: 0.78rem;
-    opacity: 0.4;
+    opacity: 0.38;
     white-space: nowrap;
     font-family: var(--font-body-family, sans-serif);
   }
 
   .prem-sort-select {
-    padding: 0.45rem 2.2rem 0.45rem 0.75rem;
+    padding: 0.4rem 2rem 0.4rem 0.75rem;
     border: 1px solid var(--color-border);
     border-radius: var(--buttons-radius, 4px);
     background: transparent;
@@ -346,36 +384,37 @@
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 0.65rem center;
+    background-position: right 0.6rem center;
     transition: border-color 0.2s;
   }
-  .prem-sort-select:focus { outline: none; border-color: var(--color-accent); }
+  .prem-sort-select:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(139,82,212,0.1); }
 
   /* ════════ ACTIVE FILTER PILLS ════════ */
   .prem-active-filters {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 0.75rem 2rem;
+    padding: 0.6rem 2rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.4rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .prem-active-filters__label {
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    opacity: 0.4;
-    margin-right: 0.2rem;
+    letter-spacing: 0.1em;
+    opacity: 0.35;
+    margin-right: 0.15rem;
   }
 
   .prem-active-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.25rem 0.75rem;
+    padding: 0.22rem 0.7rem;
     border-radius: 999px;
     font-size: 0.78rem;
     font-weight: 500;
@@ -385,32 +424,47 @@
     border: none;
     cursor: pointer;
     transition: opacity 0.2s;
+    line-height: 1.5;
   }
-  .prem-active-pill:hover { opacity: 0.8; }
+  .prem-active-pill:hover { opacity: 0.78; }
 
   .prem-active-filters__clear {
     font-size: 0.78rem;
     font-weight: 600;
     color: var(--color-accent);
     text-decoration: none;
-    margin-left: 0.25rem;
+    margin-left: 0.2rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    transition: background 0.15s;
   }
-  .prem-active-filters__clear:hover { text-decoration: underline; }
+  .prem-active-filters__clear:hover { background: rgba(139,82,212,0.08); }
 
-  /* ════════ PRODUCT GRID — full 1600px ════════ */
+  /* ════════ PRODUCT GRID ════════ */
   .prem-product-grid {
     display: grid;
     grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
-    gap: 2.5rem 1.75rem;
+    gap: 2.5rem 1.5rem;
     padding-top: 2.5rem;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 599px) {
     .prem-product-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0.75rem; padding-top: 1.5rem; }
   }
 
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
+  @media screen and (min-width: 600px) and (max-width: 899px) {
+    .prem-product-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+  }
+
+  @media screen and (min-width: 900px) and (max-width: 1199px) {
     .prem-product-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem 1.25rem; }
+  }
+
+  /* Mobile: make filter bar scrollable horizontally */
+  @media screen and (max-width: 767px) {
+    .prem-filter-bar__inner { overflow-x: auto; }
+    .prem-filter-dropdown__btn { padding: 0 1rem; font-size: 0.72rem; }
+    .prem-filter-dropdown__panel { min-width: 200px; }
   }
 
   /* ════════ PRODUCT CARD ════════ */
@@ -430,7 +484,7 @@
     aspect-ratio: {{ section.settings.image_ratio }};
     background-color: rgba(0,0,0,0.04);
     overflow: hidden;
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.9rem;
     border-radius: var(--border-radius, 0px);
   }
 
@@ -498,12 +552,7 @@
     color: var(--color-text);
   }
 
-  .prem-card__price-wrap {
-    display: flex;
-    align-items: baseline;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-  }
+  .prem-card__price-wrap { display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap; }
 
   .prem-card__price { font-size: 0.92rem; font-weight: 600; color: var(--color-text); }
   .prem-card__price--sale { color: var(--price-sale-color, #DC2626); }
@@ -511,7 +560,6 @@
 
   .prem-card__form { margin-top: auto; }
 
-  /* ── ATC Button gradient ── */
   .prem-atc-btn {
     width: 100%;
     padding: 0.78rem 1rem;
@@ -540,10 +588,7 @@
     transition: opacity 0.3s ease;
   }
 
-  .prem-atc-btn:hover:not([disabled]) {
-    transform: translateY(-2px);
-    box-shadow: 0 7px 22px rgba(139,82,212,0.36);
-  }
+  .prem-atc-btn:hover:not([disabled]) { transform: translateY(-2px); box-shadow: 0 7px 22px rgba(139,82,212,0.36); }
   .prem-atc-btn:hover:not([disabled])::after { opacity: 1; }
   .prem-atc-btn span { position: relative; z-index: 1; }
 
@@ -557,11 +602,7 @@
   .prem-atc-btn[disabled]::after { display: none; }
 
   /* ════════ EMPTY STATE ════════ */
-  .prem-coll__empty {
-    text-align: center;
-    padding: 5rem 2rem;
-    grid-column: 1 / -1;
-  }
+  .prem-coll__empty { text-align: center; padding: 5rem 2rem; grid-column: 1 / -1; }
   .prem-coll__empty-icon { opacity: 0.15; margin: 0 auto 1.5rem; width: fit-content; }
   .prem-coll__empty h2 { font-family: var(--font-heading-family, sans-serif); font-size: 1.4rem; margin-bottom: 0.75rem; }
   .prem-coll__empty p { opacity: 0.5; margin-bottom: 1.5rem; }
@@ -574,8 +615,8 @@
     text-decoration: none;
     font-weight: 600;
     font-size: 0.85rem;
-    letter-spacing: 0.05em;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   /* ════════ PAGINATION ════════ */
@@ -607,11 +648,7 @@
     transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
 
-  .prem-coll__pagination a:hover {
-    background: var(--color-accent);
-    color: #FFFFFF;
-    border-color: var(--color-accent);
-  }
+  .prem-coll__pagination a:hover { background: var(--color-accent); color: #FFFFFF; border-color: var(--color-accent); }
 
   .prem-coll__pagination .current,
   .prem-coll__pagination span.current {
@@ -621,119 +658,18 @@
     pointer-events: none;
   }
 
-  /* ════════ MOBILE FILTER DRAWER ════════ */
-  .prem-drawer-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 499;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .prem-drawer-overlay.is-active { opacity: 1; pointer-events: auto; }
-
-  .prem-filter-drawer {
-    position: fixed;
-    top: 0; left: 0;
-    width: min(320px, 88vw);
-    height: 100%;
-    background: var(--color-bg, #F8F6F4);
-    z-index: 500;
-    display: flex;
-    flex-direction: column;
-    transform: translateX(-100%);
-    transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
-    box-shadow: 6px 0 40px rgba(0,0,0,0.12);
-  }
-  .prem-filter-drawer.is-open { transform: translateX(0); }
-
-  .prem-filter-drawer__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 1.5rem;
-    background: var(--brand-gradient);
-    color: #FFFFFF;
-    flex-shrink: 0;
-  }
-
-  .prem-filter-drawer__header h2 {
-    font-family: var(--font-heading-family, sans-serif);
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #FFFFFF;
-    margin: 0;
-  }
-
-  .prem-filter-drawer__close {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    color: #FFFFFF;
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-    padding: 0;
-  }
-  .prem-filter-drawer__close:hover { background: rgba(255,255,255,0.28); }
-
-  .prem-filter-drawer__body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 1.5rem 2rem;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Mobile: hide dropdown filter bar, show drawer toggle only */
-  @media screen and (max-width: 1023px) {
-    .prem-filter-bar__groups { display: none; }
-    .prem-filter-bar__toggle { border-right: none; }
-  }
-
-  /* Drawer filter groups (same style as sidebar) */
-  .prem-filter-drawer .prem-filter-group { border-bottom: 1px solid var(--color-border); }
-
-  .prem-filter-drawer .prem-filter-group__summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    cursor: pointer;
-    font-family: var(--font-heading-family, sans-serif);
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    list-style: none;
-    color: var(--color-text);
-    user-select: none;
-  }
-  .prem-filter-drawer .prem-filter-group__summary::-webkit-details-marker { display: none; }
-
-  .prem-filter-drawer .prem-filter-group__caret { transition: transform 0.25s ease; opacity: 0.5; }
-  .prem-filter-drawer .prem-filter-group[open] .prem-filter-group__caret { transform: rotate(180deg); }
-  .prem-filter-drawer .prem-filter-group__body { padding-bottom: 1rem; }
-
-  /* ════════ FADE-UP ANIMATIONS ════════ */
+  /* ════════ FADE-UP ════════ */
   @keyframes premFadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   .prem-card.fade-up-anim {
     opacity: 0;
     animation: premFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
   }
 </style>
 
-{%- comment -%} ── Collection resolver ── {%- endcomment -%}
+{%- comment -%} Collection resolver {%- endcomment -%}
 {%- if collection -%}
   {%- assign current_collection = collection -%}
 {%- elsif section.settings.collection != blank -%}
@@ -749,11 +685,12 @@
   {%- assign display_title = section.settings.all_products_title -%}
 {%- endif -%}
 
-{%- comment -%} Active filters check {%- endcomment -%}
 {%- assign has_active_filters = false -%}
 {%- for filter in current_collection.filters -%}
   {%- if filter.active_values.size > 0 -%}{%- assign has_active_filters = true -%}{%- endif -%}
-  {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}{%- assign has_active_filters = true -%}{%- endif -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value or filter.max_value.value -%}{%- assign has_active_filters = true -%}{%- endif -%}
+  {%- endif -%}
 {%- endfor -%}
 
 <!-- ════════ GRADIENT HEADER ════════ -->
@@ -771,89 +708,107 @@
 
 {%- paginate current_collection.products by section.settings.products_per_page -%}
 
-<!-- ════════ HORIZONTAL FILTER BAR ════════ -->
-<div class="prem-filter-bar">
+<!-- ════════ FILTER BAR ════════ -->
+<div class="prem-filter-bar" id="PremFilterBar">
   <div class="prem-filter-bar__inner">
 
-    <!-- Mobile drawer trigger -->
-    <button class="prem-filter-bar__toggle" data-prem-filter-toggle aria-expanded="false" aria-controls="PremFilterDrawer">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-      Filter
-      {%- if has_active_filters -%}<span class="active-dot"></span>{%- endif -%}
-    </button>
+    {%- for filter in current_collection.filters -%}
+      {%- assign filter_has_value = false -%}
+      {%- if filter.active_values.size > 0 -%}{%- assign filter_has_value = true -%}{%- endif -%}
+      {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}{%- assign filter_has_value = true -%}{%- endif -%}
 
-    <!-- Desktop: filter dropdowns inline -->
-    <div class="prem-filter-bar__groups" id="PremFilterGroups">
-      {%- for filter in current_collection.filters -%}
-        <div class="prem-filter-dropdown" data-filter-dropdown>
-          <button class="prem-filter-dropdown__btn {% if filter.active_values.size > 0 or filter.type == 'price_range' and filter.min_value.value %}is-active{% endif %}"
-                  data-filter-dropdown-btn aria-expanded="false">
-            {{ filter.label }}
-            {%- if filter.active_values.size > 0 -%}
-              <span class="active-dot"></span>
-            {%- endif -%}
-            <svg class="prem-filter-dropdown__caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
+      <div class="prem-filter-dropdown" data-filter-dd>
 
-          <div class="prem-filter-dropdown__panel" role="region">
-            {%- case filter.type -%}
+        <button
+          type="button"
+          class="prem-filter-dropdown__btn{% if filter_has_value %} has-value{% endif %}"
+          data-filter-dd-btn
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          {{ filter.label }}
+          <span class="prem-filter-dot" aria-hidden="true"></span>
+          <svg class="prem-filter-dropdown__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
 
-              {%- when 'boolean', 'list' -%}
-                <ul class="prem-filter-list">
-                  {%- for value in filter.values -%}
-                    <li>
-                      <a href="{{ value.url_to_toggle }}" class="prem-filter-check__link">
-                        <span class="prem-filter-check__box {% if value.active %}is-checked{% endif %}" aria-hidden="true">
-                          {%- if value.active -%}
-                            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                          {%- endif -%}
-                        </span>
-                        {{ value.label }}
-                        <span class="prem-filter-check__count">({{ value.count }})</span>
-                      </a>
-                    </li>
+        <!-- Panel opens inline below — same page, no redirect -->
+        <div class="prem-filter-dropdown__panel" role="region" aria-label="{{ filter.label }} filter">
+          <p class="prem-filter-dropdown__panel-title">{{ filter.label }}</p>
+
+          {%- case filter.type -%}
+
+            {%- when 'boolean', 'list' -%}
+              <ul class="prem-filter-list">
+                {%- for value in filter.values -%}
+                  <li>
+                    <a href="{{ value.url_to_toggle }}" class="prem-filter-check__link">
+                      <span class="prem-filter-check__box {% if value.active %}is-checked{% endif %}" aria-hidden="true">
+                        {%- if value.active -%}
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        {%- endif -%}
+                      </span>
+                      <span class="prem-filter-check__label">{{ value.label }}</span>
+                      <span class="prem-filter-check__count">{{ value.count }}</span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+
+            {%- when 'price_range' -%}
+              <form action="{{ current_collection.url }}" method="get">
+                {%- comment -%} Preserve all currently active filters {%- endcomment -%}
+                {%- for f in current_collection.filters -%}
+                  {%- for v in f.active_values -%}
+                    <input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">
                   {%- endfor -%}
-                </ul>
+                {%- endfor -%}
+                {%- if sort_by != blank -%}
+                  <input type="hidden" name="sort_by" value="{{ sort_by }}">
+                {%- endif -%}
 
-              {%- when 'price_range' -%}
-                <form action="{{ current_collection.url }}" method="get">
-                  {%- for f in current_collection.filters -%}
-                    {%- for v in f.active_values -%}
-                      <input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">
-                    {%- endfor -%}
-                  {%- endfor -%}
-                  <div class="prem-price-range__inputs">
-                    <div class="prem-price-range__field">
-                      <span class="prem-price-range__symbol">$</span>
-                      <input type="number" name="{{ filter.min_value.param_name }}"
-                        value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
-                        min="0" max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                        placeholder="0" class="prem-price-range__input">
-                    </div>
-                    <span class="prem-price-range__sep">–</span>
-                    <div class="prem-price-range__field">
-                      <span class="prem-price-range__symbol">$</span>
-                      <input type="number" name="{{ filter.max_value.param_name }}"
-                        value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
-                        min="0" max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                        placeholder="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                        class="prem-price-range__input">
-                    </div>
+                <p class="prem-price-range__label">Price range</p>
+                <div class="prem-price-range__inputs">
+                  <div class="prem-price-range__field">
+                    <span class="prem-price-range__symbol">$</span>
+                    <input
+                      type="number"
+                      name="{{ filter.min_value.param_name }}"
+                      value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                      placeholder="0"
+                      class="prem-price-range__input"
+                      aria-label="Minimum price"
+                    >
                   </div>
-                  <button type="submit" class="prem-price-apply">Apply</button>
-                </form>
+                  <span class="prem-price-range__sep">to</span>
+                  <div class="prem-price-range__field">
+                    <span class="prem-price-range__symbol">$</span>
+                    <input
+                      type="number"
+                      name="{{ filter.max_value.param_name }}"
+                      value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                      placeholder="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                      class="prem-price-range__input"
+                      aria-label="Maximum price"
+                    >
+                  </div>
+                </div>
+                <button type="submit" class="prem-price-apply">
+                  <span>Apply Price Filter</span>
+                </button>
+              </form>
 
-            {%- endcase -%}
-          </div>
+          {%- endcase -%}
         </div>
-      {%- endfor -%}
-    </div>
+      </div>
+    {%- endfor -%}
 
-    <!-- Sort + count — right side -->
-    <div class="prem-filter-bar__sort">
-      <span class="prem-filter-bar__count">
-        {{ current_collection.products_count }} products
-      </span>
+    <!-- Sort + count on the right -->
+    <div class="prem-filter-bar__right">
+      <span class="prem-filter-bar__count">{{ current_collection.products_count }} products</span>
       <label for="PremSortBy" class="sr-only">Sort by</label>
       <select id="PremSortBy" class="prem-sort-select" data-prem-sort>
         {%- for option in current_collection.sort_options -%}
@@ -870,7 +825,7 @@
 <!-- ════════ ACTIVE FILTER PILLS ════════ -->
 {%- if has_active_filters -%}
   <div class="prem-active-filters">
-    <span class="prem-active-filters__label">Active:</span>
+    <span class="prem-active-filters__label">Active filters:</span>
     {%- for filter in current_collection.filters -%}
       {%- for value in filter.active_values -%}
         <a href="{{ value.url_to_remove }}" class="prem-active-pill">
@@ -887,7 +842,7 @@
         {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
-    <a href="{{ current_collection.url }}" class="prem-active-filters__clear">Clear all</a>
+    <a href="{{ current_collection.url }}" class="prem-active-filters__clear">✕ Clear all</a>
   </div>
 {%- endif -%}
 
@@ -920,7 +875,7 @@
                     srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
                             {{ product.featured_image | image_url: width: 700 }} 700w,
                             {{ product.featured_image | image_url: width: 1000 }} 1000w"
-                    sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 22vw"
+                    sizes="(max-width: 599px) 50vw, (max-width: 899px) 50vw, (max-width: 1199px) 33vw, 22vw"
                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
                     class="prem-card__img"
                     loading="lazy"
@@ -1004,49 +959,11 @@
 
 {%- endpaginate -%}
 
-<!-- ════════ MOBILE FILTER DRAWER ════════ -->
-<div class="prem-drawer-overlay" id="PremDrawerOverlay"></div>
-<div class="prem-filter-drawer" id="PremFilterDrawer" aria-hidden="true" role="dialog" aria-label="Filters">
-  <div class="prem-filter-drawer__header">
-    <h2>Filters</h2>
-    <button class="prem-filter-drawer__close" data-prem-filter-close aria-label="Close">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div class="prem-filter-drawer__body">
-    {%- for filter in current_collection.filters -%}
-      <details class="prem-filter-group" {% if filter.active_values.size > 0 %}open{% endif %}>
-        <summary class="prem-filter-group__summary">
-          <span>{{ filter.label }}</span>
-          <svg class="prem-filter-group__caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </summary>
-        <div class="prem-filter-group__body">
-          {%- if filter.type == 'list' or filter.type == 'boolean' -%}
-            <ul class="prem-filter-list">
-              {%- for value in filter.values -%}
-                <li>
-                  <a href="{{ value.url_to_toggle }}" class="prem-filter-check__link">
-                    <span class="prem-filter-check__box {% if value.active %}is-checked{% endif %}" aria-hidden="true">
-                      {%- if value.active -%}
-                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      {%- endif -%}
-                    </span>
-                    {{ value.label }} <span class="prem-filter-check__count">({{ value.count }})</span>
-                  </a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </div>
-      </details>
-    {%- endfor -%}
-  </div>
-</div>
-
 <script>
 (function () {
+  'use strict';
 
-  // ── Sort
+  /* ── Sort select ── */
   var sortSel = document.querySelector('[data-prem-sort]');
   if (sortSel) {
     sortSel.addEventListener('change', function () {
@@ -1056,74 +973,61 @@
     });
   }
 
-  // ── Desktop dropdown filters
-  var dropdowns = document.querySelectorAll('[data-filter-dropdown]');
+  /* ──────────────────────────────────────────────
+     INLINE DROPDOWN FILTERS
+     Click filter button → panel opens below bar
+     Click same button again or outside → closes
+     No sidebar. No drawer. No page redirect.
+  ────────────────────────────────────────────── */
+  var dropdowns = Array.from(document.querySelectorAll('[data-filter-dd]'));
+
+  function closeAll() {
+    dropdowns.forEach(function (dd) {
+      dd.classList.remove('is-open');
+      var btn = dd.querySelector('[data-filter-dd-btn]');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    });
+  }
 
   dropdowns.forEach(function (dd) {
-    var btn = dd.querySelector('[data-filter-dropdown-btn]');
+    var btn = dd.querySelector('[data-filter-dd-btn]');
     if (!btn) return;
 
     btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var isOpen = dd.classList.contains('is-open');
+      e.stopPropagation(); /* prevent document click from immediately closing */
 
-      // Close all first
-      dropdowns.forEach(function (d) {
-        d.classList.remove('is-open');
-        var b = d.querySelector('[data-filter-dropdown-btn]');
-        if (b) b.setAttribute('aria-expanded', 'false');
-      });
+      var wasOpen = dd.classList.contains('is-open');
+      closeAll();
 
-      // Open clicked one if it was closed
-      if (!isOpen) {
+      if (!wasOpen) {
         dd.classList.add('is-open');
         btn.setAttribute('aria-expanded', 'true');
+
+        /* Focus first interactive element inside panel */
+        var panel = dd.querySelector('.prem-filter-dropdown__panel');
+        if (panel) {
+          var first = panel.querySelector('a, input, button');
+          if (first) setTimeout(function () { first.focus(); }, 50);
+        }
       }
     });
-  });
 
-  // Close dropdowns when clicking outside
-  document.addEventListener('click', function () {
-    dropdowns.forEach(function (d) {
-      d.classList.remove('is-open');
-      var b = d.querySelector('[data-filter-dropdown-btn]');
-      if (b) b.setAttribute('aria-expanded', 'false');
-    });
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      dropdowns.forEach(function (d) { d.classList.remove('is-open'); });
-      closeDrawer();
+    /* Prevent clicks INSIDE the panel from closing it */
+    var panel = dd.querySelector('.prem-filter-dropdown__panel');
+    if (panel) {
+      panel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
     }
   });
 
-  // ── Mobile drawer
-  var toggleBtn = document.querySelector('[data-prem-filter-toggle]');
-  var closeBtn  = document.querySelector('[data-prem-filter-close]');
-  var overlay   = document.getElementById('PremDrawerOverlay');
-  var drawer    = document.getElementById('PremFilterDrawer');
+  /* Close on outside click */
+  document.addEventListener('click', closeAll);
 
-  function openDrawer() {
-    drawer.classList.add('is-open');
-    drawer.setAttribute('aria-hidden', 'false');
-    overlay.classList.add('is-active');
-    document.body.style.overflow = 'hidden';
-    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeDrawer() {
-    if (!drawer) return;
-    drawer.classList.remove('is-open');
-    drawer.setAttribute('aria-hidden', 'true');
-    overlay.classList.remove('is-active');
-    document.body.style.overflow = '';
-    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
-  }
-
-  if (toggleBtn) toggleBtn.addEventListener('click', openDrawer);
-  if (closeBtn)  closeBtn.addEventListener('click', closeDrawer);
-  if (overlay)   overlay.addEventListener('click', closeDrawer);
+  /* Close on Escape */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeAll();
+  });
 
 })();
 </script>
@@ -1140,7 +1044,7 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection",
-      "info": "Leave blank on collection pages — auto-detects. Set only when used as a standalone section."
+      "info": "Leave blank on collection pages — auto-detects."
     },
     {
       "type": "text",
