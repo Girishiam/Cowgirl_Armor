@@ -12,9 +12,23 @@
     "main": {
       "type": "premium-collection-grid",
       "settings": {
-        "columns_desktop": 3,
-        "bg_color": "#F8F6F4",
-        "padding_bottom": 80
+        "collection": "be-the-light-oaklynn-caps",
+        "title": "Cowgirl Armor- The OG Collection",
+        "show_view_all": true,
+        "shop_all_text": "Shop All",
+        "columns_desktop": 4,
+        "product_limit": 8,
+        "show_marquee": true,
+        "marquee_text": "❖ The Shield of Faith ❖ Sword of the Spirit ❖ The Helmet of Salvation ❖ Pray Boldly",
+        "marquee_speed": 20,
+        "marquee_bg": "#e2e2e2",
+        "marquee_text_color": "#1a1a1a",
+        "bg_color": "#f8f6f4",
+        "text_color": "#1a1a1a",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "button_add_to_cart": "Add to cart",
+        "button_sold_out": "Sold Out"
       }
     }
   },
