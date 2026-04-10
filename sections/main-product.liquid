@@ -4,12 +4,17 @@
      Full brand gradient system integration
      ============================================ */
 
+  /* Eliminates grey sidebars */
+  .ca-pdp-outer {
+    background-color: {{ section.settings.bg_color }};
+    width: 100%;
+  }
+
   .ca-pdp {
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
     padding: {{ section.settings.padding_top }}px 4rem {{ section.settings.padding_bottom }}px;
-    background-color: {{ section.settings.bg_color }};
     box-sizing: border-box;
   }
   @media screen and (max-width: 1023px) { .ca-pdp { padding-left: 2rem; padding-right: 2rem; } }
@@ -323,6 +328,7 @@
   {%- assign is_on_sale = true -%}
 {%- endif -%}
 
+<div class="ca-pdp-outer">
 <div class="ca-pdp">
 
   {%- if section.settings.show_breadcrumbs -%}
@@ -556,6 +562,7 @@
     </div>
   </div>
 </div>
+</div><!-- /ca-pdp-outer -->
 
 <!-- Sticky mobile ATC -->
 {%- if section.settings.show_sticky_atc -%}
