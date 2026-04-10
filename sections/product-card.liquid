@@ -1,0 +1,67 @@
+{% comment %}
+  Renders a product card.
+  Usage: {% render 'product-card', product: product %}
+{% endcomment %}
+
+{%- assign first_variant = product.selected_or_first_available_variant -%}
+{%- assign is_on_sale = false -%}
+{%- if first_variant.compare_at_price > first_variant.price -%}
+  {%- assign is_on_sale = true -%}
+{%- endif -%}
+
+<a class="product-card" href="{{ product.url | within: collection }}">
+  <div class="product-card__image-wrapper">
+
+    {%- if product.featured_image -%}
+      <img
+        class="product-card__image"
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                {{ product.featured_image | image_url: width: 600 }} 600w,
+                {{ product.featured_image | image_url: width: 900 }} 900w"
+        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="lazy"
+        width="{{ product.featured_image.width }}"
+        height="{{ product.featured_image.height }}"
+      >
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'product-card__image placeholder-svg' }}
+    {%- endif -%}
+
+    {%- if settings.show_secondary_image and product.images.size > 1 -%}
+      <img
+        class="product-card__image-secondary"
+        src="{{ product.images[1] | image_url: width: 600 }}"
+        alt="{{ product.images[1].alt | default: product.title | escape }}"
+        loading="lazy"
+      >
+    {%- endif -%}
+
+    {%- if is_on_sale and settings.show_sale_badge -%}
+      <span class="product-card__badge product-card__badge--sale">
+        {%- if settings.sale_badge_style == 'percent' -%}
+          -{%- assign savings = first_variant.compare_at_price | minus: first_variant.price | times: 100 | divided_by: first_variant.compare_at_price -%}{{ savings }}%
+        {%- else -%}
+          Sale
+        {%- endif -%}
+      </span>
+    {%- elsif product.available == false -%}
+      <span class="product-card__badge" style="background: var(--color-text); color: var(--color-bg);">Sold Out</span>
+    {%- endif -%}
+
+  </div>
+
+  <div class="product-card__info">
+    {%- if settings.show_vendor -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+    <h3 class="product-card__title">{{ product.title }}</h3>
+    <p class="product-card__price {% if is_on_sale %}product-card__price--on-sale{% endif %}">
+      {{ first_variant.price | money }}
+      {%- if is_on_sale -%}
+        <span class="product-card__price--compare">{{ first_variant.compare_at_price | money }}</span>
+      {%- endif -%}
+    </p>
+  </div>
+</a>
