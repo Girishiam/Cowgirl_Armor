@@ -85,12 +85,25 @@
         "text_color": "#1a1a1a",
         "btn_use_gradient": true
       }
+    },
+    "premium_product_grid_mfnGHW": {
+      "type": "premium-product-grid",
+      "name": "Premium Collection Grid",
+      "settings": {
+        "collection": "",
+        "image_ratio": "1 / 1",
+        "columns_desktop": 4,
+        "products_per_page": 12,
+        "padding_bottom": 80,
+        "bg_color": "#F8F6F4"
+      }
     }
   },
   "order": [
     "main",
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
-    "image_with_text_UAJ3AJ"
+    "image_with_text_UAJ3AJ",
+    "premium_product_grid_mfnGHW"
   ]
 }
