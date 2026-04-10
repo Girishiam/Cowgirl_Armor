@@ -20,15 +20,19 @@
           "type": "title",
           "settings": {}
         },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "divider_1": {
+          "type": "divider",
+          "settings": {}
+        },
         "price": {
           "type": "price",
           "settings": {
             "sale_badge_text": "Sale"
           }
-        },
-        "divider_1": {
-          "type": "divider",
-          "settings": {}
         },
         "variant_picker": {
           "type": "variant_picker",
@@ -57,17 +61,13 @@
           "type": "trust",
           "settings": {
             "trust_1": "Secure & encrypted checkout",
-            "trust_2": "Free shipping on orders over $50",
-            "trust_3": "Easy 30-day returns",
+            "trust_2": "",
+            "trust_3": "",
             "trust_4": "Printed & shipped in the USA"
           }
         },
         "divider_2": {
           "type": "divider",
-          "settings": {}
-        },
-        "description": {
-          "type": "description",
           "settings": {}
         },
         "share": {
@@ -91,8 +91,8 @@
         "share"
       ],
       "settings": {
-        "bg_color": "#FFFFFF",
-        "text_color": "#1A1A1A",
+        "bg_color": "#ffffff",
+        "text_color": "#1a1a1a",
         "padding_top": 40,
         "padding_bottom": 80,
         "img_radius": 8,
@@ -103,5 +103,7 @@
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
