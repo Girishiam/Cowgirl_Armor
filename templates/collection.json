@@ -11,7 +11,11 @@
   "sections": {
     "main": {
       "type": "premium-collection-grid",
-      "settings": {}
+      "settings": {
+        "columns_desktop": 3,
+        "bg_color": "#F8F6F4",
+        "padding_bottom": 80
+      }
     }
   },
   "order": [
