@@ -80,14 +80,14 @@
       "block_order": [
         "vendor",
         "title",
-        "price",
+        "description",
         "divider_1",
+        "price",
         "variant_picker",
         "quantity",
         "buy_buttons",
         "trust",
         "divider_2",
-        "description",
         "share"
       ],
       "settings": {
