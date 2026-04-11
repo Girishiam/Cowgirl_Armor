@@ -12,17 +12,14 @@
     "main": {
       "type": "premium-collection-grid",
       "settings": {
-        "collection": "be-the-light-oaklynn-caps",
         "all_products_title": "All Products",
         "image_ratio": "4 / 5",
         "columns_desktop": 4,
         "products_per_page": 16,
         "padding_bottom": 80,
-        "bg_color": "#f8f6f4"
+        "bg_color": "#F8F6F4"
       }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }
