@@ -74,12 +74,13 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
 
-  /* ════════ FILTER BAR — scrolls with page ════════ */
+  /* ════════ FILTER BAR — sticky below header ════════ */
   .prem-filter-bar {
     background: {{ section.settings.bg_color }};
     border-bottom: 1px solid var(--color-border);
-    position: relative;
-    z-index: 10;
+    position: sticky;
+    top: var(--nav-total-height, 80px);
+    z-index: 200;
   }
 
   .prem-filter-bar__inner {
