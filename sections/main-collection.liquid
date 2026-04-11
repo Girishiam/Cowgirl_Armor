@@ -1,363 +1,365 @@
 <style>
-  .col-{{ section.id }} {
+  /* ============================================
+     COLLECTION GRID — Cowgirl Armor
+     Clean inline filter fields above product grid
+     No sticky bar. No overlap. No issues.
+     ============================================ */
+
+  .prem-coll-{{ section.id }} {
     background-color: {{ section.settings.bg_color }};
-    color: {{ section.settings.text_color }};
-    min-height: 60vh;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
-  /* ── Hero banner ── */
-  .col-{{ section.id }} .col__hero {
-    position: relative;
-    height: {{ section.settings.hero_height }}px;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-    padding: {{ section.settings.hero_padding }}px;
-    background-color: {{ section.settings.hero_fallback_bg }};
-  }
-  .col-{{ section.id }} .col__hero-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-  .col-{{ section.id }} .col__hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%);
-  }
-  .col-{{ section.id }} .col__hero-content {
-    position: relative;
-    z-index: 2;
-  }
-  .col-{{ section.id }} .col__hero-title {
-    font-family: var(--font-heading-family, serif);
-    font-size: clamp(1.8rem, 5vw, {{ section.settings.hero_title_size }}px);
-    font-weight: {{ section.settings.hero_title_weight }};
-    color: #fff;
-    margin: 0 0 6px;
-    line-height: 1.1;
-  }
-  .col-{{ section.id }} .col__hero-desc {
-    font-size: 0.95rem;
-    color: rgba(255,255,255,0.8);
-    margin: 0;
-    max-width: 500px;
-  }
-  /* No-image fallback */
-  .col-{{ section.id }} .col__hero--no-image {
-    height: auto;
-    background: none;
-    padding: {{ section.settings.hero_padding }}px {{ section.settings.hero_padding }}px {{ section.settings.hero_padding | divided_by: 2 }}px;
-    align-items: flex-start;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-  }
-  .col-{{ section.id }} .col__hero--no-image .col__hero-title {
-    color: {{ section.settings.text_color }};
-    font-size: clamp(1.8rem, 4vw, {{ section.settings.hero_title_size }}px);
-  }
-  .col-{{ section.id }} .col__hero--no-image .col__hero-desc {
-    color: {{ section.settings.text_color }};
-    opacity: 0.6;
-  }
-
-  /* ── Toolbar (filters + sort) ── */
-  .col-{{ section.id }} .col__toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: {{ section.settings.toolbar_padding }}px {{ section.settings.padding_h_desktop }}px;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    flex-wrap: wrap;
-    position: sticky;
-    top: var(--nav-total-height, 80px);
-    background: {{ section.settings.bg_color }};
-    z-index: 100;
-  }
-  .col-{{ section.id }} .col__toolbar-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .col-{{ section.id }} .col__count {
-    font-size: 0.82rem;
-    opacity: 0.5;
-    white-space: nowrap;
-  }
-  .col-{{ section.id }} .col__filter-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px solid rgba(0,0,0,0.18);
-    border-radius: {{ section.settings.btn_radius }}px;
-    padding: 8px 16px;
-    cursor: pointer;
-    color: {{ section.settings.text_color }};
-    transition: background-color 0.18s, border-color 0.18s;
-  }
-  .col-{{ section.id }} .col__filter-toggle:hover {
-    background: rgba(0,0,0,0.04);
-    border-color: rgba(0,0,0,0.35);
-  }
-  .col-{{ section.id }} .col__filter-toggle.is-active {
-    background: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
-    border-color: {{ section.settings.text_color }};
-  }
-
-  /* Active filter pills */
-  .col-{{ section.id }} .col__active-filters {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .col-{{ section.id }} .col__active-filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.78rem;
-    font-weight: 500;
-    background: rgba(0,0,0,0.06);
-    border-radius: 20px;
-    padding: 5px 12px 5px 10px;
-    text-decoration: none;
-    color: {{ section.settings.text_color }};
-    transition: background-color 0.15s;
-  }
-  .col-{{ section.id }} .col__active-filter:hover { background: rgba(0,0,0,0.12); }
-  .col-{{ section.id }} .col__active-filter svg { flex-shrink: 0; }
-  .col-{{ section.id }} .col__clear-all {
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    color: {{ section.settings.accent_color }};
-    white-space: nowrap;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-  }
-
-  /* Sort */
-  .col-{{ section.id }} .col__sort-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .col-{{ section.id }} .col__sort-label {
-    font-size: 0.82rem;
-    opacity: 0.5;
-    white-space: nowrap;
-  }
-  .col-{{ section.id }} .col__sort-select {
-    font-family: var(--font-body-family, sans-serif);
-    font-size: 0.88rem;
-    font-weight: 500;
-    background: none;
-    border: 1px solid rgba(0,0,0,0.18);
-    border-radius: {{ section.settings.btn_radius }}px;
-    padding: 8px 32px 8px 12px;
-    color: {{ section.settings.text_color }};
-    cursor: pointer;
-    -webkit-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    min-width: 180px;
-  }
-  .col-{{ section.id }} .col__sort-select:focus { outline: none; border-color: {{ section.settings.text_color }}; }
-
-  /* ── Main layout: filter drawer + grid ── */
-  .col-{{ section.id }} .col__body {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    max-width: {{ section.settings.max_width }}px;
+  .prem-coll__wrap {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 {{ section.settings.padding_h_desktop }}px;
-  }
-  .col-{{ section.id }} .col__body.filters-open {
-    grid-template-columns: {{ section.settings.filter_panel_width }}px 1fr;
-    gap: {{ section.settings.filter_panel_gap }}px;
+    padding: 0 2rem;
   }
 
-  /* ── Filter panel ── */
-  .col-{{ section.id }} .col__filters {
-    display: none;
-    padding-top: {{ section.settings.toolbar_padding }}px;
+  /* ════════ GRADIENT HEADER ════════ */
+  .prem-coll__header {
+    background: var(--brand-gradient);
+    color: #FFFFFF;
+    text-align: center;
+    padding: clamp(3rem, 8vw, 5rem) 2rem;
+    position: relative;
+    overflow: hidden;
   }
-  .col-{{ section.id }} .col__body.filters-open .col__filters {
-    display: block;
+  .prem-coll__header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+    pointer-events: none;
   }
-
-  .col-{{ section.id }} .col__filter-group {
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+  .prem-coll__header-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
   }
-  .col-{{ section.id }} .col__filter-group:last-child {
-    border-bottom: none;
+  .prem-coll__title {
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: var(--heading-weight, 700);
+    color: #FFFFFF;
+    margin: 0 0 0.75rem;
+    line-height: 1.1;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.15);
   }
-  .col-{{ section.id }} .col__filter-group-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0 0 14px;
-    color: {{ section.settings.text_color }};
-    font-family: var(--font-body-family, sans-serif);
-    text-align: left;
+  .prem-coll__description {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    opacity: 0.9;
+    line-height: 1.65;
+    margin: 0 auto 1rem;
   }
-  .col-{{ section.id }} .col__filter-group-name {
-    font-size: 0.82rem;
-    font-weight: 700;
+  .prem-coll__count {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    opacity: 0.7;
+    background: rgba(255,255,255,0.15);
+    padding: 0.3rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.25);
   }
-  .col-{{ section.id }} .col__filter-caret {
-    transition: transform 0.25s ease;
+
+  /* ════════ FILTER ROW — full width bg, constrained content ════════ */
+  .prem-filter-row-outer {
+    background: {{ section.settings.bg_color }};
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    width: 100%;
+  }
+
+  .prem-filter-row {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .prem-filter-row__left {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .prem-filter-row__right {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
     flex-shrink: 0;
   }
-  .col-{{ section.id }} .col__filter-group-toggle[aria-expanded="false"] .col__filter-caret {
-    transform: rotate(-90deg);
-  }
-  .col-{{ section.id }} .col__filter-group-body {
+
+  /* ── Labeled field wrapper ── */
+  .prem-filter-field {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-  .col-{{ section.id }} .col__filter-group-body.is-collapsed {
-    display: none;
+    gap: 0.3rem;
   }
 
-  /* Filter option */
-  .col-{{ section.id }} .col__filter-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: {{ section.settings.text_color }};
-    font-size: 0.88rem;
-    line-height: 1.3;
-    transition: opacity 0.15s;
+  .prem-filter-field__label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    font-family: var(--font-body-family, sans-serif);
+    color: var(--color-text, #1A1A1A);
   }
-  .col-{{ section.id }} .col__filter-option:hover { opacity: 0.7; }
-  .col-{{ section.id }} .col__filter-option.is-active { font-weight: 600; }
-  .col-{{ section.id }} .col__filter-checkbox {
-    width: 16px;
-    height: 16px;
-    border: 1.5px solid rgba(0,0,0,0.25);
-    border-radius: 3px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    transition: background-color 0.15s, border-color 0.15s;
-  }
-  .col-{{ section.id }} .col__filter-option.is-active .col__filter-checkbox {
-    background: {{ section.settings.text_color }};
-    border-color: {{ section.settings.text_color }};
-  }
-  .col-{{ section.id }} .col__filter-option.is-active .col__filter-checkbox::after {
-    content: '';
-    display: block;
-    width: 9px;
-    height: 9px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l3 3 5-6' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-size: contain;
+
+  /* ── Availability select ── */
+  .prem-filter-field__select {
+    appearance: none;
+    -webkit-appearance: none;
+    min-width: 160px;
+    padding: 0.65rem 2.4rem 0.65rem 1rem;
+    border: 1.5px solid rgba(0,0,0,0.14);
+    border-radius: 8px;
+    background: #FFFFFF;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: right 0.8rem center;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color-text, #1A1A1A);
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s;
   }
-  .col-{{ section.id }} .col__filter-count {
-    opacity: 0.4;
-    font-size: 0.78rem;
-    margin-left: auto;
+  .prem-filter-field__select:focus {
+    outline: none;
+    border-color: #8B52D4;
+    box-shadow: 0 0 0 3px rgba(139,82,212,0.1);
+  }
+  .prem-filter-field__select.has-value {
+    border-color: #8B52D4;
+    background-color: rgba(139,82,212,0.04);
+    color: #8B52D4;
+    font-weight: 600;
   }
 
-  /* Price range */
-  .col-{{ section.id }} .col__price-inputs {
+  /* ── Price fields ── */
+  .prem-price-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .prem-price-field__inputs {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 4px;
+    gap: 0.5rem;
   }
-  .col-{{ section.id }} .col__price-input {
-    width: 80px;
-    padding: 8px 10px;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-radius: 4px;
-    font-size: 0.85rem;
+  .prem-price-field__input-wrap {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid rgba(0,0,0,0.14);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #FFFFFF;
+    width: 88px;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+  .prem-price-field__input-wrap:focus-within {
+    border-color: #8B52D4;
+    box-shadow: 0 0 0 3px rgba(139,82,212,0.1);
+  }
+  .prem-price-field__symbol {
+    padding: 0 0.45rem;
+    font-size: 0.82rem;
+    opacity: 0.3;
+    font-weight: 600;
+    user-select: none;
+    color: var(--color-text, #1A1A1A);
+    flex-shrink: 0;
+  }
+  .prem-price-field__input {
+    border: none;
+    outline: none;
+    padding: 0.65rem 0.45rem 0.65rem 0;
+    width: 100%;
     background: transparent;
-    color: {{ section.settings.text_color }};
-    text-align: center;
+    font-size: 0.88rem;
+    font-family: var(--font-body-family, sans-serif);
+    color: var(--color-text, #1A1A1A);
     -moz-appearance: textfield;
   }
-  .col-{{ section.id }} .col__price-input::-webkit-outer-spin-button,
-  .col-{{ section.id }} .col__price-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-  .col-{{ section.id }} .col__price-sep { font-size: 0.85rem; opacity: 0.4; }
-  .col-{{ section.id }} .col__price-go {
-    padding: 8px 14px;
-    background: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
+  .prem-price-field__input::-webkit-outer-spin-button,
+  .prem-price-field__input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .prem-price-field__sep {
+    font-size: 0.8rem;
+    opacity: 0.3;
+    flex-shrink: 0;
+    color: var(--color-text, #1A1A1A);
+  }
+  .prem-price-field__go {
+    padding: 0.65rem 1.1rem;
+    background: var(--brand-gradient);
+    color: #FFFFFF;
     border: none;
-    border-radius: 4px;
-    font-size: 0.82rem;
-    font-weight: 600;
+    border-radius: 8px;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: opacity 0.18s;
+    white-space: nowrap;
+    transition: opacity 0.18s, transform 0.15s;
   }
-  .col-{{ section.id }} .col__price-go:hover { opacity: 0.8; }
+  .prem-price-field__go:hover { opacity: 0.88; transform: translateY(-1px); }
 
-  /* ── Product grid ── */
-  .col-{{ section.id }} .col__grid-wrap {
-    padding-top: {{ section.settings.toolbar_padding }}px;
-  }
-  .col-{{ section.id }} .col__grid {
-    display: grid;
-    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
-    gap: {{ section.settings.grid_gap }}px;
-  }
-
-  /* ── Product card ── */
-  .col-{{ section.id }} .col__card {
+  /* ── Sort ── */
+  .prem-sort-wrap {
     display: flex;
     flex-direction: column;
+    gap: 0.3rem;
+  }
+  .prem-sort-wrap__label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    font-family: var(--font-body-family, sans-serif);
+    color: var(--color-text, #1A1A1A);
+  }
+  .prem-sort-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0.65rem 2.4rem 0.65rem 1rem;
+    border: 1.5px solid rgba(0,0,0,0.14);
+    border-radius: 8px;
+    background: #FFFFFF;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color-text, #1A1A1A);
+    cursor: pointer;
+    min-width: 180px;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+  .prem-sort-select:focus {
+    outline: none;
+    border-color: #8B52D4;
+    box-shadow: 0 0 0 3px rgba(139,82,212,0.1);
+  }
+
+  /* ════════ ACTIVE FILTER PILLS ════════ */
+  .prem-active-filters {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.5rem 2rem 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .prem-active-filters__label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.35;
+    color: var(--color-text, #1A1A1A);
+  }
+  .prem-active-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 500;
     text-decoration: none;
-    color: {{ section.settings.text_color }};
+    background: var(--brand-gradient);
+    color: #FFFFFF;
+    transition: opacity 0.2s;
+    line-height: 1.5;
   }
-  .col-{{ section.id }} .col__card-img-wrap {
+  .prem-active-pill:hover { opacity: 0.75; }
+  .prem-active-filters__clear {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #8B52D4;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    text-decoration-color: rgba(139,82,212,0.4);
+  }
+  .prem-active-filters__clear:hover { text-decoration-color: #8B52D4; }
+
+  /* ════════ PRODUCT GRID ════════ */
+  .prem-product-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 2.5rem 1.5rem;
+    padding-top: 2rem;
+  }
+
+  @media screen and (max-width: 599px) {
+    .prem-product-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0.75rem; padding-top: 1.25rem; }
+    .prem-filter-row { padding: 1rem; }
+    .prem-coll__wrap { padding: 0 1rem; }
+    .prem-active-filters { padding: 0.5rem 1rem 0.75rem; }
+    .prem-price-field__input-wrap { width: 72px; }
+    .prem-sort-select { min-width: 130px; }
+    .prem-filter-field__select { min-width: 130px; }
+  }
+  @media screen and (min-width: 600px) and (max-width: 899px) {
+    .prem-product-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+  }
+  @media screen and (min-width: 900px) and (max-width: 1199px) {
+    .prem-product-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem 1.25rem; }
+  }
+
+  /* ════════ PRODUCT CARD ════════ */
+  .prem-card { display: flex; flex-direction: column; position: relative; }
+
+  .prem-card__link {
+    text-decoration: none;
+    color: var(--color-text, #1A1A1A);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .prem-card__img-wrap {
     position: relative;
+    width: 100%;
+    aspect-ratio: {{ section.settings.image_ratio }};
+    background-color: #F8F6F4;
     overflow: hidden;
-    border-radius: {{ section.settings.card_radius }}px;
-    background: {{ section.settings.img_bg }};
-    aspect-ratio: {{ section.settings.img_ratio }};
-    margin-bottom: {{ section.settings.card_info_gap }}px;
+    margin-bottom: 0.9rem;
+    border-radius: 8px;
   }
-  .col-{{ section.id }} .col__card-img {
+  .prem-card__img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
     display: block;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 0.5rem;
+    box-sizing: border-box;
+    transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
   }
-  .col-{{ section.id }} .col__card:hover .col__card-img { transform: scale({{ section.settings.img_hover_scale | divided_by: 100.0 }}); }
-  .col-{{ section.id }} .col__card-img-2 {
+  .prem-card:hover .prem-card__img { transform: scale(1.05); }
+
+  .prem-card__img-secondary {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -366,520 +368,429 @@
     opacity: 0;
     transition: opacity 0.4s ease;
   }
-  .col-{{ section.id }} .col__card:hover .col__card-img-2 { opacity: 1; }
+  .prem-card:hover .prem-card__img-secondary { opacity: 1; }
 
-  /* Badge */
-  .col-{{ section.id }} .col__badge {
+  .prem-card__badge {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 0.7rem;
+    top: 0.6rem;
+    left: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: {{ section.settings.badge_radius }}px;
-    z-index: 2;
-  }
-  .col-{{ section.id }} .col__badge--sale {
-    background: {{ section.settings.sale_color }};
-    color: #fff;
-  }
-  .col-{{ section.id }} .col__badge--sold-out {
-    background: rgba(0,0,0,0.65);
-    color: #fff;
-  }
-  .col-{{ section.id }} .col__badge--new {
-    background: {{ section.settings.accent_color }};
-    color: {{ section.settings.text_color }};
-  }
-
-  /* Quick add button */
-  .col-{{ section.id }} .col__quick-add {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    padding: 10px;
-    background: {{ section.settings.bg_color }};
-    color: {{ section.settings.text_color }};
-    border: 1px solid rgba(0,0,0,0.12);
-    border-radius: {{ section.settings.btn_radius }}px;
-    font-family: var(--font-body-family, sans-serif);
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.22s ease, transform 0.22s ease, background-color 0.18s;
-    z-index: 2;
-  }
-  .col-{{ section.id }} .col__card:hover .col__quick-add {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .col-{{ section.id }} .col__quick-add:hover {
-    background: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
-  }
-  .col-{{ section.id }} .col__quick-add:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* Card info */
-  .col-{{ section.id }} .col__card-info { flex: 1; }
-  .col-{{ section.id }} .col__card-vendor {
-    font-size: 0.72rem;
-    font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    opacity: 0.45;
-    margin: 0 0 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+    color: #FFFFFF;
+    background: var(--brand-gradient);
   }
-  .col-{{ section.id }} .col__card-title {
-    font-family: var(--font-heading-family, serif);
-    font-size: clamp({{ section.settings.card_title_min }}px, 1.5vw, {{ section.settings.card_title_max }}px);
-    font-weight: {{ section.settings.card_title_weight }};
-    margin: 0 0 6px;
-    line-height: 1.3;
-    color: {{ section.settings.text_color }};
-  }
-  .col-{{ section.id }} .col__card-price {
+  .prem-card__badge--sale     { background: #DC2626 !important; }
+  .prem-card__badge--sold-out { background: rgba(0,0,0,0.65) !important; }
+
+  .prem-card__info {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
-    font-size: {{ section.settings.price_size }}px;
-    font-weight: 600;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+    flex-grow: 1;
   }
-  .col-{{ section.id }} .col__card-price--sale { color: {{ section.settings.sale_color }}; }
-  .col-{{ section.id }} .col__card-price--compare {
-    text-decoration: line-through;
-    opacity: 0.4;
-    font-size: 0.88em;
-    font-weight: 400;
+  .prem-card__title {
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: clamp(0.85rem, 1.2vw, 0.98rem);
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+    color: var(--color-text, #1A1A1A);
+  }
+  .prem-card__price-wrap { display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap; }
+  .prem-card__price { font-size: 0.92rem; font-weight: 600; color: var(--color-text, #1A1A1A); }
+  .prem-card__price--sale    { color: #DC2626; }
+  .prem-card__price--compare { font-size: 0.82rem; text-decoration: line-through; opacity: 0.38; font-weight: 400; }
+
+  .prem-card__form { margin-top: auto; }
+
+  .prem-atc-btn {
+    width: 100%;
+    padding: 0.78rem 1rem;
+    background: var(--brand-gradient);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 12px rgba(139,82,212,0.2);
+  }
+  .prem-atc-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .prem-atc-btn:hover:not([disabled]) { transform: translateY(-2px); box-shadow: 0 7px 22px rgba(139,82,212,0.36); }
+  .prem-atc-btn:hover:not([disabled])::after { opacity: 1; }
+  .prem-atc-btn span { position: relative; z-index: 1; }
+  .prem-atc-btn[disabled] {
+    background: rgba(0,0,0,0.08) !important;
+    color: rgba(0,0,0,0.28) !important;
+    box-shadow: none; cursor: not-allowed; transform: none;
   }
 
-  /* ── Empty state ── */
-  .col-{{ section.id }} .col__empty {
+  /* ════════ EMPTY STATE ════════ */
+  .prem-coll__empty {
     text-align: center;
     padding: 5rem 2rem;
     grid-column: 1 / -1;
   }
-  .col-{{ section.id }} .col__empty p {
-    opacity: 0.5;
-    margin-bottom: 1.5rem;
-    font-size: 1.1rem;
-  }
-  .col-{{ section.id }} .col__empty a {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 13px 28px;
-    background: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
-    border-radius: {{ section.settings.btn_radius }}px;
+  .prem-coll__empty p { opacity: 0.5; margin-bottom: 1.5rem; font-size: 1.05rem; }
+  .prem-coll__empty a {
+    display: inline-block;
+    background: var(--brand-gradient);
+    color: #FFFFFF;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
     text-decoration: none;
-    font-size: 0.9rem;
     font-weight: 600;
-    transition: opacity 0.2s;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
-  .col-{{ section.id }} .col__empty a:hover { opacity: 0.8; }
 
-  /* ── Pagination ── */
-  .col-{{ section.id }} .col__pagination {
+  /* ════════ PAGINATION ════════ */
+  .prem-coll__pagination {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: {{ section.settings.pagination_gap }}px;
-    padding: {{ section.settings.pagination_padding }}px 0;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 4rem;
+    padding-bottom: 2rem;
     flex-wrap: wrap;
   }
-  .col-{{ section.id }} .col__pagination a,
-  .col-{{ section.id }} .col__pagination span {
+  .prem-coll__pagination a,
+  .prem-coll__pagination span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: {{ section.settings.pagination_size }}px;
-    height: {{ section.settings.pagination_size }}px;
-    border-radius: {{ section.settings.pagination_radius }}px;
-    font-family: var(--font-body-family, sans-serif);
-    font-size: 0.9rem;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 0.75rem;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 8px;
+    font-size: 0.88rem;
     font-weight: 500;
     text-decoration: none;
-    transition: background-color 0.18s, color 0.18s, border-color 0.18s;
-    border: 1px solid transparent;
-    color: {{ section.settings.text_color }};
-    padding: 0 8px;
+    color: var(--color-text, #1A1A1A);
+    background: transparent;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
-  .col-{{ section.id }} .col__pagination a:hover {
-    background: rgba(0,0,0,0.06);
-    border-color: rgba(0,0,0,0.15);
-  }
-  .col-{{ section.id }} .col__pagination .col__page--current {
-    background: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
-    border-color: {{ section.settings.text_color }};
+  .prem-coll__pagination a:hover { background: #8B52D4; color: #FFFFFF; border-color: transparent; }
+  .prem-coll__pagination .current {
+    background: var(--brand-gradient);
+    color: #FFFFFF;
+    border-color: transparent;
+    pointer-events: none;
     font-weight: 700;
   }
-  .col-{{ section.id }} .col__pagination .col__page--prev,
-  .col-{{ section.id }} .col__pagination .col__page--next {
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    gap: 6px;
-    padding: 0 14px;
-  }
-  .col-{{ section.id }} .col__pagination .col__page--disabled {
-    opacity: 0.25;
-    pointer-events: none;
-  }
 
-  /* ── Responsive ── */
-  @media screen and (max-width: 1023px) {
-    .col-{{ section.id }} .col__body.filters-open {
-      grid-template-columns: 1fr;
-    }
-    .col-{{ section.id }} .col__body.filters-open .col__filters {
-      display: none;
-    }
+  /* ════════ FADE-UP ════════ */
+  @keyframes premFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  @media screen and (max-width: 767px) {
-    .col-{{ section.id }} {
-      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
-    }
-    .col-{{ section.id }} .col__toolbar {
-      padding-left: {{ section.settings.padding_h_mobile }}px;
-      padding-right: {{ section.settings.padding_h_mobile }}px;
-    }
-    .col-{{ section.id }} .col__body {
-      padding-left: {{ section.settings.padding_h_mobile }}px;
-      padding-right: {{ section.settings.padding_h_mobile }}px;
-    }
-    .col-{{ section.id }} .col__grid {
-      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
-      gap: {{ section.settings.grid_gap_mobile }}px;
-    }
-    .col-{{ section.id }} .col__sort-label { display: none; }
-    .col-{{ section.id }} .col__sort-select { min-width: 140px; }
-    .col-{{ section.id }} .col__hero--no-image {
-      padding-left: {{ section.settings.padding_h_mobile }}px;
-      padding-right: {{ section.settings.padding_h_mobile }}px;
-    }
+  .prem-card.fade-up-anim {
+    opacity: 0;
+    animation: premFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
   }
 </style>
 
-{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-{%- assign filters_applied = false -%}
-{%- for filter in collection.filters -%}
-  {%- if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value -%}
-    {%- assign filters_applied = true -%}
+{%- comment -%} Collection resolver {%- endcomment -%}
+{%- if collection -%}
+  {%- assign current_collection = collection -%}
+{%- elsif section.settings.collection != blank -%}
+  {%- assign current_collection = section.settings.collection -%}
+{%- else -%}
+  {%- assign current_collection = collections.all -%}
+{%- endif -%}
+
+{%- assign sort_by = current_collection.sort_by | default: current_collection.default_sort_by -%}
+
+{%- assign display_title = current_collection.title -%}
+{%- if current_collection.handle == 'all' and section.settings.all_products_title != blank -%}
+  {%- assign display_title = section.settings.all_products_title -%}
+{%- endif -%}
+
+{%- assign has_active_filters = false -%}
+{%- for filter in current_collection.filters -%}
+  {%- if filter.active_values.size > 0 -%}{%- assign has_active_filters = true -%}{%- endif -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value or filter.max_value.value -%}{%- assign has_active_filters = true -%}{%- endif -%}
   {%- endif -%}
 {%- endfor -%}
 
-<div class="col-{{ section.id }}">
-
-  {%- comment -%} ── Hero ── {%- endcomment -%}
-  {%- if section.settings.show_hero -%}
-    {%- if collection.image != blank -%}
-      <div class="col__hero">
-        <img src="{{ collection.image | image_url: width: 1600 }}" alt="{{ collection.title | escape }}" class="col__hero-img" loading="eager">
-        <div class="col__hero-overlay"></div>
-        <div class="col__hero-content">
-          <h1 class="col__hero-title">{{ collection.title }}</h1>
-          {%- if collection.description != blank and section.settings.show_description -%}
-            <p class="col__hero-desc">{{ collection.description | strip_html | truncate: 160 }}</p>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- else -%}
-      <div class="col__hero col__hero--no-image" style="padding-left:{{ section.settings.padding_h_desktop }}px;padding-right:{{ section.settings.padding_h_desktop }}px;">
-        <div class="col__hero-content">
-          <h1 class="col__hero-title">{{ collection.title }}</h1>
-          {%- if collection.description != blank and section.settings.show_description -%}
-            <p class="col__hero-desc" style="color:{{ section.settings.text_color }};opacity:0.6;">{{ collection.description | strip_html | truncate: 200 }}</p>
-          {%- endif -%}
-        </div>
-      </div>
+<!-- ════════ GRADIENT HEADER ════════ -->
+<div class="prem-coll__header">
+  <div class="prem-coll__header-inner">
+    <h1 class="prem-coll__title">{{ display_title }}</h1>
+    {%- if current_collection.description != blank -%}
+      <p class="prem-coll__description">{{ current_collection.description }}</p>
     {%- endif -%}
-  {%- endif -%}
+    <span class="prem-coll__count">
+      {{ current_collection.products_count }} {{ current_collection.products_count | pluralize: 'item', 'items' }}
+    </span>
+  </div>
+</div>
 
-  {%- comment -%} ── Toolbar ── {%- endcomment -%}
-  <div class="col__toolbar">
-    <div class="col__toolbar-left">
+{%- paginate current_collection.products by section.settings.products_per_page -%}
 
-      {%- comment -%} Filter toggle — desktop only {%- endcomment -%}
-      {%- if section.settings.show_filters and collection.filters.size > 0 -%}
-        <button class="col__filter-toggle" id="col-filter-toggle-{{ section.id }}" aria-expanded="false" aria-controls="col-filter-panel-{{ section.id }}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
-          </svg>
-          {{ section.settings.filter_btn_label | default: 'Filter' }}
-          {%- if filters_applied -%}
-            {%- assign active_count = 0 -%}
-            {%- for filter in collection.filters -%}
-              {%- assign active_count = active_count | plus: filter.active_values.size -%}
-            {%- endfor -%}
-            {%- if active_count > 0 -%}
-              <span style="background:{{ section.settings.accent_color }};color:{{ section.settings.text_color }};border-radius:50%;width:18px;height:18px;font-size:0.7rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">{{ active_count }}</span>
-            {%- endif -%}
-          {%- endif -%}
-        </button>
-      {%- endif -%}
+<!-- ════════ FILTER ROW — directly above grid, in normal page flow ════════ -->
+<div class="prem-filter-row-outer">
+<div class="prem-filter-row">
+  <div class="prem-filter-row__left">
 
-      {%- comment -%} Product count ── {%- endcomment -%}
-      {%- if section.settings.show_count -%}
-        <span class="col__count">
-          {{ collection.products_count }} {{ section.settings.count_label | default: 'products' }}
-        </span>
-      {%- endif -%}
+    {%- for filter in current_collection.filters -%}
+      {%- case filter.type -%}
 
-      {%- comment -%} Active filter pills ── {%- endcomment -%}
-      {%- if filters_applied -%}
-        <div class="col__active-filters">
-          {%- for filter in collection.filters -%}
-            {%- for value in filter.active_values -%}
-              <a href="{{ value.url_to_remove }}" class="col__active-filter">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                {{ value.label }}
-              </a>
-            {%- endfor -%}
-            {%- if filter.type == 'price_range' -%}
-              {%- if filter.min_value.value or filter.max_value.value -%}
-                <a href="{{ filter.url_to_remove }}" class="col__active-filter">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                  Price
-                </a>
+        {%- when 'boolean', 'list' -%}
+          <div class="prem-filter-field">
+            <span class="prem-filter-field__label">{{ filter.label }}</span>
+            <select
+              class="prem-filter-field__select{% if filter.active_values.size > 0 %} has-value{% endif %}"
+              data-filter-select
+              aria-label="{{ filter.label }}"
+            >
+              <option value="{{ request.path }}">All {{ filter.label }}</option>
+              {%- for value in filter.values -%}
+                <option
+                  value="{{ value.url_to_toggle }}"
+                  {% if value.active %}selected{% endif %}
+                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                >
+                  {{ value.label }} ({{ value.count }})
+                </option>
+              {%- endfor -%}
+            </select>
+          </div>
+
+        {%- when 'price_range' -%}
+          <form action="{{ request.path }}" method="get" class="prem-price-field" data-price-form>
+            {%- for f in current_collection.filters -%}
+              {%- if f.type != 'price_range' -%}
+                {%- for v in f.active_values -%}
+                  <input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">
+                {%- endfor -%}
               {%- endif -%}
+            {%- endfor -%}
+            {%- if sort_by != blank -%}
+              <input type="hidden" name="sort_by" value="{{ sort_by }}">
             {%- endif -%}
-          {%- endfor -%}
-          <a href="{{ collection.url }}" class="col__clear-all">{{ section.settings.clear_label | default: 'Clear all' }}</a>
-        </div>
-      {%- endif -%}
+            <span class="prem-filter-field__label">Price</span>
+            <div class="prem-price-field__inputs">
+              <div class="prem-price-field__input-wrap">
+                <span class="prem-price-field__symbol">$</span>
+                <input
+                  type="number"
+                  name="{{ filter.min_value.param_name }}"
+                  value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
+                  min="0"
+                  max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                  placeholder="Min"
+                  class="prem-price-field__input"
+                  aria-label="Min price"
+                >
+              </div>
+              <span class="prem-price-field__sep">–</span>
+              <div class="prem-price-field__input-wrap">
+                <span class="prem-price-field__symbol">$</span>
+                <input
+                  type="number"
+                  name="{{ filter.max_value.param_name }}"
+                  value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
+                  min="0"
+                  max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                  placeholder="Max"
+                  class="prem-price-field__input"
+                  aria-label="Max price"
+                >
+              </div>
+              <button type="submit" class="prem-price-field__go">Apply</button>
+            </div>
+          </form>
 
-    </div>
+      {%- endcase -%}
+    {%- endfor -%}
 
-    {%- comment -%} Sort ── {%- endcomment -%}
-    {%- if section.settings.show_sort -%}
-      <div class="col__sort-wrap">
-        <span class="col__sort-label">{{ section.settings.sort_label | default: 'Sort by' }}</span>
-        <select class="col__sort-select" id="col-sort-{{ section.id }}" aria-label="Sort products">
-          {%- for option in collection.sort_options -%}
-            <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
-              {{ option.name }}
-            </option>
-          {%- endfor -%}
-        </select>
-      </div>
-    {%- endif -%}
   </div>
 
-  {%- comment -%} ── Body: filters + grid ── {%- endcomment -%}
-  <div class="col__body" id="col-body-{{ section.id }}">
-
-    {%- comment -%} Filter panel ── {%- endcomment -%}
-    {%- if section.settings.show_filters and collection.filters.size > 0 -%}
-      <aside class="col__filters" id="col-filter-panel-{{ section.id }}" aria-label="Filters">
-        {%- for filter in collection.filters -%}
-          <div class="col__filter-group">
-            <button class="col__filter-group-toggle" aria-expanded="true">
-              <span class="col__filter-group-name">{{ filter.label }}</span>
-              <svg class="col__filter-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="col__filter-group-body">
-              {%- case filter.type -%}
-
-                {%- when 'boolean', 'list' -%}
-                  {%- for value in filter.values -%}
-                    <a href="{{ value.url_to_add }}"
-                       class="col__filter-option{% if value.active %} is-active{% endif %}{% if value.count == 0 and value.active == false %} is-disabled{% endif %}"
-                       {% if value.count == 0 and value.active == false %}aria-disabled="true"{% endif %}>
-                      <span class="col__filter-checkbox" aria-hidden="true"></span>
-                      {{ value.label }}
-                      {%- if section.settings.show_filter_counts -%}
-                        <span class="col__filter-count">({{ value.count }})</span>
-                      {%- endif -%}
-                    </a>
-                  {%- endfor -%}
-
-                {%- when 'price_range' -%}
-                  {%- assign min_price = filter.min_value.value | default: 0 -%}
-                  {%- assign max_price = filter.max_value.value | default: filter.range_max -%}
-                  <form>
-                    {%- comment -%} Pass through other active filters ── {%- endcomment -%}
-                    {%- for f in collection.filters -%}
-                      {%- if f.type != 'price_range' -%}
-                        {%- for v in f.active_values -%}
-                          <input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">
-                        {%- endfor -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-                    <div class="col__price-inputs">
-                      <input class="col__price-input" type="number" name="{{ filter.min_value.param_name }}"
-                             value="{{ min_price | money_without_currency | remove: ',' }}"
-                             min="0" max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                             placeholder="{{ section.settings.price_min_label | default: 'Min' }}">
-                      <span class="col__price-sep">–</span>
-                      <input class="col__price-input" type="number" name="{{ filter.max_value.param_name }}"
-                             value="{{ max_price | money_without_currency | remove: ',' }}"
-                             min="0" max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                             placeholder="{{ section.settings.price_max_label | default: 'Max' }}">
-                      <button type="submit" class="col__price-go">{{ section.settings.price_go_label | default: 'Go' }}</button>
-                    </div>
-                  </form>
-
-              {%- endcase -%}
-            </div>
-          </div>
+  <div class="prem-filter-row__right">
+    <div class="prem-sort-wrap">
+      <span class="prem-sort-wrap__label">Sort by</span>
+      <select class="prem-sort-select" data-prem-sort aria-label="Sort products">
+        {%- for option in current_collection.sort_options -%}
+          <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
+            {{ option.name }}
+          </option>
         {%- endfor -%}
-      </aside>
-    {%- endif -%}
+      </select>
+    </div>
+  </div>
+</div>
+</div><!-- /prem-filter-row-outer -->
 
-    {%- comment -%} Grid ── {%- endcomment -%}
-    <div class="col__grid-wrap">
-      <div class="col__grid">
-        {%- if collection.products.size == 0 -%}
-          <div class="col__empty">
-            <p>{{ section.settings.empty_text | default: 'No products found.' }}</p>
-            <a href="{{ routes.all_products_collection_url }}">{{ section.settings.empty_link_text | default: 'Browse all products' }}</a>
-          </div>
-        {%- else -%}
-          {%- for product in collection.products -%}
-            {%- assign first_variant = product.selected_or_first_available_variant -%}
-            {%- assign on_sale = false -%}
-            {%- if first_variant.compare_at_price > first_variant.price -%}
-              {%- assign on_sale = true -%}
-            {%- endif -%}
+<!-- ════════ ACTIVE FILTER PILLS ════════ -->
+{%- if has_active_filters -%}
+  <div style="background:{{ section.settings.bg_color }};width:100%;border-bottom:1px solid rgba(0,0,0,0.07);">
+  <div class="prem-active-filters">
+    <span class="prem-active-filters__label">Filtered by:</span>
+    {%- for filter in current_collection.filters -%}
+      {%- for value in filter.active_values -%}
+        <a href="{{ value.url_to_remove }}" class="prem-active-pill">
+          {{ value.label }}
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </a>
+      {%- endfor -%}
+      {%- if filter.type == 'price_range' -%}
+        {%- if filter.min_value.value or filter.max_value.value -%}
+          <a href="{{ filter.url_to_remove }}" class="prem-active-pill">
+            ${{ filter.min_value.value | default: 0 | money_without_currency }} – ${{ filter.max_value.value | default: filter.range_max | money_without_currency }}
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </a>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    <a href="{{ request.path }}" class="prem-active-filters__clear">✕ Clear all</a>
+  </div>
+  </div>
+{%- endif -%}
 
-            <a href="{{ product.url | within: collection }}" class="col__card">
-              <div class="col__card-img-wrap">
-                {%- if product.featured_image -%}
+<!-- ════════ PRODUCT GRID ════════ -->
+<div class="prem-coll-{{ section.id }}">
+  <div class="prem-coll__wrap">
+
+    {%- if current_collection.products.size > 0 -%}
+      <div class="prem-product-grid">
+        {%- for product in current_collection.products -%}
+          {%- assign delay = forloop.index0 | times: 50 | modulo: 300 -%}
+          <div class="prem-card fade-up-anim" style="animation-delay:{{ delay }}ms;">
+
+            <a href="{{ product.url | within: current_collection }}" class="prem-card__link" aria-label="{{ product.title | escape }}">
+              <div class="prem-card__img-wrap">
+                {%- unless product.available -%}
+                  <span class="prem-card__badge prem-card__badge--sold-out">Sold Out</span>
+                {%- endunless -%}
+                {%- if product.compare_at_price > product.price and product.available -%}
+                  <span class="prem-card__badge prem-card__badge--sale">Sale</span>
+                {%- endif -%}
+                {%- if product.featured_image != blank -%}
                   <img
-                    src="{{ product.featured_image | image_url: width: 600 }}"
-                    srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
-                            {{ product.featured_image | image_url: width: 600 }} 600w,
-                            {{ product.featured_image | image_url: width: 900 }} 900w"
-                    sizes="(max-width: 767px) {{ 100 | divided_by: section.settings.columns_mobile }}vw, {{ 100 | divided_by: section.settings.columns_desktop }}vw"
+                    src="{{ product.featured_image | image_url: width: 800 }}"
+                    srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                            {{ product.featured_image | image_url: width: 700 }} 700w,
+                            {{ product.featured_image | image_url: width: 1000 }} 1000w"
+                    sizes="(max-width: 599px) 50vw, (max-width: 899px) 50vw, (max-width: 1199px) 33vw, 22vw"
                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
-                    class="col__card-img"
+                    class="prem-card__img"
                     loading="lazy"
                     width="{{ product.featured_image.width }}"
                     height="{{ product.featured_image.height }}"
                   >
-                  {%- if section.settings.show_second_image and product.images.size > 1 -%}
+                  {%- if product.images.size > 1 -%}
                     <img
-                      src="{{ product.images[1] | image_url: width: 600 }}"
+                      src="{{ product.images[1] | image_url: width: 800 }}"
                       alt="{{ product.images[1].alt | default: product.title | escape }}"
-                      class="col__card-img-2"
+                      class="prem-card__img-secondary"
                       loading="lazy"
                     >
                   {%- endif -%}
                 {%- else -%}
-                  {{ 'product-1' | placeholder_svg_tag: 'col__card-img placeholder-svg' }}
+                  {{ 'product-1' | placeholder_svg_tag: 'prem-card__img placeholder-svg' }}
                 {%- endif -%}
-
-                {%- comment -%} Badges ── {%- endcomment -%}
-                {%- unless product.available -%}
-                  <span class="col__badge col__badge--sold-out">{{ section.settings.badge_sold_out | default: 'Sold Out' }}</span>
-                {%- endunless -%}
-                {%- if on_sale and product.available -%}
-                  <span class="col__badge col__badge--sale">{{ section.settings.badge_sale | default: 'Sale' }}</span>
-                {%- endif -%}
-
-                {%- comment -%} Quick add ── {%- endcomment -%}
-                {%- if section.settings.show_quick_add and product.available -%}
-                  {%- if product.variants.size == 1 -%}
-                    <button
-                      class="col__quick-add"
-                      data-quick-add
-                      data-variant-id="{{ first_variant.id }}"
-                      data-product-title="{{ product.title | escape }}"
-                      aria-label="Quick add {{ product.title | escape }}"
-                    >
-                      {{ section.settings.quick_add_label | default: 'Quick Add' }}
-                    </button>
-                  {%- else -%}
-                    <a href="{{ product.url | within: collection }}" class="col__quick-add" style="text-align:center;">
-                      {{ section.settings.quick_view_label | default: 'Choose Options' }}
-                    </a>
-                  {%- endif -%}
-                {%- endif -%}
-
               </div>
 
-              <div class="col__card-info">
-                {%- if section.settings.show_vendor and product.vendor != blank -%}
-                  <p class="col__card-vendor">{{ product.vendor }}</p>
-                {%- endif -%}
-                <p class="col__card-title">{{ product.title }}</p>
-                <div class="col__card-price">
-                  {%- if on_sale -%}
-                    <span class="col__card-price--sale">{{ first_variant.price | money }}</span>
-                    <span class="col__card-price--compare">{{ first_variant.compare_at_price | money }}</span>
+              <div class="prem-card__info">
+                <h3 class="prem-card__title">{{ product.title }}</h3>
+                <div class="prem-card__price-wrap">
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="prem-card__price prem-card__price--sale">{{ product.price | money }}</span>
+                    <span class="prem-card__price--compare">{{ product.compare_at_price | money }}</span>
                   {%- else -%}
-                    <span>{{ first_variant.price | money }}</span>
+                    <span class="prem-card__price">{{ product.price | money }}</span>
                   {%- endif -%}
                 </div>
               </div>
             </a>
-          {%- endfor -%}
-        {%- endif -%}
+
+            {%- form 'product', product, class: 'prem-card__form' -%}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" name="add" class="prem-atc-btn" {% unless product.available %}disabled{% endunless %}>
+                <span>{%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}</span>
+              </button>
+            {%- endform -%}
+
+          </div>
+        {%- endfor -%}
       </div>
 
-      {%- comment -%} ── Pagination ── {%- endcomment -%}
-      {%- if section.settings.show_pagination and paginate.pages > 1 -%}
-        {%- paginate collection.products by section.settings.products_per_page -%}
-          <nav class="col__pagination" aria-label="Pagination">
-            {%- if paginate.previous -%}
-              <a href="{{ paginate.previous.url }}" class="col__page--prev">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-                {{ section.settings.prev_label | default: 'Prev' }}
-              </a>
+      {%- if paginate.pages > 1 -%}
+        <nav class="prem-coll__pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">← Prev</a>{%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}">{{ part.title }}</a>
             {%- else -%}
-              <span class="col__page--prev col__page--disabled">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-                {{ section.settings.prev_label | default: 'Prev' }}
-              </span>
+              <span class="current">{{ part.title }}</span>
             {%- endif -%}
-
-            {%- for part in paginate.parts -%}
-              {%- if part.is_link -%}
-                <a href="{{ part.url }}">{{ part.title }}</a>
-              {%- elsif part.title == paginate.current_page -%}
-                <span class="col__page--current" aria-current="page">{{ part.title }}</span>
-              {%- else -%}
-                <span>{{ part.title }}</span>
-              {%- endif -%}
-            {%- endfor -%}
-
-            {%- if paginate.next -%}
-              <a href="{{ paginate.next.url }}" class="col__page--next">
-                {{ section.settings.next_label | default: 'Next' }}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-              </a>
-            {%- else -%}
-              <span class="col__page--next col__page--disabled">
-                {{ section.settings.next_label | default: 'Next' }}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-              </span>
-            {%- endif -%}
-          </nav>
-        {%- endpaginate -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}<a href="{{ paginate.next.url }}">Next →</a>{%- endif -%}
+        </nav>
       {%- endif -%}
 
-    </div>
+    {%- else -%}
+      <div class="prem-coll__empty">
+        <p>No products found. Try adjusting your filters.</p>
+        <a href="{{ request.path }}">Clear all filters</a>
+      </div>
+    {%- endif -%}
+
   </div>
 </div>
 
-<script>
-(function() {
-  var sid = '{{ section.id }}';
+{%- endpaginate -%}
 
-  // ── Sort ──────────────────────────────────────
-  var sortSelect = document.getElementById('col-sort-' + sid);
-  if (sortSelect) {
-    sortSelect.addEventListener('change', function() {
+<script>
+(function () {
+  'use strict';
+
+  function rewriteUrl(href) {
+    if (!href) return href;
+    try {
+      var u = new URL(href, window.location.origin);
+      if (u.pathname === '/collections/all' && window.location.pathname !== '/collections/all') {
+        u.pathname = window.location.pathname;
+      }
+      return u.toString();
+    } catch(e) { return href; }
+  }
+
+  /* Availability / list filter selects → navigate on change */
+  document.querySelectorAll('[data-filter-select]').forEach(function (sel) {
+    sel.addEventListener('change', function () {
+      window.location.href = rewriteUrl(sel.value);
+    });
+  });
+
+  /* Sort select */
+  var sortSel = document.querySelector('[data-prem-sort]');
+  if (sortSel) {
+    sortSel.addEventListener('change', function () {
       var url = new URL(window.location.href);
       url.searchParams.set('sort_by', this.value);
       url.searchParams.delete('page');
@@ -887,66 +798,15 @@
     });
   }
 
-  // ── Filter toggle ──────────────────────────────
-  var filterToggle = document.getElementById('col-filter-toggle-' + sid);
-  var filterBody   = document.getElementById('col-body-' + sid);
-
-  if (filterToggle && filterBody) {
-    // Restore state from sessionStorage
-    if (sessionStorage.getItem('col-filters-open-' + sid) === '1') {
-      filterBody.classList.add('filters-open');
-      filterToggle.classList.add('is-active');
-      filterToggle.setAttribute('aria-expanded', 'true');
-    }
-
-    filterToggle.addEventListener('click', function() {
-      var isOpen = filterBody.classList.toggle('filters-open');
-      filterToggle.classList.toggle('is-active', isOpen);
-      filterToggle.setAttribute('aria-expanded', String(isOpen));
-      sessionStorage.setItem('col-filters-open-' + sid, isOpen ? '1' : '0');
-    });
-  }
-
-  // ── Filter group accordion ─────────────────────
-  document.querySelectorAll('.col-' + sid + ' .col__filter-group-toggle').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var expanded = btn.getAttribute('aria-expanded') !== 'false';
-      var body = btn.nextElementSibling;
-      btn.setAttribute('aria-expanded', String(!expanded));
-      if (body) body.classList.toggle('is-collapsed', expanded);
-    });
+  /* Price form — rewrite action on submit */
+  document.querySelectorAll('[data-price-form]').forEach(function (form) {
+    var action = form.getAttribute('action');
+    form.setAttribute('action', rewriteUrl(action));
   });
 
-  // ── Quick add ──────────────────────────────────
-  document.querySelectorAll('.col-' + sid + ' [data-quick-add]').forEach(function(btn) {
-    btn.addEventListener('click', async function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (typeof Cart === 'undefined') return;
-
-      var variantId = btn.dataset.variantId;
-      var orig = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = '{{ section.settings.quick_add_loading | default: "Adding..." | escape }}';
-
-      try {
-        var item = await Cart.addItem(variantId, 1);
-        var cart = await Cart.fetchCart();
-        Cart.dispatchUpdate(cart);
-        document.dispatchEvent(new CustomEvent('cart:item-added', { detail: item }));
-
-        var drawer = document.querySelector('cart-drawer');
-        var notif  = document.querySelector('cart-notification');
-        if (drawer) drawer.open();
-        else if (notif) notif.show(item);
-
-        btn.textContent = '{{ section.settings.quick_add_success | default: "Added!" | escape }}';
-        setTimeout(function() { btn.disabled = false; btn.textContent = orig; }, 2000);
-      } catch(err) {
-        btn.disabled = false;
-        btn.textContent = orig;
-      }
-    });
+  /* Active pills — rewrite hrefs */
+  document.querySelectorAll('.prem-active-pill, .prem-active-filters__clear').forEach(function (a) {
+    a.setAttribute('href', rewriteUrl(a.getAttribute('href')));
   });
 
 })();
@@ -954,100 +814,85 @@
 
 {% schema %}
 {
-  "name": "Collection Page",
+  "name": "Collection Grid",
   "settings": [
-    { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "bg_color",        "label": "Background",       "default": "#ffffff" },
-    { "type": "color", "id": "text_color",      "label": "Text Color",       "default": "#1A1A1A" },
-    { "type": "color", "id": "accent_color",    "label": "Accent Color",     "default": "#8BA4AC" },
-    { "type": "color", "id": "sale_color",      "label": "Sale Color",       "default": "#DC2626" },
-    { "type": "color", "id": "img_bg",          "label": "Image Placeholder","default": "#f0f0f0" },
-    { "type": "color", "id": "hero_fallback_bg","label": "Hero Fallback Bg", "default": "#1a1a1a" },
-
-    { "type": "header", "content": "Layout" },
-    { "type": "range", "id": "max_width",          "label": "Max Width",          "min": 800,  "max": 1920, "step": 20, "unit": "px", "default": 1600 },
-    { "type": "range", "id": "padding_h_desktop",  "label": "Side Padding Desktop","min": 0,   "max": 80,   "step": 4,  "unit": "px", "default": 40 },
-    { "type": "range", "id": "padding_h_mobile",   "label": "Side Padding Mobile", "min": 0,   "max": 40,   "step": 4,  "unit": "px", "default": 16 },
-    { "type": "range", "id": "padding_bottom_mobile","label": "Bottom Padding Mobile","min": 0, "max": 100,  "step": 4,  "unit": "px", "default": 60 },
-
-    { "type": "header", "content": "Collection Hero" },
-    { "type": "checkbox", "id": "show_hero",        "label": "Show hero",                   "default": true },
-    { "type": "checkbox", "id": "show_description", "label": "Show collection description", "default": true },
-    { "type": "range",    "id": "hero_height",      "label": "Hero Height",  "min": 160, "max": 600, "step": 20, "unit": "px", "default": 280 },
-    { "type": "range",    "id": "hero_padding",     "label": "Hero Padding", "min": 16,  "max": 80,  "step": 4,  "unit": "px", "default": 40 },
-    { "type": "range",    "id": "hero_title_size",  "label": "Title Size Max","min": 24, "max": 72,  "step": 2,  "unit": "px", "default": 48 },
-    { "type": "range",    "id": "hero_title_weight","label": "Title Weight", "min": 300, "max": 900, "step": 100,"default": 700 },
-
-    { "type": "header", "content": "Toolbar" },
-    { "type": "range",    "id": "toolbar_padding", "label": "Toolbar Padding V", "min": 8,  "max": 24, "step": 2, "unit": "px", "default": 14 },
-    { "type": "checkbox", "id": "show_filters",    "label": "Show filter button",            "default": true },
-    { "type": "checkbox", "id": "show_sort",       "label": "Show sort dropdown",            "default": true },
-    { "type": "checkbox", "id": "show_count",      "label": "Show product count",            "default": true },
-    { "type": "checkbox", "id": "show_filter_counts","label":"Show count per filter value",  "default": true },
-    { "type": "text",     "id": "filter_btn_label","label": "Filter Button Label",           "default": "Filter" },
-    { "type": "text",     "id": "sort_label",      "label": "Sort By Label",                 "default": "Sort by" },
-    { "type": "text",     "id": "count_label",     "label": "Products Label",                "default": "products" },
-    { "type": "text",     "id": "clear_label",     "label": "Clear All Label",               "default": "Clear all" },
-
-    { "type": "header", "content": "Filter Panel" },
-    { "type": "range", "id": "filter_panel_width", "label": "Filter Panel Width", "min": 200, "max": 400, "step": 20, "unit": "px", "default": 260 },
-    { "type": "range", "id": "filter_panel_gap",   "label": "Filter Panel Gap",   "min": 20,  "max": 80,  "step": 4,  "unit": "px", "default": 40 },
-    { "type": "text",  "id": "price_min_label",    "label": "Price Min Placeholder","default": "Min" },
-    { "type": "text",  "id": "price_max_label",    "label": "Price Max Placeholder","default": "Max" },
-    { "type": "text",  "id": "price_go_label",     "label": "Price Apply Label",    "default": "Go" },
-
-    { "type": "header", "content": "Product Grid" },
-    { "type": "range",    "id": "columns_desktop",  "label": "Columns Desktop", "min": 2, "max": 5, "step": 1, "default": 3 },
-    { "type": "range",    "id": "columns_mobile",   "label": "Columns Mobile",  "min": 1, "max": 3, "step": 1, "default": 2 },
-    { "type": "range",    "id": "grid_gap",         "label": "Grid Gap Desktop","min": 8, "max": 60,"step": 4, "unit": "px", "default": 24 },
-    { "type": "range",    "id": "grid_gap_mobile",  "label": "Grid Gap Mobile", "min": 8, "max": 40,"step": 4, "unit": "px", "default": 12 },
-    { "type": "select",   "id": "img_ratio",        "label": "Image Aspect Ratio",
-      "options": [
-        { "value": "1/1",  "label": "Square 1:1"    },
-        { "value": "3/4",  "label": "Portrait 3:4"  },
-        { "value": "4/3",  "label": "Landscape 4:3" },
-        { "value": "2/3",  "label": "Tall 2:3"      }
-      ], "default": "3/4"
+    {
+      "type": "header",
+      "content": "Collection"
     },
-    { "type": "range",    "id": "img_hover_scale",  "label": "Image Hover Zoom",    "min": 100, "max": 115, "step": 1, "unit": "%", "default": 107 },
-    { "type": "checkbox", "id": "show_second_image","label": "Show 2nd image on hover","default": true },
-    { "type": "range",    "id": "card_radius",      "label": "Card Image Radius",   "min": 0, "max": 20,  "step": 2, "unit": "px", "default": 4 },
-    { "type": "range",    "id": "card_info_gap",    "label": "Gap: Image to Info",  "min": 8, "max": 24,  "step": 2, "unit": "px", "default": 14 },
-
-    { "type": "header", "content": "Card Typography" },
-    { "type": "range",    "id": "card_title_min",   "label": "Title Size Min", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14 },
-    { "type": "range",    "id": "card_title_max",   "label": "Title Size Max", "min": 14, "max": 28, "step": 1, "unit": "px", "default": 18 },
-    { "type": "range",    "id": "card_title_weight","label": "Title Weight",   "min": 300,"max": 700,"step": 100, "default": 500 },
-    { "type": "range",    "id": "price_size",       "label": "Price Font Size","min": 13, "max": 20, "step": 1, "unit": "px", "default": 15 },
-    { "type": "checkbox", "id": "show_vendor",      "label": "Show vendor",    "default": false },
-
-    { "type": "header", "content": "Badges & Quick Add" },
-    { "type": "range",    "id": "badge_radius",       "label": "Badge Radius",       "min": 0, "max": 20, "step": 2, "unit": "px", "default": 4 },
-    { "type": "text",     "id": "badge_sale",         "label": "Sale Badge Text",    "default": "Sale" },
-    { "type": "text",     "id": "badge_sold_out",     "label": "Sold Out Badge Text","default": "Sold Out" },
-    { "type": "checkbox", "id": "show_quick_add",     "label": "Show Quick Add button","default": true },
-    { "type": "text",     "id": "quick_add_label",    "label": "Quick Add Label",    "default": "Quick Add" },
-    { "type": "text",     "id": "quick_view_label",   "label": "Choose Options Label","default": "Choose Options" },
-    { "type": "text",     "id": "quick_add_loading",  "label": "Quick Add Loading",  "default": "Adding..." },
-    { "type": "text",     "id": "quick_add_success",  "label": "Quick Add Success",  "default": "Added!" },
-
-    { "type": "header", "content": "Buttons" },
-    { "type": "range", "id": "btn_radius", "label": "Button Radius", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 4 },
-
-    { "type": "header", "content": "Empty State" },
-    { "type": "text", "id": "empty_text",      "label": "Empty Text",       "default": "No products found matching your filters." },
-    { "type": "text", "id": "empty_link_text", "label": "Empty Link Text",  "default": "Browse all products" },
-
-    { "type": "header", "content": "Pagination" },
-    { "type": "checkbox", "id": "show_pagination",    "label": "Show pagination",      "default": true },
-    { "type": "range",    "id": "products_per_page",  "label": "Products per page",    "min": 8, "max": 48, "step": 4, "default": 24 },
-    { "type": "range",    "id": "pagination_gap",     "label": "Pagination Gap",       "min": 4, "max": 16, "step": 2, "unit": "px", "default": 6 },
-    { "type": "range",    "id": "pagination_size",    "label": "Page Button Size",     "min": 32,"max": 56, "step": 2, "unit": "px", "default": 40 },
-    { "type": "range",    "id": "pagination_radius",  "label": "Page Button Radius",   "min": 0, "max": 50, "step": 2, "unit": "px", "default": 6 },
-    { "type": "range",    "id": "pagination_padding", "label": "Pagination Padding V", "min": 20,"max": 80, "step": 4, "unit": "px", "default": 48 },
-    { "type": "text",     "id": "prev_label",         "label": "Previous Label",       "default": "Prev" },
-    { "type": "text",     "id": "next_label",         "label": "Next Label",           "default": "Next" }
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Leave blank on collection pages — auto-detects."
+    },
+    {
+      "type": "text",
+      "id": "all_products_title",
+      "label": "All Products heading",
+      "default": "All Products",
+      "info": "Shown only on /collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image Aspect Ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "2 / 3", "label": "Tall Portrait (2:3)" },
+        { "value": "3 / 4", "label": "Standard Portrait (3:4)" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns on Desktop",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Colors"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F8F6F4"
+    }
   ],
-  "presets": [{ "name": "Collection Page" }]
+  "presets": [
+    {
+      "name": "Collection Grid",
+      "category": "Collection"
+    }
+  ]
 }
 {% endschema %}
