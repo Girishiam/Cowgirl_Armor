@@ -1,0 +1,93 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "premium-page-hero",
+      "disabled": true,
+      "settings": {
+        "use_gradient": false,
+        "bg_color": "rgba(0,0,0,0)",
+        "text_color": "#1a1a1a",
+        "logo_width": 350,
+        "title": "",
+        "text_align": "left",
+        "padding_top": 80,
+        "padding_bottom": 60
+      }
+    },
+    "image_with_text_LXxzEk": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "layout": "image_first",
+        "content_alignment": "text-left",
+        "image": "shopify://shop_images/GodMeetsYouWhereYouAree.webp",
+        "eyebrow": "12/4/25",
+        "heading": "God meets you where you are.",
+        "text": "<p>My parents raised me in church, and led me by great examples of hard work and compassion. They were firm in their foundation of church and they walked in the path every day and showed me what it looks like to be wholesome, loving, determined people of God. I was blessed, and still am that God chose them as my parents.</p>",
+        "button_label": "Read More",
+        "button_link": "shopify://pages/god-meets-you",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "use_gradient": true,
+        "background_color": "#d9d9d9",
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
+      }
+    },
+    "image_with_text_PBqPNK": {
+      "type": "image-with-text",
+      "name": "Image with Text",
+      "settings": {
+        "layout": "image_first",
+        "content_alignment": "text-left",
+        "image": "shopify://shop_images/BelieveInYourselfCowgirl.webp",
+        "eyebrow": "11/27/25",
+        "heading": "Believe in yourself Cowgirl",
+        "text": "<p>I’ve always been told to “believe in yourself”. Truthfully, I didn’t know what it meant or how to even begin do it. Amping myself up, repeating “you got this”, didn’t seem to be cutting it.</p>",
+        "button_label": "Read More",
+        "button_link": "shopify://pages/believe-in-yourself",
+        "padding_top": 60,
+        "padding_bottom": 0,
+        "use_gradient": true,
+        "background_color": "#d9d9d9",
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
+      }
+    },
+    "image_with_text_UAJ3AJ": {
+      "type": "image-with-text",
+      "name": "Image with Text",
+      "settings": {
+        "layout": "image_first",
+        "content_alignment": "text-left",
+        "image": "shopify://shop_images/IMG_0217.webp",
+        "eyebrow": "11/18/25",
+        "heading": "Never Give Up",
+        "text": "<p>It's easy to want to quit when things don't go your way. I believe all things are possible. The Bible tells us so. Luke 1:37 says, \"For nothing will be impossible with God.\" I love Audrey Hepburn's quote too. \"Nothing is impossible, the word itself says 'I'm possible.'</p>",
+        "button_label": "Read More",
+        "button_link": "shopify://pages/never-give-up",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "use_gradient": true,
+        "background_color": "#d9d9d9",
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_with_text_LXxzEk",
+    "image_with_text_PBqPNK",
+    "image_with_text_UAJ3AJ"
+  ]
+}
