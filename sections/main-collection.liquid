@@ -8,6 +8,11 @@
   .prem-coll-{{ section.id }} {
     background-color: {{ section.settings.bg_color }};
     padding-bottom: {{ section.settings.padding_bottom }}px;
+    /* Break out of any parent max-width container */
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    margin-left: -50vw;
   }
 
   .prem-coll__wrap {
@@ -16,7 +21,7 @@
     padding: 0 2rem;
   }
 
-  /* ════════ GRADIENT HEADER ════════ */
+  /* ════════ GRADIENT HEADER — full bleed ════════ */
   .prem-coll__header {
     background: var(--brand-gradient);
     color: #FFFFFF;
@@ -24,6 +29,10 @@
     padding: clamp(3rem, 8vw, 5rem) 2rem;
     position: relative;
     overflow: hidden;
+    /* Break out of any parent max-width container */
+    width: 100vw;
+    left: 50%;
+    margin-left: -50vw;
   }
   .prem-coll__header::before {
     content: '';
@@ -66,11 +75,18 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
 
-  /* ════════ FILTER ROW — full width bg, constrained content ════════ */
+  /* ════════ FILTER ROW — breaks out of any theme wrapper ════════ */
   .prem-filter-row-outer {
     background: {{ section.settings.bg_color }};
+    border-top: 1px solid rgba(0,0,0,0.07);
     border-bottom: 1px solid rgba(0,0,0,0.07);
-    width: 100%;
+    /* Break out of any parent max-width container */
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
   }
 
   .prem-filter-row {
@@ -646,7 +662,7 @@
 
 <!-- ════════ ACTIVE FILTER PILLS ════════ -->
 {%- if has_active_filters -%}
-  <div style="background:{{ section.settings.bg_color }};width:100%;border-bottom:1px solid rgba(0,0,0,0.07);">
+  <div style="background:{{ section.settings.bg_color }};width:100vw;position:relative;left:50%;margin-left:-50vw;border-bottom:1px solid rgba(0,0,0,0.07);">
   <div class="prem-active-filters">
     <span class="prem-active-filters__label">Filtered by:</span>
     {%- for filter in current_collection.filters -%}
