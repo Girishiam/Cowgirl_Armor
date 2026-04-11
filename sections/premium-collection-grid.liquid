@@ -74,6 +74,12 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
 
+  /* ════════ PAGE BODY WRAPPER ════════ */
+  /* This wrapper gives sticky a proper scroll context */
+  .prem-page-body {
+    position: relative;
+  }
+
   /* ════════ FILTER BAR — sticky below header ════════ */
   .prem-filter-bar {
     background: {{ section.settings.bg_color }};
@@ -81,6 +87,12 @@
     position: sticky;
     top: var(--nav-total-height, 80px);
     z-index: 200;
+    /* Shadow shows depth when scrolling over products */
+    box-shadow: 0 2px 8px rgba(0,0,0,0);
+    transition: box-shadow 0.2s ease;
+  }
+  .prem-filter-bar.is-stuck {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
 
   .prem-filter-bar__inner {
@@ -446,6 +458,8 @@
     grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
     gap: 2.5rem 1.5rem;
     padding-top: 2.5rem;
+    /* Prevents pagination jump from hiding first row under sticky bar */
+    scroll-margin-top: calc(var(--nav-total-height, 80px) + 54px + 1rem);
   }
 
   @media screen and (max-width: 599px) {
@@ -712,6 +726,9 @@
 
 {%- paginate current_collection.products by section.settings.products_per_page -%}
 
+<!-- ════════ FILTER + GRID WRAPPER ════════ -->
+<div class="prem-page-body">
+
 <!-- ════════ FILTER BAR ════════ -->
 <div class="prem-filter-bar" id="PremFilterBar">
   <div class="prem-filter-bar__inner">
@@ -962,10 +979,29 @@
 </div>
 
 {%- endpaginate -%}
+</div><!-- /prem-page-body -->
 
 <script>
 (function () {
   'use strict';
+
+  /* ── Filter bar scroll shadow ── */
+  var filterBar = document.getElementById('PremFilterBar');
+  if (filterBar) {
+    var filterObserver = new IntersectionObserver(
+      function(entries) {
+        entries.forEach(function(entry) {
+          filterBar.classList.toggle('is-stuck', !entry.isIntersecting);
+        });
+      },
+      { rootMargin: '-' + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-total-height') || '80') + 1) + 'px 0px 0px 0px', threshold: 1 }
+    );
+    /* Observe a sentinel element placed just above the filter bar */
+    var sentinel = document.createElement('div');
+    sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
+    filterBar.parentNode.insertBefore(sentinel, filterBar);
+    filterObserver.observe(sentinel);
+  }
 
   /* ── Sort select ── */
   var sortSel = document.querySelector('[data-prem-sort]');
