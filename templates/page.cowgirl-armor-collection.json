@@ -86,33 +86,17 @@
         "btn_use_gradient": true
       }
     },
-    "premium_multi_collection_stack_ffDFVU": {
-      "type": "premium-multi-collection-stack",
-      "blocks": {
-        "collection_row_EatiY8": {
-          "type": "collection_row",
-          "settings": {
-            "collection": "cowgirl-armor-og",
-            "title_override": "",
-            "show_view_all": true,
-            "shop_all_text": "Shop All",
-            "columns_desktop": 4,
-            "product_limit": 12
-          }
-        }
-      },
-      "block_order": [
-        "collection_row_EatiY8"
-      ],
-      "name": "Multi-Collection Stack",
+    "premium_collection_grid_WYN6Tm": {
+      "type": "premium-collection-grid",
+      "name": "Collection Grid",
       "settings": {
-        "bg_color": "transparent",
-        "text_color": "#1A1A1A",
-        "stack_gap": 80,
-        "padding_top": 80,
+        "collection": "cowgirl-armor-og",
+        "all_products_title": "Cowgirl Armor OG",
+        "image_ratio": "4 / 5",
+        "columns_desktop": 4,
+        "products_per_page": 16,
         "padding_bottom": 80,
-        "button_add_to_cart": "Add to cart",
-        "button_sold_out": "Sold Out"
+        "bg_color": "#F8F6F4"
       }
     }
   },
@@ -121,6 +105,6 @@
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
     "image_with_text_UAJ3AJ",
-    "premium_multi_collection_stack_ffDFVU"
+    "premium_collection_grid_WYN6Tm"
   ]
 }
