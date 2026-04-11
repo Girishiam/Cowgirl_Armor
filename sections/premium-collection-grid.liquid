@@ -8,11 +8,7 @@
   .prem-coll-{{ section.id }} {
     background-color: {{ section.settings.bg_color }};
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    /* Break out of any parent max-width container */
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    margin-left: -50vw;
+    width: 100%;
   }
 
   .prem-coll__wrap {
@@ -21,18 +17,15 @@
     padding: 0 2rem;
   }
 
-  /* ════════ GRADIENT HEADER — full bleed ════════ */
+  /* ════════ GRADIENT HEADER ════════ */
   .prem-coll__header {
-    background: var(--brand-gradient);
+    background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
     color: #FFFFFF;
     text-align: center;
     padding: clamp(3rem, 8vw, 5rem) 2rem;
     position: relative;
     overflow: hidden;
-    /* Break out of any parent max-width container */
-    width: 100vw;
-    left: 50%;
-    margin-left: -50vw;
+    width: 100%;
   }
   .prem-coll__header::before {
     content: '';
@@ -75,18 +68,12 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
 
-  /* ════════ FILTER ROW — breaks out of any theme wrapper ════════ */
+  /* ════════ FILTER ROW ════════ */
   .prem-filter-row-outer {
     background: {{ section.settings.bg_color }};
     border-top: 1px solid rgba(0,0,0,0.07);
     border-bottom: 1px solid rgba(0,0,0,0.07);
-    /* Break out of any parent max-width container */
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+    width: 100%;
   }
 
   .prem-filter-row {
