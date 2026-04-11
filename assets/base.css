@@ -889,3 +889,25 @@ h6 { font-size: var(--font-heading-h6); }
   border: none;
   margin: 1.5rem 0;
 }
+
+/* ============================================
+   FULL-BLEED SECTION FIX — Cowgirl Armor
+   Allows collection sections to span full width
+   even when inside .page-width containers
+   ============================================ */
+
+/* Remove padding from shopify section wrappers
+   so our sections control their own width */
+.shopify-section {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Remove page-width constraint on collection template */
+.template-collection #MainContent,
+.template-collection .content-for-layout {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: 100% !important;
+  overflow-x: hidden;
+}
