@@ -88,12 +88,27 @@
     },
     "premium_product_grid_mfnGHW": {
       "type": "premium-product-grid",
+      "disabled": true,
       "name": "Premium Collection Grid",
       "settings": {
         "collection": "",
+        "all_products_title": "All Products",
         "image_ratio": "1 / 1",
         "columns_desktop": 4,
         "products_per_page": 12,
+        "padding_bottom": 80,
+        "bg_color": "#f8f6f4"
+      }
+    },
+    "premium_collection_grid_RdfpDr": {
+      "type": "premium-collection-grid",
+      "name": "Collection Grid",
+      "settings": {
+        "collection": "",
+        "all_products_title": "All Products",
+        "image_ratio": "4 / 5",
+        "columns_desktop": 4,
+        "products_per_page": 16,
         "padding_bottom": 80,
         "bg_color": "#F8F6F4"
       }
@@ -104,6 +119,7 @@
     "image_with_text_LXxzEk",
     "image_with_text_PBqPNK",
     "image_with_text_UAJ3AJ",
-    "premium_product_grid_mfnGHW"
+    "premium_product_grid_mfnGHW",
+    "premium_collection_grid_RdfpDr"
   ]
 }
