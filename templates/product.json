@@ -12,22 +12,89 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "vendor":         { "type": "vendor",         "settings": {} },
-        "title":          { "type": "title",           "settings": {} },
-        "description":    { "type": "description",     "settings": {} },
-        "divider_1":      { "type": "divider",         "settings": {} },
-        "price":          { "type": "price",           "settings": { "sale_badge_text": "Sale" } },
-        "variant_picker": { "type": "variant_picker",  "settings": { "picker_type": "pills" } },
-        "quantity":       { "type": "quantity",        "settings": { "show_quantity": true, "quantity_label": "Quantity" } },
-        "buy_buttons":    { "type": "buy_buttons",     "settings": { "show_dynamic_checkout": true, "btn_add": "Add to Cart", "btn_loading": "Adding...", "btn_success": "Added!", "btn_sold_out": "Sold Out" } },
-        "trust":          { "type": "trust",           "settings": { "trust_1": "Secure & encrypted checkout", "trust_2": "Free shipping on orders over $50", "trust_3": "Easy 30-day returns", "trust_4": "Printed & shipped in the USA" } },
-        "divider_2":      { "type": "divider",         "settings": {} },
-        "share":          { "type": "share",           "settings": { "show_share": true } }
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "divider_1": {
+          "type": "divider",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "sale_badge_text": "Sale"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "pills"
+          }
+        },
+        "quantity": {
+          "type": "quantity",
+          "settings": {
+            "show_quantity": true,
+            "quantity_label": "Quantity"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "btn_add": "Add to Cart",
+            "btn_loading": "Adding...",
+            "btn_success": "Added!",
+            "btn_sold_out": "Sold Out"
+          }
+        },
+        "trust": {
+          "type": "trust",
+          "settings": {
+            "trust_1": "Secure & encrypted checkout",
+            "trust_2": "Free shipping on orders over $50",
+            "trust_3": "Easy 30-day returns",
+            "trust_4": "Printed & shipped in the USA"
+          }
+        },
+        "divider_2": {
+          "type": "divider",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "show_share": true
+          }
+        }
       },
-      "block_order": ["vendor","title","description","divider_1","price","variant_picker","quantity","buy_buttons","trust","divider_2","share"],
+      "block_order": [
+        "vendor",
+        "title",
+        "description",
+        "divider_1",
+        "price",
+        "variant_picker",
+        "quantity",
+        "buy_buttons",
+        "trust",
+        "divider_2",
+        "share"
+      ],
       "settings": {
-        "bg_color": "#FFFFFF",
-        "text_color": "#1A1A1A",
+        "use_gradient": true,
+        "bg_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "accent_color": "#8b52d4",
         "padding_top": 40,
         "padding_bottom": 80,
         "img_radius": 8,
@@ -38,5 +105,7 @@
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
