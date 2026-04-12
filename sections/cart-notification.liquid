@@ -16,7 +16,6 @@
     pointer-events: auto;
   }
 
-  /* ── Panel — gradient applied directly in CSS ── */
   .cart-notif__panel {
     {%- if section.settings.use_gradient -%}
       background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
@@ -41,7 +40,13 @@
     object-fit: cover;
     flex-shrink: 0;
     background: rgba(255,255,255,0.1);
+    /* Hidden until src is populated — avoids broken-image icon flash */
+    display: none;
   }
+  .cart-notif__img.has-image {
+    display: block;
+  }
+
   .cart-notif__info { flex: 1; min-width: 0; }
   .cart-notif__added {
     font-size: 0.72rem;
@@ -92,16 +97,117 @@
   </div>
 </cart-notification>
 
+<script>
+if (!customElements.get('cart-notification')) {
+  class CartNotification extends HTMLElement {
+    constructor() {
+      super();
+      this._dismissTimer = null;
+
+      /* Cache DOM refs after the element is in the document */
+      this._img   = this.querySelector('.cart-notif__img');
+      this._title = this.querySelector('.cart-notif__title');
+      this._price = this.querySelector('.cart-notif__price');
+
+      /* Clicking anywhere on the notification dismisses it */
+      this.addEventListener('click', () => this.hide());
+    }
+
+    /**
+     * show(item) — called by the PDP ATC handler with the /cart/add.js response object.
+     *
+     * item shape (Shopify cart/add.js):
+     *   item.title          — product title
+     *   item.variant_title  — variant title (null when "Default Title")
+     *   item.price          — price in cents (integer)
+     *   item.image          — image URL string or null
+     *   item.featured_image — object { url, alt } (preferred, higher res)
+     */
+    show(item) {
+      if (!item) return;
+
+      /* ── Image ── */
+      const rawUrl = (item.featured_image && item.featured_image.url)
+        ? item.featured_image.url
+        : (item.image || null);
+
+      if (rawUrl) {
+        /* Shopify CDN: append _100x100_crop_center for a crisp 52px thumbnail */
+        const thumbUrl = this._shopifyCdnThumb(rawUrl, 100);
+        this._img.src = thumbUrl;
+        this._img.alt = (item.featured_image && item.featured_image.alt)
+          ? item.featured_image.alt
+          : item.title;
+        this._img.classList.add('has-image');
+      } else {
+        this._img.classList.remove('has-image');
+      }
+
+      /* ── Title ── */
+      const variantSuffix = item.variant_title && item.variant_title !== 'Default Title'
+        ? ' — ' + item.variant_title
+        : '';
+      this._title.textContent = item.title + variantSuffix;
+
+      /* ── Price ── */
+      this._price.textContent = this._formatMoney(item.price);
+
+      /* ── Show ── */
+      this.classList.add('is-visible');
+      this.setAttribute('aria-hidden', 'false');
+
+      /* Auto-dismiss after 4 s */
+      clearTimeout(this._dismissTimer);
+      this._dismissTimer = setTimeout(() => this.hide(), 4000);
+    }
+
+    hide() {
+      clearTimeout(this._dismissTimer);
+      this.classList.remove('is-visible');
+      this.setAttribute('aria-hidden', 'true');
+    }
+
+    /**
+     * Converts a full Shopify CDN URL to a sized thumbnail.
+     * Works for both cdn.shopify.com/s/files/* and shopify CDN v2 URLs.
+     * Falls back to the original URL if the pattern doesn't match.
+     */
+    _shopifyCdnThumb(url, size) {
+      /* Already has a size query param — replace it */
+      if (url.includes('?')) {
+        return url.split('?')[0] + '?width=' + size;
+      }
+      /* Insert _NxN_crop_center before the file extension */
+      return url.replace(/(\.[a-z]+)(\?|$)/i, `_${size}x${size}_crop_center$1$2`);
+    }
+
+    /** Formats Shopify cent integer → "$12.00" using the store currency */
+    _formatMoney(cents) {
+      const amount = (cents / 100).toFixed(2);
+      /* Use Shopify's global money format if available */
+      if (window.Shopify && window.Shopify.money_format) {
+        return window.Shopify.money_format.replace('{{amount}}', amount)
+                                          .replace('{{amount_no_decimals}}', Math.round(cents / 100))
+                                          .replace('{{amount_with_comma_separator}}', amount.replace('.', ','));
+      }
+      return '$' + amount;
+    }
+  }
+
+  customElements.define('cart-notification', CartNotification);
+}
+</script>
+
 {% schema %}
 {
   "name": "Cart Notification",
   "limit": 1,
   "settings": [
     { "type": "text",     "id": "added_text",   "label": "Added Text",                    "default": "Added to cart" },
-    { "type": "text",     "id": "view_text",    "label": "View Cart Text",                "default": "View cart" },
-    { "type": "checkbox", "id": "use_gradient", "label": "Use brand gradient background", "default": true },
-    { "type": "color",    "id": "bg",           "label": "Background (if not gradient)",  "default": "#8B52D4" },
-    { "type": "color",    "id": "text",         "label": "Text Color",                    "default": "#FFFFFF" }
+    { "type": "text",     "id": "view_text",     "label": "View Cart Text",                "default": "View cart" },
+    { "type": "checkbox", "id": "use_gradient",  "label": "Use brand gradient background", "default": true },
+    { "type": "color",    "id": "bg",            "label": "Background (if not gradient)",  "default": "#8B52D4" },
+    { "type": "color",    "id": "text",          "label": "Text Color",                    "default": "#FFFFFF" }
   ],
   "presets": [{ "name": "Cart Notification" }]
 }
