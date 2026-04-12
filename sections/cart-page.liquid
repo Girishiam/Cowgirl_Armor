@@ -201,6 +201,7 @@
   .cart-item__variants {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-end;
     gap: 0.4rem;
     margin-top: 4px;
   }
@@ -223,10 +224,11 @@
     padding: 0.35rem 1.8rem 0.35rem 0.65rem;
     border: 1.5px solid var(--cp-input-border);
     border-radius: 6px;
-    background: var(--cp-input-bg);
+    background-color: {%- if section.settings.use_gradient -%} rgba(42,18,90,0.85) {%- else -%} #F8F6F4 {%- endif -%};
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='{%- if section.settings.use_gradient -%}%23FFFFFF{%- else -%}%231a1a1a{%- endif -%}' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.55rem center;
+    color-scheme: {%- if section.settings.use_gradient -%} dark {%- else -%} light {%- endif -%};
     font-family: var(--font-body-family, sans-serif);
     font-size: 0.8rem;
     font-weight: 500;
@@ -242,27 +244,29 @@
   }
   .cart-item__variant-select:disabled { opacity: 0.45; cursor: not-allowed; }
 
-  /* Update variant button */
+  /* Update variant button — same height/padding as the selects, sits inline */
   .cart-item__variant-update {
     display: none;
     align-items: center;
     gap: 4px;
-    margin-top: 6px;
-    padding: 0.35rem 0.85rem;
+    align-self: flex-end;   /* aligns to bottom of the select, not top */
+    margin-top: 0;
+    padding: 0.35rem 0.7rem;
     border-radius: 6px;
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
     transition: opacity 0.18s;
-    border: none;
+    white-space: nowrap;
     {%- if section.settings.use_gradient -%}
-      background: rgba(255,255,255,0.2);
-      border: 1.5px solid rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.38);
       color: #FFFFFF;
     {%- else -%}
       background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      border: none;
       color: #FFFFFF;
     {%- endif -%}
   }
