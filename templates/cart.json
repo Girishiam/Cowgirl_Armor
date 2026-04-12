@@ -11,8 +11,16 @@
   "sections": {
     "main": {
       "type": "cart-page",
-      "settings": {}
+      "settings": {
+        "title": "Your Cart",
+        "use_gradient": true,
+        "bg_color": "#f8f6f4",
+        "text_color": "#1a1a1a",
+        "accent_color": "#8b52d4"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
