@@ -1,85 +1,129 @@
 <style>
   /* ============================================
      COLLECTION GRID — Cowgirl Armor
-     Clean inline filter fields above product grid
-     No sticky bar. No overlap. No issues.
+     Gradient / solid background switching
+     mirrors the Editorial Page pattern exactly
      ============================================ */
 
-  .prem-coll-{{ section.id }} {
-    background-color: {{ section.settings.bg_color }};
-    padding-bottom: {{ section.settings.padding_bottom }}px;
+  /* ── Outer wrapper — full width, background lives here ── */
+  .prem-outer-{{ section.id }} {
     width: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
   }
 
-  .prem-coll__wrap {
+  /* ── Reset & Vars ── */
+  .prem-coll-{{ section.id }} {
+    --pc-bg:        {{ section.settings.bg_color }};
+    --pc-text:      {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.text_color }} {%- endif -%};
+    --pc-accent:    {{ section.settings.accent_color }};
+    --pc-card-bg:   {%- if section.settings.use_gradient -%} rgba(255,255,255,0.12) {%- else -%} {{ section.settings.card_bg }} {%- endif -%};
+    --pc-border:    {%- if section.settings.use_gradient -%} rgba(255,255,255,0.25) {%- else -%} rgba(0,0,0,0.08) {%- endif -%};
+    --pc-input-bg:  {%- if section.settings.use_gradient -%} rgba(255,255,255,0.15) {%- else -%} #FFFFFF {%- endif -%};
+    --pc-input-border: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.35) {%- else -%} rgba(0,0,0,0.14) {%- endif -%};
+    --pc-label-opacity: {%- if section.settings.use_gradient -%} 0.65 {%- else -%} 0.45 {%- endif -%};
+    color: var(--pc-text);
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .prem-coll-{{ section.id }} *,
+  .prem-coll-{{ section.id }} *::before,
+  .prem-coll-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  .prem-coll__wrap-{{ section.id }} {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
   }
 
-  /* ════════ GRADIENT HEADER ════════ */
-  .prem-coll__header {
-    background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
-    color: #FFFFFF;
+  /* ════════════════════════════════
+     COLLECTION HEADER
+  ════════════════════════════════ */
+  .prem-coll__header-{{ section.id }} {
     text-align: center;
     padding: clamp(3rem, 8vw, 5rem) 2rem;
     position: relative;
     overflow: hidden;
     width: 100%;
   }
-  .prem-coll__header::before {
+
+  /* Subtle shimmer overlay — only needed when gradient is active */
+  {%- if section.settings.use_gradient -%}
+  .prem-coll__header-{{ section.id }}::before {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
     pointer-events: none;
   }
-  .prem-coll__header-inner {
+  {%- endif -%}
+
+  .prem-coll__header-inner-{{ section.id }} {
     position: relative;
     z-index: 1;
     max-width: 700px;
     margin: 0 auto;
   }
-  .prem-coll__title {
+
+  .prem-coll__title-{{ section.id }} {
     font-family: var(--font-heading-family, sans-serif);
-    font-size: clamp(2rem, 6vw, 4rem);
-    font-weight: var(--heading-weight, 700);
-    color: #FFFFFF;
+    font-size: clamp(2rem, 6vw, {{ section.settings.title_size }}px);
+    font-weight: {{ section.settings.title_weight }};
+    color: var(--pc-text);
     margin: 0 0 0.75rem;
     line-height: 1.1;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    letter-spacing: -0.02em;
+    {%- if section.settings.use_gradient -%}
+      text-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    {%- endif -%}
   }
-  .prem-coll__description {
+
+  .prem-coll__description-{{ section.id }} {
     font-size: clamp(1rem, 2vw, 1.15rem);
-    opacity: 0.9;
+    color: var(--pc-text);
+    opacity: 0.88;
     line-height: 1.65;
     margin: 0 auto 1rem;
   }
-  .prem-coll__count {
+
+  .prem-coll__count-{{ section.id }} {
     display: inline-block;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    opacity: 0.7;
-    background: rgba(255,255,255,0.15);
+    color: var(--pc-text);
+    {%- if section.settings.use_gradient -%}
+      opacity: 0.7;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+    {%- else -%}
+      opacity: 0.6;
+      background: rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.1);
+    {%- endif -%}
     padding: 0.3rem 1rem;
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.25);
   }
 
-  /* ════════ FILTER ROW ════════ */
-  .prem-filter-row-outer {
-    background: {{ section.settings.bg_color }};
-    border-top: 1px solid rgba(0,0,0,0.07);
-    border-bottom: 1px solid rgba(0,0,0,0.07);
+  /* ════════════════════════════════
+     FILTER ROW
+  ════════════════════════════════ */
+  .prem-filter-row-outer-{{ section.id }} {
+    border-top: 1px solid var(--pc-border);
+    border-bottom: 1px solid var(--pc-border);
     width: 100%;
   }
 
-  .prem-filter-row {
+  .prem-filter-row-{{ section.id }} {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 1.25rem 2rem 1.25rem;
+    padding: 1.25rem 2rem;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -87,7 +131,7 @@
     flex-wrap: wrap;
   }
 
-  .prem-filter-row__left {
+  .prem-filter-row__left-{{ section.id }} {
     display: flex;
     align-items: flex-end;
     gap: 1rem;
@@ -95,7 +139,7 @@
     flex: 1;
   }
 
-  .prem-filter-row__right {
+  .prem-filter-row__right-{{ section.id }} {
     display: flex;
     align-items: flex-end;
     gap: 0.75rem;
@@ -103,88 +147,88 @@
   }
 
   /* ── Labeled field wrapper ── */
-  .prem-filter-field {
+  .prem-filter-field-{{ section.id }} {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
   }
 
-  .prem-filter-field__label {
+  .prem-filter-field__label-{{ section.id }} {
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    opacity: 0.45;
+    opacity: var(--pc-label-opacity);
     font-family: var(--font-body-family, sans-serif);
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
   }
 
-  /* ── Availability select ── */
-  .prem-filter-field__select {
+  /* ── Availability / list select ── */
+  .prem-filter-field__select-{{ section.id }} {
     appearance: none;
     -webkit-appearance: none;
     min-width: 160px;
     padding: 0.65rem 2.4rem 0.65rem 1rem;
-    border: 1.5px solid rgba(0,0,0,0.14);
+    border: 1.5px solid var(--pc-input-border);
     border-radius: 8px;
-    background: #FFFFFF;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background: var(--pc-input-bg);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='{%- if section.settings.use_gradient -%}%23FFFFFF{%- else -%}%231a1a1a{%- endif -%}' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.8rem center;
     font-family: var(--font-body-family, sans-serif);
     font-size: 0.88rem;
     font-weight: 500;
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
     cursor: pointer;
     transition: border-color 0.18s, box-shadow 0.18s;
   }
-  .prem-filter-field__select:focus {
+  .prem-filter-field__select-{{ section.id }}:focus {
     outline: none;
-    border-color: #8B52D4;
-    box-shadow: 0 0 0 3px rgba(139,82,212,0.1);
+    border-color: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.7) {%- else -%} {{ section.settings.accent_color }} {%- endif -%};
+    box-shadow: 0 0 0 3px {%- if section.settings.use_gradient -%} rgba(255,255,255,0.15) {%- else -%} rgba(139,82,212,0.1) {%- endif -%};
   }
-  .prem-filter-field__select.has-value {
-    border-color: #8B52D4;
-    background-color: rgba(139,82,212,0.04);
-    color: #8B52D4;
+  .prem-filter-field__select-{{ section.id }}.has-value {
+    border-color: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.8) {%- else -%} {{ section.settings.accent_color }} {%- endif -%};
+    background-color: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.2) {%- else -%} rgba(139,82,212,0.04) {%- endif -%};
+    color: var(--pc-text);
     font-weight: 600;
   }
 
   /* ── Price fields ── */
-  .prem-price-field {
+  .prem-price-field-{{ section.id }} {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
   }
-  .prem-price-field__inputs {
+  .prem-price-field__inputs-{{ section.id }} {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
-  .prem-price-field__input-wrap {
+  .prem-price-field__input-wrap-{{ section.id }} {
     display: flex;
     align-items: center;
-    border: 1.5px solid rgba(0,0,0,0.14);
+    border: 1.5px solid var(--pc-input-border);
     border-radius: 8px;
     overflow: hidden;
-    background: #FFFFFF;
+    background: var(--pc-input-bg);
     width: 88px;
     transition: border-color 0.18s, box-shadow 0.18s;
   }
-  .prem-price-field__input-wrap:focus-within {
-    border-color: #8B52D4;
-    box-shadow: 0 0 0 3px rgba(139,82,212,0.1);
+  .prem-price-field__input-wrap-{{ section.id }}:focus-within {
+    border-color: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.7) {%- else -%} {{ section.settings.accent_color }} {%- endif -%};
+    box-shadow: 0 0 0 3px {%- if section.settings.use_gradient -%} rgba(255,255,255,0.15) {%- else -%} rgba(139,82,212,0.1) {%- endif -%};
   }
-  .prem-price-field__symbol {
+  .prem-price-field__symbol-{{ section.id }} {
     padding: 0 0.45rem;
     font-size: 0.82rem;
-    opacity: 0.3;
+    opacity: 0.4;
     font-weight: 600;
     user-select: none;
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
     flex-shrink: 0;
   }
-  .prem-price-field__input {
+  .prem-price-field__input-{{ section.id }} {
     border: none;
     outline: none;
     padding: 0.65rem 0.45rem 0.65rem 0;
@@ -192,22 +236,29 @@
     background: transparent;
     font-size: 0.88rem;
     font-family: var(--font-body-family, sans-serif);
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
     -moz-appearance: textfield;
   }
-  .prem-price-field__input::-webkit-outer-spin-button,
-  .prem-price-field__input::-webkit-inner-spin-button { -webkit-appearance: none; }
-  .prem-price-field__sep {
+  .prem-price-field__input-{{ section.id }}::placeholder { color: var(--pc-text); opacity: 0.35; }
+  .prem-price-field__input-{{ section.id }}::-webkit-outer-spin-button,
+  .prem-price-field__input-{{ section.id }}::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .prem-price-field__sep-{{ section.id }} {
     font-size: 0.8rem;
-    opacity: 0.3;
+    opacity: 0.35;
     flex-shrink: 0;
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
   }
-  .prem-price-field__go {
+  .prem-price-field__go-{{ section.id }} {
     padding: 0.65rem 1.1rem;
-    background: var(--brand-gradient);
-    color: #FFFFFF;
-    border: none;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #FFFFFF;
+    {%- else -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      border: none;
+      color: #FFFFFF;
+    {%- endif -%}
     border-radius: 8px;
     font-family: var(--font-body-family, sans-serif);
     font-size: 0.78rem;
@@ -218,49 +269,51 @@
     white-space: nowrap;
     transition: opacity 0.18s, transform 0.15s;
   }
-  .prem-price-field__go:hover { opacity: 0.88; transform: translateY(-1px); }
+  .prem-price-field__go-{{ section.id }}:hover { opacity: 0.85; transform: translateY(-1px); }
 
   /* ── Sort ── */
-  .prem-sort-wrap {
+  .prem-sort-wrap-{{ section.id }} {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
   }
-  .prem-sort-wrap__label {
+  .prem-sort-wrap__label-{{ section.id }} {
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    opacity: 0.45;
+    opacity: var(--pc-label-opacity);
     font-family: var(--font-body-family, sans-serif);
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
   }
-  .prem-sort-select {
+  .prem-sort-select-{{ section.id }} {
     appearance: none;
     -webkit-appearance: none;
     padding: 0.65rem 2.4rem 0.65rem 1rem;
-    border: 1.5px solid rgba(0,0,0,0.14);
+    border: 1.5px solid var(--pc-input-border);
     border-radius: 8px;
-    background: #FFFFFF;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background: var(--pc-input-bg);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='{%- if section.settings.use_gradient -%}%23FFFFFF{%- else -%}%231a1a1a{%- endif -%}' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.8rem center;
     font-family: var(--font-body-family, sans-serif);
     font-size: 0.88rem;
     font-weight: 500;
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
     cursor: pointer;
     min-width: 180px;
     transition: border-color 0.18s, box-shadow 0.18s;
   }
-  .prem-sort-select:focus {
+  .prem-sort-select-{{ section.id }}:focus {
     outline: none;
-    border-color: #8B52D4;
-    box-shadow: 0 0 0 3px rgba(139,82,212,0.1);
+    border-color: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.7) {%- else -%} {{ section.settings.accent_color }} {%- endif -%};
+    box-shadow: 0 0 0 3px {%- if section.settings.use_gradient -%} rgba(255,255,255,0.15) {%- else -%} rgba(139,82,212,0.1) {%- endif -%};
   }
 
-  /* ════════ ACTIVE FILTER PILLS ════════ */
-  .prem-active-filters {
+  /* ════════════════════════════════
+     ACTIVE FILTER PILLS
+  ════════════════════════════════ */
+  .prem-active-filters-{{ section.id }} {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0.5rem 2rem 0.75rem;
@@ -268,16 +321,17 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.4rem;
+    border-bottom: 1px solid var(--pc-border);
   }
-  .prem-active-filters__label {
+  .prem-active-filters__label-{{ section.id }} {
     font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    opacity: 0.35;
-    color: var(--color-text, #1A1A1A);
+    opacity: 0.4;
+    color: var(--pc-text);
   }
-  .prem-active-pill {
+  .prem-active-pill-{{ section.id }} {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -286,28 +340,43 @@
     font-size: 0.76rem;
     font-weight: 500;
     text-decoration: none;
-    background: var(--brand-gradient);
-    color: #FFFFFF;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #FFFFFF;
+    {%- else -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      color: #FFFFFF;
+    {%- endif -%}
     transition: opacity 0.2s;
     line-height: 1.5;
   }
-  .prem-active-pill:hover { opacity: 0.75; }
-  .prem-active-filters__clear {
+  .prem-active-pill-{{ section.id }}:hover { opacity: 0.75; }
+  .prem-active-filters__clear-{{ section.id }} {
     font-size: 0.76rem;
     font-weight: 600;
-    color: #8B52D4;
     text-decoration: underline;
     text-underline-offset: 2px;
     cursor: pointer;
     background: none;
     border: none;
     padding: 0;
-    text-decoration-color: rgba(139,82,212,0.4);
+    {%- if section.settings.use_gradient -%}
+      color: rgba(255,255,255,0.85);
+      text-decoration-color: rgba(255,255,255,0.4);
+    {%- else -%}
+      color: {{ section.settings.accent_color }};
+      text-decoration-color: rgba(139,82,212,0.4);
+    {%- endif -%}
   }
-  .prem-active-filters__clear:hover { text-decoration-color: #8B52D4; }
+  .prem-active-filters__clear-{{ section.id }}:hover {
+    text-decoration-color: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.9) {%- else -%} {{ section.settings.accent_color }} {%- endif -%};
+  }
 
-  /* ════════ PRODUCT GRID ════════ */
-  .prem-product-grid {
+  /* ════════════════════════════════
+     PRODUCT GRID
+  ════════════════════════════════ */
+  .prem-product-grid-{{ section.id }} {
     display: grid;
     grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
     gap: 2.5rem 1.5rem;
@@ -315,54 +384,77 @@
   }
 
   @media screen and (max-width: 599px) {
-    .prem-product-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0.75rem; padding-top: 1.25rem; }
-    .prem-filter-row { padding: 1rem; }
-    .prem-coll__wrap { padding: 0 1rem; }
-    .prem-active-filters { padding: 0.5rem 1rem 0.75rem; }
-    .prem-price-field__input-wrap { width: 72px; }
-    .prem-sort-select { min-width: 130px; }
-    .prem-filter-field__select { min-width: 130px; }
+    .prem-product-grid-{{ section.id }} { grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0.75rem; padding-top: 1.25rem; }
+    .prem-filter-row-{{ section.id }} { padding: 1rem; }
+    .prem-coll__wrap-{{ section.id }} { padding: 0 1rem; }
+    .prem-active-filters-{{ section.id }} { padding: 0.5rem 1rem 0.75rem; }
+    .prem-price-field__input-wrap-{{ section.id }} { width: 72px; }
+    .prem-sort-select-{{ section.id }} { min-width: 130px; }
+    .prem-filter-field__select-{{ section.id }} { min-width: 130px; }
   }
   @media screen and (min-width: 600px) and (max-width: 899px) {
-    .prem-product-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+    .prem-product-grid-{{ section.id }} { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
   }
   @media screen and (min-width: 900px) and (max-width: 1199px) {
-    .prem-product-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem 1.25rem; }
+    .prem-product-grid-{{ section.id }} { grid-template-columns: repeat(3, 1fr); gap: 2rem 1.25rem; }
   }
 
-  /* ════════ PRODUCT CARD ════════ */
-  .prem-card { display: flex; flex-direction: column; position: relative; }
+  /* ════════════════════════════════
+     PRODUCT CARD
+  ════════════════════════════════ */
+  .prem-card-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--pc-card-bg);
+    border-radius: 12px;
+    {%- if section.settings.use_gradient -%}
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
+    {%- else -%}
+      border: 1px solid rgba(0,0,0,0.06);
+    {%- endif -%}
+    padding: 0 0 0.9rem;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .prem-card-{{ section.id }}:hover {
+    transform: translateY(-3px);
+    {%- if section.settings.use_gradient -%}
+      box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+    {%- else -%}
+      box-shadow: 0 10px 28px rgba(139,82,212,0.14);
+    {%- endif -%}
+  }
 
-  .prem-card__link {
+  .prem-card__link-{{ section.id }} {
     text-decoration: none;
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
   }
 
-  .prem-card__img-wrap {
+  .prem-card__img-wrap-{{ section.id }} {
     position: relative;
     width: 100%;
     aspect-ratio: {{ section.settings.image_ratio }};
-    background-color: #F8F6F4;
+    background-color: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.1) {%- else -%} #F8F6F4 {%- endif -%};
     overflow: hidden;
     margin-bottom: 0.9rem;
-    border-radius: 8px;
   }
-  .prem-card__img {
+  .prem-card__img-{{ section.id }} {
     width: 100%;
     height: 100%;
     object-fit: contain;
     object-position: center;
     display: block;
     padding: 0.5rem;
-    box-sizing: border-box;
     transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
   }
-  .prem-card:hover .prem-card__img { transform: scale(1.05); }
+  .prem-card-{{ section.id }}:hover .prem-card__img-{{ section.id }} { transform: scale(1.05); }
 
-  .prem-card__img-secondary {
+  .prem-card__img-secondary-{{ section.id }} {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -371,9 +463,9 @@
     opacity: 0;
     transition: opacity 0.4s ease;
   }
-  .prem-card:hover .prem-card__img-secondary { opacity: 1; }
+  .prem-card-{{ section.id }}:hover .prem-card__img-secondary-{{ section.id }} { opacity: 1; }
 
-  .prem-card__badge {
+  .prem-card__badge-{{ section.id }} {
     position: absolute;
     top: 0.6rem;
     left: 0.6rem;
@@ -385,38 +477,39 @@
     border-radius: 4px;
     z-index: 2;
     color: #FFFFFF;
-    background: var(--brand-gradient);
+    background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
   }
-  .prem-card__badge--sale     { background: #DC2626 !important; }
-  .prem-card__badge--sold-out { background: rgba(0,0,0,0.65) !important; }
+  .prem-card__badge--sale-{{ section.id }}     { background: #DC2626 !important; }
+  .prem-card__badge--sold-out-{{ section.id }} { background: rgba(0,0,0,0.55) !important; }
 
-  .prem-card__info {
+  .prem-card__info-{{ section.id }} {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     margin-bottom: 0.75rem;
     flex-grow: 1;
+    padding: 0 0.9rem;
   }
-  .prem-card__title {
+
+  .prem-card__title-{{ section.id }} {
     font-family: var(--font-heading-family, sans-serif);
     font-size: clamp(0.85rem, 1.2vw, 0.98rem);
     font-weight: 600;
     line-height: 1.35;
     margin: 0;
-    color: var(--color-text, #1A1A1A);
+    color: var(--pc-text);
   }
-  .prem-card__price-wrap { display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap; }
-  .prem-card__price { font-size: 0.92rem; font-weight: 600; color: var(--color-text, #1A1A1A); }
-  .prem-card__price--sale    { color: #DC2626; }
-  .prem-card__price--compare { font-size: 0.82rem; text-decoration: line-through; opacity: 0.38; font-weight: 400; }
 
-  .prem-card__form { margin-top: auto; }
+  .prem-card__price-wrap-{{ section.id }} { display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap; }
+  .prem-card__price-{{ section.id }} { font-size: 0.92rem; font-weight: 600; color: var(--pc-text); }
+  .prem-card__price--sale-{{ section.id }}    { color: {%- if section.settings.use_gradient -%} #FFB4B4 {%- else -%} #DC2626 {%- endif -%}; }
+  .prem-card__price--compare-{{ section.id }} { font-size: 0.82rem; text-decoration: line-through; opacity: 0.38; font-weight: 400; color: var(--pc-text); }
 
-  .prem-atc-btn {
+  .prem-card__form-{{ section.id }} { margin-top: auto; padding: 0 0.9rem; }
+
+  .prem-atc-btn-{{ section.id }} {
     width: 100%;
     padding: 0.78rem 1rem;
-    background: var(--brand-gradient);
-    color: #FFFFFF;
     border: none;
     border-radius: 8px;
     font-family: var(--font-heading-family, sans-serif);
@@ -428,9 +521,18 @@
     position: relative;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 3px 12px rgba(139,82,212,0.2);
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #FFFFFF;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    {%- else -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      color: #FFFFFF;
+      box-shadow: 0 3px 12px rgba(139,82,212,0.2);
+    {%- endif -%}
   }
-  .prem-atc-btn::after {
+  .prem-atc-btn-{{ section.id }}::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -438,25 +540,38 @@
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-  .prem-atc-btn:hover:not([disabled]) { transform: translateY(-2px); box-shadow: 0 7px 22px rgba(139,82,212,0.36); }
-  .prem-atc-btn:hover:not([disabled])::after { opacity: 1; }
-  .prem-atc-btn span { position: relative; z-index: 1; }
-  .prem-atc-btn[disabled] {
-    background: rgba(0,0,0,0.08) !important;
-    color: rgba(0,0,0,0.28) !important;
+  .prem-atc-btn-{{ section.id }}:hover:not([disabled]) {
+    transform: translateY(-2px);
+    {%- if section.settings.use_gradient -%}
+      box-shadow: 0 7px 20px rgba(0,0,0,0.18);
+    {%- else -%}
+      box-shadow: 0 7px 22px rgba(139,82,212,0.36);
+    {%- endif -%}
+  }
+  .prem-atc-btn-{{ section.id }}:hover:not([disabled])::after { opacity: 1; }
+  .prem-atc-btn-{{ section.id }} span { position: relative; z-index: 1; }
+  .prem-atc-btn-{{ section.id }}[disabled] {
+    background: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.08) !important; color: rgba(255,255,255,0.3) !important; border-color: rgba(255,255,255,0.15) !important; {%- else -%} rgba(0,0,0,0.08) !important; color: rgba(0,0,0,0.28) !important; {%- endif -%}
     box-shadow: none; cursor: not-allowed; transform: none;
   }
 
-  /* ════════ EMPTY STATE ════════ */
-  .prem-coll__empty {
+  /* ════════════════════════════════
+     EMPTY STATE
+  ════════════════════════════════ */
+  .prem-coll__empty-{{ section.id }} {
     text-align: center;
     padding: 5rem 2rem;
     grid-column: 1 / -1;
   }
-  .prem-coll__empty p { opacity: 0.5; margin-bottom: 1.5rem; font-size: 1.05rem; }
-  .prem-coll__empty a {
+  .prem-coll__empty-{{ section.id }} p { opacity: 0.55; margin-bottom: 1.5rem; font-size: 1.05rem; color: var(--pc-text); }
+  .prem-coll__empty-{{ section.id }} a {
     display: inline-block;
-    background: var(--brand-gradient);
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.4);
+    {%- else -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- endif -%}
     color: #FFFFFF;
     padding: 0.75rem 2rem;
     border-radius: 8px;
@@ -467,8 +582,10 @@
     letter-spacing: 0.05em;
   }
 
-  /* ════════ PAGINATION ════════ */
-  .prem-coll__pagination {
+  /* ════════════════════════════════
+     PAGINATION
+  ════════════════════════════════ */
+  .prem-coll__pagination-{{ section.id }} {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -477,44 +594,68 @@
     padding-bottom: 2rem;
     flex-wrap: wrap;
   }
-  .prem-coll__pagination a,
-  .prem-coll__pagination span {
+  .prem-coll__pagination-{{ section.id }} a,
+  .prem-coll__pagination-{{ section.id }} span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 42px;
     height: 42px;
     padding: 0 0.75rem;
-    border: 1px solid rgba(0,0,0,0.12);
     border-radius: 8px;
     font-size: 0.88rem;
     font-weight: 500;
     text-decoration: none;
-    color: var(--color-text, #1A1A1A);
-    background: transparent;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
+    {%- if section.settings.use_gradient -%}
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.85);
+      background: transparent;
+    {%- else -%}
+      border: 1px solid rgba(0,0,0,0.12);
+      color: var(--color-text, #1A1A1A);
+      background: transparent;
+    {%- endif -%}
   }
-  .prem-coll__pagination a:hover { background: #8B52D4; color: #FFFFFF; border-color: transparent; }
-  .prem-coll__pagination .current {
-    background: var(--brand-gradient);
-    color: #FFFFFF;
-    border-color: transparent;
+  .prem-coll__pagination-{{ section.id }} a:hover {
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.2);
+      color: #FFFFFF;
+      border-color: rgba(255,255,255,0.4);
+    {%- else -%}
+      background: #8B52D4;
+      color: #FFFFFF;
+      border-color: transparent;
+    {%- endif -%}
+  }
+  .prem-coll__pagination-{{ section.id }} .current {
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      color: #FFFFFF;
+    {%- else -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      border-color: transparent;
+      color: #FFFFFF;
+    {%- endif -%}
     pointer-events: none;
     font-weight: 700;
   }
 
-  /* ════════ FADE-UP ════════ */
-  @keyframes premFadeUp {
+  /* ════════════════════════════════
+     FADE-UP ANIMATION
+  ════════════════════════════════ */
+  @keyframes premFadeUp-{{ section.id }} {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .prem-card.fade-up-anim {
+  .prem-card-{{ section.id }}.fade-up-anim {
     opacity: 0;
-    animation: premFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    animation: premFadeUp-{{ section.id }} 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
   }
 </style>
 
-{%- comment -%} Collection resolver {%- endcomment -%}
+{%- comment -%} ── Collection resolver ── {%- endcomment -%}
 {%- if collection -%}
   {%- assign current_collection = collection -%}
 {%- elsif section.settings.collection != blank -%}
@@ -538,158 +679,158 @@
   {%- endif -%}
 {%- endfor -%}
 
-<!-- ════════ GRADIENT HEADER ════════ -->
-<div class="prem-coll__header">
-  <div class="prem-coll__header-inner">
-    <h1 class="prem-coll__title">{{ display_title }}</h1>
-    {%- if current_collection.description != blank -%}
-      <p class="prem-coll__description">{{ current_collection.description }}</p>
-    {%- endif -%}
-    <span class="prem-coll__count">
-      {{ current_collection.products_count }} {{ current_collection.products_count | pluralize: 'item', 'items' }}
-    </span>
-  </div>
-</div>
+<div class="prem-outer-{{ section.id }}">
+<div class="prem-coll-{{ section.id }}">
 
-{%- paginate current_collection.products by section.settings.products_per_page -%}
-
-<!-- ════════ FILTER ROW — directly above grid, in normal page flow ════════ -->
-<div class="prem-filter-row-outer">
-<div class="prem-filter-row">
-  <div class="prem-filter-row__left">
-
-    {%- for filter in current_collection.filters -%}
-      {%- case filter.type -%}
-
-        {%- when 'boolean', 'list' -%}
-          <div class="prem-filter-field">
-            <span class="prem-filter-field__label">{{ filter.label }}</span>
-            <select
-              class="prem-filter-field__select{% if filter.active_values.size > 0 %} has-value{% endif %}"
-              data-filter-select
-              aria-label="{{ filter.label }}"
-            >
-              <option value="{{ request.path }}">All {{ filter.label }}</option>
-              {%- for value in filter.values -%}
-                <option
-                  value="{{ value.url_to_toggle }}"
-                  {% if value.active %}selected{% endif %}
-                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                >
-                  {{ value.label }} ({{ value.count }})
-                </option>
-              {%- endfor -%}
-            </select>
-          </div>
-
-        {%- when 'price_range' -%}
-          <form action="{{ request.path }}" method="get" class="prem-price-field" data-price-form>
-            {%- for f in current_collection.filters -%}
-              {%- if f.type != 'price_range' -%}
-                {%- for v in f.active_values -%}
-                  <input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">
-                {%- endfor -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {%- if sort_by != blank -%}
-              <input type="hidden" name="sort_by" value="{{ sort_by }}">
-            {%- endif -%}
-            <span class="prem-filter-field__label">Price</span>
-            <div class="prem-price-field__inputs">
-              <div class="prem-price-field__input-wrap">
-                <span class="prem-price-field__symbol">$</span>
-                <input
-                  type="number"
-                  name="{{ filter.min_value.param_name }}"
-                  value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
-                  min="0"
-                  max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                  placeholder="Min"
-                  class="prem-price-field__input"
-                  aria-label="Min price"
-                >
-              </div>
-              <span class="prem-price-field__sep">–</span>
-              <div class="prem-price-field__input-wrap">
-                <span class="prem-price-field__symbol">$</span>
-                <input
-                  type="number"
-                  name="{{ filter.max_value.param_name }}"
-                  value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
-                  min="0"
-                  max="{{ filter.range_max | money_without_currency | remove: ',' }}"
-                  placeholder="Max"
-                  class="prem-price-field__input"
-                  aria-label="Max price"
-                >
-              </div>
-              <button type="submit" class="prem-price-field__go">Apply</button>
-            </div>
-          </form>
-
-      {%- endcase -%}
-    {%- endfor -%}
-
-  </div>
-
-  <div class="prem-filter-row__right">
-    <div class="prem-sort-wrap">
-      <span class="prem-sort-wrap__label">Sort by</span>
-      <select class="prem-sort-select" data-prem-sort aria-label="Sort products">
-        {%- for option in current_collection.sort_options -%}
-          <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
-            {{ option.name }}
-          </option>
-        {%- endfor -%}
-      </select>
+  <!-- ════════ COLLECTION HEADER ════════ -->
+  <div class="prem-coll__header-{{ section.id }}">
+    <div class="prem-coll__header-inner-{{ section.id }}">
+      <h1 class="prem-coll__title-{{ section.id }}">{{ display_title }}</h1>
+      {%- if current_collection.description != blank -%}
+        <p class="prem-coll__description-{{ section.id }}">{{ current_collection.description }}</p>
+      {%- endif -%}
+      <span class="prem-coll__count-{{ section.id }}">
+        {{ current_collection.products_count }} {{ current_collection.products_count | pluralize: 'item', 'items' }}
+      </span>
     </div>
   </div>
-</div>
-</div><!-- /prem-filter-row-outer -->
 
-<!-- ════════ ACTIVE FILTER PILLS ════════ -->
-{%- if has_active_filters -%}
-  <div style="background:{{ section.settings.bg_color }};width:100vw;position:relative;left:50%;margin-left:-50vw;border-bottom:1px solid rgba(0,0,0,0.07);">
-  <div class="prem-active-filters">
-    <span class="prem-active-filters__label">Filtered by:</span>
-    {%- for filter in current_collection.filters -%}
-      {%- for value in filter.active_values -%}
-        <a href="{{ value.url_to_remove }}" class="prem-active-pill">
-          {{ value.label }}
-          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </a>
-      {%- endfor -%}
-      {%- if filter.type == 'price_range' -%}
-        {%- if filter.min_value.value or filter.max_value.value -%}
-          <a href="{{ filter.url_to_remove }}" class="prem-active-pill">
-            ${{ filter.min_value.value | default: 0 | money_without_currency }} – ${{ filter.max_value.value | default: filter.range_max | money_without_currency }}
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  {%- paginate current_collection.products by section.settings.products_per_page -%}
+
+  <!-- ════════ FILTER ROW ════════ -->
+  <div class="prem-filter-row-outer-{{ section.id }}">
+    <div class="prem-filter-row-{{ section.id }}">
+      <div class="prem-filter-row__left-{{ section.id }}">
+
+        {%- for filter in current_collection.filters -%}
+          {%- case filter.type -%}
+
+            {%- when 'boolean', 'list' -%}
+              <div class="prem-filter-field-{{ section.id }}">
+                <span class="prem-filter-field__label-{{ section.id }}">{{ filter.label }}</span>
+                <select
+                  class="prem-filter-field__select-{{ section.id }}{% if filter.active_values.size > 0 %} has-value{% endif %}"
+                  data-filter-select
+                  aria-label="{{ filter.label }}"
+                >
+                  <option value="{{ request.path }}">All {{ filter.label }}</option>
+                  {%- for value in filter.values -%}
+                    <option
+                      value="{{ value.url_to_toggle }}"
+                      {% if value.active %}selected{% endif %}
+                      {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                    >
+                      {{ value.label }} ({{ value.count }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </div>
+
+            {%- when 'price_range' -%}
+              <form action="{{ request.path }}" method="get" class="prem-price-field-{{ section.id }}" data-price-form>
+                {%- for f in current_collection.filters -%}
+                  {%- if f.type != 'price_range' -%}
+                    {%- for v in f.active_values -%}
+                      <input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">
+                    {%- endfor -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- if sort_by != blank -%}
+                  <input type="hidden" name="sort_by" value="{{ sort_by }}">
+                {%- endif -%}
+                <span class="prem-filter-field__label-{{ section.id }}">Price</span>
+                <div class="prem-price-field__inputs-{{ section.id }}">
+                  <div class="prem-price-field__input-wrap-{{ section.id }}">
+                    <span class="prem-price-field__symbol-{{ section.id }}">$</span>
+                    <input
+                      type="number"
+                      name="{{ filter.min_value.param_name }}"
+                      value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                      placeholder="Min"
+                      class="prem-price-field__input-{{ section.id }}"
+                      aria-label="Min price"
+                    >
+                  </div>
+                  <span class="prem-price-field__sep-{{ section.id }}">–</span>
+                  <div class="prem-price-field__input-wrap-{{ section.id }}">
+                    <span class="prem-price-field__symbol-{{ section.id }}">$</span>
+                    <input
+                      type="number"
+                      name="{{ filter.max_value.param_name }}"
+                      value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                      placeholder="Max"
+                      class="prem-price-field__input-{{ section.id }}"
+                      aria-label="Max price"
+                    >
+                  </div>
+                  <button type="submit" class="prem-price-field__go-{{ section.id }}">Apply</button>
+                </div>
+              </form>
+
+          {%- endcase -%}
+        {%- endfor -%}
+
+      </div>
+
+      <div class="prem-filter-row__right-{{ section.id }}">
+        <div class="prem-sort-wrap-{{ section.id }}">
+          <span class="prem-sort-wrap__label-{{ section.id }}">Sort by</span>
+          <select class="prem-sort-select-{{ section.id }}" data-prem-sort aria-label="Sort products">
+            {%- for option in current_collection.sort_options -%}
+              <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
+                {{ option.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div><!-- /filter-row-outer -->
+
+  <!-- ════════ ACTIVE FILTER PILLS ════════ -->
+  {%- if has_active_filters -%}
+    <div class="prem-active-filters-{{ section.id }}">
+      <span class="prem-active-filters__label-{{ section.id }}">Filtered by:</span>
+      {%- for filter in current_collection.filters -%}
+        {%- for value in filter.active_values -%}
+          <a href="{{ value.url_to_remove }}" class="prem-active-pill-{{ section.id }}">
+            {{ value.label }}
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
           </a>
+        {%- endfor -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value or filter.max_value.value -%}
+            <a href="{{ filter.url_to_remove }}" class="prem-active-pill-{{ section.id }}">
+              ${{ filter.min_value.value | default: 0 | money_without_currency }} – ${{ filter.max_value.value | default: filter.range_max | money_without_currency }}
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </a>
+          {%- endif -%}
         {%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
-    <a href="{{ request.path }}" class="prem-active-filters__clear">✕ Clear all</a>
-  </div>
-  </div>
-{%- endif -%}
+      {%- endfor -%}
+      <a href="{{ request.path }}" class="prem-active-filters__clear-{{ section.id }}">✕ Clear all</a>
+    </div>
+  {%- endif -%}
 
-<!-- ════════ PRODUCT GRID ════════ -->
-<div class="prem-coll-{{ section.id }}">
-  <div class="prem-coll__wrap">
+  <!-- ════════ PRODUCT GRID ════════ -->
+  <div class="prem-coll__wrap-{{ section.id }}">
 
     {%- if current_collection.products.size > 0 -%}
-      <div class="prem-product-grid">
+      <div class="prem-product-grid-{{ section.id }}">
         {%- for product in current_collection.products -%}
           {%- assign delay = forloop.index0 | times: 50 | modulo: 300 -%}
-          <div class="prem-card fade-up-anim" style="animation-delay:{{ delay }}ms;">
+          <div class="prem-card-{{ section.id }} fade-up-anim" style="animation-delay:{{ delay }}ms;">
 
-            <a href="{{ product.url | within: current_collection }}" class="prem-card__link" aria-label="{{ product.title | escape }}">
-              <div class="prem-card__img-wrap">
+            <a href="{{ product.url | within: current_collection }}" class="prem-card__link-{{ section.id }}" aria-label="{{ product.title | escape }}">
+              <div class="prem-card__img-wrap-{{ section.id }}">
                 {%- unless product.available -%}
-                  <span class="prem-card__badge prem-card__badge--sold-out">Sold Out</span>
+                  <span class="prem-card__badge-{{ section.id }} prem-card__badge--sold-out-{{ section.id }}">Sold Out</span>
                 {%- endunless -%}
                 {%- if product.compare_at_price > product.price and product.available -%}
-                  <span class="prem-card__badge prem-card__badge--sale">Sale</span>
+                  <span class="prem-card__badge-{{ section.id }} prem-card__badge--sale-{{ section.id }}">Sale</span>
                 {%- endif -%}
                 {%- if product.featured_image != blank -%}
                   <img
@@ -699,7 +840,7 @@
                             {{ product.featured_image | image_url: width: 1000 }} 1000w"
                     sizes="(max-width: 599px) 50vw, (max-width: 899px) 50vw, (max-width: 1199px) 33vw, 22vw"
                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
-                    class="prem-card__img"
+                    class="prem-card__img-{{ section.id }}"
                     loading="lazy"
                     width="{{ product.featured_image.width }}"
                     height="{{ product.featured_image.height }}"
@@ -708,32 +849,34 @@
                     <img
                       src="{{ product.images[1] | image_url: width: 800 }}"
                       alt="{{ product.images[1].alt | default: product.title | escape }}"
-                      class="prem-card__img-secondary"
+                      class="prem-card__img-secondary-{{ section.id }}"
                       loading="lazy"
                     >
                   {%- endif -%}
                 {%- else -%}
-                  {{ 'product-1' | placeholder_svg_tag: 'prem-card__img placeholder-svg' }}
+                  {%- assign placeholder_class = 'prem-card__img-' | append: section.id | append: ' placeholder-svg' -%}
+                  {{ 'product-1' | placeholder_svg_tag: placeholder_class }}
                 {%- endif -%}
               </div>
 
-              <div class="prem-card__info">
-                <h3 class="prem-card__title">{{ product.title }}</h3>
-                <div class="prem-card__price-wrap">
+              <div class="prem-card__info-{{ section.id }}">
+                <h3 class="prem-card__title-{{ section.id }}">{{ product.title }}</h3>
+                <div class="prem-card__price-wrap-{{ section.id }}">
                   {%- if product.compare_at_price > product.price -%}
-                    <span class="prem-card__price prem-card__price--sale">{{ product.price | money }}</span>
-                    <span class="prem-card__price--compare">{{ product.compare_at_price | money }}</span>
+                    <span class="prem-card__price-{{ section.id }} prem-card__price--sale-{{ section.id }}">{{ product.price | money }}</span>
+                    <span class="prem-card__price--compare-{{ section.id }}">{{ product.compare_at_price | money }}</span>
                   {%- else -%}
-                    <span class="prem-card__price">{{ product.price | money }}</span>
+                    <span class="prem-card__price-{{ section.id }}">{{ product.price | money }}</span>
                   {%- endif -%}
                 </div>
               </div>
             </a>
 
-            {%- form 'product', product, class: 'prem-card__form' -%}
+            {%- assign form_class = 'prem-card__form-' | append: section.id -%}
+            {%- form 'product', product, class: form_class -%}
               <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
               <input type="hidden" name="quantity" value="1">
-              <button type="submit" name="add" class="prem-atc-btn" {% unless product.available %}disabled{% endunless %}>
+              <button type="submit" name="add" class="prem-atc-btn-{{ section.id }}" {% unless product.available %}disabled{% endunless %}>
                 <span>{%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}</span>
               </button>
             {%- endform -%}
@@ -743,7 +886,7 @@
       </div>
 
       {%- if paginate.pages > 1 -%}
-        <nav class="prem-coll__pagination" aria-label="Pagination">
+        <nav class="prem-coll__pagination-{{ section.id }}" aria-label="Pagination">
           {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">← Prev</a>{%- endif -%}
           {%- for part in paginate.parts -%}
             {%- if part.is_link -%}
@@ -757,16 +900,18 @@
       {%- endif -%}
 
     {%- else -%}
-      <div class="prem-coll__empty">
+      <div class="prem-coll__empty-{{ section.id }}">
         <p>No products found. Try adjusting your filters.</p>
         <a href="{{ request.path }}">Clear all filters</a>
       </div>
     {%- endif -%}
 
-  </div>
-</div>
+  </div><!-- /wrap -->
 
-{%- endpaginate -%}
+  {%- endpaginate -%}
+
+</div><!-- /prem-coll -->
+</div><!-- /prem-outer -->
 
 <script>
 (function () {
@@ -808,8 +953,10 @@
   });
 
   /* Active pills — rewrite hrefs */
-  document.querySelectorAll('.prem-active-pill, .prem-active-filters__clear').forEach(function (a) {
-    a.setAttribute('href', rewriteUrl(a.getAttribute('href')));
+  document.querySelectorAll('.prem-active-pill-{{ section.id }}, .prem-active-filters__clear-{{ section.id }}').forEach(function (a) {
+    if (a.getAttribute('href')) {
+      a.setAttribute('href', rewriteUrl(a.getAttribute('href')));
+    }
   });
 
 })();
@@ -838,6 +985,29 @@
     },
     {
       "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title Size (max)",
+      "min": 32,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title Weight",
+      "min": 300,
+      "max": 900,
+      "step": 100,
+      "default": 700
+    },
+    {
+      "type": "header",
       "content": "Layout"
     },
     {
@@ -845,10 +1015,10 @@
       "id": "image_ratio",
       "label": "Image Aspect Ratio",
       "options": [
-        { "value": "1 / 1", "label": "Square (1:1)" },
-        { "value": "4 / 5", "label": "Portrait (4:5)" },
-        { "value": "2 / 3", "label": "Tall Portrait (2:3)" },
-        { "value": "3 / 4", "label": "Standard Portrait (3:4)" }
+        { "value": "1 / 1",   "label": "Square (1:1)"           },
+        { "value": "4 / 5",   "label": "Portrait (4:5)"         },
+        { "value": "2 / 3",   "label": "Tall Portrait (2:3)"    },
+        { "value": "3 / 4",   "label": "Standard Portrait (3:4)"}
       ],
       "default": "4 / 5"
     },
@@ -872,7 +1042,7 @@
     },
     {
       "type": "header",
-      "content": "Spacing & Colors"
+      "content": "Spacing"
     },
     {
       "type": "range",
@@ -885,10 +1055,39 @@
       "default": 80
     },
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Spans full width. All text, borders, inputs, cards, and buttons auto-switch to white/frosted variants."
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Background Color",
+      "label": "Background (if not gradient)",
       "default": "#F8F6F4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color (if not gradient)",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent / Focus Color (if not gradient)",
+      "default": "#8B52D4"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background (if not gradient)",
+      "default": "#FFFFFF"
     }
   ],
   "presets": [
