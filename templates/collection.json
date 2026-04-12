@@ -12,14 +12,23 @@
     "main": {
       "type": "premium-collection-grid",
       "settings": {
+        "collection": "",
         "all_products_title": "All Products",
+        "title_size": 64,
+        "title_weight": 700,
         "image_ratio": "4 / 5",
         "columns_desktop": 4,
         "products_per_page": 16,
         "padding_bottom": 80,
-        "bg_color": "#F8F6F4"
+        "use_gradient": true,
+        "bg_color": "#f8f6f4",
+        "text_color": "#1a1a1a",
+        "accent_color": "#8b52d4",
+        "card_bg": "#ffffff"
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
