@@ -89,6 +89,55 @@
     "premium_two_column_faq_KbH6U7": {
       "type": "premium-two-column-faq",
       "blocks": {
+        "faq_aKAmzF": {
+          "type": "faq",
+          "settings": {
+            "question": "📦 Do I need to check out again for additional items?",
+            "answer": "<p>No—please don’t check out again, as it may charge you additional shipping.</p><p>We will send you a <strong>direct invoice</strong>, and once paid, we’ll ship everything together.</p>"
+          }
+        },
+        "faq_g6HHKH": {
+          "type": "faq",
+          "settings": {
+            "question": "📦 Why was my order refunded due to shipping?",
+            "answer": "<p>If your order had an <strong>invalid or incomplete shipping address</strong>, it may have been refunded.</p><p>To resend your order:</p><ol><li>Provide your correct shipping address</li><li>Complete the <strong>$7 re-shipping fee</strong></li></ol><p>Once completed, we’ll get your order back in the queue.</p>"
+          }
+        },
+        "faq_JJNTd9": {
+          "type": "faq",
+          "settings": {
+            "question": "📦 What if I received an extra item?",
+            "answer": "<p>Thank you for your honesty—we appreciate you!</p><p>We can provide a <strong>return label via email</strong>, and you can simply print it and drop the package at your local post office.</p>"
+          }
+        },
+        "faq_YGDdrH": {
+          "type": "faq",
+          "settings": {
+            "question": "📬 What if I haven’t received my package?",
+            "answer": "<p>We recommend checking with your <strong>local post office</strong> first. Sometimes packages are held for pickup if they don’t fit in your mailbox.</p><p>If you’re still unable to locate it, please reach out and we’ll help investigate further.</p>"
+          }
+        },
+        "faq_YBfGLH": {
+          "type": "faq",
+          "settings": {
+            "question": "🙏 Can I donate instead of receiving my order?",
+            "answer": "<p>Absolutely. If you choose not to receive your item, we can ensure your purchase is treated as a <strong>donation</strong>.</p><p>All proceeds from Oaklynn Domer cap purchases go directly to <strong>Kelsie and her family</strong>, and donations may also support the <strong>Rope Like A Girl Foundation</strong>.</p>"
+          }
+        },
+        "faq_6haBHa": {
+          "type": "faq",
+          "settings": {
+            "question": "❌ Can I cancel my order?",
+            "answer": "<p>Yes, we completely understand.</p><p>If you’d like to cancel your order, please reach out to us and we’ll process your <strong>refund as quickly as possible</strong>.</p>"
+          }
+        },
+        "faq_Fqjtky": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I exchange my item for a different size?",
+            "answer": "<p>Yes! You can return your item to us, and we’ll send you the correct size.</p><p>Please include your <strong>name and order number</strong> inside the package and send it to:</p><p>140 Big Salty Ln Springtown, TX 76082</p>"
+          }
+        },
         "faq_Tjh7mg": {
           "type": "faq",
           "settings": {
@@ -108,6 +157,20 @@
           "settings": {
             "question": "I placed multiple items in one order. Will they ship together?",
             "answer": "<p>Not always.</p><p>Some items are fulfilled from different production partners or warehouses. If that’s the case, your order may arrive in multiple shipments with separate tracking numbers.</p><p><strong>Memorial caps and specialty caps will ship separately from other merchandise</strong>, even if purchased in the same order.</p>"
+          }
+        },
+        "faq_Jnjhbm": {
+          "type": "faq",
+          "settings": {
+            "question": "🇨🇦 Why is there an additional shipping charge for Canada?",
+            "answer": "<p>We discovered that the original shipping cost to Canada was <strong>under-calculated</strong>.</p><p>The additional <strong>$10 shipping fee</strong> covers the remaining cost required to deliver your order internationally. This is the only additional charge needed.<br/><br/></p>"
+          }
+        },
+        "faq_DbLxRJ": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I update my shipping address?",
+            "answer": "<p>Yes! If your order has not shipped yet, we can update your address.</p>"
           }
         },
         "faq_6r8tET": {
@@ -130,15 +193,32 @@
             "question": "Do you offer size exchanges?",
             "answer": "<p>We do <strong>not offer exchanges for sizing</strong>.</p><p>Many of our items are produced in limited quantities or made-to-order, which prevents us from holding inventory for exchanges.</p><p>Please review sizing charts carefully before placing your order. If you have questions about fit before purchasing, we are happy to help — just email us at:</p><p>📧 <strong>hello@cowgirlarmor.com</strong></p>"
           }
+        },
+        "faq_MidKUf": {
+          "type": "faq",
+          "settings": {
+            "question": "🩷✨ Final Note",
+            "answer": "<p>We are a small business, and the response to this has been incredibly meaningful.</p><p>Thank you for your <strong>patience, grace, and support</strong> as we work through every order with care.</p>"
+          }
         }
       },
       "block_order": [
+        "faq_aKAmzF",
+        "faq_g6HHKH",
+        "faq_JJNTd9",
+        "faq_YGDdrH",
+        "faq_YBfGLH",
+        "faq_6haBHa",
+        "faq_Fqjtky",
         "faq_Tjh7mg",
         "faq_iqzwBV",
         "faq_LgmEmB",
+        "faq_Jnjhbm",
+        "faq_DbLxRJ",
         "faq_6r8tET",
         "faq_C4hnGh",
-        "faq_fWUqTf"
+        "faq_fWUqTf",
+        "faq_MidKUf"
       ],
       "name": "Two-Column FAQ",
       "settings": {
