@@ -258,7 +258,8 @@
       <p class="nl__subtitle">{{ section.settings.subtitle }}</p>
     {%- endif -%}
 
-    {% form 'customer', id: 'nl-form-{{ section.id }}', class: 'nl__form' %}
+    {%- comment -%} id: parameter removed — was causing garbled URL on redirect {%- endcomment -%}
+    {% form 'customer', class: 'nl__form' %}
       <input type="hidden" name="contact[tags]" value="newsletter,prospect,{{ section.settings.tag_extra | escape }}">
       <input type="hidden" name="customer[accepts_marketing]" value="true">
 
