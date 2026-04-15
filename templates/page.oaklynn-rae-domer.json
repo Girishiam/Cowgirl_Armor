@@ -215,6 +215,59 @@
         "enable_grain": true,
         "show_scroll_indicator": false
       }
+    },
+    "premium_multi_collection_stack_WUBK69": {
+      "type": "premium-multi-collection-stack",
+      "blocks": {
+        "collection_row_H7mXxk": {
+          "type": "collection_row",
+          "settings": {
+            "collection": "",
+            "title_override": "",
+            "show_view_all": true,
+            "shop_all_text": "Shop All",
+            "columns_desktop": 4,
+            "product_limit": 4
+          }
+        },
+        "collection_row_ph9eeQ": {
+          "type": "collection_row",
+          "settings": {
+            "collection": "",
+            "title_override": "",
+            "show_view_all": true,
+            "shop_all_text": "Shop All",
+            "columns_desktop": 4,
+            "product_limit": 4
+          }
+        },
+        "collection_row_KmhLmg": {
+          "type": "collection_row",
+          "settings": {
+            "collection": "",
+            "title_override": "",
+            "show_view_all": true,
+            "shop_all_text": "Shop All",
+            "columns_desktop": 4,
+            "product_limit": 4
+          }
+        }
+      },
+      "block_order": [
+        "collection_row_H7mXxk",
+        "collection_row_ph9eeQ",
+        "collection_row_KmhLmg"
+      ],
+      "name": "Multi-Collection Stack",
+      "settings": {
+        "bg_color": "transparent",
+        "text_color": "#1A1A1A",
+        "stack_gap": 80,
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "button_add_to_cart": "Add to cart",
+        "button_sold_out": "Sold Out"
+      }
     }
   },
   "order": [
@@ -223,6 +276,7 @@
     "image_with_text_PBqPNK",
     "image_with_text_UAJ3AJ",
     "premium_memorial_hero_XFmByF",
-    "premium_memorial_hero_ewWhRQ"
+    "premium_memorial_hero_ewWhRQ",
+    "premium_multi_collection_stack_WUBK69"
   ]
 }
