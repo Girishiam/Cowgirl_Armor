@@ -210,7 +210,7 @@
       </div>
 
       <div class="premium-waitlist__form-col fade-up-anim" style="animation-delay: 200ms;">
-        {%- form 'customer', id: 'PremiumWaitlistForm-{{ section.id }}', class: 'premium-form' -%}
+        {%- form 'customer', class: 'premium-form' -%}
 
           <input type="hidden" name="customer[tags]"              value="waitlist,prospect">
           <input type="hidden" name="customer[accepts_marketing]" value="true">
@@ -334,11 +334,9 @@
       "label": "Text",
       "default": "<p>Some things aren't meant to be missed. Join the Cowgirl Armor first-come, first-served list and be first in line for every drop, every restock, and every piece created to remind you who you are and whose you are.</p>"
     },
-    {
-      "type": "text", "id": "button_label",         "label": "Submit Button Label",  "default": "I want in!" },
-    { "type": "text", "id": "success_message",      "label": "Success Message",       "default": "You're on the list! Keep an eye on your inbox." },
-    { "type": "text", "id": "error_message_prefix", "label": "Error Message Prefix",  "default": "Please adjust the following fields:" },
-
+    { "type": "text", "id": "button_label",         "label": "Submit Button Label",  "default": "I want in!" },
+    { "type": "text", "id": "success_message",       "label": "Success Message",      "default": "You're on the list! Keep an eye on your inbox." },
+    { "type": "text", "id": "error_message_prefix",  "label": "Error Message Prefix", "default": "Please adjust the following fields:" },
     {
       "type": "header",
       "content": "Button Style"
@@ -350,7 +348,6 @@
       "default": true,
       "info": "Ignored when section background is gradient — button auto-adapts to frosted glass."
     },
-
     {
       "type": "header",
       "content": "Form Labels"
@@ -361,7 +358,6 @@
     { "type": "text", "id": "phone_label",       "label": "Phone Label",         "default": "Phone"      },
     { "type": "text", "id": "phone_placeholder", "label": "Phone Placeholder",   "default": "(555) 000-0000" },
     { "type": "text", "id": "required_text",     "label": "Required Field Text", "default": "(required)" },
-
     {
       "type": "header",
       "content": "Spacing"
