@@ -1,14 +1,15 @@
 <style>
-  /* ─── Reset ─────────────────────────────────────────────── */
+  /* ─── Reset & Base ─────────────────────────────────────── */
   .site-header *,
   .site-header *::before,
   .site-header *::after { box-sizing: border-box; }
 
-  /* ─── Header Shell ──────────────────────────────────────── */
+  /* ─── Fixed Header Shell ────────────────────────────────── */
   .site-header {
     position: fixed;
     top: var(--announcement-height, 0px);
-    left: 0; right: 0;
+    left: 0;
+    right: 0;
     z-index: 200;
     width: 100%;
     background-color: {{ section.settings.header_bg }};
@@ -16,15 +17,17 @@
     border-bottom: {{ section.settings.border_bottom_width }}px solid {{ section.settings.border_bottom_color }};
     box-shadow: {{ section.settings.header_shadow }};
     transition: background-color {{ section.settings.sticky_transition }}s ease,
-                box-shadow        {{ section.settings.sticky_transition }}s ease,
-                padding           {{ section.settings.sticky_transition }}s ease;
+                box-shadow {{ section.settings.sticky_transition }}s ease,
+                padding {{ section.settings.sticky_transition }}s ease;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
 
-  body { padding-top: var(--nav-total-height, 80px); }
+  body {
+    padding-top: var(--nav-total-height, 80px);
+  }
 
-  /* ─── Inner Wrapper ─────────────────────────────────────── */
+  /* ─── Inner wrapper ─────────────────────────────────────── */
   .header__inner {
     display: flex;
     align-items: center;
@@ -35,16 +38,7 @@
     transition: padding {{ section.settings.sticky_transition }}s ease;
   }
 
-  /* Tighter inner padding on small mobile */
-  @media screen and (max-width: 480px) {
-    .header__inner {
-      padding-left: max(12px, env(safe-area-inset-left));
-      padding-right: max(12px, env(safe-area-inset-right));
-      gap: 0.5rem;
-    }
-  }
-
-  /* ─── Sticky ────────────────────────────────────────────── */
+  /* ─── Sticky state ──────────────────────────────────────── */
   .site-header.is-sticky {
     background-color: {{ section.settings.sticky_bg }};
     box-shadow: {{ section.settings.sticky_shadow }};
@@ -54,45 +48,25 @@
     padding-bottom: {{ section.settings.sticky_padding }}px;
   }
 
-  /* ─── Left: Logo + Hamburger ────────────────────────────── */
-  .header__left {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .header__logo { flex-shrink: 0; line-height: 1; min-width: 0; }
-  .logo-link    { text-decoration: none; color: inherit; display: flex; align-items: center; }
-
+  /* ─── Logo ──────────────────────────────────────────────── */
+  .header__logo { flex-shrink: 0; line-height: 1; }
+  .logo-link { text-decoration: none; color: inherit; display: flex; align-items: center; }
   .logo-image {
     display: block;
     height: auto;
     max-height: 60px;
     width: auto;
-    max-width: min({{ section.settings.logo_width }}px, 50vw);
+    max-width: {{ section.settings.logo_width }}px;
     object-fit: contain;
-    transition: max-width {{ section.settings.sticky_transition }}s ease,
-                max-height {{ section.settings.sticky_transition }}s ease;
+    transition: max-width {{ section.settings.sticky_transition }}s ease;
   }
-  .site-header.is-sticky .logo-image {
-    max-height: 40px;
-    max-width: min({{ section.settings.logo_width }}px, 45vw);
-  }
-  @media screen and (max-width: 480px) {
-    .logo-image { max-height: 48px; max-width: min(160px, 40vw); }
-    .site-header.is-sticky .logo-image { max-height: 36px; }
-  }
-
+  .site-header.is-sticky .logo-image { max-height: 44px; }
   .logo-text {
     font-size: clamp({{ section.settings.logo_text_min }}px, 2.5vw, {{ section.settings.logo_text_max }}px);
     font-weight: {{ section.settings.logo_font_weight }};
     letter-spacing: {{ section.settings.logo_letter_spacing }}px;
     white-space: nowrap;
     color: inherit;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   /* ─── Desktop Nav ───────────────────────────────────────── */
@@ -102,7 +76,7 @@
     align-items: center;
     list-style: none;
     margin: 0; padding: 0;
-    gap: clamp(0.5rem, 1.5vw, {{ section.settings.nav_gap_max }}rem);
+    gap: clamp(0.6rem, 1.5vw, {{ section.settings.nav_gap_max }}rem);
     flex-wrap: nowrap;
   }
   .site-nav__item { position: relative; }
@@ -112,7 +86,7 @@
     align-items: center;
     text-decoration: none;
     color: {{ section.settings.header_text_color }};
-    font-size: clamp(11px, 1vw, {{ section.settings.nav_font_size }}px);
+    font-size: clamp(12px, 1.1vw, {{ section.settings.nav_font_size }}px);
     font-weight: {{ section.settings.nav_font_weight }};
     white-space: nowrap;
     padding: 8px 2px 14px;
@@ -167,7 +141,8 @@
   .site-nav__item--has-dropdown:hover .site-nav__dropdown,
   .site-nav__item--has-dropdown:focus-within .site-nav__dropdown,
   .site-nav__item--has-dropdown.is-open .site-nav__dropdown {
-    opacity: 1; pointer-events: auto;
+    opacity: 1;
+    pointer-events: auto;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
   }
@@ -189,20 +164,9 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    flex: 1;
     gap: {{ section.settings.icon_gap }}px;
-    min-width: 0;
+    flex: 1;
   }
-  /* Tighten gap on tablet so all icons still fit */
-  @media screen and (max-width: 1200px) and (min-width: 1024px) {
-    .header__right { gap: max(6px, calc({{ section.settings.icon_gap }}px * 0.65)); }
-  }
-  /* Mobile: only cart + account visible — shrink gap */
-  @media screen and (max-width: 1023px) {
-    .header__right { gap: 2px; flex: 0 0 auto; }
-  }
-
-  /* ─── Icon Base — 44×44px min tap target everywhere ─────── */
   .header__icon {
     display: inline-flex;
     align-items: center;
@@ -212,12 +176,12 @@
     cursor: pointer;
     background: none;
     border: none;
-    padding: 0;
+    padding: 4px;
     position: relative;
     transition: opacity 0.2s ease;
     flex-shrink: 0;
-    min-width: 44px;
-    min-height: 44px;
+    width: calc({{ section.settings.icon_size }}px + 8px);
+    height: calc({{ section.settings.icon_size }}px + 8px);
   }
   .header__icon:hover { opacity: 0.7; }
   .header__icon svg {
@@ -225,56 +189,13 @@
     width: {{ section.settings.icon_size }}px;
     height: {{ section.settings.icon_size }}px;
     flex-shrink: 0;
-    pointer-events: none;
-  }
-  /* Slightly smaller icon SVG on very small screens */
-  @media screen and (max-width: 380px) {
-    .header__icon svg {
-      width: max(18px, calc({{ section.settings.icon_size }}px - 4px));
-      height: max(18px, calc({{ section.settings.icon_size }}px - 4px));
-    }
   }
 
-  /* ─── Account Icon + Tooltip ────────────────────────────── */
-  .header__account { position: relative; }
-
-  /* Tooltip: pointer:fine only (mice). Hidden on touch. */
-  @media (pointer: fine) {
-    .header__account-tooltip {
-      position: absolute;
-      top: calc(100% + 4px);
-      right: 0;
-      background: {{ section.settings.dropdown_bg }};
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: {{ section.settings.dropdown_radius }}px;
-      box-shadow: {{ section.settings.dropdown_shadow }};
-      padding: 5px 12px;
-      white-space: nowrap;
-      font-size: 12px;
-      font-weight: 500;
-      color: {{ section.settings.header_text_color }};
-      opacity: 0;
-      pointer-events: none;
-      visibility: hidden;
-      transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
-      transform: translateY(-4px);
-      z-index: 300;
-    }
-    .header__account:hover .header__account-tooltip {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-  }
-  @media (pointer: coarse) {
-    .header__account-tooltip { display: none !important; }
-  }
-
-  /* ─── Cart Badge ────────────────────────────────────────── */
+  /* Cart badge */
   .header__cart { position: relative; }
   .cart-count {
     position: absolute;
-    top: 2px; right: 2px;
+    top: -7px; right: -7px;
     min-width: 17px; height: 17px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -286,7 +207,7 @@
     pointer-events: none;
   }
 
-  /* ─── CTA Button ────────────────────────────────────────── */
+  /* CTA Button */
   .header__btn {
     display: inline-flex;
     align-items: center;
@@ -309,7 +230,7 @@
     border-color: transparent;
   }
 
-  /* ─── Social Icons ──────────────────────────────────────── */
+  /* Social icons */
   .header__socials {
     display: flex;
     align-items: center;
@@ -321,81 +242,59 @@
   .mobile-menu-btn {
     display: none;
     background: none; border: none; cursor: pointer;
-    padding: 0;
+    padding: 6px;
     color: {{ section.settings.header_text_color }};
     flex-shrink: 0;
-    min-width: 44px; min-height: 44px;
-    align-items: center; justify-content: center;
   }
 
-  /* ─── Responsive Breakpoints ────────────────────────────── */
-  /* Tablet + Mobile (< 1024px) */
+  /* ─── Responsive ────────────────────────────────────────── */
   @media screen and (max-width: 1023px) {
-    .site-nav,
-    .header__socials,
-    .header__btn,
-    .header__search-toggle { display: none !important; }
+    .site-nav, .header__socials, .header__btn, .header__search-toggle { display: none !important; }
     .mobile-menu-btn { display: inline-flex; }
   }
-  /* Desktop (≥ 1024px) */
   @media screen and (min-width: 1024px) {
     .mobile-menu-btn { display: none !important; }
   }
 
-  /* ─── Drawer Overlay ────────────────────────────────────── */
-  .mobile-drawer-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 499;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .mobile-drawer-overlay.active { opacity: 1; pointer-events: auto; }
-
-  /* ─── Drawer Panel ──────────────────────────────────────── */
+  /* ─── Mobile Drawer ─────────────────────────────────────── */
   .mobile-drawer {
     position: fixed;
     top: 0; left: 0;
-    width: min(320px, 88vw);
+    width: min(320px, 85vw);
     height: 100%;
-    height: 100dvh;
     z-index: 500;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     background-color: {{ section.settings.drawer_bg }};
     color: {{ section.settings.drawer_text_color }};
     display: flex;
     flex-direction: column;
-    padding: 1.5rem 1.25rem;
-    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    padding: 2rem 1.5rem;
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .mobile-drawer.mobile-drawer--active { transform: translateX(0); }
 
-  @media screen and (max-width: 360px) {
-    .mobile-drawer { width: 92vw; padding: 1.25rem 1rem; }
+  .mobile-drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 499; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
   }
+  .mobile-drawer-overlay.active { opacity: 1; pointer-events: auto; }
 
-  /* ─── Drawer Header ─────────────────────────────────────── */
   .mobile-drawer__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.75rem;
-    flex-shrink: 0;
+    margin-bottom: 2rem;
   }
   .mobile-drawer__close {
     background: none; border: none; cursor: pointer;
-    color: inherit; padding: 0; margin-left: auto;
+    color: inherit; padding: 4px; margin-left: auto;
     opacity: 0.7; transition: opacity 0.2s;
-    min-width: 44px; min-height: 44px;
-    display: flex; align-items: center; justify-content: center;
   }
   .mobile-drawer__close:hover { opacity: 1; }
 
-  /* ─── Drawer Nav ────────────────────────────────────────── */
-  .mobile-drawer__nav { flex: 1 1 auto; overflow-y: auto; }
   .mobile-drawer__nav ul { list-style: none; padding: 0; margin: 0; width: 100%; }
   .mobile-drawer__nav > ul > li { border-bottom: 1px solid rgba(0,0,0,0.08); }
   .mobile-drawer__nav > ul > li:last-child { border-bottom: none; }
@@ -405,8 +304,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 52px;
-    padding: 12px 4px;
+    padding: 14px 4px;
     text-decoration: none;
     color: inherit;
     font-size: clamp({{ section.settings.drawer_font_min }}px, 5vw, {{ section.settings.drawer_font_max }}px);
@@ -421,8 +319,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 52px;
-    padding: 12px 4px;
+    padding: 14px 4px;
     font-size: clamp({{ section.settings.drawer_font_min }}px, 5vw, {{ section.settings.drawer_font_max }}px);
     font-weight: {{ section.settings.drawer_font_weight }};
     background: none; border: none; color: inherit; cursor: pointer; text-align: left;
@@ -430,12 +327,10 @@
   .drawer-accordion__icon { transition: transform 0.25s ease; flex-shrink: 0; }
   .drawer-accordion__toggle[aria-expanded="true"] .drawer-accordion__icon { transform: rotate(180deg); }
   .drawer-accordion__body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-  .drawer-accordion__body.open { max-height: 600px; }
+  .drawer-accordion__body.open { max-height: 500px; }
 
   .drawer-sublink {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
+    display: block;
     padding: 10px 12px;
     text-decoration: none;
     color: inherit;
@@ -445,45 +340,16 @@
   }
   .drawer-sublink:hover { opacity: 1; padding-left: 20px; }
 
-  /* ─── Drawer Footer ─────────────────────────────────────── */
   .mobile-drawer__footer {
     margin-top: auto;
-    padding-top: 1.5rem;
+    padding-top: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
     align-items: center;
-    flex-shrink: 0;
   }
-
-  .drawer-account-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    color: inherit;
-    font-size: 15px;
-    font-weight: 500;
-    opacity: 0.85;
-    transition: opacity 0.2s;
-    width: 100%;
-    min-height: 44px;
-    padding: 8px 0;
-  }
-  .drawer-account-row:hover,
-  .drawer-account-row:focus { opacity: 1; outline: none; }
-  .drawer-account-row svg { flex-shrink: 0; }
-
-  .drawer-logout-row { font-size: 13px; opacity: 0.55; min-height: 36px; }
-
-  /* ─── Drawer Socials ────────────────────────────────────── */
   .drawer-socials { display: flex; gap: {{ section.settings.social_gap }}px; align-items: center; }
-  .drawer-socials a {
-    color: inherit; opacity: 0.8; transition: opacity 0.2s;
-    min-width: 44px; min-height: 44px;
-    display: flex; align-items: center; justify-content: center;
-  }
+  .drawer-socials a { color: inherit; opacity: 0.8; transition: opacity 0.2s; }
   .drawer-socials a:hover { opacity: 1; }
 
   /* ─── Search Overlay ────────────────────────────────────── */
@@ -491,24 +357,20 @@
     position: fixed; inset: 0;
     background: rgba(0,0,0,{{ section.settings.search_overlay_opacity | divided_by: 100.0 }});
     backdrop-filter: blur({{ section.settings.search_overlay_blur }}px);
-    -webkit-backdrop-filter: blur({{ section.settings.search_overlay_blur }}px);
     z-index: 600;
     display: flex;
     align-items: {{ section.settings.search_position }};
     justify-content: center;
-    padding: 4rem 1.5rem 2rem;
+    padding: 4rem 2rem 2rem;
     opacity: 0; visibility: hidden;
-    transition: opacity {{ section.settings.search_transition }}s ease,
-                visibility {{ section.settings.search_transition }}s ease;
+    transition: opacity {{ section.settings.search_transition }}s ease, visibility {{ section.settings.search_transition }}s ease;
   }
   .search-overlay.is-open { opacity: 1; visibility: visible; }
   .search-overlay__content { position: relative; width: 100%; max-width: {{ section.settings.search_max_width }}px; }
   .search-overlay__close {
     position: absolute; top: -3rem; right: 0;
     background: none; border: none; color: white; cursor: pointer;
-    min-width: 44px; min-height: 44px;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.8; transition: opacity 0.2s;
+    padding: 8px; opacity: 0.8; transition: opacity 0.2s;
   }
   .search-overlay__close:hover { opacity: 1; }
   .search-form { position: relative; display: flex; align-items: center; }
@@ -516,8 +378,7 @@
     width: 100%;
     padding: {{ section.settings.search_input_padding }}px;
     padding-right: 56px;
-    /* max(16px) prevents iOS auto-zoom on focus */
-    font-size: max(16px, {{ section.settings.search_input_size }}px);
+    font-size: {{ section.settings.search_input_size }}px;
     border: {{ section.settings.search_input_border }}px solid {{ section.settings.search_input_border_color }};
     border-radius: {{ section.settings.search_input_radius }}px;
     background: {{ section.settings.search_input_bg }};
@@ -525,67 +386,17 @@
     outline: none;
   }
   .search-submit {
-    position: absolute; right: 0;
+    position: absolute; right: 12px;
     background: none; border: none; cursor: pointer;
+    padding: 8px;
     color: {{ section.settings.search_input_text }};
-    min-width: 44px; min-height: 44px;
-    display: flex; align-items: center; justify-content: center;
   }
-  @media screen and (max-width: 480px) {
-    .search-overlay { padding: 3rem 1rem 1.5rem; }
-  }
-
-  /* ─── Gradient Header Overrides ─────────────────────────── */
-  {% if settings.enable_gradient and settings.gradient_header %}
-  .site-header {
-    background: var(--brand-gradient) !important;
-    color: #FFFFFF !important;
-  }
-  .site-header.is-sticky {
-    background: linear-gradient(
-      {{ settings.gradient_direction }},
-      {{ settings.gradient_color_1 }}f2 0%,
-      {{ settings.gradient_color_2 }}f2 55%,
-      {{ settings.gradient_color_3 }}f2 100%
-    ) !important;
-  }
-  .site-header .site-nav__link,
-  .site-header .header__icon,
-  .site-header .logo-text,
-  .site-header .mobile-menu-btn { color: #FFFFFF !important; }
-  .site-header .header__btn {
-    background: rgba(255,255,255,0.15) !important;
-    color: #FFFFFF !important;
-    border-color: rgba(255,255,255,0.5) !important;
-  }
-  .site-header .header__btn:hover {
-    background: rgba(255,255,255,0.28) !important;
-    border-color: #FFFFFF !important;
-  }
-  .site-header .site-nav__dropdown {
-    background-color: {{ settings.gradient_color_2 }} !important;
-  }
-  .site-header .site-nav__dropdown::before {
-    border-bottom-color: {{ settings.gradient_color_2 }} !important;
-  }
-  .site-header .site-nav__dropdown-link { color: #FFFFFF !important; }
-  .site-header .site-nav__dropdown-link:hover {
-    background-color: rgba(255,255,255,0.12) !important;
-  }
-  .site-header .header__account-tooltip {
-    background: {{ settings.gradient_color_2 }} !important;
-    color: #FFFFFF !important;
-    border-color: transparent !important;
-  }
-  {% endif %}
 </style>
 
-<!-- ─── Drawer Overlay ──────────────────────────────────── -->
 <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
 
-<!-- ─── Header ─────────────────────────────────────────── -->
 <header
-  class="site-header"
+  class="site-header{% if section.settings.enable_sticky %} header-sticky{% endif %}"
   id="site-header"
   data-sticky="{{ section.settings.enable_sticky }}"
   data-scroll-threshold="{{ section.settings.sticky_threshold }}"
@@ -593,15 +404,12 @@
   <div class="header__inner">
 
     <!-- Left: Hamburger + Logo -->
-    <div class="header__left">
-      <button
-        class="mobile-menu-btn"
-        aria-expanded="false"
-        aria-controls="mobile-drawer"
-        aria-label="Open navigation menu"
-      >
-        <svg aria-hidden="true" focusable="false"
-             viewBox="0 0 24 24"
+    <div style="display:flex;align-items:center;gap:0.75rem;flex:1;">
+      <button class="mobile-menu-btn"
+              aria-expanded="false"
+              aria-controls="mobile-drawer"
+              aria-label="Open navigation">
+        <svg aria-hidden="true" viewBox="0 0 24 24"
              width="{{ section.settings.hamburger_size }}"
              height="{{ section.settings.hamburger_size }}"
              fill="none" stroke="currentColor"
@@ -612,19 +420,18 @@
       </button>
 
       <div class="header__logo">
-        <a href="{{ routes.root_url }}" class="logo-link" aria-label="{{ shop.name }} — Home">
+        <a href="{{ routes.root_url }}" class="logo-link">
           {%- if section.settings.logo != blank -%}
             <img
-              src="{{ section.settings.logo | image_url: width: 480 }}"
-              srcset="{{ section.settings.logo | image_url: width: 240 }} 240w,
-                      {{ section.settings.logo | image_url: width: 480 }} 480w"
-              sizes="(max-width: 480px) min(160px, 40vw), {{ section.settings.logo_width }}px"
+              src="{{ section.settings.logo | image_url: width: 400 }}"
+              srcset="{{ section.settings.logo | image_url: width: 200 }} 200w,
+                      {{ section.settings.logo | image_url: width: 400 }} 400w"
+              sizes="{{ section.settings.logo_width }}px"
               alt="{{ shop.name }}"
               class="logo-image"
               width="{{ section.settings.logo_width }}"
               height="auto"
               loading="eager"
-              fetchpriority="high"
             >
           {%- else -%}
             <span class="logo-text">{{ shop.name }}</span>
@@ -636,7 +443,7 @@
     <!-- Center: Desktop Nav -->
     {%- if section.settings.menu != blank -%}
       <nav class="site-nav" aria-label="Main navigation">
-        <ul class="site-nav__list" role="list">
+        <ul class="site-nav__list">
           {%- for link in linklists[section.settings.menu].links -%}
             {%- if link.links != blank -%}
               <li class="site-nav__item site-nav__item--has-dropdown">
@@ -645,22 +452,13 @@
                    aria-haspopup="true"
                    aria-expanded="false">
                   {{ link.title }}
-                  <svg aria-hidden="true" style="margin-left:4px;flex-shrink:0;"
-                       viewBox="0 0 10 6"
-                       width="{{ section.settings.caret_size }}"
-                       height="{{ section.settings.caret_size }}"
-                       fill="none" stroke="currentColor"
-                       stroke-width="1.5" stroke-linecap="round">
-                    <path d="M1 1L5 5L9 1"/>
-                  </svg>
                 </a>
                 <ul class="site-nav__dropdown" role="menu">
                   {%- for childlink in link.links -%}
                     <li role="none">
                       <a href="{{ childlink.url }}"
                          class="site-nav__dropdown-link{% if childlink.active %} site-nav__dropdown-link--active{% endif %}"
-                         role="menuitem"
-                         {% if childlink.active %}aria-current="page"{% endif %}>
+                         role="menuitem">
                         {{ childlink.title }}
                       </a>
                     </li>
@@ -682,112 +480,67 @@
     {%- endif -%}
 
     <!-- Right: Icons + CTA -->
-    <div class="header__right">
-
+    <div class="header__right" style="flex:1;justify-content:flex-end;">
       {%- if section.settings.show_search -%}
-        <button
-          class="header__icon header__search-toggle"
-          aria-label="Open search"
-          aria-expanded="false"
-          data-search-toggle
-        >
-          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
+        <button class="header__icon header__search-toggle"
+                aria-label="Search"
+                data-search-toggle>
+          <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
           </svg>
         </button>
       {%- endif -%}
 
-      <!-- Social Icons — desktop only via CSS -->
-      <div class="header__socials" aria-label="Social links">
+      <div class="header__socials">
         {%- if section.settings.social_facebook_link != blank -%}
-          <a href="{{ section.settings.social_facebook_link }}"
-             class="header__icon"
-             target="_blank" rel="noopener noreferrer"
-             aria-label="Facebook — opens in new tab">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
+          <a href="{{ section.settings.social_facebook_link }}" class="header__icon" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
               <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
             </svg>
           </a>
         {%- endif -%}
         {%- if section.settings.social_instagram_link != blank -%}
-          <a href="{{ section.settings.social_instagram_link }}"
-             class="header__icon"
-             target="_blank" rel="noopener noreferrer"
-             aria-label="Instagram — opens in new tab">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
+          <a href="{{ section.settings.social_instagram_link }}" class="header__icon" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
               <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/>
             </svg>
           </a>
         {%- endif -%}
       </div>
 
-      <!-- Account Icon — visible on all breakpoints -->
-      {%- if settings.show_customer_login and shop.customer_accounts_enabled -%}
-        {%- if customer -%}
-          <a href="{{ routes.account_url }}"
-             class="header__icon header__account"
-             aria-label="My account — {{ customer.first_name }}">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 12c2.71 0 4.8-2.09 4.8-4.8C16.8 4.49 14.71 2.4 12 2.4S7.2 4.49 7.2 7.2C7.2 9.91 9.29 12 12 12zm0 2.4c-3.21 0-9.6 1.61-9.6 4.8v2.4h19.2v-2.4c0-3.19-6.39-4.8-9.6-4.8z"/>
-            </svg>
-            <span class="header__account-tooltip" aria-hidden="true">{{ customer.first_name }}'s Account</span>
-          </a>
-        {%- else -%}
-          <a href="{{ routes.account_login_url }}"
-             class="header__icon header__account"
-             aria-label="Log in to your account">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 12c2.71 0 4.8-2.09 4.8-4.8C16.8 4.49 14.71 2.4 12 2.4S7.2 4.49 7.2 7.2C7.2 9.91 9.29 12 12 12zm0 2.4c-3.21 0-9.6 1.61-9.6 4.8v2.4h19.2v-2.4c0-3.19-6.39-4.8-9.6-4.8z"/>
-            </svg>
-            <span class="header__account-tooltip" aria-hidden="true">Log in</span>
-          </a>
-        {%- endif -%}
-      {%- endif -%}
-
-      <!-- Cart — visible on all breakpoints -->
       <a href="{{ routes.cart_url }}"
          class="header__icon header__cart"
-         aria-label="Cart{% if cart.item_count > 0 %} — {{ cart.item_count }} item{{ cart.item_count | plural: '', 's' }}{% endif %}">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
+         aria-label="Cart ({{ cart.item_count }} items)">
+        <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
           <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
         </svg>
-        <span class="cart-count"{% if cart.item_count == 0 %} hidden{% endif %} aria-hidden="true">
-          {{- cart.item_count -}}
-        </span>
+        <span class="cart-count"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
 
-      <!-- CTA Button — desktop only via CSS -->
       {%- if section.settings.button_label != blank -%}
         <a href="{{ section.settings.button_link }}" class="header__btn">
           {{ section.settings.button_label }}
         </a>
       {%- endif -%}
+    </div>
 
-    </div><!-- /.header__right -->
-  </div><!-- /.header__inner -->
+  </div>
 </header>
 
 <!-- ─── Search Overlay ──────────────────────────────────── -->
 {%- if section.settings.show_search -%}
-<div class="search-overlay" id="search-overlay" role="dialog" aria-label="Search" aria-hidden="true">
+<div class="search-overlay" id="search-overlay" aria-hidden="true">
   <div class="search-overlay__content">
     <button class="search-overlay__close" aria-label="Close search">
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M18 6L6 18M6 6l12 12"/>
       </svg>
     </button>
     <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
-      <input
-        type="search" name="q"
-        placeholder="{{ section.settings.search_placeholder }}"
-        class="search-input"
-        autocomplete="off" autocorrect="off"
-        autocapitalize="off" spellcheck="false"
-        aria-label="{{ section.settings.search_placeholder }}"
-      >
+      <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}"
+             class="search-input" autocomplete="off" aria-label="Search">
       <button type="submit" class="search-submit" aria-label="Submit search">
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
           <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
         </svg>
       </button>
@@ -797,82 +550,61 @@
 {%- endif -%}
 
 <!-- ─── Mobile Drawer ───────────────────────────────────── -->
-<nav class="mobile-drawer" id="mobile-drawer" aria-hidden="true" aria-label="Mobile navigation">
-
+<div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
   <div class="mobile-drawer__header">
     {%- if section.settings.drawer_logo != blank -%}
       <img src="{{ section.settings.drawer_logo | image_url: width: section.settings.drawer_logo_width }}"
-           alt="{{ shop.name }}" loading="lazy"
-           style="max-width:{{ section.settings.drawer_logo_width }}px;height:auto;display:block;">
+           alt="{{ shop.name }}"
+           style="max-width:{{ section.settings.drawer_logo_width }}px;height:auto;">
     {%- elsif section.settings.logo != blank -%}
       <img src="{{ section.settings.logo | image_url: width: section.settings.drawer_logo_width }}"
-           alt="{{ shop.name }}" loading="lazy"
-           style="max-width:{{ section.settings.drawer_logo_width }}px;height:auto;display:block;">
+           alt="{{ shop.name }}"
+           style="max-width:{{ section.settings.drawer_logo_width }}px;height:auto;">
     {%- else -%}
-      <span style="font-weight:700;font-size:1.1rem;line-height:1;">{{ shop.name }}</span>
+      <span style="font-weight:700;font-size:1.1rem;">{{ shop.name }}</span>
     {%- endif -%}
-
-    <button class="mobile-drawer__close" aria-label="Close navigation menu">
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <button class="mobile-drawer__close" aria-label="Close menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M18 6L6 18M6 6l12 12"/>
       </svg>
     </button>
   </div>
 
-  <div class="mobile-drawer__nav">
+  <nav class="mobile-drawer__nav" aria-label="Mobile navigation">
     {%- if section.settings.menu != blank -%}
-      <ul role="list">
+      <ul>
         {%- for link in linklists[section.settings.menu].links -%}
           <li>
             {%- if link.links != blank -%}
-              <button
-                class="drawer-accordion__toggle"
-                aria-expanded="false"
-                aria-controls="drawer-sub-{{ forloop.index }}"
-              >
+              <button class="drawer-accordion__toggle" aria-expanded="false">
                 {{ link.title }}
-                <svg class="drawer-accordion__icon" aria-hidden="true"
-                     width="16" height="16" viewBox="0 0 10 6"
-                     fill="none" stroke="currentColor"
-                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 1L5 5L9 1"/>
+                <svg class="drawer-accordion__icon" width="16" height="16" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
-              <div class="drawer-accordion__body" id="drawer-sub-{{ forloop.index }}">
-                <ul role="list" style="list-style:none;padding:0 0 0.5rem 1rem;margin:0;">
+              <div class="drawer-accordion__body">
+                <ul style="list-style:none;padding:0 0 0.5rem 1rem;margin:0;">
                   {%- for childlink in link.links -%}
-                    <li>
-                      <a href="{{ childlink.url }}"
-                         class="drawer-sublink"
-                         {% if childlink.active %}aria-current="page"{% endif %}>
-                        {{ childlink.title }}
-                      </a>
-                    </li>
+                    <li><a href="{{ childlink.url }}" class="drawer-sublink">{{ childlink.title }}</a></li>
                   {%- endfor -%}
                 </ul>
               </div>
             {%- else -%}
-              <a href="{{ link.url }}"
-                 class="drawer-link"
-                 {% if link.active %}aria-current="page"{% endif %}>
-                {{ link.title }}
-              </a>
+              <a href="{{ link.url }}" class="drawer-link">{{ link.title }}</a>
             {%- endif -%}
           </li>
         {%- endfor -%}
       </ul>
     {%- endif -%}
-  </div>
+  </nav>
 
   <div class="mobile-drawer__footer">
-
     {%- if section.settings.button_label != blank -%}
       <a href="{{ section.settings.button_link }}"
-         style="display:inline-flex;align-items:center;justify-content:center;
-                text-decoration:none;width:100%;min-height:48px;
+         style="display:inline-flex;align-items:center;text-decoration:none;
                 background:linear-gradient(135deg,#3A6FE8 0%,#8B52D4 55%,#CC72E8 100%);
-                color:#FFFFFF;border:none;
+                color:#FFFFFF;
+                border:none;
                 border-radius:{{ section.settings.button_border_radius }}px;
                 padding:{{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
                 font-size:{{ section.settings.button_font_size }}px;
@@ -881,56 +613,26 @@
       </a>
     {%- endif -%}
 
-    {%- if settings.show_customer_login and shop.customer_accounts_enabled -%}
-      {%- if customer -%}
-        <a href="{{ routes.account_url }}" class="drawer-account-row">
-          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-            <path d="M12 12c2.71 0 4.8-2.09 4.8-4.8C16.8 4.49 14.71 2.4 12 2.4S7.2 4.49 7.2 7.2C7.2 9.91 9.29 12 12 12zm0 2.4c-3.21 0-9.6 1.61-9.6 4.8v2.4h19.2v-2.4c0-3.19-6.39-4.8-9.6-4.8z"/>
-          </svg>
-          {{ customer.first_name }}'s Account
-        </a>
-        <a href="{{ routes.account_logout_url }}" class="drawer-account-row drawer-logout-row">
-          Log out
-        </a>
-      {%- else -%}
-        <a href="{{ routes.account_login_url }}" class="drawer-account-row">
-          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-            <path d="M12 12c2.71 0 4.8-2.09 4.8-4.8C16.8 4.49 14.71 2.4 12 2.4S7.2 4.49 7.2 7.2C7.2 9.91 9.29 12 12 12zm0 2.4c-3.21 0-9.6 1.61-9.6 4.8v2.4h19.2v-2.4c0-3.19-6.39-4.8-9.6-4.8z"/>
-          </svg>
-          Log in / Account
-        </a>
-      {%- endif -%}
-    {%- endif -%}
-
     {%- if section.settings.show_drawer_socials -%}
-      <div class="drawer-socials" aria-label="Social links">
+      <div class="drawer-socials">
         {%- if section.settings.social_facebook_link != blank -%}
-          <a href="{{ section.settings.social_facebook_link }}"
-             target="_blank" rel="noopener noreferrer"
-             aria-label="Facebook — opens in new tab">
-            <svg aria-hidden="true" viewBox="0 0 24 24"
-                 width="{{ section.settings.drawer_social_size }}"
-                 height="{{ section.settings.drawer_social_size }}" fill="currentColor">
+          <a href="{{ section.settings.social_facebook_link }}" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" width="{{ section.settings.drawer_social_size }}" height="{{ section.settings.drawer_social_size }}" fill="currentColor">
               <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
             </svg>
           </a>
         {%- endif -%}
         {%- if section.settings.social_instagram_link != blank -%}
-          <a href="{{ section.settings.social_instagram_link }}"
-             target="_blank" rel="noopener noreferrer"
-             aria-label="Instagram — opens in new tab">
-            <svg aria-hidden="true" viewBox="0 0 24 24"
-                 width="{{ section.settings.drawer_social_size }}"
-                 height="{{ section.settings.drawer_social_size }}" fill="currentColor">
+          <a href="{{ section.settings.social_instagram_link }}" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="{{ section.settings.drawer_social_size }}" height="{{ section.settings.drawer_social_size }}" fill="currentColor">
               <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/>
             </svg>
           </a>
         {%- endif -%}
       </div>
     {%- endif -%}
-
   </div>
-</nav>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -938,89 +640,91 @@ document.addEventListener('DOMContentLoaded', function() {
   var header       = document.getElementById('site-header');
   var announcement = document.querySelector('.announcement-bar');
 
-  /* ── Height sync ────────────────────────────────────── */
-  function debounce(fn, ms) { var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); }; }
-
   function setHeights() {
-    var aH = (announcement && announcement.offsetParent !== null) ? announcement.offsetHeight : 0;
+    var aH = announcement ? announcement.offsetHeight : 0;
     var hH = header ? header.offsetHeight : 0;
     document.documentElement.style.setProperty('--announcement-height', aH + 'px');
     document.documentElement.style.setProperty('--nav-total-height', (aH + hH) + 'px');
   }
   setHeights();
-  window.addEventListener('resize', debounce(setHeights, 80), { passive: true });
+  window.addEventListener('resize', setHeights, { passive: true });
   window.addEventListener('load', setHeights);
 
-  /* ── Sticky ─────────────────────────────────────────── */
   {%- if section.settings.enable_sticky -%}
   window.addEventListener('scroll', function() {
     if (!header) return;
-    header.classList.toggle('is-sticky', window.scrollY > {{ section.settings.sticky_threshold }});
+    if (window.scrollY > {{ section.settings.sticky_threshold }}) {
+      header.classList.add('is-sticky');
+    } else {
+      header.classList.remove('is-sticky');
+    }
   }, { passive: true });
   {%- endif -%}
 
-  /* ── Desktop Dropdown ───────────────────────────────── */
-  document.querySelectorAll('.site-nav__item--has-dropdown').forEach(function(item) {
-    var timer = null;
-    var link  = item.querySelector('.site-nav__link');
-
+  var dropdownItems = document.querySelectorAll('.site-nav__item--has-dropdown');
+  dropdownItems.forEach(function(item) {
+    var leaveTimer = null;
     item.addEventListener('mouseenter', function() {
-      clearTimeout(timer);
+      clearTimeout(leaveTimer);
       item.classList.add('is-open');
+      var link = item.querySelector('.site-nav__link');
       if (link) link.setAttribute('aria-expanded', 'true');
     });
     item.addEventListener('mouseleave', function() {
-      timer = setTimeout(function() {
+      leaveTimer = setTimeout(function() {
         item.classList.remove('is-open');
+        var link = item.querySelector('.site-nav__link');
         if (link) link.setAttribute('aria-expanded', 'false');
       }, 100);
     });
-    if (link) {
-      link.addEventListener('keydown', function(e) {
+    var parentLink = item.querySelector('.site-nav__link');
+    if (parentLink) {
+      parentLink.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          var open = item.classList.toggle('is-open');
-          link.setAttribute('aria-expanded', String(open));
+          var isOpen = item.classList.contains('is-open');
+          item.classList.toggle('is-open', !isOpen);
+          parentLink.setAttribute('aria-expanded', String(!isOpen));
         }
         if (e.key === 'Escape') {
           item.classList.remove('is-open');
-          link.setAttribute('aria-expanded', 'false');
-          link.focus();
+          parentLink.setAttribute('aria-expanded', 'false');
+          parentLink.focus();
         }
       });
     }
+    item.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        item.classList.remove('is-open');
+        var link = item.querySelector('.site-nav__link');
+        if (link) { link.setAttribute('aria-expanded', 'false'); link.focus(); }
+      }
+    });
   });
+
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.site-nav__item--has-dropdown')) {
-      document.querySelectorAll('.site-nav__item--has-dropdown').forEach(function(item) {
+      dropdownItems.forEach(function(item) {
         item.classList.remove('is-open');
-        var l = item.querySelector('.site-nav__link');
-        if (l) l.setAttribute('aria-expanded', 'false');
+        var link = item.querySelector('.site-nav__link');
+        if (link) link.setAttribute('aria-expanded', 'false');
       });
     }
   });
 
-  /* ── Mobile Drawer ──────────────────────────────────── */
-  var menuBtn      = document.querySelector('.mobile-menu-btn');
-  var drawer       = document.getElementById('mobile-drawer');
-  var closeBtn     = drawer && drawer.querySelector('.mobile-drawer__close');
-  var overlay      = document.getElementById('drawer-overlay');
-  var lastFocused  = null;
+  var menuBtn  = document.querySelector('.mobile-menu-btn');
+  var drawer   = document.getElementById('mobile-drawer');
+  var closeBtn = document.querySelector('.mobile-drawer__close');
+  var overlay  = document.getElementById('drawer-overlay');
 
   function openDrawer() {
     if (!drawer) return;
-    lastFocused = document.activeElement;
     drawer.classList.add('mobile-drawer--active');
     drawer.setAttribute('aria-hidden', 'false');
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
     if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
-    setTimeout(function() {
-      var first = drawer.querySelector('button, a[href], [tabindex]:not([tabindex="-1"])');
-      if (first) first.focus();
-    }, 60);
   }
-
   function closeDrawer() {
     if (!drawer) return;
     drawer.classList.remove('mobile-drawer--active');
@@ -1028,7 +732,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
     if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
-    if (lastFocused) lastFocused.focus();
   }
 
   if (menuBtn)  menuBtn.addEventListener('click', openDrawer);
@@ -1038,41 +741,37 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Escape' && drawer && drawer.classList.contains('mobile-drawer--active')) closeDrawer();
   });
 
-  /* Drawer accordion */
   if (drawer) {
     drawer.querySelectorAll('.drawer-accordion__toggle').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var expanded = this.getAttribute('aria-expanded') === 'true';
-        var bodyId   = this.getAttribute('aria-controls');
-        var body     = bodyId ? document.getElementById(bodyId) : this.nextElementSibling;
+        var body = this.nextElementSibling;
         this.setAttribute('aria-expanded', String(!expanded));
         if (body) body.classList.toggle('open', !expanded);
       });
     });
   }
 
-  /* ── Search Overlay ─────────────────────────────────── */
   {%- if section.settings.show_search -%}
   var searchToggle  = document.querySelector('[data-search-toggle]');
   var searchOverlay = document.getElementById('search-overlay');
-  var searchClose   = searchOverlay && searchOverlay.querySelector('.search-overlay__close');
-  var searchInput   = searchOverlay && searchOverlay.querySelector('.search-input');
+  var searchClose   = document.querySelector('.search-overlay__close');
+  var searchInput   = document.querySelector('.search-input');
 
   function openSearch() {
     if (!searchOverlay) return;
     searchOverlay.classList.add('is-open');
     searchOverlay.setAttribute('aria-hidden', 'false');
-    if (searchToggle) searchToggle.setAttribute('aria-expanded', 'true');
-    setTimeout(function() { if (searchInput) searchInput.focus(); }, 60);
+    setTimeout(function() { if (searchInput) searchInput.focus(); }, 50);
   }
   function closeSearch() {
     if (!searchOverlay) return;
     searchOverlay.classList.remove('is-open');
     searchOverlay.setAttribute('aria-hidden', 'true');
-    if (searchToggle) searchToggle.setAttribute('aria-expanded', 'false');
   }
-  if (searchToggle) searchToggle.addEventListener('click', openSearch);
-  if (searchClose)  searchClose.addEventListener('click', closeSearch);
+
+  if (searchToggle)  searchToggle.addEventListener('click', openSearch);
+  if (searchClose)   searchClose.addEventListener('click', closeSearch);
   if (searchOverlay) searchOverlay.addEventListener('click', function(e) {
     if (e.target === searchOverlay) closeSearch();
   });
@@ -1081,21 +780,15 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   {%- endif -%}
 
-  /* ── Cart Count Sync ────────────────────────────────── */
-  document.addEventListener('cart:updated', function(e) {
-    var n = (e.detail && e.detail.item_count) || 0;
-    document.querySelectorAll('.cart-count').forEach(function(el) {
-      el.textContent = n;
-      if (n === 0) el.setAttribute('hidden', '');
-      else el.removeAttribute('hidden');
+  var cartCount = document.querySelector('.cart-count');
+  if (cartCount) {
+    document.addEventListener('cart:updated', function(e) {
+      var n = (e.detail && e.detail.item_count) || 0;
+      cartCount.textContent = n;
+      if (n === 0) cartCount.setAttribute('hidden', '');
+      else cartCount.removeAttribute('hidden');
     });
-    var cartLink = document.querySelector('.header__cart');
-    if (cartLink) {
-      cartLink.setAttribute('aria-label',
-        n > 0 ? 'Cart — ' + n + ' item' + (n === 1 ? '' : 's') : 'Cart'
-      );
-    }
-  });
+  }
 
 });
 </script>
@@ -1108,48 +801,50 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "color",  "id": "header_bg",            "label": "Background Color",      "default": "#F8F6F4" },
     { "type": "color",  "id": "header_text_color",    "label": "Text Color",            "default": "#1A1A1A" },
     { "type": "text",   "id": "header_shadow",         "label": "Header Shadow",         "default": "none" },
-    { "type": "range",  "id": "padding_top",           "label": "Top Padding",           "min": 8,  "max": 40, "step": 2,  "unit": "px", "default": 16 },
-    { "type": "range",  "id": "padding_bottom",        "label": "Bottom Padding",        "min": 8,  "max": 40, "step": 2,  "unit": "px", "default": 16 },
-    { "type": "range",  "id": "padding_h",             "label": "Side Padding",          "min": 0,  "max": 60, "step": 4,  "unit": "px", "default": 12 },
-    { "type": "range",  "id": "border_bottom_width",   "label": "Border Bottom Width",   "min": 0,  "max": 5,  "step": 1,  "unit": "px", "default": 0 },
+    { "type": "range",  "id": "padding_top",           "label": "Top Padding",           "min": 8,  "max": 40, "step": 2,   "unit": "px",  "default": 16 },
+    { "type": "range",  "id": "padding_bottom",        "label": "Bottom Padding",        "min": 8,  "max": 40, "step": 2,   "unit": "px",  "default": 16 },
+    { "type": "range",  "id": "padding_h",             "label": "Side Padding",          "min": 0,  "max": 60, "step": 4,   "unit": "px",  "default": 12 },
+    { "type": "range",  "id": "border_bottom_width",   "label": "Border Bottom Width",   "min": 0,  "max": 5,  "step": 1,   "unit": "px",  "default": 0 },
     { "type": "color",  "id": "border_bottom_color",   "label": "Border Bottom Color",   "default": "#0000001a" },
 
     { "type": "header", "content": "Logo" },
     { "type": "image_picker", "id": "logo",            "label": "Logo Image" },
-    { "type": "checkbox", "id": "invert_logo",         "label": "Invert logo to white", "default": false },
-    { "type": "checkbox", "id": "invert_logo_sticky",  "label": "Keep inverted when sticky", "default": false },
-    { "type": "range",  "id": "logo_width",            "label": "Logo Max Width",        "min": 60, "max": 300, "step": 10, "unit": "px", "default": 160 },
-    { "type": "range",  "id": "logo_text_min",         "label": "Logo Text Min Size",    "min": 14, "max": 28,  "step": 1,  "unit": "px", "default": 18 },
-    { "type": "range",  "id": "logo_text_max",         "label": "Logo Text Max Size",    "min": 20, "max": 48,  "step": 2,  "unit": "px", "default": 26 },
+    { "type": "checkbox", "id": "invert_logo",         "label": "Invert logo to white",
+      "default": false, "info": "Turn on when header background is dark or gradient — makes black logos white." },
+    { "type": "checkbox", "id": "invert_logo_sticky",  "label": "Keep inverted when sticky",
+      "default": false, "info": "If header background changes on scroll (e.g. from gradient to light), turn this OFF to revert logo back to original." },
+    { "type": "range",  "id": "logo_width",            "label": "Logo Max Width",        "min": 60, "max": 300, "step": 10, "unit": "px",  "default": 160 },
+    { "type": "range",  "id": "logo_text_min",         "label": "Logo Text Min Size",    "min": 14, "max": 28,  "step": 1,  "unit": "px",  "default": 18 },
+    { "type": "range",  "id": "logo_text_max",         "label": "Logo Text Max Size",    "min": 20, "max": 48,  "step": 2,  "unit": "px",  "default": 26 },
     { "type": "range",  "id": "logo_font_weight",      "label": "Logo Font Weight",      "min": 300, "max": 900, "step": 100, "default": 700 },
-    { "type": "range",  "id": "logo_letter_spacing",   "label": "Logo Letter Spacing",   "min": 0,  "max": 5,   "step": 1,  "unit": "px", "default": 1 },
+    { "type": "range",  "id": "logo_letter_spacing",   "label": "Logo Letter Spacing",   "min": 0,  "max": 5,   "step": 1,  "unit": "px",  "default": 1 },
 
     { "type": "header", "content": "Navigation" },
     { "type": "link_list", "id": "menu",               "label": "Menu",                  "default": "main-menu" },
-    { "type": "range",  "id": "nav_font_size",          "label": "Nav Font Size",         "min": 11, "max": 18,  "step": 1,  "unit": "px", "default": 14 },
+    { "type": "range",  "id": "nav_font_size",          "label": "Nav Font Size",         "min": 11, "max": 18,  "step": 1,  "unit": "px",  "default": 14 },
     { "type": "range",  "id": "nav_font_weight",        "label": "Nav Font Weight",       "min": 300, "max": 700, "step": 100, "default": 400 },
     { "type": "range",  "id": "nav_gap_max",            "label": "Nav Gap Max",           "min": 1,  "max": 4,   "step": 1,  "unit": "rem", "default": 2 },
-    { "type": "range",  "id": "caret_size",             "label": "Dropdown Caret Size",   "min": 8,  "max": 14,  "step": 1,  "unit": "px", "default": 10 },
+    { "type": "range",  "id": "caret_size",             "label": "Dropdown Caret Size",   "min": 8,  "max": 14,  "step": 1,  "unit": "px",  "default": 10 },
 
     { "type": "header", "content": "Dropdown" },
     { "type": "color",  "id": "dropdown_bg",            "label": "Dropdown Background",   "default": "#F8F6F4" },
-    { "type": "range",  "id": "dropdown_font_size",     "label": "Dropdown Font Size",    "min": 12, "max": 18,  "step": 1,  "unit": "px", "default": 14 },
-    { "type": "range",  "id": "dropdown_radius",        "label": "Dropdown Border Radius","min": 0,  "max": 20,  "step": 2,  "unit": "px", "default": 6 },
+    { "type": "range",  "id": "dropdown_font_size",     "label": "Dropdown Font Size",    "min": 12, "max": 18,  "step": 1,  "unit": "px",  "default": 14 },
+    { "type": "range",  "id": "dropdown_radius",        "label": "Dropdown Border Radius","min": 0,  "max": 20,  "step": 2,  "unit": "px",  "default": 6 },
     { "type": "text",   "id": "dropdown_shadow",        "label": "Dropdown Shadow",       "default": "0 8px 30px rgba(0,0,0,0.12)" },
 
     { "type": "header", "content": "Icons & Cart" },
-    { "type": "range",  "id": "icon_size",              "label": "Icon Size",             "min": 18, "max": 30,  "step": 2,  "unit": "px", "default": 22 },
-    { "type": "range",  "id": "icon_gap",               "label": "Header Icons Gap",      "min": 4,  "max": 32,  "step": 4,  "unit": "px", "default": 8 },
-    { "type": "range",  "id": "social_gap",             "label": "Social Icons Gap",      "min": 4,  "max": 24,  "step": 4,  "unit": "px", "default": 8 },
+    { "type": "range",  "id": "icon_size",              "label": "Icon Size",             "min": 18, "max": 30,  "step": 2,  "unit": "px",  "default": 22 },
+    { "type": "range",  "id": "icon_gap",               "label": "Header Icons Gap",      "min": 4,  "max": 32,  "step": 4,  "unit": "px",  "default": 8 },
+    { "type": "range",  "id": "social_gap",             "label": "Social Icons Gap",      "min": 4,  "max": 24,  "step": 4,  "unit": "px",  "default": 8 },
     { "type": "color",  "id": "cart_badge_bg",          "label": "Cart Badge Background", "default": "#3A6FE8" },
     { "type": "color",  "id": "cart_badge_text",        "label": "Cart Badge Text",       "default": "#FFFFFF" },
-    { "type": "range",  "id": "cart_badge_size",        "label": "Cart Badge Font Size",  "min": 9,  "max": 14,  "step": 1,  "unit": "px", "default": 10 },
+    { "type": "range",  "id": "cart_badge_size",        "label": "Cart Badge Font Size",  "min": 9,  "max": 14,  "step": 1,  "unit": "px",  "default": 10 },
 
     { "type": "header", "content": "Search" },
     { "type": "checkbox", "id": "show_search",          "label": "Show Search",           "default": false },
     { "type": "text",   "id": "search_placeholder",     "label": "Search Placeholder",    "default": "Search..." },
-    { "type": "range",  "id": "search_overlay_opacity", "label": "Overlay Opacity",       "min": 50, "max": 95,  "step": 5,  "unit": "%",  "default": 85 },
-    { "type": "range",  "id": "search_overlay_blur",    "label": "Overlay Blur",          "min": 0,  "max": 20,  "step": 2,  "unit": "px", "default": 10 },
+    { "type": "range",  "id": "search_overlay_opacity", "label": "Overlay Opacity",       "min": 50, "max": 95,  "step": 5,  "unit": "%",   "default": 85 },
+    { "type": "range",  "id": "search_overlay_blur",    "label": "Overlay Blur",          "min": 0,  "max": 20,  "step": 2,  "unit": "px",  "default": 10 },
     { "type": "select", "id": "search_position",        "label": "Search Position",
       "options": [
         { "value": "flex-start", "label": "Top"    },
@@ -1157,41 +852,41 @@ document.addEventListener('DOMContentLoaded', function() {
         { "value": "flex-end",   "label": "Bottom" }
       ], "default": "flex-start"
     },
-    { "type": "range",  "id": "search_max_width",       "label": "Search Max Width",      "min": 400, "max": 800, "step": 50, "unit": "px", "default": 600 },
-    { "type": "range",  "id": "search_input_padding",   "label": "Input Padding",         "min": 10, "max": 28,  "step": 2,  "unit": "px", "default": 18 },
-    { "type": "range",  "id": "search_input_size",      "label": "Input Font Size",       "min": 16, "max": 32,  "step": 2,  "unit": "px", "default": 22 },
-    { "type": "range",  "id": "search_input_border",    "label": "Input Border Width",    "min": 0,  "max": 3,   "step": 1,  "unit": "px", "default": 1 },
+    { "type": "range",  "id": "search_max_width",       "label": "Search Max Width",      "min": 400, "max": 800, "step": 50, "unit": "px",  "default": 600 },
+    { "type": "range",  "id": "search_input_padding",   "label": "Input Padding",         "min": 10, "max": 28,  "step": 2,  "unit": "px",  "default": 18 },
+    { "type": "range",  "id": "search_input_size",      "label": "Input Font Size",       "min": 16, "max": 32,  "step": 2,  "unit": "px",  "default": 22 },
+    { "type": "range",  "id": "search_input_border",    "label": "Input Border Width",    "min": 0,  "max": 3,   "step": 1,  "unit": "px",  "default": 1 },
     { "type": "color",  "id": "search_input_border_color", "label": "Input Border Color", "default": "#CCCCCC" },
-    { "type": "range",  "id": "search_input_radius",    "label": "Input Border Radius",   "min": 0,  "max": 50,  "step": 2,  "unit": "px", "default": 8 },
+    { "type": "range",  "id": "search_input_radius",    "label": "Input Border Radius",   "min": 0,  "max": 50,  "step": 2,  "unit": "px",  "default": 8 },
     { "type": "color",  "id": "search_input_bg",        "label": "Input Background",      "default": "#FFFFFF" },
     { "type": "color",  "id": "search_input_text",      "label": "Input Text Color",      "default": "#1A1A1A" },
-    { "type": "text",   "id": "search_transition",      "label": "Transition Speed (s)",  "default": "0.3" },
+    { "type": "text",   "id": "search_transition",      "label": "Transition Speed (s)",  "default": "0.3", "info": "In seconds, e.g. 0.3" },
 
     { "type": "header", "content": "Sticky Header" },
     { "type": "checkbox", "id": "enable_sticky",        "label": "Enable Sticky Header",  "default": true },
-    { "type": "range",  "id": "sticky_threshold",       "label": "Scroll Threshold",      "min": 0,  "max": 200, "step": 10, "unit": "px", "default": 50 },
+    { "type": "range",  "id": "sticky_threshold",       "label": "Scroll Threshold",      "min": 0,  "max": 200, "step": 10, "unit": "px",  "default": 50 },
     { "type": "color",  "id": "sticky_bg",              "label": "Sticky Background",     "default": "#F8F6F4f2" },
     { "type": "text",   "id": "sticky_shadow",          "label": "Sticky Shadow",         "default": "0 4px 20px rgba(58,111,232,0.10)" },
-    { "type": "range",  "id": "sticky_padding",         "label": "Sticky Padding",        "min": 6,  "max": 24,  "step": 1,  "unit": "px", "default": 10 },
-    { "type": "text",   "id": "sticky_transition",      "label": "Sticky Transition (s)", "default": "0.3" },
+    { "type": "range",  "id": "sticky_padding",         "label": "Sticky Padding",        "min": 6,  "max": 24,  "step": 1,  "unit": "px",  "default": 10 },
+    { "type": "text",   "id": "sticky_transition",      "label": "Sticky Transition (s)", "default": "0.3", "info": "In seconds, e.g. 0.3" },
 
     { "type": "header", "content": "Mobile Menu" },
-    { "type": "range",  "id": "hamburger_size",         "label": "Hamburger Size",        "min": 20, "max": 32,  "step": 2,  "unit": "px", "default": 24 },
+    { "type": "range",  "id": "hamburger_size",         "label": "Hamburger Size",        "min": 20, "max": 32,  "step": 2,  "unit": "px",  "default": 24 },
     { "type": "range",  "id": "hamburger_thickness",    "label": "Hamburger Thickness",   "min": 1,  "max": 3,   "step": 0.5, "default": 2 },
     { "type": "color",  "id": "drawer_bg",              "label": "Drawer Background",     "default": "#F8F6F4" },
     { "type": "color",  "id": "drawer_text_color",      "label": "Drawer Text Color",     "default": "#1A1A1A" },
     { "type": "image_picker", "id": "drawer_logo",      "label": "Drawer Logo (optional)" },
-    { "type": "range",  "id": "drawer_logo_width",      "label": "Drawer Logo Width",     "min": 60, "max": 220, "step": 10, "unit": "px", "default": 120 },
-    { "type": "range",  "id": "drawer_font_min",        "label": "Link Font Min",         "min": 16, "max": 28,  "step": 2,  "unit": "px", "default": 20 },
-    { "type": "range",  "id": "drawer_font_max",        "label": "Link Font Max",         "min": 24, "max": 40,  "step": 2,  "unit": "px", "default": 28 },
+    { "type": "range",  "id": "drawer_logo_width",      "label": "Drawer Logo Width",     "min": 60, "max": 220, "step": 10, "unit": "px",  "default": 120 },
+    { "type": "range",  "id": "drawer_font_min",        "label": "Link Font Min",         "min": 16, "max": 28,  "step": 2,  "unit": "px",  "default": 20 },
+    { "type": "range",  "id": "drawer_font_max",        "label": "Link Font Max",         "min": 24, "max": 40,  "step": 2,  "unit": "px",  "default": 28 },
     { "type": "range",  "id": "drawer_font_weight",     "label": "Link Font Weight",      "min": 300, "max": 800, "step": 100, "default": 600 },
-    { "type": "range",  "id": "drawer_subfont_size",    "label": "Sub-link Font Size",    "min": 13, "max": 20,  "step": 1,  "unit": "px", "default": 15 },
+    { "type": "range",  "id": "drawer_subfont_size",    "label": "Sub-link Font Size",    "min": 13, "max": 20,  "step": 1,  "unit": "px",  "default": 15 },
     { "type": "checkbox", "id": "show_drawer_socials",  "label": "Show Socials in Drawer","default": true },
-    { "type": "range",  "id": "drawer_social_size",     "label": "Drawer Social Size",    "min": 22, "max": 36,  "step": 2,  "unit": "px", "default": 26 },
+    { "type": "range",  "id": "drawer_social_size",     "label": "Drawer Social Size",    "min": 22, "max": 36,  "step": 2,  "unit": "px",  "default": 26 },
 
     { "type": "header", "content": "Social Links" },
-    { "type": "url", "id": "social_facebook_link",  "label": "Facebook URL" },
-    { "type": "url", "id": "social_instagram_link", "label": "Instagram URL" },
+    { "type": "url",    "id": "social_facebook_link",   "label": "Facebook URL" },
+    { "type": "url",    "id": "social_instagram_link",  "label": "Instagram URL" },
 
     { "type": "header", "content": "CTA Button" },
     { "type": "text",   "id": "button_label",           "label": "Button Label",          "default": "Get on THE LIST" },
@@ -1200,10 +895,10 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "color",  "id": "button_text_color",      "label": "Button Text Color",     "default": "#1A1A1A" },
     { "type": "color",  "id": "button_border_color",    "label": "Button Border Color",   "default": "#1A1A1A" },
     { "type": "range",  "id": "button_border_width",    "label": "Button Border Width",   "min": 0,  "max": 4,   "step": 0.5, "unit": "px", "default": 2 },
-    { "type": "range",  "id": "button_border_radius",   "label": "Button Border Radius",  "min": 0,  "max": 30,  "step": 2,  "unit": "px", "default": 4 },
-    { "type": "range",  "id": "button_padding_v",       "label": "Button V Padding",      "min": 6,  "max": 18,  "step": 1,  "unit": "px", "default": 9 },
-    { "type": "range",  "id": "button_padding_h",       "label": "Button H Padding",      "min": 12, "max": 36,  "step": 2,  "unit": "px", "default": 18 },
-    { "type": "range",  "id": "button_font_size",       "label": "Button Font Size",      "min": 11, "max": 18,  "step": 1,  "unit": "px", "default": 13 },
+    { "type": "range",  "id": "button_border_radius",   "label": "Button Border Radius",  "min": 0,  "max": 30,  "step": 2,  "unit": "px",  "default": 4 },
+    { "type": "range",  "id": "button_padding_v",       "label": "Button V Padding",      "min": 6,  "max": 18,  "step": 1,  "unit": "px",  "default": 9 },
+    { "type": "range",  "id": "button_padding_h",       "label": "Button H Padding",      "min": 12, "max": 36,  "step": 2,  "unit": "px",  "default": 18 },
+    { "type": "range",  "id": "button_font_size",       "label": "Button Font Size",      "min": 11, "max": 18,  "step": 1,  "unit": "px",  "default": 13 },
     { "type": "range",  "id": "button_font_weight",     "label": "Button Font Weight",    "min": 400, "max": 700, "step": 100, "default": 500 }
   ],
   "presets": [{ "name": "Header (Enhanced)" }]
