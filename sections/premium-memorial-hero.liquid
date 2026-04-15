@@ -1,57 +1,56 @@
 <style>
-  .memorial-hero-{{ section.id }} {
+  /* ══════════════════════════════════════════
+     MEMORIAL HERO BANNER — Cowgirl Armor
+     Cinematic / editorial premium aesthetic
+     Full gradient switch system
+  ══════════════════════════════════════════ */
+
+  .mh-outer-{{ section.id }} {
     position: relative;
     width: 100%;
+    overflow: hidden;
     min-height: {{ section.settings.height_mobile }}px;
+    background-color: {{ section.settings.bg_color }};
     display: flex;
     flex-direction: column;
-    justify-content: {{ section.settings.content_position }};
-    padding-top: {{ section.settings.padding_top_mobile }}px;
-    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
-    padding-left: {{ section.settings.padding_h_mobile }}px;
-    padding-right: {{ section.settings.padding_h_mobile }}px;
-    overflow: hidden;
-    background-color: {{ section.settings.bg_color }};
   }
 
   @media screen and (min-width: 768px) {
-    .memorial-hero-{{ section.id }} {
+    .mh-outer-{{ section.id }} {
       min-height: {{ section.settings.height_desktop }}px;
-      padding-top: {{ section.settings.padding_top_desktop }}px;
-      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
-      padding-left: {{ section.settings.padding_h_desktop }}px;
-      padding-right: {{ section.settings.padding_h_desktop }}px;
     }
   }
 
-  .memorial-hero-{{ section.id }} .mh__bg {
+  /* ════ BACKGROUND IMAGE ════ */
+  .mh-outer-{{ section.id }} .mh__bg {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: {{ section.settings.image_fit }};
     object-position: {{ section.settings.focal_point }};
     z-index: 1;
+    display: block;
     {%- if section.settings.enable_zoom_anim -%}
-    animation: mhBgSettle 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      animation: mhBgSettle-{{ section.id }} 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     {%- endif -%}
   }
 
-  @keyframes mhBgSettle {
-    from { transform: scale(1.06); }
-    to   { transform: scale(1);    }
+  @keyframes mhBgSettle-{{ section.id }} {
+    from { transform: scale(1.07); }
+    to   { transform: scale(1); }
   }
 
+  /* ════ OVERLAY LAYERS ════ */
   {%- assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0 -%}
   {%- assign ov_r = section.settings.overlay_color | color_extract: 'red' -%}
   {%- assign ov_g = section.settings.overlay_color | color_extract: 'green' -%}
   {%- assign ov_b = section.settings.overlay_color | color_extract: 'blue' -%}
 
-  .memorial-hero-{{ section.id }} .mh__overlay {
+  /* Primary overlay — color/gradient from settings */
+  .mh-outer-{{ section.id }} .mh__overlay {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    inset: 0;
     z-index: 2;
     {%- if section.settings.overlay_style == 'gradient_bottom' -%}
       background: linear-gradient(
@@ -67,14 +66,59 @@
       );
     {%- elsif section.settings.overlay_style == 'solid' -%}
       background: rgba({{ ov_r }},{{ ov_g }},{{ ov_b }},{{ overlay_alpha }});
-    {%- elsif section.settings.overlay_style == 'none' -%}
+    {%- else -%}
       display: none;
     {%- endif -%}
   }
 
-  .memorial-hero-{{ section.id }} .mh__content {
-    position: relative;
+  /* Brand gradient overlay — active only when use_gradient is on */
+  {%- if section.settings.use_gradient -%}
+  .mh-outer-{{ section.id }} .mh__overlay-gradient {
+    position: absolute;
+    inset: 0;
     z-index: 3;
+    background: linear-gradient(
+      135deg,
+      rgba(58, 111, 232, 0.72) 0%,
+      rgba(139, 82, 212, 0.68) 50%,
+      rgba(204, 114, 232, 0.55) 100%
+    );
+    mix-blend-mode: multiply;
+  }
+  {%- endif -%}
+
+  /* Vignette — always on, adds cinematic depth */
+  .mh-outer-{{ section.id }} .mh__vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 40%,
+      rgba(0,0,0,0.45) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* ════ CONTENT WRAPPER ════ */
+  .mh-outer-{{ section.id }} .mh__content-wrap {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: {{ section.settings.content_position }};
+    padding: {{ section.settings.padding_top_mobile }}px {{ section.settings.padding_h_mobile }}px {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .mh-outer-{{ section.id }} .mh__content-wrap {
+      padding: {{ section.settings.padding_top_desktop }}px {{ section.settings.padding_h_desktop }}px {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  /* ════ INNER CONTENT BOX ════ */
+  .mh-outer-{{ section.id }} .mh__content {
     max-width: {{ section.settings.content_max_width }}px;
     width: 100%;
     text-align: {{ section.settings.text_align }};
@@ -87,21 +131,43 @@
     {%- endif -%}
   }
 
-  .memorial-hero-{{ section.id }} .mh__eyebrow {
+  /* ════ EYEBROW ════ */
+  .mh-outer-{{ section.id }} .mh__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--font-body-family, sans-serif);
-    font-size: clamp(0.75rem, 1.2vw, {{ section.settings.eyebrow_size }}px);
-    font-weight: 600;
+    font-size: clamp(0.65rem, 1vw, {{ section.settings.eyebrow_size }}px);
+    font-weight: 700;
     letter-spacing: {{ section.settings.eyebrow_spacing | divided_by: 100.0 }}em;
     text-transform: uppercase;
     color: {{ section.settings.eyebrow_color }};
     margin: 0 0 {{ section.settings.eyebrow_gap }}px;
-    opacity: 0.85;
     {%- if section.settings.enable_text_shadow -%}
-    text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+      text-shadow: 0 1px 12px rgba(0,0,0,0.5);
     {%- endif -%}
   }
 
-  .memorial-hero-{{ section.id }} .mh__title {
+  /* Decorative rule flanking the eyebrow */
+  .mh-outer-{{ section.id }} .mh__eyebrow::before,
+  .mh-outer-{{ section.id }} .mh__eyebrow::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 36px;
+    background: currentColor;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  {%- if section.settings.text_align == 'left' -%}
+    .mh-outer-{{ section.id }} .mh__eyebrow::before { display: none; }
+  {%- elsif section.settings.text_align == 'right' -%}
+    .mh-outer-{{ section.id }} .mh__eyebrow::after { display: none; }
+  {%- endif -%}
+
+  /* ════ TITLE ════ */
+  .mh-outer-{{ section.id }} .mh__title {
     font-family: var(--font-heading-family, serif);
     font-size: clamp({{ section.settings.title_size_min }}px, 6vw, {{ section.settings.title_size_max }}px);
     font-weight: {{ section.settings.title_weight }};
@@ -110,95 +176,183 @@
     margin: 0 0 {{ section.settings.title_gap }}px;
     color: inherit;
     {%- if section.settings.enable_text_shadow -%}
-    text-shadow: 0 2px 16px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 24px rgba(0,0,0,0.4);
     {%- endif -%}
   }
 
-  .memorial-hero-{{ section.id }} .mh__subtitle {
+  /* ════ RULE DIVIDER (between title and subtitle) ════ */
+  .mh-outer-{{ section.id }} .mh__rule {
+    display: block;
+    width: 48px;
+    height: 2px;
+    margin: 0 0 {{ section.settings.title_gap }}px;
+    border: none;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.6);
+    {%- else -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- endif -%}
+    {%- if section.settings.text_align == 'center' -%}
+      margin-left: auto;
+      margin-right: auto;
+    {%- elsif section.settings.text_align == 'right' -%}
+      margin-left: auto;
+    {%- endif -%}
+  }
+
+  /* ════ SUBTITLE ════ */
+  .mh-outer-{{ section.id }} .mh__subtitle {
     font-family: var(--font-body-family, sans-serif);
     font-size: clamp({{ section.settings.subtitle_size_min }}px, 2vw, {{ section.settings.subtitle_size_max }}px);
     font-weight: {{ section.settings.subtitle_weight }};
-    line-height: 1.5;
+    line-height: 1.65;
     letter-spacing: {{ section.settings.subtitle_spacing | divided_by: 100.0 }}em;
     margin: 0 0 {{ section.settings.subtitle_gap }}px;
     color: inherit;
     opacity: {{ section.settings.subtitle_opacity | divided_by: 100.0 }};
     {%- if section.settings.enable_text_shadow -%}
-    text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      text-shadow: 0 1px 10px rgba(0,0,0,0.35);
     {%- endif -%}
   }
 
-  /* Richtext elements inside subtitle */
-  .memorial-hero-{{ section.id }} .mh__subtitle p {
-    margin: 0 0 0.6em;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle p:last-child {
-    margin-bottom: 0;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle strong,
-  .memorial-hero-{{ section.id }} .mh__subtitle b {
-    font-weight: 700;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle em,
-  .memorial-hero-{{ section.id }} .mh__subtitle i {
-    font-style: italic;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle ul,
-  .memorial-hero-{{ section.id }} .mh__subtitle ol {
-    padding-left: 1.4em;
-    margin: 0.4em 0 0.6em;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle ul {
-    list-style: disc;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle ol {
-    list-style: decimal;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle li {
-    margin-bottom: 0.3em;
-  }
-  .memorial-hero-{{ section.id }} .mh__subtitle a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  .mh-outer-{{ section.id }} .mh__subtitle p        { margin: 0 0 0.6em; }
+  .mh-outer-{{ section.id }} .mh__subtitle p:last-child { margin-bottom: 0; }
+  .mh-outer-{{ section.id }} .mh__subtitle strong,
+  .mh-outer-{{ section.id }} .mh__subtitle b        { font-weight: 700; }
+  .mh-outer-{{ section.id }} .mh__subtitle em,
+  .mh-outer-{{ section.id }} .mh__subtitle i        { font-style: italic; }
+  .mh-outer-{{ section.id }} .mh__subtitle ul,
+  .mh-outer-{{ section.id }} .mh__subtitle ol       { padding-left: 1.4em; margin: 0.4em 0 0.6em; }
+  .mh-outer-{{ section.id }} .mh__subtitle ul       { list-style: disc; }
+  .mh-outer-{{ section.id }} .mh__subtitle ol       { list-style: decimal; }
+  .mh-outer-{{ section.id }} .mh__subtitle li       { margin-bottom: 0.3em; }
+  .mh-outer-{{ section.id }} .mh__subtitle a        { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ════ BUTTON ════ */
+  .mh-outer-{{ section.id }} .mh__btn-wrap {
+    margin-top: {{ section.settings.btn_gap }}px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    {%- if section.settings.text_align == 'center' -%}
+      justify-content: center;
+    {%- elsif section.settings.text_align == 'right' -%}
+      justify-content: flex-end;
+    {%- endif -%}
   }
 
-  .memorial-hero-{{ section.id }} .mh__btn {
-    display: inline-block;
+  .mh-outer-{{ section.id }} .mh__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
-    background-color: {{ section.settings.btn_bg }};
-    color: {{ section.settings.btn_text_color }};
-    border: {{ section.settings.btn_border_width }}px solid {{ section.settings.btn_border_color }};
     border-radius: {{ section.settings.btn_radius }}px;
     font-family: var(--font-body-family, sans-serif);
     font-size: {{ section.settings.btn_font_size }}px;
     font-weight: {{ section.settings.btn_font_weight }};
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-decoration: none;
     text-transform: {{ section.settings.btn_transform }};
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    margin-top: {{ section.settings.btn_gap }}px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.25s ease,
+                opacity 0.2s ease;
+    background-color: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_text_color }};
+    border: {{ section.settings.btn_border_width }}px solid {{ section.settings.btn_border_color }};
+    {%- if section.settings.enable_text_shadow -%}
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    {%- endif -%}
   }
 
-  .memorial-hero-{{ section.id }} .mh__btn:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
-  }
-
-  /* Animations */
-  {%- if section.settings.enable_text_anim -%}
-  .memorial-hero-{{ section.id }} .fade-up {
+  .mh-outer-{{ section.id }} .mh__btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.12);
     opacity: 0;
-    transform: translateY(20px);
-    animation: mhFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: opacity 0.25s ease;
   }
-  @keyframes mhFadeUp {
+
+  .mh-outer-{{ section.id }} .mh__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(0,0,0,0.3);
+  }
+  .mh-outer-{{ section.id }} .mh__btn:hover::after { opacity: 1; }
+
+  /* Arrow icon inside button */
+  .mh-outer-{{ section.id }} .mh__btn-arrow {
+    display: inline-flex;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .mh-outer-{{ section.id }} .mh__btn:hover .mh__btn-arrow {
+    transform: translateX(3px);
+  }
+
+  /* ════ SCROLL INDICATOR ════ */
+  {%- if section.settings.show_scroll_indicator -%}
+  .mh-outer-{{ section.id }} .mh__scroll {
+    position: absolute;
+    bottom: 24px;
+    {%- if section.settings.text_align == 'center' -%}
+      left: 50%;
+      transform: translateX(-50%);
+    {%- elsif section.settings.text_align == 'right' -%}
+      right: {{ section.settings.padding_h_desktop }}px;
+    {%- else -%}
+      left: {{ section.settings.padding_h_desktop }}px;
+    {%- endif -%}
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: {{ section.settings.text_color }};
+    opacity: 0.5;
+    animation: mhScrollBob-{{ section.id }} 2s ease-in-out infinite;
+  }
+  .mh-outer-{{ section.id }} .mh__scroll-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  @keyframes mhScrollBob-{{ section.id }} {
+    0%, 100% { transform: {%- if section.settings.text_align == 'center' -%} translateX(-50%) {%- endif -%} translateY(0); }
+    50%       { transform: {%- if section.settings.text_align == 'center' -%} translateX(-50%) {%- endif -%} translateY(5px); }
+  }
+  {%- endif -%}
+
+  /* ════ GRAIN TEXTURE OVERLAY ════ */
+  {%- if section.settings.enable_grain -%}
+  .mh-outer-{{ section.id }} .mh__grain {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    mix-blend-mode: overlay;
+  }
+  {%- endif -%}
+
+  /* ════ FADE-UP ANIMATIONS ════ */
+  {%- if section.settings.enable_text_anim -%}
+  .mh-outer-{{ section.id }} .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: mhFadeUp-{{ section.id }} 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes mhFadeUp-{{ section.id }} {
     to { opacity: 1; transform: translateY(0); }
   }
   {%- endif -%}
 </style>
 
-<div class="memorial-hero-{{ section.id }}">
+<div class="mh-outer-{{ section.id }}">
 
   {%- if section.settings.image != blank -%}
     <img
@@ -211,6 +365,7 @@
       alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
       class="mh__bg"
       loading="eager"
+      fetchpriority="high"
       width="{{ section.settings.image.width }}"
       height="{{ section.settings.image.height }}"
     >
@@ -219,39 +374,68 @@
   {%- endif -%}
 
   <div class="mh__overlay"></div>
+  {%- if section.settings.use_gradient -%}
+    <div class="mh__overlay-gradient"></div>
+  {%- endif -%}
+  <div class="mh__vignette"></div>
+  {%- if section.settings.enable_grain -%}
+    <div class="mh__grain"></div>
+  {%- endif -%}
 
-  <div class="mh__content">
+  <div class="mh__content-wrap">
+    <div class="mh__content">
 
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="mh__eyebrow{% if section.settings.enable_text_anim %} fade-up{% endif %}"
-         style="{% if section.settings.enable_text_anim %}animation-delay: 100ms;{% endif %}">
-        {{ section.settings.eyebrow }}
-      </p>
-    {%- endif -%}
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="mh__eyebrow{% if section.settings.enable_text_anim %} fade-up{% endif %}"
+           {% if section.settings.enable_text_anim %}style="animation-delay:80ms;"{% endif %}>
+          {{ section.settings.eyebrow }}
+        </p>
+      {%- endif -%}
 
-    {%- if section.settings.title != blank -%}
-      <h1 class="mh__title{% if section.settings.enable_text_anim %} fade-up{% endif %}"
-          style="{% if section.settings.enable_text_anim %}animation-delay: 250ms;{% endif %}">
-        {{ section.settings.title }}
-      </h1>
-    {%- endif -%}
+      {%- if section.settings.title != blank -%}
+        <h1 class="mh__title{% if section.settings.enable_text_anim %} fade-up{% endif %}"
+            {% if section.settings.enable_text_anim %}style="animation-delay:220ms;"{% endif %}>
+          {{ section.settings.title }}
+        </h1>
+      {%- endif -%}
 
-    {%- if section.settings.subtitle != blank -%}
-      <div class="mh__subtitle{% if section.settings.enable_text_anim %} fade-up{% endif %}"
-         style="{% if section.settings.enable_text_anim %}animation-delay: 400ms;{% endif %}">
-        {{ section.settings.subtitle }}
-      </div>
-    {%- endif -%}
+      {%- if section.settings.show_rule and section.settings.subtitle != blank -%}
+        <hr class="mh__rule{% if section.settings.enable_text_anim %} fade-up{% endif %}"
+            {% if section.settings.enable_text_anim %}style="animation-delay:340ms;"{% endif %}>
+      {%- endif -%}
 
-    {%- if section.settings.btn_label != blank and section.settings.btn_link != blank -%}
-      <a href="{{ section.settings.btn_link }}"
-         class="mh__btn{% if section.settings.enable_text_anim %} fade-up{% endif %}"
-         style="{% if section.settings.enable_text_anim %}animation-delay: 550ms;{% endif %}">
-        {{ section.settings.btn_label }}
-      </a>
-    {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <div class="mh__subtitle{% if section.settings.enable_text_anim %} fade-up{% endif %}"
+             {% if section.settings.enable_text_anim %}style="animation-delay:420ms;"{% endif %}>
+          {{ section.settings.subtitle }}
+        </div>
+      {%- endif -%}
 
+      {%- if section.settings.btn_label != blank and section.settings.btn_link != blank -%}
+        <div class="mh__btn-wrap{% if section.settings.enable_text_anim %} fade-up{% endif %}"
+             {% if section.settings.enable_text_anim %}style="animation-delay:560ms;"{% endif %}>
+          <a href="{{ section.settings.btn_link }}" class="mh__btn">
+            {{ section.settings.btn_label }}
+            <span class="mh__btn-arrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        </div>
+      {%- endif -%}
+
+    </div>
   </div>
+
+  {%- if section.settings.show_scroll_indicator -%}
+    <div class="mh__scroll" aria-hidden="true">
+      <span class="mh__scroll-label">Scroll</span>
+      <svg width="16" height="20" viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <rect x="1" y="1" width="14" height="22" rx="7"/>
+        <line x1="8" y1="6" x2="8" y2="10"/>
+      </svg>
+    </div>
+  {%- endif -%}
+
 </div>
 
 {% schema %}
@@ -273,11 +457,10 @@
       "label": "Image Fit",
       "options": [
         { "value": "cover",   "label": "Cover (fills, may crop)" },
-        { "value": "contain", "label": "Contain (shows full image, no crop)" },
-        { "value": "fill",    "label": "Stretch to fill" }
+        { "value": "contain", "label": "Contain (no crop)"       },
+        { "value": "fill",    "label": "Stretch to fill"         }
       ],
-      "default": "cover",
-      "info": "Use 'Contain' to show the full image without any cropping"
+      "default": "cover"
     },
     {
       "type": "select",
@@ -294,8 +477,7 @@
         { "value": "bottom left",   "label": "Bottom Left"  },
         { "value": "bottom right",  "label": "Bottom Right" }
       ],
-      "default": "center center",
-      "info": "Only applies when Image Fit is set to Cover"
+      "default": "center center"
     },
     {
       "type": "header",
@@ -305,21 +487,36 @@
       "type": "range",
       "id": "height_desktop",
       "label": "Height — Desktop",
-      "min": 300,
-      "max": 1000,
-      "step": 20,
-      "unit": "px",
-      "default": 720
+      "min": 300, "max": 1000, "step": 20, "unit": "px", "default": 720
     },
     {
       "type": "range",
       "id": "height_mobile",
       "label": "Height — Mobile",
-      "min": 200,
-      "max": 700,
-      "step": 20,
-      "unit": "px",
-      "default": 500
+      "min": 200, "max": 700, "step": 20, "unit": "px", "default": 500
+    },
+    {
+      "type": "header",
+      "content": "Colors & Gradient"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient overlay",
+      "default": false,
+      "info": "Lays the brand purple-blue gradient over the image. Works best with darker or desaturated photos."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fallback Background Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
     },
     {
       "type": "header",
@@ -330,10 +527,10 @@
       "id": "overlay_style",
       "label": "Overlay Style",
       "options": [
-        { "value": "gradient_bottom", "label": "Gradient — Bottom (text at bottom)" },
-        { "value": "gradient_top",    "label": "Gradient — Top (text at top)"       },
-        { "value": "solid",           "label": "Solid color"                        },
-        { "value": "none",            "label": "None"                               }
+        { "value": "gradient_bottom", "label": "Gradient — Bottom"    },
+        { "value": "gradient_top",    "label": "Gradient — Top"       },
+        { "value": "solid",           "label": "Solid color"          },
+        { "value": "none",            "label": "None"                 }
       ],
       "default": "gradient_bottom"
     },
@@ -347,29 +544,14 @@
       "type": "range",
       "id": "overlay_opacity",
       "label": "Overlay Opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 60
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 65
     },
     {
       "type": "range",
       "id": "overlay_clear_stop",
       "label": "Gradient Clear Zone",
-      "min": 0,
-      "max": 80,
-      "step": 5,
-      "unit": "%",
-      "default": 40,
-      "info": "How far down before the overlay starts darkening"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Fallback Background Color",
-      "default": "#1A1A1A",
-      "info": "Shows if no image is set"
+      "min": 0, "max": 80, "step": 5, "unit": "%", "default": 35,
+      "info": "% of the image that stays clear before the overlay starts"
     },
     {
       "type": "header",
@@ -401,11 +583,7 @@
       "type": "range",
       "id": "content_max_width",
       "label": "Content Max Width",
-      "min": 400,
-      "max": 1200,
-      "step": 20,
-      "unit": "px",
-      "default": 800
+      "min": 400, "max": 1200, "step": 20, "unit": "px", "default": 800
     },
     {
       "type": "range",
@@ -451,43 +629,32 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow Text",
-      "info": "Small text above the title"
+      "info": "Small label above the title — flanked by decorative rules"
     },
     {
       "type": "color",
       "id": "eyebrow_color",
       "label": "Eyebrow Color",
-      "default": "#ffffff"
+      "default": "#FFFFFF"
     },
     {
       "type": "range",
       "id": "eyebrow_size",
       "label": "Eyebrow Font Size (max)",
-      "min": 10,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 13
+      "min": 10, "max": 20, "step": 1, "unit": "px", "default": 12
     },
     {
       "type": "range",
       "id": "eyebrow_spacing",
       "label": "Eyebrow Letter Spacing",
-      "min": 0,
-      "max": 30,
-      "step": 1,
-      "default": 15,
-      "info": "Divide by 100 for em value — e.g. 15 = 0.15em"
+      "min": 0, "max": 40, "step": 1, "default": 20,
+      "info": "Divide by 100 → em value. 20 = 0.20em"
     },
     {
       "type": "range",
       "id": "eyebrow_gap",
       "label": "Gap Below Eyebrow",
-      "min": 4,
-      "max": 32,
-      "step": 2,
-      "unit": "px",
-      "default": 12
+      "min": 4, "max": 32, "step": 2, "unit": "px", "default": 16
     },
     {
       "type": "header",
@@ -500,70 +667,42 @@
       "default": "Oaklynn Rae Domer"
     },
     {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color (all)",
-      "default": "#FFFFFF"
-    },
-    {
       "type": "range",
       "id": "title_size_min",
       "label": "Title Size — Min (mobile)",
-      "min": 20,
-      "max": 60,
-      "step": 2,
-      "unit": "px",
-      "default": 32
+      "min": 20, "max": 60, "step": 2, "unit": "px", "default": 32
     },
     {
       "type": "range",
       "id": "title_size_max",
       "label": "Title Size — Max (desktop)",
-      "min": 32,
-      "max": 120,
-      "step": 2,
-      "unit": "px",
-      "default": 72
+      "min": 32, "max": 120, "step": 2, "unit": "px", "default": 72
     },
     {
       "type": "range",
       "id": "title_weight",
       "label": "Title Font Weight",
-      "min": 300,
-      "max": 900,
-      "step": 100,
-      "default": 700
+      "min": 300, "max": 900, "step": 100, "default": 700
     },
     {
       "type": "range",
       "id": "title_line_height",
       "label": "Title Line Height",
-      "min": 80,
-      "max": 160,
-      "step": 5,
-      "unit": "%",
-      "default": 110,
-      "info": "e.g. 110 = 1.1"
+      "min": 80, "max": 160, "step": 5, "unit": "%", "default": 110,
+      "info": "e.g. 108 = 1.08"
     },
     {
       "type": "range",
       "id": "title_letter_spacing",
       "label": "Title Letter Spacing",
-      "min": -5,
-      "max": 20,
-      "step": 1,
-      "default": -1,
-      "info": "Divide by 100 for em value — e.g. -1 = -0.01em, 5 = 0.05em"
+      "min": -5, "max": 20, "step": 1, "default": -2,
+      "info": "Divide by 100 → em. -2 = -0.02em"
     },
     {
       "type": "range",
       "id": "title_gap",
       "label": "Gap Below Title",
-      "min": 4,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 12
+      "min": 4, "max": 40, "step": 2, "unit": "px", "default": 16
     },
     {
       "type": "header",
@@ -579,60 +718,44 @@
       "type": "range",
       "id": "subtitle_size_min",
       "label": "Subtitle Size — Min",
-      "min": 12,
-      "max": 28,
-      "step": 1,
-      "unit": "px",
-      "default": 16
+      "min": 12, "max": 28, "step": 1, "unit": "px", "default": 15
     },
     {
       "type": "range",
       "id": "subtitle_size_max",
       "label": "Subtitle Size — Max",
-      "min": 14,
-      "max": 40,
-      "step": 1,
-      "unit": "px",
-      "default": 22
+      "min": 14, "max": 40, "step": 1, "unit": "px", "default": 20
     },
     {
       "type": "range",
       "id": "subtitle_weight",
       "label": "Subtitle Font Weight",
-      "min": 300,
-      "max": 700,
-      "step": 100,
-      "default": 400
+      "min": 300, "max": 700, "step": 100, "default": 400
     },
     {
       "type": "range",
       "id": "subtitle_spacing",
       "label": "Subtitle Letter Spacing",
-      "min": 0,
-      "max": 20,
-      "step": 1,
-      "default": 5,
-      "info": "Divide by 100 for em value — e.g. 5 = 0.05em"
+      "min": 0, "max": 20, "step": 1, "default": 3,
+      "info": "Divide by 100 → em. 3 = 0.03em"
     },
     {
       "type": "range",
       "id": "subtitle_opacity",
       "label": "Subtitle Opacity",
-      "min": 40,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 90
+      "min": 40, "max": 100, "step": 5, "unit": "%", "default": 85
     },
     {
       "type": "range",
       "id": "subtitle_gap",
       "label": "Gap Below Subtitle",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 0
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show rule line between title and subtitle",
+      "default": true
     },
     {
       "type": "header",
@@ -642,7 +765,7 @@
       "type": "text",
       "id": "btn_label",
       "label": "Button Label",
-      "info": "Leave blank to hide button"
+      "info": "Leave blank to hide"
     },
     {
       "type": "url",
@@ -653,78 +776,55 @@
       "type": "color",
       "id": "btn_bg",
       "label": "Button Background",
-      "default": "#ffffff"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "btn_text_color",
       "label": "Button Text Color",
-      "default": "#1a1a1a"
+      "default": "#1A1A1A"
     },
     {
       "type": "color",
       "id": "btn_border_color",
       "label": "Button Border Color",
-      "default": "#ffffff"
+      "default": "#FFFFFF"
     },
     {
       "type": "range",
       "id": "btn_border_width",
       "label": "Button Border Width",
-      "min": 0,
-      "max": 4,
-      "step": 1,
-      "unit": "px",
-      "default": 1
+      "min": 0, "max": 4, "step": 1, "unit": "px", "default": 0
     },
     {
       "type": "range",
       "id": "btn_radius",
       "label": "Button Corner Radius",
-      "min": 0,
-      "max": 40,
-      "step": 2,
-      "unit": "px",
-      "default": 4
+      "min": 0, "max": 40, "step": 2, "unit": "px", "default": 4
     },
     {
       "type": "range",
       "id": "btn_padding_v",
       "label": "Button Padding Vertical",
-      "min": 8,
-      "max": 32,
-      "step": 2,
-      "unit": "px",
-      "default": 14
+      "min": 8, "max": 32, "step": 2, "unit": "px", "default": 16
     },
     {
       "type": "range",
       "id": "btn_padding_h",
       "label": "Button Padding Horizontal",
-      "min": 16,
-      "max": 80,
-      "step": 4,
-      "unit": "px",
-      "default": 32
+      "min": 16, "max": 80, "step": 4, "unit": "px", "default": 36
     },
     {
       "type": "range",
       "id": "btn_font_size",
       "label": "Button Font Size",
-      "min": 12,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 14
+      "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14
     },
     {
       "type": "range",
       "id": "btn_font_weight",
       "label": "Button Font Weight",
-      "min": 400,
-      "max": 700,
-      "step": 100,
-      "default": 600
+      "min": 400, "max": 700, "step": 100, "default": 600
     },
     {
       "type": "select",
@@ -734,17 +834,13 @@
         { "value": "none",      "label": "None"      },
         { "value": "uppercase", "label": "Uppercase" }
       ],
-      "default": "none"
+      "default": "uppercase"
     },
     {
       "type": "range",
       "id": "btn_gap",
       "label": "Gap Above Button",
-      "min": 8,
-      "max": 48,
-      "step": 4,
-      "unit": "px",
-      "default": 24
+      "min": 8, "max": 48, "step": 4, "unit": "px", "default": 28
     },
     {
       "type": "header",
@@ -753,7 +849,7 @@
     {
       "type": "checkbox",
       "id": "enable_zoom_anim",
-      "label": "Subtle zoom-in on image load",
+      "label": "Cinematic zoom-in on load",
       "default": true
     },
     {
@@ -765,8 +861,21 @@
     {
       "type": "checkbox",
       "id": "enable_text_shadow",
-      "label": "Text shadow for readability",
+      "label": "Text shadow for depth",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_grain",
+      "label": "Film grain texture overlay",
+      "default": true,
+      "info": "Subtle noise adds cinematic depth. Very lightweight SVG filter."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show scroll indicator",
+      "default": false
     }
   ],
   "presets": [
