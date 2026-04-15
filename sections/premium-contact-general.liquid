@@ -108,7 +108,7 @@
   }
   .premium-form__label span { font-weight: normal; opacity: 0.6; margin-left: 0.25rem; }
 
-  /* ── Inputs — full bordered box ── */
+  /* ── Inputs ── */
   .premium-form__input,
   .premium-form__textarea {
     width: 100%;
@@ -314,7 +314,8 @@
     <div class="premium-general__container">
 
       <div class="premium-general__form-card fade-up-anim" style="animation-delay: 150ms;">
-        {%- form 'contact', id: 'GeneralContactForm-{{ section.id }}', class: 'premium-form' -%}
+        {%- comment -%} id: parameter removed — was causing garbled URL on redirect {%- endcomment -%}
+        {%- form 'contact', class: 'premium-form' -%}
 
           {%- if form.posted_successfully? -%}
             <div class="premium-form__message premium-form__message--success" tabindex="-1" autofocus>
@@ -462,10 +463,9 @@
       "type": "header",
       "content": "Content"
     },
-    { "type": "text",         "id": "heading", "label": "Heading",    "default": "Questions?"        },
+    { "type": "text",         "id": "heading", "label": "Heading",    "default": "Questions?"         },
     { "type": "text",         "id": "subtext", "label": "Subheading", "default": "We are here to help!" },
     { "type": "image_picker", "id": "image",   "label": "Decorative Graphic (Right Column)" },
-
     {
       "type": "header",
       "content": "Button Style"
@@ -477,7 +477,6 @@
       "default": true,
       "info": "Ignored when section background is gradient — button auto-adapts to frosted glass."
     },
-
     {
       "type": "header",
       "content": "Form Settings"
@@ -493,7 +492,6 @@
     { "type": "text",     "id": "button_label",     "label": "Submit Button Label",      "default": "Submit"     },
     { "type": "text",     "id": "success_message",  "label": "Success Message",
       "default": "Thanks for reaching out! We will get back to you shortly." },
-
     {
       "type": "header",
       "content": "Spacing"
