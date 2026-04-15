@@ -1,8 +1,27 @@
 <style>
+  /* ── Outer wrapper — full width, background lives here ── */
+  .mcs-outer-{{ section.id }} {
+    width: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- else -%}
+      background-color: {{ section.settings.bg_color }};
+    {%- endif -%}
+  }
+
+  /* ── CSS Vars — single source of truth ── */
   .multi-coll-stack-{{ section.id }} {
+    --mcs-text:         {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.text_color }} {%- endif -%};
+    --mcs-border:       {%- if section.settings.use_gradient -%} rgba(255,255,255,0.2) {%- else -%} rgba(0,0,0,0.1) {%- endif -%};
+    --mcs-card-bg:      {%- if section.settings.use_gradient -%} rgba(255,255,255,0.1) {%- else -%} rgba(0,0,0,0.02) {%- endif -%};
+    --mcs-qty-border:   {%- if section.settings.use_gradient -%} rgba(255,255,255,0.3) {%- else -%} rgba(0,0,0,0.2) {%- endif -%};
+    --mcs-btn-border:   {%- if section.settings.use_gradient -%} rgba(255,255,255,0.5) {%- else -%} {{ section.settings.text_color }} {%- endif -%};
+    --mcs-btn-hover-bg: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.2) {%- else -%} {{ section.settings.text_color }} {%- endif -%};
+    --mcs-btn-hover-text: {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.bg_color }} {%- endif -%};
+
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    background-color: {{ section.settings.bg_color }};
+    color: var(--mcs-text);
   }
 
   .multi-coll-stack__container {
@@ -11,7 +30,7 @@
     padding: 0 2rem;
     display: flex;
     flex-direction: column;
-    gap: {{ section.settings.stack_gap }}px; /* Controls spacing between the different collection rows */
+    gap: {{ section.settings.stack_gap }}px;
   }
 
   .multi-coll-row {
@@ -19,7 +38,7 @@
     flex-direction: column;
   }
 
-  /* --- Row Header --- */
+  /* ── Row Header ── */
   .multi-coll-row__header {
     display: flex;
     flex-direction: row;
@@ -27,36 +46,37 @@
     align-items: flex-end;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid var(--mcs-border);
   }
 
   .multi-coll-row__title {
-    font-family: var(--font-heading);
+    font-family: var(--font-heading-family, sans-serif);
     font-size: clamp(1.5rem, 3vw, 2.2rem);
-    color: {{ section.settings.text_color }};
+    font-weight: 700;
+    color: var(--mcs-text);
     margin: 0;
     line-height: 1.2;
+    letter-spacing: -0.02em;
   }
 
   .multi-coll-row__shop-all {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.8rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: {{ section.settings.text_color }};
+    letter-spacing: 0.1em;
+    color: var(--mcs-text);
     text-decoration: none;
+    opacity: 0.55;
     padding-bottom: 2px;
     border-bottom: 1px solid currentColor;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
     white-space: nowrap;
     margin-left: 1rem;
   }
+  .multi-coll-row__shop-all:hover { opacity: 1; }
 
-  .multi-coll-row__shop-all:hover {
-    opacity: 0.6;
-  }
-
-  /* --- Product Grid --- */
+  /* ── Product Grid ── */
   .multi-coll-row__grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -64,12 +84,9 @@
   }
 
   @media screen and (min-width: 768px) {
-    .multi-coll-row__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .multi-coll-row__grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  /* We use CSS variables to set dynamic desktop columns per block */
   @media screen and (min-width: 1024px) {
     .multi-coll-row__grid {
       grid-template-columns: repeat(var(--desktop-cols), 1fr);
@@ -77,261 +94,355 @@
     }
   }
 
-  /* --- Product Card (Inline Form) --- */
-  .premium-stacked-card {
+  /* ── Product Card ── */
+  .premium-stacked-card-{{ section.id }} {
     display: flex;
     flex-direction: column;
-    color: {{ section.settings.text_color }};
     height: 100%;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 0 0 1rem;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    {%- else -%}
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      transition: none;
+    {%- endif -%}
   }
 
-  .premium-stacked-card__link {
+  {%- if section.settings.use_gradient -%}
+  .premium-stacked-card-{{ section.id }}:hover {
+    background: rgba(255,255,255,0.13);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+  }
+  {%- endif -%}
+
+  .premium-stacked-card-{{ section.id }} .psc__link {
     text-decoration: none;
-    color: inherit;
+    color: var(--mcs-text);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
   }
 
-  .premium-stacked-card__image-wrapper {
+  .premium-stacked-card-{{ section.id }} .psc__img-wrap {
     width: 100%;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    background-color: rgba(0,0,0,0.02);
+    background: var(--mcs-card-bg);
     margin-bottom: 1rem;
-    border-radius: var(--border-radius, 0px);
+    {%- if section.settings.use_gradient -%}
+      border-radius: 0;
+    {%- else -%}
+      border-radius: {{ section.settings.card_radius }}px;
+    {%- endif -%}
   }
 
-  .premium-stacked-card__image {
+  .premium-stacked-card-{{ section.id }} .psc__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    display: block;
+    transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
   }
+  .premium-stacked-card-{{ section.id }}:hover .psc__img { transform: scale(1.04); }
 
-  .premium-stacked-card:hover .premium-stacked-card__image {
-    transform: scale(1.03);
-  }
-
-  .premium-stacked-card__info {
+  .premium-stacked-card-{{ section.id }} .psc__info {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.35rem;
     flex-grow: 1;
+    {%- if section.settings.use_gradient -%}
+      padding: 0 1rem;
+    {%- endif -%}
   }
 
-  .premium-stacked-card__title {
-    font-family: var(--font-body);
-    font-size: 1.05rem;
-    font-weight: 500;
-    line-height: 1.3;
-    margin: 0;
-  }
-
-  .premium-stacked-card__price {
-    font-family: var(--font-body);
+  .premium-stacked-card-{{ section.id }} .psc__title {
+    font-family: var(--font-body-family, sans-serif);
     font-size: 0.95rem;
-    opacity: 0.8;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+    color: var(--mcs-text);
   }
 
-  /* Inline Action Row */
-  .premium-stacked-card__action-row {
+  .premium-stacked-card-{{ section.id }} .psc__price {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.9rem;
+    color: var(--mcs-text);
+    opacity: 0.75;
+  }
+
+  .premium-stacked-card-{{ section.id }} .psc__compare {
+    text-decoration: line-through;
+    opacity: 0.4;
+    margin-right: 0.4rem;
+  }
+
+  /* ── Action Row ── */
+  .premium-stacked-card-{{ section.id }} .psc__action {
     display: flex;
     gap: 0.5rem;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     width: 100%;
+    {%- if section.settings.use_gradient -%}
+      padding: 0 1rem;
+    {%- endif -%}
   }
 
-  .premium-stacked-card__qty {
+  .premium-stacked-card-{{ section.id }} .psc__qty {
     display: flex;
     align-items: center;
-    border: 1px solid rgba(0,0,0,0.2);
-    width: 35%;
+    border: 1.5px solid var(--mcs-qty-border);
+    border-radius: {{ section.settings.btn_radius }}px;
+    overflow: hidden;
+    width: 36%;
+    flex-shrink: 0;
+    background: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.08) {%- else -%} transparent {%- endif -%};
   }
 
-  .premium-stacked-card__qty-btn {
+  .premium-stacked-card-{{ section.id }} .psc__qty-btn {
     background: transparent;
     border: none;
-    width: 30%;
+    width: 32%;
     height: 100%;
+    padding: 0.65rem 0;
     cursor: pointer;
-    font-size: 1.1rem;
-    color: inherit;
+    font-size: 1rem;
+    color: var(--mcs-text);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .premium-stacked-card-{{ section.id }} .psc__qty-btn:hover {
+    background: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.12) {%- else -%} rgba(0,0,0,0.05) {%- endif -%};
   }
 
-  .premium-stacked-card__qty-input {
-    width: 40%;
+  .premium-stacked-card-{{ section.id }} .psc__qty-input {
+    width: 36%;
     border: none;
     background: transparent;
     text-align: center;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: inherit;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--mcs-text);
     -moz-appearance: textfield;
     padding: 0;
   }
+  .premium-stacked-card-{{ section.id }} .psc__qty-input::-webkit-outer-spin-button,
+  .premium-stacked-card-{{ section.id }} .psc__qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
-  .premium-stacked-card__qty-input::-webkit-outer-spin-button,
-  .premium-stacked-card__qty-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  .premium-stacked-card__add-btn {
+  .premium-stacked-card-{{ section.id }} .psc__add-btn {
     flex-grow: 1;
-    background: transparent;
-    border: 1px solid {{ section.settings.text_color }};
-    color: {{ section.settings.text_color }};
-    font-family: var(--font-body);
+    border: 1.5px solid var(--mcs-btn-border);
+    border-radius: {{ section.settings.btn_radius }}px;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 0.78rem;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.07em;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0.8rem 0;
+    padding: 0.65rem 0.5rem;
+    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+    color: var(--mcs-text);
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.1);
+    {%- else -%}
+      background: transparent;
+    {%- endif -%}
   }
-
-  .premium-stacked-card__add-btn:hover:not([disabled]) {
-    background-color: {{ section.settings.text_color }};
-    color: {{ section.settings.bg_color }};
+  .premium-stacked-card-{{ section.id }} .psc__add-btn:hover:not([disabled]) {
+    background: var(--mcs-btn-hover-bg);
+    color: var(--mcs-btn-hover-text);
+    transform: translateY(-1px);
   }
-
-  .premium-stacked-card__add-btn[disabled] {
-    opacity: 0.5;
+  .premium-stacked-card-{{ section.id }} .psc__add-btn[disabled] {
+    opacity: 0.35;
     cursor: not-allowed;
   }
 
-  .fade-up-anim {
+  /* ── Gradient section header (optional, replaces plain title) ── */
+  {%- if section.settings.show_section_header -%}
+  .mcs-header-{{ section.id }} {
+    {%- if section.settings.use_gradient -%}
+      text-align: center;
+      padding: clamp(2.5rem, 6vw, 4rem) 2rem clamp(1.5rem, 3vw, 2.5rem);
+      position: relative;
+    {%- else -%}
+      padding: clamp(2rem, 5vw, 3.5rem) 2rem clamp(1rem, 2vw, 2rem);
+      text-align: {{ section.settings.header_align }};
+      max-width: 1400px;
+      margin: 0 auto;
+    {%- endif -%}
+  }
+  .mcs-header__title-{{ section.id }} {
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: clamp(1.8rem, 5vw, {{ section.settings.header_size }}px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 0.5rem;
+    color: var(--mcs-text);
+  }
+  .mcs-header__sub-{{ section.id }} {
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    opacity: 0.7;
+    color: var(--mcs-text);
+    margin: 0;
+    line-height: 1.6;
+  }
+  {%- endif -%}
+
+  /* ── Fade-up animation ── */
+  .mcs-fade-up {
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform: translateY(18px);
+    animation: mcsFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes mcsFadeUp {
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  @keyframes fadeUpAnim {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  @media (max-width: 599px) {
+    .multi-coll-stack__container { padding: 0 1rem; }
+    .multi-coll-row__header { flex-wrap: wrap; gap: 0.5rem; }
   }
 </style>
 
-<div class="multi-coll-stack-{{ section.id }}">
-  <div class="multi-coll-stack__container">
-    {%- for block in section.blocks -%}
-      {%- assign target_collection = block.settings.collection -%}
+<div class="mcs-outer-{{ section.id }}">
 
-      <div
-        class="multi-coll-row fade-up-anim"
-        style="--desktop-cols: {{ block.settings.columns_desktop }}; animation-delay: {{ forloop.index0 | times: 150 }}ms;"
-        {{ block.shopify_attributes }}
-      >
-        <div class="multi-coll-row__header">
-          <h2 class="multi-coll-row__title">
-            {{ block.settings.title_override | default: target_collection.title | default: 'Featured Collection' }}
-          </h2>
+  {%- if section.settings.show_section_header and section.settings.header_title != blank -%}
+    <div class="mcs-header-{{ section.id }}">
+      <h2 class="mcs-header__title-{{ section.id }}">{{ section.settings.header_title }}</h2>
+      {%- if section.settings.header_subtitle != blank -%}
+        <p class="mcs-header__sub-{{ section.id }}">{{ section.settings.header_subtitle }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 
-          {%- if block.settings.show_view_all and target_collection != blank -%}
-            <a href="{{ target_collection.url }}" class="multi-coll-row__shop-all"> {{ block.settings.shop_all_text | default: 'Shop All' | escape }} </a>
-          {%- endif -%}
-        </div>
+  <div class="multi-coll-stack-{{ section.id }}">
+    <div class="multi-coll-stack__container">
 
-        <div class="multi-coll-row__grid">
-          {%- for product in target_collection.products limit: block.settings.product_limit -%}
-            <div class="premium-stacked-card">
-              <a href="{{ product.url }}" class="premium-stacked-card__link">
-                <div class="premium-stacked-card__image-wrapper">
-                  {%- if product.featured_image != blank -%}
-                    <img
-                      src="{{ product.featured_image | image_url: width: 600 }}"
-                      alt="{{ product.featured_image.alt | escape }}"
-                      class="premium-stacked-card__image"
-                      loading="lazy"
-                    >
-                  {%- else -%}
-                    {{ 'product-1' | placeholder_svg_tag: 'premium-stacked-card__image placeholder-svg' }}
-                  {%- endif -%}
-                </div>
+      {%- for block in section.blocks -%}
+        {%- assign target_collection = block.settings.collection -%}
+        {%- assign anim_delay = forloop.index0 | times: 120 -%}
 
-                <div class="premium-stacked-card__info">
-                  <h3 class="premium-stacked-card__title">{{ product.title }}</h3>
-                  <div class="premium-stacked-card__price">
-                    {%- if product.compare_at_price > product.price -%}
-                      <span style="text-decoration: line-through; opacity: 0.5; margin-right: 0.5rem;">
-                        {{- product.compare_at_price | money -}}
-                      </span>
-                    {%- endif -%}
-                    <span>{{ product.price | money }}</span>
-                  </div>
-                </div>
+        <div
+          class="multi-coll-row mcs-fade-up"
+          style="--desktop-cols: {{ block.settings.columns_desktop }}; animation-delay: {{ anim_delay }}ms;"
+          {{ block.shopify_attributes }}
+        >
+
+          <div class="multi-coll-row__header">
+            <h2 class="multi-coll-row__title">
+              {{ block.settings.title_override | default: target_collection.title | default: 'Featured Collection' }}
+            </h2>
+            {%- if block.settings.show_view_all and target_collection != blank -%}
+              <a href="{{ target_collection.url }}" class="multi-coll-row__shop-all">
+                {{ block.settings.shop_all_text | default: 'Shop All' | escape }}
               </a>
+            {%- endif -%}
+          </div>
 
-              {%- form 'product', product, class: 'premium-stacked-card__action-row' -%}
-                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <div class="multi-coll-row__grid">
+            {%- for product in target_collection.products limit: block.settings.product_limit -%}
+              {%- assign card_delay = forloop.index0 | times: 60 | plus: anim_delay -%}
 
-                <div class="premium-stacked-card__qty">
+              <div class="premium-stacked-card-{{ section.id }} mcs-fade-up" style="animation-delay: {{ card_delay }}ms;">
+
+                <a href="{{ product.url }}" class="psc__link" aria-label="{{ product.title | escape }}">
+                  <div class="psc__img-wrap">
+                    {%- if product.featured_image != blank -%}
+                      <img
+                        src="{{ product.featured_image | image_url: width: 600 }}"
+                        srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                                {{ product.featured_image | image_url: width: 700 }} 700w"
+                        sizes="(max-width: 599px) 50vw, (max-width: 1023px) 50vw, 25vw"
+                        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                        class="psc__img"
+                        loading="lazy"
+                        width="{{ product.featured_image.width }}"
+                        height="{{ product.featured_image.height }}"
+                      >
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag: 'psc__img placeholder-svg' }}
+                    {%- endif -%}
+                  </div>
+
+                  <div class="psc__info">
+                    <h3 class="psc__title">{{ product.title }}</h3>
+                    <div class="psc__price">
+                      {%- if product.compare_at_price > product.price -%}
+                        <span class="psc__compare">{{ product.compare_at_price | money }}</span>
+                      {%- endif -%}
+                      <span>{{ product.price | money }}</span>
+                    </div>
+                  </div>
+                </a>
+
+                {%- form 'product', product, class: 'psc__action' -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+                  <div class="psc__qty">
+                    <button type="button" class="psc__qty-btn" onclick="this.nextElementSibling.stepDown()" aria-label="Decrease quantity">−</button>
+                    <input type="number" name="quantity" class="psc__qty-input" value="1" min="1" aria-label="Quantity">
+                    <button type="button" class="psc__qty-btn" onclick="this.previousElementSibling.stepUp()" aria-label="Increase quantity">+</button>
+                  </div>
+
                   <button
-                    type="button"
-                    class="premium-stacked-card__qty-btn"
-                    onclick="this.nextElementSibling.stepDown()"
+                    type="submit"
+                    name="add"
+                    class="psc__add-btn"
+                    {% unless product.available %}disabled{% endunless %}
                   >
-                    −
+                    {%- if product.available -%}
+                      {{ section.settings.button_add_to_cart | default: 'Add to cart' | escape }}
+                    {%- else -%}
+                      {{ section.settings.button_sold_out | default: 'Sold Out' | escape }}
+                    {%- endif -%}
                   </button>
-                  <input type="number" name="quantity" class="premium-stacked-card__qty-input" value="1" min="1">
-                  <button
-                    type="button"
-                    class="premium-stacked-card__qty-btn"
-                    onclick="this.previousElementSibling.stepUp()"
-                  >
-                    +
-                  </button>
-                </div>
+                {%- endform -%}
 
-                <button
-                  type="submit"
-                  name="add"
-                  class="premium-stacked-card__add-btn"
-                  {% unless product.available %}
-                    disabled
-                  {% endunless %}
-                >
-                  {%- if product.available -%}
-                    {{ section.settings.button_add_to_cart | default: 'Add to cart' | escape }}
-                  {%- else -%}
-                    {{ section.settings.button_sold_out | default: 'Sold Out' | escape }}
-                  {%- endif -%}
-                </button>
-              {%- endform -%}
-            </div>
-
-          {%- else -%}
-            {%- for i in (1..block.settings.columns_desktop) -%}
-              <div class="premium-stacked-card">
-                <div class="premium-stacked-card__link">
-                  <div class="premium-stacked-card__image-wrapper">
-                    {{ 'product-' | append: i | placeholder_svg_tag: 'premium-stacked-card__image placeholder-svg' }}
-                  </div>
-                  <div class="premium-stacked-card__info">
-                    <h3 class="premium-stacked-card__title">Memorial Collection Item</h3>
-                    <div class="premium-stacked-card__price">$29.99</div>
-                  </div>
-                </div>
-                <div class="premium-stacked-card__action-row">
-                  <div class="premium-stacked-card__qty">
-                    <button type="button" class="premium-stacked-card__qty-btn">−</button>
-                    <input type="number" class="premium-stacked-card__qty-input" value="1">
-                    <button type="button" class="premium-stacked-card__qty-btn">+</button>
-                  </div>
-                  <button class="premium-stacked-card__add-btn" disabled>Add to cart</button>
-                </div>
               </div>
+
+            {%- else -%}
+              {%- for i in (1..block.settings.columns_desktop) -%}
+                <div class="premium-stacked-card-{{ section.id }}">
+                  <div class="psc__link">
+                    <div class="psc__img-wrap">
+                      {%- assign placeholder_index = i | modulo: 6 | plus: 1 -%}
+                      {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'psc__img placeholder-svg' }}
+                    </div>
+                    <div class="psc__info">
+                      <h3 class="psc__title">Memorial Collection Item</h3>
+                      <div class="psc__price">$29.99</div>
+                    </div>
+                  </div>
+                  <div class="psc__action">
+                    <div class="psc__qty">
+                      <button type="button" class="psc__qty-btn">−</button>
+                      <input type="number" class="psc__qty-input" value="1">
+                      <button type="button" class="psc__qty-btn">+</button>
+                    </div>
+                    <button class="psc__add-btn" disabled>Add to cart</button>
+                  </div>
+                </div>
+              {%- endfor -%}
             {%- endfor -%}
-          {%- endfor -%}
+
+          </div>
         </div>
-      </div>
-    {%- endfor -%}
+      {%- endfor -%}
+
+    </div>
   </div>
 </div>
 
@@ -340,16 +451,72 @@
   "name": "Multi-Collection Stack",
   "settings": [
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use brand gradient background",
+      "default": false,
+      "info": "Spans full width. Text, borders, cards, and buttons all auto-switch to white/frosted variants."
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Section Background",
-      "default": "transparent"
+      "label": "Background (if not gradient)",
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text Color",
+      "label": "Text Color (if not gradient)",
       "default": "#1A1A1A"
+    },
+    {
+      "type": "header",
+      "content": "Section Header (Optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_header",
+      "label": "Show section header",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "header_title",
+      "label": "Header Title"
+    },
+    {
+      "type": "text",
+      "id": "header_subtitle",
+      "label": "Header Subtitle"
+    },
+    {
+      "type": "range",
+      "id": "header_size",
+      "label": "Header Font Size (max)",
+      "min": 24,
+      "max": 72,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "header_align",
+      "label": "Header Alignment (solid mode)",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
     },
     {
       "type": "range",
@@ -382,6 +549,26 @@
       "default": 80
     },
     {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card Image Radius (solid mode)",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button / Qty Radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
       "type": "header",
       "content": "Product Card Texts"
     },
@@ -412,7 +599,7 @@
           "type": "text",
           "id": "title_override",
           "label": "Heading Override",
-          "info": "Leave blank to use the default collection title."
+          "info": "Leave blank to use the collection title."
         },
         {
           "type": "checkbox",
@@ -451,7 +638,11 @@
     {
       "name": "Multi-Collection Stack",
       "category": "Collection",
-      "blocks": [{ "type": "collection_row" }, { "type": "collection_row" }, { "type": "collection_row" }]
+      "blocks": [
+        { "type": "collection_row" },
+        { "type": "collection_row" },
+        { "type": "collection_row" }
+      ]
     }
   ]
 }
