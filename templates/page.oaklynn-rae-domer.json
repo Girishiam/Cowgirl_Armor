@@ -229,34 +229,10 @@
             "columns_desktop": 4,
             "product_limit": 4
           }
-        },
-        "collection_row_ph9eeQ": {
-          "type": "collection_row",
-          "settings": {
-            "collection": "",
-            "title_override": "",
-            "show_view_all": true,
-            "shop_all_text": "Shop All",
-            "columns_desktop": 4,
-            "product_limit": 4
-          }
-        },
-        "collection_row_KmhLmg": {
-          "type": "collection_row",
-          "settings": {
-            "collection": "",
-            "title_override": "",
-            "show_view_all": true,
-            "shop_all_text": "Shop All",
-            "columns_desktop": 4,
-            "product_limit": 4
-          }
         }
       },
       "block_order": [
-        "collection_row_H7mXxk",
-        "collection_row_ph9eeQ",
-        "collection_row_KmhLmg"
+        "collection_row_H7mXxk"
       ],
       "name": "Multi-Collection Stack",
       "settings": {
