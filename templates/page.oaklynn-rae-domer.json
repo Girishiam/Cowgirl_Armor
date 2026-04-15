@@ -13,6 +13,7 @@
       "type": "premium-page-hero",
       "disabled": true,
       "settings": {
+        "use_gradient": false,
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "logo_width": 350,
@@ -37,8 +38,10 @@
         "button_link": "shopify://pages/god-meets-you",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_PBqPNK": {
@@ -56,8 +59,10 @@
         "button_link": "shopify://pages/believe-in-yourself",
         "padding_top": 60,
         "padding_bottom": 0,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "image_with_text_UAJ3AJ": {
@@ -75,8 +80,10 @@
         "button_link": "shopify://pages/never-give-up",
         "padding_top": 60,
         "padding_bottom": 60,
+        "use_gradient": false,
         "background_color": "#d9d9d9",
-        "text_color": "#1a1a1a"
+        "text_color": "#1a1a1a",
+        "btn_use_gradient": true
       }
     },
     "premium_memorial_hero_XFmByF": {
@@ -88,11 +95,13 @@
         "focal_point": "center center",
         "height_desktop": 1000,
         "height_mobile": 500,
+        "use_gradient": true,
+        "bg_color": "#1a1a1a",
+        "text_color": "#ffffff",
         "overlay_style": "gradient_bottom",
         "overlay_color": "#000000",
         "overlay_opacity": 50,
         "overlay_clear_stop": 40,
-        "bg_color": "#1a1a1a",
         "content_position": "flex-start",
         "text_align": "left",
         "content_max_width": 800,
@@ -108,7 +117,6 @@
         "eyebrow_spacing": 15,
         "eyebrow_gap": 12,
         "title": "Oaklynn Rae Domer",
-        "text_color": "#ffffff",
         "title_size_min": 32,
         "title_size_max": 72,
         "title_weight": 700,
@@ -122,6 +130,7 @@
         "subtitle_spacing": 5,
         "subtitle_opacity": 90,
         "subtitle_gap": 0,
+        "show_rule": true,
         "btn_label": "",
         "btn_link": "",
         "btn_bg": "#ffffff",
@@ -137,7 +146,9 @@
         "btn_gap": 24,
         "enable_zoom_anim": true,
         "enable_text_anim": true,
-        "enable_text_shadow": true
+        "enable_text_shadow": true,
+        "enable_grain": true,
+        "show_scroll_indicator": false
       }
     },
     "premium_memorial_hero_ewWhRQ": {
@@ -149,11 +160,13 @@
         "focal_point": "top center",
         "height_desktop": 1000,
         "height_mobile": 500,
+        "use_gradient": false,
+        "bg_color": "#1a1a1a",
+        "text_color": "#ffffff",
         "overlay_style": "solid",
         "overlay_color": "#000000",
         "overlay_opacity": 50,
         "overlay_clear_stop": 35,
-        "bg_color": "#1A1A1A",
         "content_position": "center",
         "text_align": "left",
         "content_max_width": 800,
@@ -169,7 +182,6 @@
         "eyebrow_spacing": 15,
         "eyebrow_gap": 12,
         "title": "Be The Light Pink Memorial Cap — #LoveLikeOaklynn",
-        "text_color": "#FFFFFF",
         "title_size_min": 32,
         "title_size_max": 72,
         "title_weight": 700,
@@ -183,6 +195,7 @@
         "subtitle_spacing": 5,
         "subtitle_opacity": 90,
         "subtitle_gap": 0,
+        "show_rule": true,
         "btn_label": "",
         "btn_link": "",
         "btn_bg": "#ffffff",
@@ -198,7 +211,9 @@
         "btn_gap": 24,
         "enable_zoom_anim": true,
         "enable_text_anim": true,
-        "enable_text_shadow": true
+        "enable_text_shadow": true,
+        "enable_grain": true,
+        "show_scroll_indicator": false
       }
     }
   },
