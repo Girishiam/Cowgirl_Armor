@@ -1,0 +1,671 @@
+{%- comment -%} Build gradient directly in Liquid — no CSS variable dependency {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
+{%- comment -%} Resolve blog handle from settings {%- endcomment -%}
+{%- assign blog_handle = section.settings.blog_handle | default: 'cowgirl-conversations' -%}
+{%- assign the_blog = blogs[blog_handle] -%}
+
+<style>
+  /* ── Wrapper ── */
+  .pbl-{{ section.id }} {
+    background-color: #FFFFFF;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .pbl-{{ section.id }} .pbl__inner {
+    max-width: {{ settings.page_width | default: 1400 }}px;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+  }
+
+  /* ── Section header ── */
+  .pbl-{{ section.id }} .pbl__header {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .pbl-{{ section.id }} .pbl__eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: {{ grad_col_2 }};
+    margin-bottom: 0.75rem;
+  }
+  .pbl-{{ section.id }} .pbl__eyebrow::after {
+    content: '';
+    display: block;
+    height: 2px;
+    width: 2.5rem;
+    margin-top: 6px;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
+  }
+
+  .pbl-{{ section.id }} .pbl__title {
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: clamp(1.75rem, 4vw, {{ section.settings.heading_size }}px);
+    font-weight: 700;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .pbl-{{ section.id }} .pbl__subtitle {
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    opacity: 0.65;
+    max-width: 600px;
+  }
+
+  /* ── Article row ── */
+  .pbl-{{ section.id }} .pbl__article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    padding: {{ section.settings.article_padding }}px 0;
+    border-bottom: 1.5px solid #F0F0F0;
+  }
+  .pbl-{{ section.id }} .pbl__article:first-of-type {
+    border-top: 1.5px solid #F0F0F0;
+  }
+
+  /* Alternating layout — image right on even rows */
+  {%- if section.settings.alternate_layout -%}
+  .pbl-{{ section.id }} .pbl__article:nth-child(even) .pbl__image-col {
+    order: 2;
+  }
+  .pbl-{{ section.id }} .pbl__article:nth-child(even) .pbl__content-col {
+    order: 1;
+  }
+  {%- endif -%}
+
+  /* ── Image column ── */
+  .pbl-{{ section.id }} .pbl__image-col {
+    overflow: hidden;
+    border-radius: {{ section.settings.image_radius }}px;
+    aspect-ratio: {{ section.settings.image_ratio }};
+    background-color: #F5F5F7;
+    flex-shrink: 0;
+  }
+  .pbl-{{ section.id }} .pbl__image-col a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .pbl-{{ section.id }} .pbl__image-col img,
+  .pbl-{{ section.id }} .pbl__image-col .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .pbl-{{ section.id }} .pbl__article:hover .pbl__image-col img {
+    transform: scale(1.04);
+  }
+
+  /* ── Content column ── */
+  .pbl-{{ section.id }} .pbl__content-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Date */
+  .pbl-{{ section.id }} .pbl__date {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: {{ grad_col_2 }};
+    margin-bottom: 0.65rem;
+  }
+
+  /* Tags */
+  .pbl-{{ section.id }} .pbl__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .pbl-{{ section.id }} .pbl__tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.65rem;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
+    color: #FFFFFF;
+  }
+
+  /* Title */
+  .pbl-{{ section.id }} .pbl__article-title {
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: clamp(1.35rem, 2.5vw, {{ section.settings.title_size }}px);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: 1.2;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    margin: 0 0 0.85rem;
+    text-decoration: none;
+    display: block;
+    transition: color 0.2s ease;
+  }
+  .pbl-{{ section.id }} .pbl__article:hover .pbl__article-title {
+    color: {{ grad_col_2 }};
+  }
+
+  /* Author */
+  .pbl-{{ section.id }} .pbl__author {
+    font-size: 0.8rem;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    opacity: 0.5;
+    margin-bottom: 0.65rem;
+  }
+
+  /* Excerpt */
+  .pbl-{{ section.id }} .pbl__excerpt {
+    font-size: clamp(0.9rem, 1.3vw, 1rem);
+    line-height: 1.8;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    opacity: 0.68;
+    margin: 0 0 1.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: {{ section.settings.excerpt_lines }};
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Read more button */
+  .pbl-{{ section.id }} .pbl__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.7rem 1.75rem;
+    border-radius: {{ section.settings.btn_radius }}px;
+    background: {{ brand_gradient }};
+    color: #FFFFFF;
+    border: none;
+    box-shadow: 0 4px 20px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    align-self: flex-start;
+  }
+  .pbl-{{ section.id }} .pbl__btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: {{ brand_gradient }};
+    filter: brightness(0.88);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .pbl-{{ section.id }} .pbl__btn span { position: relative; z-index: 1; }
+  .pbl-{{ section.id }} .pbl__btn svg  { position: relative; z-index: 1; transition: transform 0.2s ease; }
+  .pbl-{{ section.id }} .pbl__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 36px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.35);
+  }
+  .pbl-{{ section.id }} .pbl__btn:hover::after  { opacity: 1; }
+  .pbl-{{ section.id }} .pbl__btn:hover svg { transform: translateX(3px); }
+
+  /* ── Empty state ── */
+  .pbl-{{ section.id }} .pbl__empty {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    opacity: 0.45;
+    font-size: 1.05rem;
+  }
+
+  /* ── Pagination ── */
+  .pbl-{{ section.id }} .pbl__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    flex-wrap: wrap;
+  }
+  .pbl-{{ section.id }} .pbl__pagination a,
+  .pbl-{{ section.id }} .pbl__pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.6rem;
+    height: 2.6rem;
+    padding: 0 0.8rem;
+    border-radius: {{ section.settings.btn_radius }}px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid #E2E2E2;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    background: #FFFFFF;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .pbl-{{ section.id }} .pbl__pagination a:hover {
+    border-color: {{ grad_col_2 }};
+    color: {{ grad_col_2 }};
+  }
+  .pbl-{{ section.id }} .pbl__pagination .pbl__page--current {
+    background: {{ brand_gradient }};
+    color: #FFFFFF;
+    border-color: transparent;
+  }
+
+  /* ── Responsive ── */
+  @media screen and (max-width: 767px) {
+    .pbl-{{ section.id }} .pbl__article {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .pbl-{{ section.id }} .pbl__image-col { order: 1 !important; }
+    .pbl-{{ section.id }} .pbl__content-col { order: 2 !important; }
+    .pbl-{{ section.id }} .pbl__image-col { aspect-ratio: 16 / 9; }
+    .pbl-{{ section.id }} .pbl__article { padding: {{ section.settings.article_padding | times: 0.6 | round }}px 0; }
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    .pbl-{{ section.id }} .pbl__article {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+  }
+</style>
+
+{%- paginate the_blog.articles by section.settings.articles_per_page -%}
+
+<div class="pbl-{{ section.id }}">
+  <div class="pbl__inner">
+
+    {%- comment -%} Section header {%- endcomment -%}
+    {%- if section.settings.show_header -%}
+      <div class="pbl__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="pbl__eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="pbl__title">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <p class="pbl__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Article list {%- endcomment -%}
+    {%- if the_blog.articles_count > 0 -%}
+
+      {%- for article in the_blog.articles -%}
+        <article class="pbl__article">
+
+          {%- comment -%} — Image — {%- endcomment -%}
+          <div class="pbl__image-col">
+            <a href="{{ article.url }}" aria-label="{{ article.title | escape }}" tabindex="-1">
+              {%- if article.image != blank -%}
+                <img
+                  src="{{ article.image | image_url: width: 800 }}"
+                  srcset="
+                    {{ article.image | image_url: width: 400 }} 400w,
+                    {{ article.image | image_url: width: 700 }} 700w,
+                    {{ article.image | image_url: width: 900 }} 900w"
+                  sizes="(max-width: 767px) 100vw, 50vw"
+                  alt="{{ article.image.alt | default: article.title | escape }}"
+                  loading="lazy"
+                  width="800"
+                  height="auto"
+                >
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+          </div>
+
+          {%- comment -%} — Content — {%- endcomment -%}
+          <div class="pbl__content-col">
+
+            {%- if section.settings.show_date -%}
+              <time class="pbl__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                {{ article.published_at | date: section.settings.date_format }}
+              </time>
+            {%- endif -%}
+
+            {%- if section.settings.show_tags and article.tags.size > 0 -%}
+              <div class="pbl__tags">
+                {%- for tag in article.tags limit: 3 -%}
+                  <span class="pbl__tag">{{ tag }}</span>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            <a href="{{ article.url }}" class="pbl__article-title">{{ article.title }}</a>
+
+            {%- if section.settings.show_author -%}
+              <p class="pbl__author">By {{ article.author }}</p>
+            {%- endif -%}
+
+            {%- if section.settings.show_excerpt -%}
+              <div class="pbl__excerpt">
+                {%- if article.excerpt != blank -%}
+                  {{ article.excerpt | strip_html }}
+                {%- else -%}
+                  {{ article.content | strip_html | truncate: 220 }}
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            <a href="{{ article.url }}" class="pbl__btn">
+              <span>{{ section.settings.btn_label }}</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+
+          </div>
+        </article>
+      {%- endfor -%}
+
+      {%- comment -%} — Pagination — {%- endcomment -%}
+      {%- if paginate.pages > 1 -%}
+        <nav class="pbl__pagination" aria-label="{{ the_blog.title }} pagination">
+
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" aria-label="Previous page">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          {%- endif -%}
+
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}">{{ part.title }}</a>
+            {%- else -%}
+              <span class="{% if part.title == paginate.current_page %}pbl__page--current{% endif %}">
+                {{ part.title }}
+              </span>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" aria-label="Next page">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          {%- endif -%}
+
+        </nav>
+      {%- endif -%}
+
+    {%- else -%}
+      <div class="pbl__empty">
+        <p>{{ section.settings.empty_text }}</p>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Page Blog List",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Blog Source"
+    },
+    {
+      "type": "text",
+      "id": "blog_handle",
+      "label": "Blog Handle",
+      "default": "cowgirl-conversations",
+      "info": "Find this in Shopify Admin → Content → Blogs. It's the URL slug e.g. 'cowgirl-conversations'."
+    },
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show section header",
+      "default": false,
+      "info": "Turn on if this section is mid-page and needs its own heading."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Label",
+      "default": "Stories & Faith"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Cowgirl Conversations"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle / Description"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Article Layout"
+    },
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles per page",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "alternate_layout",
+      "label": "Alternate image left / right",
+      "default": true,
+      "info": "Odd rows: image left. Even rows: image right."
+    },
+    {
+      "type": "range",
+      "id": "article_padding",
+      "label": "Space between articles",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "1 / 1",  "label": "Square (1:1)"    },
+        { "value": "4 / 3",  "label": "Landscape (4:3)" },
+        { "value": "3 / 4",  "label": "Portrait (3:4)"  },
+        { "value": "16 / 9", "label": "Wide (16:9)"     }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Article Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show publish date",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "date_format",
+      "label": "Date format",
+      "options": [
+        { "value": "%m/%d/%y",   "label": "MM/DD/YY"       },
+        { "value": "%B %d, %Y", "label": "Month DD, YYYY"  },
+        { "value": "%d %B %Y",  "label": "DD Month YYYY"   },
+        { "value": "%b %d, %Y", "label": "Mon DD, YYYY"    }
+      ],
+      "default": "%m/%d/%y"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show article tags",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show excerpt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "excerpt_lines",
+      "label": "Excerpt max lines",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Article title size (desktop)",
+      "min": 20,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title font weight",
+      "min": 400,
+      "max": 800,
+      "step": 100,
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label",
+      "default": "Read More"
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Empty State"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty state message",
+      "default": "No posts yet — check back soon."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Blog List"
+    }
+  ]
+}
+{% endschema %}
