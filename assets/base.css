@@ -1,4 +1,11 @@
 /* Cowgirl Armor Global CSS */
+/* ============================================================
+   PREMIUM WHITE REDESIGN
+   Base: Pure white / near-white surfaces
+   Gradient: Buttons · Dividers · Badges · Borders / Focus rings
+   Gradient: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%)
+   ============================================================ */
+
 /* Variables */
 :root {
   /* =============================================
@@ -13,17 +20,24 @@
   --color-brand-gradient-vertical: linear-gradient(180deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
   --color-brand-gradient-radial: radial-gradient(ellipse at top left, #3A6FE8, #8B52D4 50%, #CC72E8);
 
-  /* Colors */
-  --color-base-bg:   var(--color-bg, #F8F6F4);
+  /* ── PREMIUM WHITE SURFACE SYSTEM ── */
+  --color-surface-0:   #FFFFFF;        /* Pure white — cards, modals, inputs    */
+  --color-surface-1:   #FAFAFA;        /* Near-white — page body                */
+  --color-surface-2:   #F5F5F7;        /* Subtle tint — alternating sections    */
+  --color-surface-3:   #EFEFEF;        /* Light grey — hover states, borders    */
+
+  /* Colors — base bg is now white */
+  --color-base-bg:   var(--color-bg, #FFFFFF);
   --color-accent:    var(--color-accent, #8B52D4);
   --color-secondary: var(--color-secondary, #CC72E8);
   --color-text:      var(--color-text, #1A1A1A);
-  --color-border:    var(--color-border, #CCCCCC);
+  --color-text-muted: rgba(26, 26, 26, 0.55);
+  --color-border:    var(--color-border, #E2E2E2);
   --color-error:     var(--color-error, #DC2626);
   --color-success:   var(--color-success, #16A34A);
 
-  /* Button Colors */
-  --color-button:       var(--color-button, #3A6FE8);
+  /* Button Colors — now gradient-driven */
+  --color-button:       var(--color-button, #8B52D4);
   --color-button-text:  var(--color-button-text, #FFFFFF);
   --color-button-hover: var(--color-button-hover, #8B52D4);
 
@@ -59,13 +73,15 @@
   --buttons-radius:           var(--buttons-radius, 4px);
   --buttons-border-thickness: var(--buttons-border-thickness, 1px);
 
-  /* Shadows */
-  --shadow-opacity:  var(--shadow-opacity, 0.1);
-  --shadow-blur:     var(--shadow-blur, 20px);
-  --shadow-default:  0 4px var(--shadow-blur) rgba(0, 0, 0, var(--shadow-opacity));
-  --shadow-hover:    0 8px calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, calc(var(--shadow-opacity) * 1.2));
-  --shadow-brand:    0 4px 24px rgba(139, 82, 212, 0.25);
-  --shadow-brand-hover: 0 8px 40px rgba(139, 82, 212, 0.4);
+  /* Shadows — refined for white surfaces */
+  --shadow-opacity:  var(--shadow-opacity, 0.07);
+  --shadow-blur:     var(--shadow-blur, 24px);
+  --shadow-default:  0 2px var(--shadow-blur) rgba(0, 0, 0, var(--shadow-opacity));
+  --shadow-hover:    0 8px calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, calc(var(--shadow-opacity) * 1.4));
+  --shadow-brand:    0 4px 24px rgba(139, 82, 212, 0.22);
+  --shadow-brand-hover: 0 8px 40px rgba(139, 82, 212, 0.38);
+  --shadow-card:     0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.08);
 
   /* Layout */
   --page-width:        1400px;
@@ -76,6 +92,9 @@
   --duration-default: 200ms;
   --duration-long:    500ms;
   --ease-out-slow:    cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Gradient border trick (used on cards, inputs) ── */
+  --gradient-border-width: 1.5px;
 }
 
 /* ============================================
@@ -84,7 +103,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background-color: var(--color-base-bg);
+  background-color: var(--color-surface-1);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--font-size-base);
@@ -120,8 +139,8 @@ h6 { font-size: var(--font-heading-h6); }
   left: -9999px;
   z-index: 9999;
   padding: 10px 20px;
-  background: var(--color-button, #3A6FE8);
-  color: var(--color-button-text, #fff);
+  background: var(--color-brand-gradient);
+  color: #fff;
   font-weight: 600;
   text-decoration: none;
   border-radius: 4px;
@@ -145,7 +164,7 @@ h6 { font-size: var(--font-heading-h6); }
 }
 .announcement-bar__content { flex-grow: 1; }
 .announcement-bar__link { text-decoration: none; }
-.announcement-bar__link:hover .announcement-bar__message { opacity: 0.8; text-decoration: underline; }
+.announcement-bar__link:hover .announcement-bar__message { opacity: 0.85; text-decoration: underline; }
 .announcement-bar__message { margin: 0; line-height: 1.4; }
 .announcement-bar__close {
   background: transparent;
@@ -175,6 +194,7 @@ h6 { font-size: var(--font-heading-h6); }
   display: flex;
   flex-direction: column;
   padding: 2rem 1.5rem;
+  background-color: var(--color-surface-0);
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -183,7 +203,7 @@ h6 { font-size: var(--font-heading-h6); }
 .mobile-drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.35);
   z-index: 499;
   opacity: 0;
   pointer-events: none;
@@ -201,12 +221,11 @@ h6 { font-size: var(--font-heading-h6); }
 
 /* ============================================
    CART DRAWER — base layout
-   (colors come from cart-drawer.liquid)
    ============================================ */
 .cart-drawer__overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.35);
   z-index: 800;
   opacity: 0;
   pointer-events: none;
@@ -220,11 +239,12 @@ h6 { font-size: var(--font-heading-h6); }
   width: min(420px, 92vw);
   height: 100%;
   z-index: 801;
+  background-color: var(--color-surface-0);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+  box-shadow: -8px 0 40px rgba(0,0,0,0.09);
 }
 .cart-drawer__panel.is-open { transform: translateX(0); }
 
@@ -236,7 +256,7 @@ h6 { font-size: var(--font-heading-h6); }
   align-items: center;
   justify-content: center;
   padding: 1rem 2rem;
-  border: 1px solid var(--color-text);
+  border: 1.5px solid var(--color-text);
   background-color: transparent;
   color: var(--color-text);
   font-family: var(--font-heading);
@@ -244,40 +264,89 @@ h6 { font-size: var(--font-heading-h6); }
   font-weight: 600;
   text-decoration: none;
   border-radius: var(--buttons-radius);
-  border-width: var(--buttons-border-thickness);
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
               transform 0.2s ease, box-shadow 0.2s ease;
   -webkit-appearance: none;
   appearance: none;
 }
-.btn:hover { background-color: var(--color-text); color: var(--color-base-bg); }
+.btn:hover { background-color: var(--color-text); color: var(--color-surface-0); }
 
+/* ── PRIMARY BUTTON — full gradient ── */
 .btn--primary {
-  background-color: var(--color-button);
-  color: var(--color-button-text);
-  border-color: var(--color-button);
+  background: var(--color-brand-gradient);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: var(--shadow-brand);
+  position: relative;
+  overflow: hidden;
 }
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-brand-gradient-hover);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.btn--primary:hover::after { opacity: 1; }
 .btn--primary:hover {
-  background-color: var(--color-button-hover);
-  border-color: var(--color-button-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-brand-hover);
 }
+.btn--primary span { position: relative; z-index: 1; }
 
+/* ── SECONDARY BUTTON — gradient border, transparent fill ── */
 .btn--secondary {
   background-color: transparent;
-  color: var(--color-text);
-  border: var(--buttons-border-thickness) solid var(--color-text);
+  color: var(--color-brand-purple);
+  border: none;
+  position: relative;
+  padding: calc(1rem + 1.5px) calc(2rem + 1.5px); /* compensate for pseudo border */
 }
-.btn--secondary:hover { background-color: var(--color-text); color: var(--color-base-bg); }
-
-.btn--accent {
-  background-color: var(--color-accent);
+/* Gradient border via pseudo-element */
+.btn--secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--buttons-radius);
+  padding: 1.5px;
+  background: var(--color-brand-gradient);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.btn--secondary:hover {
+  background: var(--color-brand-gradient);
   color: #FFFFFF;
-  border-color: var(--color-accent);
 }
-.btn--accent:hover { opacity: 0.9; transform: translateY(-2px); }
+.btn--secondary:hover::before { display: none; }
 
-/* Brand gradient button — Cowgirl Armor signature CTA */
+/* ── ACCENT BUTTON ── */
+.btn--accent {
+  background: var(--color-brand-gradient);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: var(--shadow-brand);
+  position: relative;
+  overflow: hidden;
+}
+.btn--accent::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-brand-gradient-hover);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.btn--accent:hover::after { opacity: 1; }
+.btn--accent:hover { transform: translateY(-2px); box-shadow: var(--shadow-brand-hover); }
+.btn--accent span { position: relative; z-index: 1; }
+
+/* ── BRAND BUTTON (alias — same as primary) ── */
 .btn--brand {
   background: var(--color-brand-gradient);
   color: #FFFFFF;
@@ -295,28 +364,37 @@ h6 { font-size: var(--font-heading-h6); }
   transition: opacity 0.3s ease;
 }
 .btn--brand:hover::after { opacity: 1; }
-.btn--brand:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-brand-hover);
-}
+.btn--brand:hover { transform: translateY(-2px); box-shadow: var(--shadow-brand-hover); }
 .btn--brand span { position: relative; z-index: 1; }
 
 .btn--full-width  { width: 100%; }
 .btn--shadow      { box-shadow: var(--shadow-default); }
 .btn--shadow:hover{ box-shadow: var(--shadow-hover); }
 .btn--uppercase   { text-transform: uppercase; letter-spacing: 0.05em; }
-.btn:disabled     { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn:disabled     { opacity: 0.45; cursor: not-allowed; transform: none !important; }
 
 /* ============================================
-   PRODUCT CARD
+   PRODUCT CARD — white surface
    ============================================ */
-.product-card { position: relative; text-decoration: none; color: var(--color-text); display: block; }
+.product-card {
+  position: relative;
+  text-decoration: none;
+  color: var(--color-text);
+  display: block;
+  background-color: var(--color-surface-0);
+  border-radius: var(--border-radius);
+  transition: box-shadow var(--duration-default) ease, transform var(--duration-default) ease;
+}
+.product-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
+}
 .product-card__image-wrapper {
   position: relative;
   overflow: hidden;
   border-radius: var(--border-radius);
   margin-bottom: 1rem;
-  background: rgba(0,0,0,0.04);
+  background: var(--color-surface-2);
 }
 .product-card__image { width: 100%; height: auto; display: block; transition: transform var(--duration-long) var(--ease-out-slow); }
 .product-card:hover .product-card__image { transform: scale(1.05); }
@@ -327,6 +405,8 @@ h6 { font-size: var(--font-heading-h6); }
   width: 100%; height: 100%; object-fit: cover;
 }
 .product-card:hover .product-card__image-secondary { opacity: 1; }
+
+/* Badge — gradient */
 .product-card__badge {
   position: absolute; top: 0.75rem; left: 0.75rem;
   background: var(--color-brand-gradient);
@@ -341,30 +421,39 @@ h6 { font-size: var(--font-heading-h6); }
 .product-card__badge--sale { background: var(--color-error); }
 .product-card__info    { padding: 0.25rem 0; }
 .product-card__title   { font-family: var(--font-heading); font-size: 0.95rem; margin-bottom: 0.35rem; font-weight: 600; }
-.product-card__vendor  { font-size: var(--font-size-sm); opacity: 0.6; margin-bottom: 0.35rem; }
+.product-card__vendor  { font-size: var(--font-size-sm); color: var(--color-text-muted); margin-bottom: 0.35rem; }
 .product-card__price   { font-weight: 600; }
 .product-card__price--on-sale  { color: var(--color-error); }
-.product-card__price--compare  { text-decoration: line-through; opacity: 0.5; margin-left: 0.5rem; font-weight: 400; }
+.product-card__price--compare  { text-decoration: line-through; opacity: 0.45; margin-left: 0.5rem; font-weight: 400; }
 
 /* ============================================
-   CARD
+   CARD — white surface + gradient border on hover
    ============================================ */
 .card {
-  background-color: var(--color-base-bg);
-  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-surface-0);
+  border: var(--border-width) solid var(--color-surface-3);
   border-radius: var(--border-radius);
   padding: 1.5rem;
-  transition: transform var(--duration-default) ease, box-shadow var(--duration-default) ease;
+  transition: transform var(--duration-default) ease, box-shadow var(--duration-default) ease, border-color var(--duration-default) ease;
+  box-shadow: var(--shadow-card);
 }
-.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
-.card--shadow { box-shadow: var(--shadow-default); }
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  /* Gradient border on hover via outline trick */
+  border-color: transparent;
+  outline: 1.5px solid transparent;
+  background-clip: padding-box;
+  box-shadow: var(--shadow-card-hover), 0 0 0 1.5px rgba(139,82,212,0.35);
+}
+.card--shadow { box-shadow: var(--shadow-card); }
 .card--brand-shadow:hover { box-shadow: var(--shadow-brand-hover); }
 .card__image  { width: 100%; height: auto; display: block; border-radius: var(--border-radius); }
 .card__title  { font-family: var(--font-heading); font-size: var(--font-heading-h4); margin-bottom: 0.5rem; }
-.card__text   { opacity: 0.8; }
+.card__text   { color: var(--color-text-muted); }
 
 /* ============================================
-   FORMS
+   FORMS — gradient focus ring
    ============================================ */
 .form-field { margin-bottom: 1.5rem; }
 .form-label {
@@ -373,12 +462,14 @@ h6 { font-size: var(--font-heading-h6); }
   font-size: var(--font-size-sm);
   margin-bottom: 0.5rem;
   font-weight: 600;
+  color: var(--color-text);
 }
 .form-input, .form-textarea, .form-select {
-  width: 100%; padding: 0.75rem 1rem;
-  border: var(--border-width) solid var(--color-border);
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--color-surface-3);
   border-radius: var(--border-radius);
-  background-color: var(--color-base-bg);
+  background-color: var(--color-surface-0);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--font-size-base);
@@ -386,11 +477,27 @@ h6 { font-size: var(--font-heading-h6); }
   -webkit-appearance: none;
   appearance: none;
 }
+
+/* Gradient focus ring — the signature micro-detail */
 .form-input:focus, .form-textarea:focus, .form-select:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(139, 82, 212, 0.15);
+  border-color: transparent;
+  box-shadow:
+    0 0 0 1.5px transparent,
+    0 0 0 1.5px var(--color-brand-purple),
+    0 0 0 4px rgba(139, 82, 212, 0.12);
+  /* Fallback for browsers that support it: gradient border */
+  background-image: none;
 }
+
+/* Better gradient focus via pseudo on wrapper — progressive enhancement */
+.form-field:focus-within .form-input,
+.form-field:focus-within .form-textarea,
+.form-field:focus-within .form-select {
+  border-color: var(--color-brand-purple);
+  box-shadow: 0 0 0 3px rgba(139, 82, 212, 0.14);
+}
+
 .form-textarea { min-height: 120px; resize: vertical; }
 .form-error    { color: var(--color-error);   font-size: var(--font-size-sm); margin-top: 0.25rem; }
 .form-success  { color: var(--color-success); font-size: var(--font-size-sm); margin-top: 0.25rem; }
@@ -401,25 +508,28 @@ h6 { font-size: var(--font-heading-h6); }
 .placeholder-svg {
   display: block;
   width: 100%; height: 100%;
-  fill: rgba(0,0,0,0.12);
-  background-color: rgba(0,0,0,0.04);
+  fill: rgba(0,0,0,0.08);
+  background-color: var(--color-surface-2);
 }
 
 /* ============================================
-   BADGES
+   BADGES — gradient background
    ============================================ */
 .badge {
-  display: inline-block; padding: 0.25rem 0.75rem;
-  font-size: var(--font-size-sm); font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em;
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   border-radius: var(--border-radius);
   background: var(--color-brand-gradient);
   color: #FFFFFF;
 }
 .badge--sale     { background: var(--color-error);   color: white; }
-.badge--new      { background: var(--color-success); color: white; }
-.badge--sold-out { background: var(--color-text);    color: var(--color-base-bg); }
-.badge--accent   { background: var(--color-accent);  color: #FFFFFF; }
+.badge--new      { background: var(--color-brand-gradient); color: white; }
+.badge--sold-out { background: var(--color-text);    color: var(--color-surface-0); }
+.badge--accent   { background: var(--color-brand-gradient); color: #FFFFFF; }
 
 /* ============================================
    LAYOUT UTILITIES
@@ -431,6 +541,11 @@ h6 { font-size: var(--font-heading-h6); }
   padding: 0 var(--page-width-margin, 2rem);
 }
 .section { padding: var(--spacing-sections) 0; }
+
+/* Alternating section surfaces — replaces heavy gradient backgrounds */
+.section--white     { background-color: var(--color-surface-0); }
+.section--offwhite  { background-color: var(--color-surface-1); }
+.section--subtle    { background-color: var(--color-surface-2); }
 
 /* ============================================
    GRID UTILITIES
@@ -518,8 +633,8 @@ h6 { font-size: var(--font-heading-h6); }
 /* Loading */
 .loading { opacity: 0.6; pointer-events: none; cursor: wait; }
 .spinner {
-  border: 3px solid rgba(0,0,0,0.1);
-  border-top-color: var(--color-accent);
+  border: 3px solid var(--color-surface-3);
+  border-top-color: var(--color-brand-purple);
   border-radius: 50%;
   width: 36px; height: 36px;
   animation: spin 0.8s linear infinite;
@@ -528,9 +643,12 @@ h6 { font-size: var(--font-heading-h6); }
 
 /* ============================================
    BRAND GRADIENT UTILITIES — Cowgirl Armor
+   Preserved: only applies gradient to small
+   elements (buttons, badges, lines, borders)
+   NOT to large section backgrounds.
    ============================================ */
 
-/* Universal gradient attribute — add data-gradient="true" to ANY element */
+/* Universal gradient attribute */
 [data-gradient="true"] {
   background: var(--color-brand-gradient) !important;
   color: #FFFFFF;
@@ -546,7 +664,7 @@ h6 { font-size: var(--font-heading-h6); }
   color: #FFFFFF;
 }
 
-/* Backgrounds */
+/* Backgrounds — use sparingly, only for accent UI elements */
 .bg-brand          { background: var(--color-brand-gradient); }
 .bg-brand-vertical { background: var(--color-brand-gradient-vertical); }
 .bg-brand-radial   { background: var(--color-brand-gradient-radial); }
@@ -555,10 +673,14 @@ h6 { font-size: var(--font-heading-h6); }
   background-size: 300% 300%;
   animation: gradientShift 6s ease infinite;
 }
-.bg-accent    { background-color: var(--color-accent); }
-.bg-secondary { background-color: var(--color-secondary); }
+/* Neutral backgrounds for white theme */
+.bg-white   { background-color: var(--color-surface-0); }
+.bg-offwhite{ background-color: var(--color-surface-1); }
+.bg-subtle  { background-color: var(--color-surface-2); }
+.bg-accent    { background: var(--color-brand-gradient); }
+.bg-secondary { background: var(--color-brand-gradient); }
 
-/* Text gradient */
+/* Text gradient — hero headlines etc */
 .text-gradient {
   background: var(--color-brand-gradient);
   -webkit-background-clip: text;
@@ -574,7 +696,7 @@ h6 { font-size: var(--font-heading-h6); }
   animation: shimmer 3s linear infinite;
 }
 
-/* Brand borders */
+/* ── GRADIENT BORDERS — the signature detail ── */
 .border-brand {
   border: 2px solid transparent;
   background-clip: padding-box;
@@ -588,7 +710,7 @@ h6 { font-size: var(--font-heading-h6); }
   background: var(--color-brand-gradient);
   z-index: -1;
 }
-.border-accent   { border-color: var(--color-accent); }
+.border-accent   { border-color: var(--color-brand-purple); }
 .border-brand-solid { border-color: var(--color-brand-purple); }
 
 /* Brand shadow utilities */
@@ -596,7 +718,7 @@ h6 { font-size: var(--font-heading-h6); }
 .shadow-brand-hover:hover { box-shadow: var(--shadow-brand-hover); }
 
 /* ============================================
-   HERO
+   HERO — white / light base version
    ============================================ */
 .premium-hero {
   position: relative;
@@ -606,7 +728,7 @@ h6 { font-size: var(--font-heading-h6); }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: var(--color-base-bg);
+  background-color: var(--color-surface-0);
 }
 .premium-hero__bg {
   position: absolute; inset: 0;
@@ -615,18 +737,19 @@ h6 { font-size: var(--font-heading-h6); }
   z-index: 1;
   animation: bgSettle 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
+/* Lighter overlay for premium white feel */
 .premium-hero__overlay {
   position: absolute; inset: 0;
   z-index: 2;
-  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(0,0,0,0.45) 100%);
 }
 .premium-hero__overlay--brand {
   position: absolute; inset: 0;
   z-index: 2;
   background: linear-gradient(180deg,
-    rgba(58,111,232,0.3) 0%,
-    rgba(139,82,212,0.4) 50%,
-    rgba(204,114,232,0.5) 100%
+    rgba(58,111,232,0.18) 0%,
+    rgba(139,82,212,0.28) 50%,
+    rgba(204,114,232,0.35) 100%
   );
 }
 .premium-hero__content-container {
@@ -638,15 +761,23 @@ h6 { font-size: var(--font-heading-h6); }
    ICON / CATEGORY GRID
    ============================================ */
 .category-card {
-  background-color: var(--color-accent);
-  padding: 3rem 2rem; text-align: center;
+  background-color: var(--color-surface-0);
+  padding: 3rem 2rem;
+  text-align: center;
   border-radius: var(--border-radius);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: var(--border-width) solid var(--color-text);
+  border: 1.5px solid var(--color-surface-3);
+  box-shadow: var(--shadow-card);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 1rem;
+  color: var(--color-text);
 }
-.category-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-brand-hover); }
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-brand-hover);
+  border-color: transparent;
+}
+/* Gradient variant — still available for hero icons */
 .category-card--gradient {
   background: var(--color-brand-gradient);
   border: none;
@@ -687,11 +818,11 @@ h6 { font-size: var(--font-heading-h6); }
    SHIELD CONTAINER — Cowgirl Armor brand shape
    ============================================ */
 .shield-container {
-  border: var(--border-width) solid var(--color-text);
+  border: 1.5px solid var(--color-surface-3);
   padding: 2rem;
   clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
   border-radius: var(--border-radius);
-  background: transparent;
+  background: var(--color-surface-0);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -703,8 +834,17 @@ h6 { font-size: var(--font-heading-h6); }
   color: #FFFFFF;
 }
 .shield-container--outline {
-  border: 3px solid var(--color-brand-purple);
-  background: transparent;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+.shield-container--outline::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
+  background: var(--color-brand-gradient);
+  z-index: -1;
 }
 
 /* ============================================
@@ -728,32 +868,37 @@ h6 { font-size: var(--font-heading-h6); }
 /* ============================================
    ICON / CATEGORY GRID SECTION
    ============================================ */
-.icon-grid-section {
-  /* Full-width outer wrapper — no max-width here.
-     The inner .armor-grid handles centering and constraint. */
-  width: 100%;
-}
+.icon-grid-section { width: 100%; }
 
 /* ============================================
    FORM SECTION (newsletter with bg)
+   Now: white/light bg with gradient accents
    ============================================ */
 .form-section {
   position: relative;
   padding: clamp(4rem, 10vw, 8rem) 2rem;
-  background-size: cover;
-  background-position: center;
-  background-color: var(--color-text);
-  color: var(--color-base-bg);
+  background-color: var(--color-surface-0);
+  color: var(--color-text);
   text-align: center;
+  /* Subtle gradient top border line */
+  border-top: 3px solid transparent;
+  background-image:
+    linear-gradient(var(--color-surface-0), var(--color-surface-0)),
+    var(--color-brand-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
+/* Dark/brand variant — kept for sections that need impact */
 .form-section--brand {
   background: var(--color-brand-gradient);
+  border-top: none;
+  background-image: none;
   color: #FFFFFF;
 }
 .form-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(26,26,26,0.6);
+  background: rgba(255,255,255,0.85);
 }
 .form-content {
   position: relative;
@@ -761,10 +906,10 @@ h6 { font-size: var(--font-heading-h6); }
   max-width: 600px;
   margin: 0 auto;
 }
-.newsletter-form input::placeholder { color: rgba(226,226,226,0.7); }
+.newsletter-form input::placeholder { color: var(--color-text-muted); }
 .newsletter-form button {
-  background: var(--color-base-bg);
-  color: var(--color-text);
+  background: var(--color-brand-gradient);
+  color: #FFFFFF;
   border: none;
 }
 .form-section--brand .newsletter-form button {
@@ -780,10 +925,7 @@ h6 { font-size: var(--font-heading-h6); }
   max-width: 800px;
   margin: 0 auto;
 }
-.premium-hero__logo {
-  margin: 0 auto 1.5rem auto;
-  display: block;
-}
+.premium-hero__logo { margin: 0 auto 1.5rem auto; display: block; }
 .premium-hero__heading {
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   line-height: 1.1;
@@ -830,7 +972,7 @@ h6 { font-size: var(--font-heading-h6); }
 }
 
 /* ============================================
-   TEXT UTILITIES (full set)
+   TEXT UTILITIES
    ============================================ */
 .text-body    { font-family: var(--font-body); }
 .text-heading { font-family: var(--font-heading); }
@@ -849,11 +991,12 @@ h6 { font-size: var(--font-heading-h6); }
 .capitalize    { text-transform: capitalize; }
 .lowercase     { text-transform: lowercase; }
 .text-white    { color: #FFFFFF; }
+.text-muted    { color: var(--color-text-muted); }
 .text-accent   { color: var(--color-accent); }
 .text-brand    { color: var(--color-brand-purple); }
 
 /* ============================================
-   DISPLAY UTILITIES (full set)
+   DISPLAY UTILITIES
    ============================================ */
 .block        { display: block; }
 .inline-block { display: inline-block; }
@@ -874,36 +1017,69 @@ h6 { font-size: var(--font-heading-h6); }
 .pb-0 { padding-bottom: 0; }
 
 /* ============================================
-   DIVIDER UTILITIES — Cowgirl Armor
+   DIVIDER UTILITIES — Gradient lines
    ============================================ */
 .divider-brand {
-  height: 3px;
+  height: 2px;
   background: var(--color-brand-gradient);
   border: none;
-  border-radius: 2px;
+  border-radius: 99px;
   margin: 2rem 0;
+  opacity: 0.85;
+}
+.divider-brand--thick {
+  height: 3px;
+}
+.divider-brand--centered {
+  max-width: 80px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Used under section headings as an accent line */
+.divider-brand--small {
+  height: 2px;
+  width: 48px;
+  background: var(--color-brand-gradient);
+  border: none;
+  border-radius: 99px;
+  margin: 0.75rem 0 1.5rem 0;
 }
 .divider-thin {
   height: 1px;
-  background-color: var(--color-border);
+  background-color: var(--color-surface-3);
   border: none;
   margin: 1.5rem 0;
 }
 
+/* ── HR tag — make native <hr> use gradient ── */
+hr {
+  border: none;
+  height: 1.5px;
+  background: var(--color-brand-gradient);
+  border-radius: 99px;
+  margin: 1.5rem 0;
+  opacity: 0.6;
+}
+
+/* ============================================
+   INPUT GRADIENT FOCUS — global native inputs
+   (supplements .form-input class)
+   ============================================ */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-brand-purple);
+  box-shadow: 0 0 0 3px rgba(139, 82, 212, 0.14);
+}
+
 /* ============================================
    FULL-BLEED SECTION FIX — Cowgirl Armor
-   Allows collection sections to span full width
-   even when inside .page-width containers
    ============================================ */
-
-/* Remove padding from shopify section wrappers
-   so our sections control their own width */
 .shopify-section {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
-
-/* Remove page-width constraint on collection template */
 .template-collection #MainContent,
 .template-collection .content-for-layout {
   padding-left: 0 !important;
