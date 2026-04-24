@@ -1,264 +1,567 @@
+{%- comment -%} Build gradient directly in Liquid {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
 <style>
-  .premium-article-{{ section.id }} {
-    background-color: {{ section.settings.bg_color }};
+  /* ── Wrapper ── */
+  .article-{{ section.id }} {
+    background-color: #FFFFFF;
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    color: {{ section.settings.text_color }};
   }
 
-  .premium-article__header {
-    max-width: 1000px;
-    margin: 0 auto 3rem;
-    text-align: center;
-    padding: 0 2rem;
+  .article-{{ section.id }} .article__inner {
+    max-width: {{ section.settings.content_max_width }}px;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 5vw, 3rem);
   }
 
-  .premium-article__title {
-    font-family: var(--font-heading);
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    color: {{ section.settings.text_color }};
-  }
-
-  .premium-article__meta {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    opacity: 0.7;
+  /* ── Back link ── */
+  .article-{{ section.id }} .article__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: {{ grad_col_2 }};
+    margin-bottom: 2.5rem;
+    transition: gap 0.2s ease;
+  }
+  .article-{{ section.id }} .article__back:hover { gap: 0.65rem; }
+  .article-{{ section.id }} .article__back svg { transition: transform 0.2s ease; }
+  .article-{{ section.id }} .article__back:hover svg { transform: translateX(-3px); }
+
+  /* ── Header ── */
+  .article-{{ section.id }} .article__header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1.5px solid #F0F0F0;
   }
 
-  .premium-article__meta-separator {
-    margin: 0 0.5rem;
+  .article-{{ section.id }} .article__eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: {{ grad_col_2 }};
+    margin-bottom: 1rem;
+  }
+  .article-{{ section.id }} .article__eyebrow::after {
+    content: '';
+    display: block;
+    height: 2px;
+    width: 2.5rem;
+    margin-top: 6px;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
   }
 
-  .premium-article__image-container {
-    max-width: 1000px;
-    margin: 0 auto 4rem;
-    padding: 0 2rem;
+  .article-{{ section.id }} .article__title {
+    font-family: var(--font-heading-family, sans-serif);
+    font-size: clamp(2rem, 5vw, {{ section.settings.title_size }}px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    margin: 0 0 1.25rem;
   }
 
-  .premium-article__image {
+  .article-{{ section.id }} .article__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.82rem;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    opacity: 0.55;
+  }
+  .article-{{ section.id }} .article__meta-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+  }
+  .article-{{ section.id }} .article__meta-author {
+    color: {{ grad_col_2 }};
+    opacity: 1;
+    font-weight: 600;
+  }
+
+  /* ── Tags ── */
+  .article-{{ section.id }} .article__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+  .article-{{ section.id }} .article__tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
+    color: #FFFFFF;
+  }
+
+  /* ── Hero image ── */
+  .article-{{ section.id }} .article__hero {
     width: 100%;
-    height: auto;
+    border-radius: {{ section.settings.image_radius }}px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    aspect-ratio: {{ section.settings.image_ratio }};
+    background: #F5F5F7;
+  }
+  .article-{{ section.id }} .article__hero img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: var(--border-radius);
     display: block;
   }
 
-  .premium-article__content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    font-family: var(--font-body);
-    font-size: clamp(1rem, 2vw, 1.15rem);
-    line-height: 1.8;
+  /* ── Article body content ── */
+  .article-{{ section.id }} .article__body {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: clamp(1rem, 1.5vw, {{ section.settings.body_size }}px);
+    line-height: 1.85;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
   }
 
-  .premium-article__content p {
-    margin-bottom: 2rem;
+  /* Rich text styles */
+  .article-{{ section.id }} .article__body h1,
+  .article-{{ section.id }} .article__body h2,
+  .article-{{ section.id }} .article__body h3,
+  .article-{{ section.id }} .article__body h4 {
+    font-family: var(--font-heading-family, sans-serif);
+    font-weight: 700;
+    line-height: 1.2;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    margin: 2rem 0 1rem;
   }
+  .article-{{ section.id }} .article__body h2 { font-size: clamp(1.4rem, 3vw, 1.75rem); }
+  .article-{{ section.id }} .article__body h3 { font-size: clamp(1.2rem, 2.5vw, 1.4rem); }
 
-  .premium-article__content h2,
-  .premium-article__content h3,
-  .premium-article__content h4 {
-    font-family: var(--font-heading);
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
+  .article-{{ section.id }} .article__body p { margin: 0 0 1.5rem; }
+  .article-{{ section.id }} .article__body p:last-child { margin-bottom: 0; }
+
+  .article-{{ section.id }} .article__body a {
+    color: {{ grad_col_2 }};
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
+  .article-{{ section.id }} .article__body a:hover { opacity: 0.75; }
 
-  .premium-article__content img {
+  .article-{{ section.id }} .article__body ul,
+  .article-{{ section.id }} .article__body ol {
+    padding-left: 1.5rem;
+    margin: 0 0 1.5rem;
+  }
+  .article-{{ section.id }} .article__body li { margin-bottom: 0.5rem; }
+
+  .article-{{ section.id }} .article__body img {
     max-width: 100%;
     height: auto;
+    border-radius: {{ section.settings.image_radius }}px;
+    margin: 1.5rem 0;
+  }
+
+  .article-{{ section.id }} .article__body blockquote {
     margin: 2rem 0;
-  }
-
-  .premium-article__content a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  .premium-article__content blockquote {
-    border-left: 2px solid {{ section.settings.text_color }};
-    padding-left: 1.5rem;
-    margin-left: 0;
+    padding: 1.25rem 1.75rem;
+    border-left: 3px solid transparent;
+    background-image: linear-gradient(#FFFFFF, #FFFFFF),  {{ brand_gradient }};
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-color: #FAFAFA;
+    font-size: 1.1rem;
     font-style: italic;
-    font-size: 1.25rem;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    opacity: 0.85;
+    border-radius: 0 4px 4px 0;
   }
 
-  .premium-article__pagination {
-    max-width: 1200px;
-    margin: 5rem auto 0;
-    padding: 3rem 2rem 0;
-    border-top: 1px solid rgba(0,0,0,0.1);
+  .article-{{ section.id }} .article__body hr {
+    border: none;
+    height: 1.5px;
+    background: {{ brand_gradient }};
+    border-radius: 99px;
+    margin: 2.5rem 0;
+    opacity: 0.5;
+  }
+
+  /* ── Footer divider ── */
+  .article-{{ section.id }} .article__footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1.5px solid #F0F0F0;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1rem;
   }
 
-  .article-nav-link {
+  /* ── Back to blog button ── */
+  .article-{{ section.id }} .article__back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.7rem 1.75rem;
+    border-radius: 4px;
+    background: {{ brand_gradient }};
+    color: #FFFFFF;
+    border: none;
+    box-shadow: 0 4px 20px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .article-{{ section.id }} .article__back-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: {{ brand_gradient }};
+    filter: brightness(0.88);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .article-{{ section.id }} .article__back-btn span,
+  .article-{{ section.id }} .article__back-btn svg { position: relative; z-index: 1; }
+  .article-{{ section.id }} .article__back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 36px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.35);
+  }
+  .article-{{ section.id }} .article__back-btn:hover::after { opacity: 1; }
+
+  /* ── Share links ── */
+  .article-{{ section.id }} .article__share {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    font-size: 0.82rem;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
+    opacity: 0.55;
+  }
+  .article-{{ section.id }} .article__share a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1.5px solid #E2E2E2;
+    color: {{ settings.color_text | default: '#1A1A1A' }};
     text-decoration: none;
-    color: {{ section.settings.text_color }};
-    font-family: var(--font-heading);
-    font-size: clamp(1.2rem, 3vw, 1.8rem);
-    transition: opacity 0.3s ease;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    opacity: 1;
+  }
+  .article-{{ section.id }} .article__share a:hover {
+    border-color: {{ grad_col_2 }};
+    color: {{ grad_col_2 }};
+    background: rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.06);
   }
 
-  .article-nav-link:hover {
-    opacity: 0.6;
-  }
-
-  .article-nav-link svg {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-  }
-
-  .article-nav-link--next {
-    margin-left: auto;
-    text-align: right;
+  /* ── Responsive ── */
+  @media screen and (max-width: 767px) {
+    .article-{{ section.id }} .article__footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>
 
-<article class="premium-article-{{ section.id }}" itemscope itemtype="http://schema.org/BlogPosting">
-  <header class="premium-article__header fade-up-anim">
-    <h1 class="premium-article__title" itemprop="headline">{{ article.title }}</h1>
+<div class="article-{{ section.id }}">
+  <div class="article__inner">
 
-    {%- if section.settings.show_date or section.settings.show_author -%}
-      <div class="premium-article__meta">
+    {%- comment -%} Back link ── {%- endcomment -%}
+    {%- if section.settings.show_back_link -%}
+      <a href="{{ blog.url }}" class="article__back">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M13 7H1M6 2L1 7l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ section.settings.back_label }}
+      </a>
+    {%- endif -%}
+
+    {%- comment -%} Article header ── {%- endcomment -%}
+    <header class="article__header">
+
+      {%- if section.settings.show_blog_title -%}
+        <span class="article__eyebrow">{{ blog.title }}</span>
+      {%- endif -%}
+
+      <h1 class="article__title">{{ article.title }}</h1>
+
+      <div class="article__meta">
         {%- if section.settings.show_date -%}
-          <span itemprop="datePublished">{{ article.published_at | time_tag: format: 'date' }}</span>
-        {%- endif -%}
-
-        {%- if section.settings.show_date and section.settings.show_author -%}
-          <span class="premium-article__meta-separator">|</span>
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+            {{ article.published_at | date: section.settings.date_format }}
+          </time>
         {%- endif -%}
 
         {%- if section.settings.show_author -%}
-          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-            <span itemprop="name">{{ article.author }}</span>
-          </span>
+          {%- if section.settings.show_date -%}
+            <span class="article__meta-dot"></span>
+          {%- endif -%}
+          <span class="article__meta-author">{{ article.author }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.show_read_time -%}
+          {%- assign words = article.content | strip_html | split: ' ' | size -%}
+          {%- assign read_time = words | divided_by: 200 | plus: 1 -%}
+          <span class="article__meta-dot"></span>
+          <span>{{ read_time }} min read</span>
         {%- endif -%}
       </div>
-    {%- endif -%}
-  </header>
 
-  {%- if article.image and section.settings.show_featured_image -%}
-    <div class="premium-article__image-container fade-up-anim" style="animation-delay: 100ms;">
-      <img
-        src="{{ article.image | image_url: width: 1400 }}"
-        alt="{{ article.image.alt | escape }}"
-        class="premium-article__image"
-        itemprop="image"
-        loading="eager"
-      >
+      {%- if section.settings.show_tags and article.tags.size > 0 -%}
+        <div class="article__tags">
+          {%- for tag in article.tags -%}
+            <span class="article__tag">{{ tag }}</span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </header>
+
+    {%- comment -%} Hero image ── {%- endcomment -%}
+    {%- if section.settings.show_image and article.image != blank -%}
+      <div class="article__hero">
+        <img
+          src="{{ article.image | image_url: width: 1200 }}"
+          srcset="
+            {{ article.image | image_url: width: 600 }}  600w,
+            {{ article.image | image_url: width: 900 }}  900w,
+            {{ article.image | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 767px) 100vw, {{ section.settings.content_max_width }}px"
+          alt="{{ article.image.alt | default: article.title | escape }}"
+          loading="eager"
+          fetchpriority="high"
+          width="1200"
+          height="auto"
+        >
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Article body ── {%- endcomment -%}
+    <div class="article__body rte">
+      {{ article.content }}
     </div>
-  {%- endif -%}
 
-  <div class="premium-article__content fade-up-anim" style="animation-delay: 200ms;" itemprop="articleBody">
-    {{ article.content }}
+    {%- comment -%} Footer ── {%- endcomment -%}
+    <div class="article__footer">
+      <a href="{{ blog.url }}" class="article__back-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M13 7H1M6 2L1 7l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>{{ section.settings.back_label }}</span>
+      </a>
+
+      {%- if section.settings.show_share -%}
+        <div class="article__share">
+          <span>Share</span>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener" aria-label="Share on Facebook">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+            </svg>
+          </a>
+          <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Share on X">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Share on Pinterest">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+            </svg>
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+
   </div>
-
-  {%- if section.settings.show_pagination -%}
-    {%- if blog.previous_article or blog.next_article -%}
-      <div class="premium-article__pagination">
-        {%- if blog.previous_article -%}
-          <a href="{{ blog.previous_article.url }}" class="article-nav-link article-nav-link--prev">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>{{ blog.previous_article.title }}</span>
-          </a>
-        {%- else -%}
-          <div></div>
-        {%- endif -%}
-
-        {%- if blog.next_article -%}
-          <a href="{{ blog.next_article.url }}" class="article-nav-link article-nav-link--next">
-            <span>{{ blog.next_article.title }}</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-  {%- endif -%}
-</article>
+</div>
 
 {% schema %}
 {
-  "name": "Article Post",
+  "name": "Article",
   "tag": "section",
-  "templates": ["article"],
   "settings": [
     {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "transparent"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#1A1A1A"
+      "type": "header",
+      "content": "Header"
     },
     {
       "type": "checkbox",
-      "id": "show_featured_image",
-      "label": "Show Featured Image",
+      "id": "show_back_link",
+      "label": "Show back link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back link label",
+      "default": "Back to Cowgirl Conversations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_blog_title",
+      "label": "Show blog name as eyebrow",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_date",
-      "label": "Show Date",
-      "default": false
+      "label": "Show publish date",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "date_format",
+      "label": "Date format",
+      "options": [
+        { "value": "%m/%d/%y",  "label": "MM/DD/YY"      },
+        { "value": "%B %d, %Y", "label": "Month DD, YYYY" },
+        { "value": "%d %B %Y",  "label": "DD Month YYYY"  },
+        { "value": "%b %d, %Y", "label": "Mon DD, YYYY"   }
+      ],
+      "default": "%B %d, %Y"
     },
     {
       "type": "checkbox",
       "id": "show_author",
-      "label": "Show Author",
-      "default": false
+      "label": "Show author",
+      "default": true
     },
     {
       "type": "checkbox",
-      "id": "show_pagination",
-      "label": "Show Next/Previous Article Links",
+      "id": "show_read_time",
+      "label": "Show estimated read time",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show tags",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show featured image",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "21 / 9", "label": "Cinematic (21:9)" },
+        { "value": "16 / 9", "label": "Wide (16:9)"      },
+        { "value": "4 / 3",  "label": "Landscape (4:3)"  },
+        { "value": "1 / 1",  "label": "Square (1:1)"     }
+      ],
+      "default": "16 / 9"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size (desktop max)",
+      "min": 28,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body text size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 480,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 740
+    },
+    {
+      "type": "header",
+      "content": "Footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Show share buttons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
     },
     {
       "type": "range",
       "id": "padding_top",
-      "min": 0,
+      "label": "Top padding",
+      "min": 20,
       "max": 120,
-      "step": 4,
+      "step": 10,
       "unit": "px",
-      "label": "Top Padding",
-      "default": 80
+      "default": 60
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "min": 0,
+      "label": "Bottom padding",
+      "min": 20,
       "max": 120,
-      "step": 4,
+      "step": 10,
       "unit": "px",
-      "label": "Bottom Padding",
       "default": 80
     }
   ],
   "presets": [
     {
-      "name": "Article Post"
+      "name": "Article"
     }
   ]
 }
