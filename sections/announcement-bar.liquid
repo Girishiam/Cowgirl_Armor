@@ -11,36 +11,170 @@
       transform: translate3d(0, 0, 0);
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
+      /* Smooth hide/show */
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .announcement-bar--hidden {
+      transform: translate3d(0, -100%, 0) !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Gradient variant */
+    .announcement-bar[data-gradient="true"] {
+      background: var(--brand-gradient);
+      color: #FFFFFF;
+    }
+
+    /* Content layout */
+    .announcement-bar__content {
+      flex-grow: 1;
+      padding: 0 2.5rem; /* room for close btn */
+    }
+
+    .announcement-bar__message {
+      margin: 0;
+      line-height: 1.4;
+      font-family: var(--font-heading-family, sans-serif);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .announcement-bar__link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .announcement-bar__link:hover .announcement-bar__message {
+      opacity: 0.85;
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+
+    /* Close button */
+    .announcement-bar__close {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      color: inherit;
+      border-radius: 50%;
+      line-height: 0;
+    }
+    .announcement-bar__close:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.15);
+    }
+
+    /* Gradient close btn hover — subtle white bg */
+    .announcement-bar[data-gradient="true"] .announcement-bar__close:hover {
+      background: rgba(255, 255, 255, 0.18);
     }
   </style>
 
-  <div class="announcement-bar"
+  <div
+    class="announcement-bar"
+    id="announcement-bar"
     role="region"
     aria-label="Announcement"
     {% if section.settings.use_gradient %}
       data-gradient="true"
     {% else %}
       style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};"
-    {% endif %}>
-
+    {% endif %}
+  >
     <div class="announcement-bar__content">
       {%- if section.settings.link != blank -%}
         <a href="{{ section.settings.link }}" class="announcement-bar__link">
       {%- endif -%}
-        <p class="announcement-bar__message">{{ section.settings.text }}</p>
+          <p class="announcement-bar__message">{{ section.settings.text }}</p>
       {%- if section.settings.link != blank -%}
         </a>
       {%- endif -%}
     </div>
 
     {%- if section.settings.show_close -%}
-      <button type="button" class="announcement-bar__close" aria-label="Close announcement">
+      <button
+        type="button"
+        class="announcement-bar__close"
+        aria-label="Close announcement"
+        id="announcement-bar-close"
+      >
         <svg aria-hidden="true" focusable="false" role="presentation" viewBox="0 0 14 14" width="12" height="12">
           <path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </button>
     {%- endif -%}
   </div>
+
+  <script>
+    (function () {
+      var SESSION_KEY = 'announcement-bar-closed-{{ section.id }}';
+      var bar    = document.getElementById('announcement-bar');
+      var btn    = document.getElementById('announcement-bar-close');
+      var header = document.getElementById('site-header');
+
+      /* ── Sync header/body top offset whenever bar height changes ── */
+      function syncOffsets() {
+        var barH = (bar && !bar.classList.contains('announcement-bar--hidden'))
+          ? bar.offsetHeight
+          : 0;
+        var headerH = header ? header.offsetHeight : 0;
+
+        document.documentElement.style.setProperty('--announcement-height', barH + 'px');
+        document.documentElement.style.setProperty('--nav-total-height', (barH + headerH) + 'px');
+
+        /* Push header below the bar */
+        if (header) {
+          header.style.top = barH + 'px';
+        }
+      }
+
+      /* ── Hide bar ── */
+      function hideBar() {
+        if (!bar) return;
+        bar.classList.add('announcement-bar--hidden');
+        sessionStorage.setItem(SESSION_KEY, 'true');
+        /* Short delay so CSS transition plays before we recalc */
+        setTimeout(syncOffsets, 320);
+      }
+
+      /* ── Init ── */
+      function init() {
+        if (!bar) return;
+
+        /* Restore closed state across page loads within the session */
+        if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+          bar.classList.add('announcement-bar--hidden');
+        }
+
+        syncOffsets();
+        window.addEventListener('resize', syncOffsets, { passive: true });
+
+        if (btn) {
+          btn.addEventListener('click', hideBar);
+        }
+      }
+
+      /* Run after DOM is ready */
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
 {%- endif -%}
 
 {% schema %}
