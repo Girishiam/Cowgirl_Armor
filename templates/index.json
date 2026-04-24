@@ -13,13 +13,13 @@
       "type": "hero",
       "settings": {
         "hero_height": 100,
-        "use_gradient": true,
-        "bg_color": "#cccccc",
+        "use_gradient": false,
+        "bg_color": "#ffffff",
         "overlay_color": "#000000",
         "overlay_opacity": 0,
         "center_image": "shopify://shop_images/IMG_1760_1.png",
         "image_width": 1000,
-        "invert_image": true
+        "invert_image": false
       }
     },
     "purpose": {
