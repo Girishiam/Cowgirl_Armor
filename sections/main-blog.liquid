@@ -280,6 +280,8 @@
   }
 </style>
 
+{%- paginate blog.articles by section.settings.articles_per_page -%}
+
 <div class="blog-list-{{ section.id }}">
   <div class="blog-list__inner">
 
@@ -294,9 +296,7 @@
       </div>
     {%- endif -%}
 
-    {%- paginate blog.articles by section.settings.articles_per_page -%}
-
-      {%- if blog.articles_count > 0 -%}
+      {%- if blog.articles.size > 0 -%}
 
         {%- for article in blog.articles -%}
           <article class="blog-article">
@@ -386,7 +386,7 @@
               {%- if part.is_link -%}
                 <a href="{{ part.url }}">{{ part.title }}</a>
               {%- else -%}
-                <span class="{% if part.title == paginate.current_page %}current{% endif %}">{{ part.title }}</span>
+                <span class="{% assign cur = paginate.current_page | append: '' %}{% if part.title == cur %}current{% endif %}">{{ part.title }}</span>
               {%- endif -%}
             {%- endfor -%}
 
@@ -406,10 +406,10 @@
         </div>
       {%- endif -%}
 
-    {%- endpaginate -%}
-
   </div>
 </div>
+
+{%- endpaginate -%}
 
 {% schema %}
 {
