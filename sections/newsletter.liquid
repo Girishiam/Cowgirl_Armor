@@ -1,4 +1,18 @@
+{%- comment -%} Build gradient directly in Liquid — no CSS variable dependency {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
+{%- comment -%} Determine if we are in "dark mode" (gradient bg or image with dark overlay) {%- endcomment -%}
+{%- assign is_dark = false -%}
+{%- if section.settings.use_gradient -%}
+  {%- assign is_dark = true -%}
+{%- endif -%}
+
 <style>
+  /* ── Section wrapper ── */
   .nl-{{ section.id }} {
     position: relative;
     padding: clamp(4rem, 10vw, 8rem) 2rem;
@@ -6,8 +20,9 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+
     {%- if section.settings.use_gradient and section.settings.image == blank -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      background: {{ brand_gradient }};
       color: #FFFFFF;
     {%- else -%}
       background-color: {{ section.settings.bg_color }};
@@ -15,20 +30,27 @@
     {%- endif -%}
   }
 
+  /* ── Background image ── */
   {%- if section.settings.image != blank -%}
   .nl-{{ section.id }} .nl__bg {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     object-position: {{ section.settings.image_focal }};
     z-index: 0;
   }
   {%- endif -%}
 
+  /* ── Overlay ── */
   .nl-{{ section.id }} .nl__overlay {
-    position: absolute; inset: 0; z-index: 1;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
     {%- if section.settings.use_gradient and section.settings.image != blank -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      background: {{ brand_gradient }};
       opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
     {%- else -%}
       {%- assign ov_r = section.settings.overlay_color | color_extract: 'red' -%}
@@ -39,104 +61,171 @@
     {%- endif -%}
   }
 
+  /* ── Content ── */
   .nl-{{ section.id }} .nl__content {
-    position: relative; z-index: 2;
-    width: 100%; max-width: {{ section.settings.max_width }}px;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: {{ section.settings.max_width }}px;
     text-align: {{ section.settings.content_align }};
   }
 
+  /* ── Eyebrow ── */
   .nl-{{ section.id }} .nl__eyebrow {
     font-family: var(--font-body-family, sans-serif);
     font-size: {{ section.settings.eyebrow_size }}px;
-    font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     margin: 0 0 12px;
-    {%- if section.settings.use_gradient -%}color: rgba(255,255,255,0.8);
-    {%- else -%}color: {{ section.settings.accent_color }};{%- endif -%}
+
+    {%- if is_dark -%}
+      color: rgba(255,255,255,0.8);
+    {%- else -%}
+      color: {{ section.settings.accent_color }};
+    {%- endif -%}
   }
 
+  /* Gradient underline on eyebrow when on white bg */
+  {%- unless is_dark -%}
+  .nl-{{ section.id }} .nl__eyebrow::after {
+    content: '';
+    display: block;
+    height: 2px;
+    width: 2.5rem;
+    margin-top: 6px;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
+    {%- if section.settings.content_align == 'center' -%}
+      margin-left: auto;
+      margin-right: auto;
+    {%- endif -%}
+  }
+  {%- endunless -%}
+
+  /* ── Title ── */
   .nl-{{ section.id }} .nl__title {
     font-family: var(--font-heading-family, serif);
     font-size: clamp({{ section.settings.title_min }}px, 4vw, {{ section.settings.title_max }}px);
     font-weight: {{ section.settings.title_weight }};
     letter-spacing: {{ section.settings.title_ls | divided_by: 100.0 }}em;
     text-transform: {{ section.settings.title_transform }};
-    line-height: 1.1; margin: 0 0 16px;
-    {%- if section.settings.use_gradient -%}color: #FFFFFF;
-    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
+    line-height: 1.1;
+    margin: 0 0 16px;
+
+    {%- if is_dark -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
+  /* ── Subtitle ── */
   .nl-{{ section.id }} .nl__subtitle {
     font-family: var(--font-body-family, sans-serif);
     font-size: clamp(14px, 1.3vw, {{ section.settings.subtitle_size }}px);
-    line-height: 1.6; opacity: 0.75;
-    margin: 0 0 {{ section.settings.form_gap }}px; max-width: 560px;
-    {%- if section.settings.content_align == 'center' -%}margin-left: auto; margin-right: auto;{%- endif -%}
-    {%- if section.settings.use_gradient -%}color: #FFFFFF;
-    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
+    line-height: 1.6;
+    opacity: 0.75;
+    margin: 0 0 {{ section.settings.form_gap }}px;
+    max-width: 560px;
+
+    {%- if section.settings.content_align == 'center' -%}
+      margin-left: auto;
+      margin-right: auto;
+    {%- endif -%}
+
+    {%- if is_dark -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
+  /* ── Form layout ── */
   .nl-{{ section.id }} .nl__form {
-    display: flex; flex-direction: column; gap: {{ section.settings.field_gap }}px;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.field_gap }}px;
     {%- if section.settings.content_align == 'center' -%}align-items: center;{%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__row {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: {{ section.settings.field_gap }}px; width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.field_gap }}px;
+    width: 100%;
     max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
   }
 
   .nl-{{ section.id }} .nl__field {
-    display: flex; flex-direction: column; gap: 6px;
-    width: 100%; max-width: {{ section.settings.form_max_width }}px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
   }
 
+  /* ── Labels ── */
   .nl-{{ section.id }} .nl__label {
     font-family: var(--font-body-family, sans-serif);
-    font-size: {{ section.settings.label_size }}px; font-weight: 600;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+    font-size: {{ section.settings.label_size }}px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    {%- if is_dark or section.settings.image != blank -%}
       color: #FFFFFF;
     {%- else -%}
       color: {{ section.settings.text_color }};
     {%- endif -%}
   }
-  .nl-{{ section.id }} .nl__req { font-weight: 400; letter-spacing: 0; text-transform: none; opacity: 0.5; font-size: {{ section.settings.label_size | minus: 1 }}px; }
+  .nl-{{ section.id }} .nl__req {
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    opacity: 0.5;
+    font-size: {{ section.settings.label_size | minus: 1 }}px;
+  }
 
+  /* ── Inputs ── */
   .nl-{{ section.id }} .nl__input {
     width: 100%;
     font-family: var(--font-body-family, sans-serif);
     font-size: {{ section.settings.input_size }}px;
-    -webkit-appearance: none; appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
     transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
     border-radius: 6px;
     padding: {{ section.settings.input_pv }}px 1rem;
-    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+
+    {%- if is_dark or section.settings.image != blank -%}
       background: rgba(255,255,255,0.14);
       border: 1.5px solid rgba(255,255,255,0.4);
       color: #FFFFFF;
       caret-color: #FFFFFF;
     {%- else -%}
-      background: transparent;
+      background: #FFFFFF;
       border: 1.5px solid {{ section.settings.input_border_c }};
       color: {{ section.settings.text_color }};
     {%- endif -%}
   }
+
   .nl-{{ section.id }} .nl__input:focus {
     outline: none;
-    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+    {%- if is_dark or section.settings.image != blank -%}
       border-color: rgba(255,255,255,0.9);
       background: rgba(255,255,255,0.22);
       box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
     {%- else -%}
-      border-color: {{ section.settings.text_color }};
-      box-shadow: 0 0 0 3px rgba(139,82,212,0.12);
+      border-color: {{ grad_col_2 }};
+      box-shadow: 0 0 0 3px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.14);
     {%- endif -%}
   }
+
   .nl-{{ section.id }} .nl__input::placeholder {
-    {%- if section.settings.use_gradient or section.settings.image != blank -%}
+    {%- if is_dark or section.settings.image != blank -%}
       color: rgba(255,255,255,0.5);
     {%- else -%}
       color: {{ section.settings.text_color }};
@@ -144,41 +233,71 @@
     {%- endif -%}
   }
 
+  /* ── Checkbox ── */
   .nl-{{ section.id }} .nl__check-wrap {
-    display: flex; align-items: flex-start; gap: 10px;
-    width: 100%; max-width: {{ section.settings.form_max_width }}px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
     cursor: pointer;
   }
+
   .nl-{{ section.id }} .nl__checkbox {
-    -webkit-appearance: none; appearance: none;
-    width: 18px; height: 18px; min-width: 18px;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
     border: 1.5px solid
-      {%- if section.settings.use_gradient or section.settings.image != blank -%} rgba(255,255,255,0.6)
+      {%- if is_dark or section.settings.image != blank -%} rgba(255,255,255,0.6)
       {%- else -%} {{ section.settings.input_border_c }}{%- endif -%};
-    background: transparent; cursor: pointer; position: relative;
-    border-radius: 2px; margin-top: 2px; transition: border-color 0.2s, background-color 0.2s;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    border-radius: 3px;
+    margin-top: 2px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
   }
+
   .nl-{{ section.id }} .nl__checkbox:checked {
-    {%- if section.settings.use_gradient or section.settings.image != blank -%}
-      background: #FFFFFF; border-color: #FFFFFF;
+    {%- if is_dark or section.settings.image != blank -%}
+      background: #FFFFFF;
+      border-color: #FFFFFF;
     {%- else -%}
-      background: {{ section.settings.text_color }}; border-color: {{ section.settings.text_color }};
+      background: {{ grad_col_2 }};
+      border-color: {{ grad_col_2 }};
     {%- endif -%}
   }
+
   .nl-{{ section.id }} .nl__checkbox:checked::after {
-    content: ''; position: absolute; top: 2px; left: 5px;
-    width: 5px; height: 9px;
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 5px;
+    height: 9px;
     border: 2px solid
-      {%- if section.settings.use_gradient or section.settings.image != blank -%} #8B52D4
-      {%- else -%} {{ section.settings.bg_color }}{%- endif -%};
-    border-top: none; border-left: none; transform: rotate(45deg);
+      {%- if is_dark or section.settings.image != blank -%} {{ grad_col_2 }}
+      {%- else -%} #FFFFFF{%- endif -%};
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
   }
+
   .nl-{{ section.id }} .nl__check-label {
     font-family: var(--font-body-family, sans-serif);
-    font-size: {{ section.settings.checkbox_size }}px; opacity: 0.8; line-height: 1.5; cursor: pointer;
-    {%- if section.settings.use_gradient -%}color: #FFFFFF;
-    {%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
+    font-size: {{ section.settings.checkbox_size }}px;
+    opacity: 0.8;
+    line-height: 1.5;
+    cursor: pointer;
+
+    {%- if is_dark -%}
+      color: #FFFFFF;
+    {%- else -%}
+      color: {{ section.settings.text_color }};
+    {%- endif -%}
   }
 
   /* ── Submit button ── */
@@ -186,45 +305,101 @@
     border-radius: {{ section.settings.btn_radius }}px;
     padding: {{ section.settings.btn_pv }}px {{ section.settings.btn_ph }}px;
     font-family: var(--font-body-family, sans-serif);
-    font-size: {{ section.settings.btn_size }}px; font-weight: {{ section.settings.btn_weight }};
-    text-transform: {{ section.settings.btn_transform }}; letter-spacing: 0.05em;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-    transition: opacity 0.25s ease, transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
-    {%- if section.settings.use_gradient -%}
-      background: rgba(255,255,255,0.18); color: #FFFFFF; border: 1.5px solid rgba(255,255,255,0.5);
+    font-size: {{ section.settings.btn_size }}px;
+    font-weight: {{ section.settings.btn_weight }};
+    text-transform: {{ section.settings.btn_transform }};
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+
+    {%- if is_dark -%}
+      /* On gradient bg — frosted white ghost button */
+      background: rgba(255,255,255,0.18);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,0.5);
     {%- elsif section.settings.btn_use_gradient -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
-      color: #FFFFFF; border: none;
+      /* White bg — full gradient button */
+      background: {{ brand_gradient }};
+      color: #FFFFFF;
+      border: none;
+      box-shadow: 0 4px 24px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.22);
     {%- else -%}
-      background-color: {{ section.settings.btn_bg }}; color: {{ section.settings.btn_color }};
+      background-color: {{ section.settings.btn_bg }};
+      color: {{ section.settings.btn_color }};
       border: {{ section.settings.btn_border_w }}px solid {{ section.settings.btn_border_c }};
     {%- endif -%}
   }
+
+  /* Gradient button hover overlay */
+  {%- unless is_dark -%}
+  {%- if section.settings.btn_use_gradient -%}
+  .nl-{{ section.id }} .nl__submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: {{ brand_gradient }};
+    filter: brightness(0.88);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .nl-{{ section.id }} .nl__submit span { position: relative; z-index: 1; }
+  {%- endif -%}
+  {%- endunless -%}
+
   .nl-{{ section.id }} .nl__submit:hover:not(:disabled) {
-    {%- if section.settings.use_gradient -%}
-      background: rgba(255,255,255,0.28); border-color: #FFFFFF; transform: translateY(-2px);
+    {%- if is_dark -%}
+      background: rgba(255,255,255,0.28);
+      border-color: #FFFFFF;
+      transform: translateY(-2px);
     {%- elsif section.settings.btn_use_gradient -%}
-      opacity: 0.85; transform: translateY(-2px);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.38);
     {%- else -%}
-      background-color: {{ section.settings.btn_bg_hover }}; color: {{ section.settings.btn_color_hover }}; transform: translateY(-1px);
+      background-color: {{ section.settings.btn_bg_hover }};
+      color: {{ section.settings.btn_color_hover }};
+      transform: translateY(-1px);
     {%- endif -%}
   }
+
+  {%- unless is_dark -%}
+  {%- if section.settings.btn_use_gradient -%}
+  .nl-{{ section.id }} .nl__submit:hover:not(:disabled)::after { opacity: 1; }
+  {%- endif -%}
+  {%- endunless -%}
+
   .nl-{{ section.id }} .nl__submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  /* ── Success / Error messages ── */
   .nl-{{ section.id }} .nl__success {
-    padding: 16px 20px; background: rgba(22,163,74,0.12); border: 1px solid rgba(22,163,74,0.3);
-    border-radius: 4px; font-size: 15px; text-align: center;
+    padding: 16px 20px;
+    background: rgba(22,163,74,0.1);
+    border: 1px solid rgba(22,163,74,0.28);
+    border-radius: 4px;
+    font-size: 15px;
+    text-align: center;
     max-width: {{ section.settings.form_max_width }}px;
+
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
-    {%- if section.settings.use_gradient -%}color: #FFFFFF;{%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
+    {%- if is_dark -%}color: #FFFFFF;{%- else -%}color: {{ section.settings.text_color }};{%- endif -%}
   }
+
   .nl-{{ section.id }} .nl__error {
-    padding: 12px 16px; background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.25);
-    border-radius: 4px; color: #dc2626; font-size: 13px;
+    padding: 12px 16px;
+    background: rgba(220,38,38,0.08);
+    border: 1px solid rgba(220,38,38,0.22);
+    border-radius: 4px;
+    color: #dc2626;
+    font-size: 13px;
     max-width: {{ section.settings.form_max_width }}px;
     {%- if section.settings.content_align == 'center' -%}margin: 0 auto;{%- endif -%}
   }
 
+  /* ── Responsive ── */
   @media screen and (max-width: 639px) {
     .nl-{{ section.id }} .nl__row { grid-template-columns: 1fr; }
   }
@@ -235,10 +410,15 @@
   {%- if section.settings.image != blank -%}
     <img
       src="{{ section.settings.image | image_url: width: 1600 }}"
-      srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
-              {{ section.settings.image | image_url: width: 1200 }} 1200w,
-              {{ section.settings.image | image_url: width: 1600 }} 1600w"
-      sizes="100vw" alt="" class="nl__bg" aria-hidden="true" loading="lazy"
+      srcset="
+        {{ section.settings.image | image_url: width: 800 }}  800w,
+        {{ section.settings.image | image_url: width: 1200 }} 1200w,
+        {{ section.settings.image | image_url: width: 1600 }} 1600w"
+      sizes="100vw"
+      alt=""
+      class="nl__bg"
+      aria-hidden="true"
+      loading="lazy"
     >
   {%- endif -%}
 
@@ -258,7 +438,6 @@
       <p class="nl__subtitle">{{ section.settings.subtitle }}</p>
     {%- endif -%}
 
-    {%- comment -%} id: parameter removed — was causing garbled URL on redirect {%- endcomment -%}
     {% form 'customer', class: 'nl__form' %}
       <input type="hidden" name="contact[tags]" value="newsletter,prospect,{{ section.settings.tag_extra | escape }}">
       <input type="hidden" name="customer[accepts_marketing]" value="true">
@@ -278,18 +457,36 @@
             <div class="nl__field">
               <label class="nl__label" for="nl-first-{{ section.id }}">
                 {{ section.settings.label_first }}
-                {%- if section.settings.show_required_label -%}<span class="nl__req">({{ section.settings.required_text }})</span>{%- endif -%}
+                {%- if section.settings.show_required_label -%}
+                  <span class="nl__req">({{ section.settings.required_text }})</span>
+                {%- endif -%}
               </label>
-              <input type="text" id="nl-first-{{ section.id }}" name="contact[first_name]" class="nl__input"
-                     placeholder="{{ section.settings.placeholder_first | escape }}" autocomplete="given-name" required>
+              <input
+                type="text"
+                id="nl-first-{{ section.id }}"
+                name="contact[first_name]"
+                class="nl__input"
+                placeholder="{{ section.settings.placeholder_first | escape }}"
+                autocomplete="given-name"
+                required
+              >
             </div>
             <div class="nl__field">
               <label class="nl__label" for="nl-last-{{ section.id }}">
                 {{ section.settings.label_last }}
-                {%- if section.settings.show_required_label -%}<span class="nl__req">({{ section.settings.required_text }})</span>{%- endif -%}
+                {%- if section.settings.show_required_label -%}
+                  <span class="nl__req">({{ section.settings.required_text }})</span>
+                {%- endif -%}
               </label>
-              <input type="text" id="nl-last-{{ section.id }}" name="contact[last_name]" class="nl__input"
-                     placeholder="{{ section.settings.placeholder_last | escape }}" autocomplete="family-name" required>
+              <input
+                type="text"
+                id="nl-last-{{ section.id }}"
+                name="contact[last_name]"
+                class="nl__input"
+                placeholder="{{ section.settings.placeholder_last | escape }}"
+                autocomplete="family-name"
+                required
+              >
             </div>
           </div>
         {%- endif -%}
@@ -297,22 +494,42 @@
         <div class="nl__field">
           <label class="nl__label" for="nl-email-{{ section.id }}">
             {{ section.settings.label_email }}
-            {%- if section.settings.show_required_label -%}<span class="nl__req">({{ section.settings.required_text }})</span>{%- endif -%}
+            {%- if section.settings.show_required_label -%}
+              <span class="nl__req">({{ section.settings.required_text }})</span>
+            {%- endif -%}
           </label>
-          <input type="email" id="nl-email-{{ section.id }}" name="contact[email]" class="nl__input"
-                 placeholder="{{ section.settings.placeholder_email | escape }}" autocomplete="email"
-                 value="{{ form.email }}" required>
+          <input
+            type="email"
+            id="nl-email-{{ section.id }}"
+            name="contact[email]"
+            class="nl__input"
+            placeholder="{{ section.settings.placeholder_email | escape }}"
+            autocomplete="email"
+            value="{{ form.email }}"
+            required
+          >
         </div>
 
         {%- if section.settings.show_checkbox -%}
           <label class="nl__check-wrap">
-            <input type="checkbox" name="customer[accepts_marketing]" class="nl__checkbox" value="true"
-                   {% if section.settings.checkbox_default_checked %}checked{% endif %}>
+            <input
+              type="checkbox"
+              name="customer[accepts_marketing]"
+              class="nl__checkbox"
+              value="true"
+              {% if section.settings.checkbox_default_checked %}checked{% endif %}
+            >
             <span class="nl__check-label">{{ section.settings.checkbox_text }}</span>
           </label>
         {%- endif -%}
 
-        <button type="submit" class="nl__submit">{{ section.settings.btn_label }}</button>
+        <button type="submit" class="nl__submit">
+          {%- if section.settings.btn_use_gradient and is_dark == false -%}
+            <span>{{ section.settings.btn_label }}</span>
+          {%- else -%}
+            {{ section.settings.btn_label }}
+          {%- endif -%}
+        </button>
 
       {%- endif -%}
     {% endform %}
@@ -326,14 +543,14 @@
   "settings": [
     { "type": "header", "content": "Content" },
     { "type": "text",     "id": "eyebrow",   "label": "Eyebrow Text" },
-    { "type": "text",     "id": "title",     "label": "Heading",   "default": "Join The Cowgirl Army" },
+    { "type": "text",     "id": "title",     "label": "Heading",  "default": "Join The Cowgirl Army" },
     { "type": "textarea", "id": "subtitle",  "label": "Subtitle" },
     { "type": "text",     "id": "tag_extra", "label": "Extra Tag", "default": "cowgirl-army",
       "info": "Added to subscriber tags in addition to 'newsletter'." },
 
     { "type": "header", "content": "Background" },
-    { "type": "checkbox",     "id": "use_gradient",    "label": "Use brand gradient background", "default": true,
-      "info": "No image = gradient bg. With image = gradient overlay. All text auto-switches to white." },
+    { "type": "checkbox",     "id": "use_gradient",    "label": "Use brand gradient background", "default": false,
+      "info": "Off = clean white background (recommended). With image = gradient overlay tint." },
     { "type": "image_picker", "id": "image",           "label": "Background Image" },
     { "type": "select",       "id": "image_focal",     "label": "Image Focal Point",
       "options": [
@@ -341,12 +558,12 @@
         { "value": "top center",    "label": "Top"    },
         { "value": "bottom center", "label": "Bottom" }
       ], "default": "center center" },
-    { "type": "color", "id": "overlay_color",   "label": "Overlay Color (if not gradient)",   "default": "#FFFFFF" },
+    { "type": "color", "id": "overlay_color",   "label": "Overlay Color (if not gradient)",   "default": "#000000" },
     { "type": "range", "id": "overlay_opacity", "label": "Overlay Opacity",
-      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 85 },
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 55 },
 
     { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "bg_color",     "label": "Background (if not gradient)", "default": "#F8F6F4" },
+    { "type": "color", "id": "bg_color",     "label": "Background (if not gradient)", "default": "#FFFFFF" },
     { "type": "color", "id": "text_color",   "label": "Text Color (if not gradient)", "default": "#1A1A1A" },
     { "type": "color", "id": "accent_color", "label": "Eyebrow Color (if not gradient)", "default": "#8B52D4" },
 
@@ -389,7 +606,7 @@
     { "type": "text",     "id": "placeholder_email",   "label": "Email Placeholder",     "default": "Your email address" },
 
     { "type": "header", "content": "Input Style" },
-    { "type": "color", "id": "input_border_c", "label": "Input Border Color (if not gradient)", "default": "#1A1A1A" },
+    { "type": "color", "id": "input_border_c", "label": "Input Border Color (if not gradient)", "default": "#E2E2E2" },
     { "type": "range", "id": "input_border_w", "label": "Input Border Width", "min": 1,"max": 3,"step": 1,"unit": "px","default": 1 },
     { "type": "range", "id": "input_pv",       "label": "Input Padding V",    "min": 6,"max": 20,"step": 2,"unit": "px","default": 12 },
 
@@ -408,7 +625,7 @@
     { "type": "color",    "id": "btn_bg_hover",    "label": "Button Hover Background (solid only)", "default": "#333333" },
     { "type": "color",    "id": "btn_color_hover", "label": "Button Hover Text (solid only)",       "default": "#FFFFFF" },
     { "type": "color",    "id": "btn_border_c",    "label": "Button Border (solid only)",           "default": "#1A1A1A" },
-    { "type": "range",    "id": "btn_border_w",    "label": "Border Width",    "min": 0,"max": 4,"step": 1,"unit": "px","default": 1 },
+    { "type": "range",    "id": "btn_border_w",    "label": "Border Width",    "min": 0,"max": 4,"step": 1,"unit": "px","default": 0 },
     { "type": "range",    "id": "btn_radius",      "label": "Button Radius",   "min": 0,"max": 30,"step": 2,"unit": "px","default": 4 },
     { "type": "range",    "id": "btn_pv",          "label": "Button Padding V","min": 10,"max": 24,"step": 2,"unit": "px","default": 16 },
     { "type": "range",    "id": "btn_ph",          "label": "Button Padding H","min": 16,"max": 60,"step": 4,"unit": "px","default": 40 },
