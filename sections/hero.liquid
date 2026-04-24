@@ -1,3 +1,10 @@
+{%- comment -%} Build gradient directly in Liquid — no CSS variable dependency {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
 <style>
   .premium-hero-{{ section.id }} {
     position: relative;
@@ -5,35 +12,41 @@
     height: calc({{ section.settings.hero_height }}vh - var(--nav-total-height, 80px));
     min-height: 400px;
     overflow: hidden;
-    {%- if section.settings.use_gradient and section.settings.bg_image == blank -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+
+    {%- if section.settings.bg_image != blank -%}
+      background-color: {{ settings.color_bg | default: '#FFFFFF' }};
+    {%- elsif section.settings.use_gradient -%}
+      background: {{ brand_gradient }};
     {%- else -%}
-      background: {{ section.settings.bg_color }};
+      background-color: {{ section.settings.bg_color }};
     {%- endif -%}
   }
 
+  /* Background image */
   .premium-hero-{{ section.id }} .premium-hero__bg {
     position: absolute;
     inset: 0;
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    object-position: center;
     z-index: 0;
   }
 
+  /* Overlay */
   .premium-hero-{{ section.id }} .premium-hero__overlay {
     position: absolute;
     inset: 0;
     z-index: 1;
     opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-    {%- if section.settings.use_gradient and section.settings.bg_image != blank -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+    {%- if section.settings.use_gradient -%}
+      background: {{ brand_gradient }};
     {%- else -%}
       background-color: {{ section.settings.overlay_color }};
     {%- endif -%}
   }
 
-  /* ── Use position:absolute + left:50% + translateX(-50%)
-     This centers based on the IMAGE's rendered width, not its PNG canvas ── */
+  /* Content container — centered */
   .premium-hero-{{ section.id }} .premium-hero__content-container {
     position: absolute;
     top: 50%;
@@ -44,47 +57,64 @@
     max-width: {{ section.settings.image_width }}px;
   }
 
+  /* Center image */
   .premium-hero-{{ section.id }} .center-hero-img {
     display: block;
     width: {{ section.settings.image_width }}px;
     max-width: 90vw;
     height: auto;
     {%- if section.settings.invert_image -%}
-      filter: drop-shadow(0 25px 35px rgba(0,0,0,0.3)) brightness(0) invert(1);
+      filter: drop-shadow(0 25px 35px rgba(0,0,0,0.18)) brightness(0) invert(1);
     {%- else -%}
-      filter: drop-shadow(0 25px 35px rgba(0,0,0,0.4));
+      {%- if section.settings.bg_image == blank and section.settings.use_gradient == false -%}
+        /* White bg — use brand-colored shadow */
+        filter: drop-shadow(0 20px 40px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.22));
+      {%- else -%}
+        filter: drop-shadow(0 25px 35px rgba(0,0,0,0.35));
+      {%- endif -%}
     {%- endif -%}
     opacity: 0;
     animation:
-      heroImageEntrance 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards,
-      float 6s ease-in-out 2s infinite alternate;
+      heroImageEntrance-{{ section.id }} 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards,
+      float-{{ section.id }} 6s ease-in-out 2s infinite alternate;
   }
 
+  /* Fallback shield */
   .premium-hero-{{ section.id }} .shield-container {
-    border: 2px solid rgba(255,255,255,0.8);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 4px;
-    background: rgba(0,0,0,0.2);
-    backdrop-filter: blur(5px);
+    border-radius: var(--border-radius, 4px);
+    {%- if section.settings.use_gradient -%}
+      border: 2px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+    {%- else -%}
+      border: 2px solid {{ grad_col_2 }}4D;
+      background: {{ grad_col_1 }}0D;
+    {%- endif -%}
   }
 
   .premium-hero-{{ section.id }} .fallback-text {
-    color: #fff;
+    {%- if section.settings.use_gradient -%}
+      color: #ffffff;
+    {%- else -%}
+      color: {{ grad_col_2 }};
+    {%- endif -%}
     font-size: 2rem;
     letter-spacing: 4px;
     font-family: var(--font-heading-family, serif);
     margin: 0;
   }
 
-  @keyframes heroImageEntrance {
+  /* Scoped keyframes — avoids conflicts with multiple hero sections */
+  @keyframes heroImageEntrance-{{ section.id }} {
     0%   { opacity: 0; transform: translateY(50px) scale(0.95); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 1; transform: translateY(0)    scale(1);    }
   }
 
-  @keyframes float {
-    0%   { transform: translateY(0px) scale(1); }
+  @keyframes float-{{ section.id }} {
+    0%   { transform: translateY(0px)   scale(1);    }
     100% { transform: translateY(-15px) scale(1.02); }
   }
 </style>
@@ -94,9 +124,10 @@
   {%- if section.settings.bg_image != blank -%}
     <img
       src="{{ section.settings.bg_image | image_url: width: 2000 }}"
-      alt="{{ section.settings.bg_image.alt | default: 'Hero Background' | escape }}"
+      alt="{{ section.settings.bg_image.alt | default: shop.name | escape }}"
       class="premium-hero__bg"
       loading="eager"
+      fetchpriority="high"
     >
   {%- endif -%}
 
@@ -108,14 +139,17 @@
     {%- if section.settings.center_image != blank -%}
       <img
         src="{{ section.settings.center_image | image_url: width: section.settings.image_width }}"
-        alt="{{ section.settings.center_image.alt | default: 'Center Image' | escape }}"
+        alt="{{ section.settings.center_image.alt | default: shop.name | escape }}"
         class="center-hero-img"
         loading="eager"
+        fetchpriority="high"
       >
     {%- else -%}
-      <div class="shield-container center-hero-img"
-           style="width:{{ section.settings.image_width }}px;height:{{ section.settings.image_width | times: 1.25 }}px;">
-        <h2 class="fallback-text">C.A.</h2>
+      <div
+        class="shield-container center-hero-img"
+        style="width: {{ section.settings.image_width }}px; height: {{ section.settings.image_width | times: 1.25 }}px;"
+      >
+        <h2 class="fallback-text">{{ shop.name | truncate: 4, '' }}</h2>
       </div>
     {%- endif -%}
   </div>
@@ -129,7 +163,10 @@
     {
       "type": "range",
       "id": "hero_height",
-      "min": 40, "max": 100, "step": 5, "unit": "vh",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
       "label": "Section Height",
       "default": 90
     },
@@ -141,14 +178,14 @@
       "type": "checkbox",
       "id": "use_gradient",
       "label": "Use brand gradient",
-      "default": true,
-      "info": "No image = gradient background. With image = gradient overlay tint."
+      "default": false,
+      "info": "Off = clean white background (recommended). On = gradient background or overlay tint if image is set."
     },
     {
       "type": "color",
       "id": "bg_color",
       "label": "Background Color (if not gradient)",
-      "default": "#F8F6F4"
+      "default": "#FFFFFF"
     },
     {
       "type": "image_picker",
@@ -164,9 +201,12 @@
     {
       "type": "range",
       "id": "overlay_opacity",
-      "min": 0, "max": 100, "step": 5, "unit": "%",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
       "label": "Overlay Opacity",
-      "default": 30
+      "default": 20
     },
     {
       "type": "header",
@@ -180,7 +220,10 @@
     {
       "type": "range",
       "id": "image_width",
-      "min": 100, "max": 1000, "step": 20, "unit": "px",
+      "min": 100,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
       "label": "Image Max Width",
       "default": 400
     },
@@ -188,8 +231,8 @@
       "type": "checkbox",
       "id": "invert_image",
       "label": "Invert image to white",
-      "default": true,
-      "info": "Turn on for black logos on gradient/dark backgrounds."
+      "default": false,
+      "info": "Enable for black/dark logos placed on gradient or dark backgrounds."
     }
   ],
   "presets": [
