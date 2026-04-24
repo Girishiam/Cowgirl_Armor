@@ -1,16 +1,26 @@
-{%- comment -%} Build gradient directly in Liquid — no CSS variable dependency {%- endcomment -%}
+{%- comment -%} Build gradient directly in Liquid {%- endcomment -%}
 {%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
 {%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
 {%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
 {%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
 {%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
 
-{%- comment -%} Resolve blog handle from settings {%- endcomment -%}
-{%- assign blog_handle = section.settings.blog_handle | default: 'cowgirl-conversations' -%}
-{%- assign the_blog = blogs[blog_handle] -%}
+{%- comment -%}
+  On PAGE templates, the global `blog` object does not exist.
+  We must use blogs['handle'] to fetch the blog by its handle.
+  Pagination via {% paginate %} also does not work on page templates —
+  we handle pagination manually via URL params instead.
+{%- endcomment -%}
+
+{%- assign blog_handle  = section.settings.blog_handle | default: 'cowgirl-conversations' -%}
+{%- assign the_blog     = blogs[blog_handle] -%}
+{%- assign per_page     = section.settings.articles_per_page | default: 6 -%}
+{%- assign current_page = request.page_number | default: 1 -%}
+{%- assign offset       = current_page | minus: 1 | times: per_page -%}
+{%- assign total        = the_blog.articles_count -%}
+{%- assign total_pages  = total | divided_by: per_page | ceil -%}
 
 <style>
-  /* ── Wrapper ── */
   .pbl-{{ section.id }} {
     background-color: #FFFFFF;
     padding-top: {{ section.settings.padding_top }}px;
@@ -27,7 +37,6 @@
   .pbl-{{ section.id }} .pbl__header {
     margin-bottom: clamp(2rem, 5vw, 3.5rem);
   }
-
   .pbl-{{ section.id }} .pbl__eyebrow {
     display: inline-block;
     font-size: 0.72rem;
@@ -46,7 +55,6 @@
     border-radius: 99px;
     background: {{ brand_gradient }};
   }
-
   .pbl-{{ section.id }} .pbl__title {
     font-family: var(--font-heading-family, sans-serif);
     font-size: clamp(1.75rem, 4vw, {{ section.settings.heading_size }}px);
@@ -55,7 +63,6 @@
     line-height: 1.15;
     margin: 0;
   }
-
   .pbl-{{ section.id }} .pbl__subtitle {
     margin-top: 0.75rem;
     font-size: 1rem;
@@ -78,14 +85,9 @@
     border-top: 1.5px solid #F0F0F0;
   }
 
-  /* Alternating layout — image right on even rows */
   {%- if section.settings.alternate_layout -%}
-  .pbl-{{ section.id }} .pbl__article:nth-child(even) .pbl__image-col {
-    order: 2;
-  }
-  .pbl-{{ section.id }} .pbl__article:nth-child(even) .pbl__content-col {
-    order: 1;
-  }
+  .pbl-{{ section.id }} .pbl__article:nth-child(even) .pbl__image-col { order: 2; }
+  .pbl-{{ section.id }} .pbl__article:nth-child(even) .pbl__content-col { order: 1; }
   {%- endif -%}
 
   /* ── Image column ── */
@@ -94,7 +96,6 @@
     border-radius: {{ section.settings.image_radius }}px;
     aspect-ratio: {{ section.settings.image_ratio }};
     background-color: #F5F5F7;
-    flex-shrink: 0;
   }
   .pbl-{{ section.id }} .pbl__image-col a {
     display: block;
@@ -110,9 +111,7 @@
     display: block;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .pbl-{{ section.id }} .pbl__article:hover .pbl__image-col img {
-    transform: scale(1.04);
-  }
+  .pbl-{{ section.id }} .pbl__article:hover .pbl__image-col img { transform: scale(1.04); }
 
   /* ── Content column ── */
   .pbl-{{ section.id }} .pbl__content-col {
@@ -120,8 +119,6 @@
     flex-direction: column;
     justify-content: center;
   }
-
-  /* Date */
   .pbl-{{ section.id }} .pbl__date {
     display: block;
     font-size: 0.78rem;
@@ -131,8 +128,6 @@
     color: {{ grad_col_2 }};
     margin-bottom: 0.65rem;
   }
-
-  /* Tags */
   .pbl-{{ section.id }} .pbl__tags {
     display: flex;
     flex-wrap: wrap;
@@ -149,8 +144,6 @@
     background: {{ brand_gradient }};
     color: #FFFFFF;
   }
-
-  /* Title */
   .pbl-{{ section.id }} .pbl__article-title {
     font-family: var(--font-heading-family, sans-serif);
     font-size: clamp(1.35rem, 2.5vw, {{ section.settings.title_size }}px);
@@ -162,19 +155,13 @@
     display: block;
     transition: color 0.2s ease;
   }
-  .pbl-{{ section.id }} .pbl__article:hover .pbl__article-title {
-    color: {{ grad_col_2 }};
-  }
-
-  /* Author */
+  .pbl-{{ section.id }} .pbl__article:hover .pbl__article-title { color: {{ grad_col_2 }}; }
   .pbl-{{ section.id }} .pbl__author {
     font-size: 0.8rem;
     color: {{ settings.color_text | default: '#1A1A1A' }};
     opacity: 0.5;
     margin-bottom: 0.65rem;
   }
-
-  /* Excerpt */
   .pbl-{{ section.id }} .pbl__excerpt {
     font-size: clamp(0.9rem, 1.3vw, 1rem);
     line-height: 1.8;
@@ -187,7 +174,7 @@
     overflow: hidden;
   }
 
-  /* Read more button */
+  /* ── Button ── */
   .pbl-{{ section.id }} .pbl__btn {
     display: inline-flex;
     align-items: center;
@@ -216,13 +203,14 @@
     opacity: 0;
     transition: opacity 0.25s ease;
   }
-  .pbl-{{ section.id }} .pbl__btn span { position: relative; z-index: 1; }
-  .pbl-{{ section.id }} .pbl__btn svg  { position: relative; z-index: 1; transition: transform 0.2s ease; }
+  .pbl-{{ section.id }} .pbl__btn span,
+  .pbl-{{ section.id }} .pbl__btn svg { position: relative; z-index: 1; }
+  .pbl-{{ section.id }} .pbl__btn svg { transition: transform 0.2s ease; }
   .pbl-{{ section.id }} .pbl__btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 36px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.35);
   }
-  .pbl-{{ section.id }} .pbl__btn:hover::after  { opacity: 1; }
+  .pbl-{{ section.id }} .pbl__btn:hover::after { opacity: 1; }
   .pbl-{{ section.id }} .pbl__btn:hover svg { transform: translateX(3px); }
 
   /* ── Empty state ── */
@@ -258,7 +246,7 @@
     border: 1.5px solid #E2E2E2;
     color: {{ settings.color_text | default: '#1A1A1A' }};
     background: #FFFFFF;
-    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease;
   }
   .pbl-{{ section.id }} .pbl__pagination a:hover {
     border-color: {{ grad_col_2 }};
@@ -276,26 +264,20 @@
       grid-template-columns: 1fr;
       gap: 1.25rem;
     }
-    .pbl-{{ section.id }} .pbl__image-col { order: 1 !important; }
+    .pbl-{{ section.id }} .pbl__image-col { order: 1 !important; aspect-ratio: 16 / 9; }
     .pbl-{{ section.id }} .pbl__content-col { order: 2 !important; }
-    .pbl-{{ section.id }} .pbl__image-col { aspect-ratio: 16 / 9; }
-    .pbl-{{ section.id }} .pbl__article { padding: {{ section.settings.article_padding | times: 0.6 | round }}px 0; }
-  }
-
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
     .pbl-{{ section.id }} .pbl__article {
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      padding: {{ section.settings.article_padding | times: 0.6 | round }}px 0;
     }
   }
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    .pbl-{{ section.id }} .pbl__article { gap: 2rem; }
+  }
 </style>
-
-{%- paginate the_blog.articles by section.settings.articles_per_page -%}
 
 <div class="pbl-{{ section.id }}">
   <div class="pbl__inner">
 
-    {%- comment -%} Section header {%- endcomment -%}
     {%- if section.settings.show_header -%}
       <div class="pbl__header">
         {%- if section.settings.eyebrow != blank -%}
@@ -310,13 +292,21 @@
       </div>
     {%- endif -%}
 
-    {%- comment -%} Article list {%- endcomment -%}
-    {%- if the_blog.articles.size > 0 -%}
+    {%- if the_blog == blank -%}
+      <div class="pbl__empty">
+        <p>Blog "{{ blog_handle }}" not found. Check the Blog Handle setting matches your blog's URL slug in Shopify Admin → Content → Blogs.</p>
+      </div>
 
-      {%- for article in the_blog.articles -%}
+    {%- elsif the_blog.articles.size == 0 -%}
+      <div class="pbl__empty">
+        <p>{{ section.settings.empty_text }}</p>
+      </div>
+
+    {%- else -%}
+
+      {%- for article in the_blog.articles limit: per_page offset: offset -%}
         <article class="pbl__article">
 
-          {%- comment -%} — Image — {%- endcomment -%}
           <div class="pbl__image-col">
             <a href="{{ article.url }}" aria-label="{{ article.title | escape }}" tabindex="-1">
               {%- if article.image != blank -%}
@@ -338,9 +328,7 @@
             </a>
           </div>
 
-          {%- comment -%} — Content — {%- endcomment -%}
           <div class="pbl__content-col">
-
             {%- if section.settings.show_date -%}
               <time class="pbl__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
                 {{ article.published_at | date: section.settings.date_format }}
@@ -377,35 +365,33 @@
                 <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </a>
-
           </div>
+
         </article>
       {%- endfor -%}
 
-      {%- comment -%} — Pagination — {%- endcomment -%}
-      {%- if paginate.pages > 1 -%}
+      {%- comment -%} Manual pagination using page URL param {%- endcomment -%}
+      {%- if total_pages > 1 -%}
         <nav class="pbl__pagination" aria-label="{{ the_blog.title }} pagination">
 
-          {%- if paginate.previous -%}
-            <a href="{{ paginate.previous.url }}" aria-label="Previous page">
+          {%- if current_page > 1 -%}
+            <a href="?page={{ current_page | minus: 1 }}" aria-label="Previous page">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </a>
           {%- endif -%}
 
-          {%- for part in paginate.parts -%}
-            {%- if part.is_link -%}
-              <a href="{{ part.url }}">{{ part.title }}</a>
+          {%- for i in (1..total_pages) -%}
+            {%- if i == current_page -%}
+              <span class="pbl__page--current">{{ i }}</span>
             {%- else -%}
-              <span class="{% assign current = paginate.current_page | append: '' %}{% if part.title == current %}pbl__page--current{% endif %}">
-                {{ part.title }}
-              </span>
+              <a href="?page={{ i }}">{{ i }}</a>
             {%- endif -%}
           {%- endfor -%}
 
-          {%- if paginate.next -%}
-            <a href="{{ paginate.next.url }}" aria-label="Next page">
+          {%- if current_page < total_pages -%}
+            <a href="?page={{ current_page | plus: 1 }}" aria-label="Next page">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -415,16 +401,10 @@
         </nav>
       {%- endif -%}
 
-    {%- else -%}
-      <div class="pbl__empty">
-        <p>{{ section.settings.empty_text }}</p>
-      </div>
     {%- endif -%}
 
   </div>
 </div>
-
-{%- endpaginate -%}
 
 {% schema %}
 {
@@ -439,7 +419,7 @@
       "id": "blog_handle",
       "label": "Blog Handle",
       "default": "cowgirl-conversations",
-      "info": "Find this in Shopify Admin → Content → Blogs. It's the URL slug e.g. 'cowgirl-conversations'."
+      "info": "Go to Admin → Content → Blogs. The handle is the last part of the URL e.g. 'cowgirl-conversations'."
     },
     {
       "type": "header",
@@ -449,8 +429,7 @@
       "type": "checkbox",
       "id": "show_header",
       "label": "Show section header",
-      "default": false,
-      "info": "Turn on if this section is mid-page and needs its own heading."
+      "default": false
     },
     {
       "type": "text",
@@ -467,7 +446,7 @@
     {
       "type": "textarea",
       "id": "subtitle",
-      "label": "Subtitle / Description"
+      "label": "Subtitle"
     },
     {
       "type": "range",
@@ -496,8 +475,7 @@
       "type": "checkbox",
       "id": "alternate_layout",
       "label": "Alternate image left / right",
-      "default": true,
-      "info": "Odd rows: image left. Even rows: image right."
+      "default": true
     },
     {
       "type": "range",
@@ -550,10 +528,10 @@
       "id": "date_format",
       "label": "Date format",
       "options": [
-        { "value": "%m/%d/%y",   "label": "MM/DD/YY"       },
-        { "value": "%B %d, %Y", "label": "Month DD, YYYY"  },
-        { "value": "%d %B %Y",  "label": "DD Month YYYY"   },
-        { "value": "%b %d, %Y", "label": "Mon DD, YYYY"    }
+        { "value": "%m/%d/%y",  "label": "MM/DD/YY"      },
+        { "value": "%B %d, %Y", "label": "Month DD, YYYY" },
+        { "value": "%d %B %Y",  "label": "DD Month YYYY"  },
+        { "value": "%b %d, %Y", "label": "Mon DD, YYYY"   }
       ],
       "default": "%m/%d/%y"
     },
