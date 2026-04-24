@@ -37,8 +37,8 @@
         "button_link": "shopify://pages/god-meets-you",
         "padding_top": 60,
         "padding_bottom": 60,
-        "use_gradient": true,
-        "background_color": "#d9d9d9",
+        "use_gradient": false,
+        "background_color": "#ffffff",
         "text_color": "#1a1a1a",
         "btn_use_gradient": true
       }
@@ -57,8 +57,8 @@
         "button_link": "shopify://pages/believe-in-yourself",
         "padding_top": 60,
         "padding_bottom": 0,
-        "use_gradient": true,
-        "background_color": "#d9d9d9",
+        "use_gradient": false,
+        "background_color": "#ffffff",
         "text_color": "#1a1a1a",
         "btn_use_gradient": true
       }
@@ -77,8 +77,8 @@
         "button_link": "shopify://pages/never-give-up",
         "padding_top": 60,
         "padding_bottom": 60,
-        "use_gradient": true,
-        "background_color": "#d9d9d9",
+        "use_gradient": false,
+        "background_color": "#ffffff",
         "text_color": "#1a1a1a",
         "btn_use_gradient": true
       }
