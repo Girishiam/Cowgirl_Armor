@@ -1,15 +1,22 @@
+{%- comment -%} Build gradient directly in Liquid — no CSS variable dependency {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
 <style>
-  /* ── Outer wrapper — full width, background lives here ── */
+  /* ── Outer wrapper — full width background ── */
   .iwt-outer-{{ section.id }} {
     width: 100%;
     {%- if section.settings.use_gradient -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      background: {{ brand_gradient }};
     {%- else -%}
       background-color: {{ section.settings.background_color }};
     {%- endif -%}
   }
 
-  /* ── Inner — padding + layout only ── */
+  /* ── Inner — padding + color ── */
   .iwt-section-{{ section.id }} {
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
@@ -20,29 +27,31 @@
     {%- endif -%}
   }
 
+  /* ── Grid ── */
   .iwt-section-{{ section.id }} .iwt-grid {
     display: grid;
     grid-template-columns: 1fr;
     align-items: stretch;
-    max-width: 1400px;
+    max-width: {{ settings.page_width | default: 1400 }}px;
     margin: 0 auto;
   }
-
   @media screen and (min-width: 768px) {
     .iwt-section-{{ section.id }} .iwt-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
 
-  /* Image Column */
+  /* ── Image column ── */
   .iwt-section-{{ section.id }} .iwt-media {
     position: relative;
     overflow: hidden;
     min-height: 420px;
   }
-
   @media screen and (min-width: 768px) {
     .iwt-section-{{ section.id }} .iwt-media { min-height: 560px; }
+  }
+  @media screen and (max-width: 767px) {
+    .iwt-section-{{ section.id }} .iwt-media { min-height: 300px; }
   }
 
   .iwt-section-{{ section.id }} .iwt-media img {
@@ -52,49 +61,76 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    transition: transform 0.7s ease;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
-
-  .iwt-section-{{ section.id }} .iwt-media:hover img { transform: scale(1.03); }
+  .iwt-section-{{ section.id }} .iwt-media:hover img { transform: scale(1.04); }
 
   .iwt-section-{{ section.id }} .iwt-media .placeholder-svg {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.05);
+    background: #F5F5F7;
   }
   .iwt-section-{{ section.id }} .iwt-media .placeholder-svg svg {
-    width: 60%; height: auto; opacity: 0.3;
+    width: 60%; height: auto; opacity: 0.2;
   }
 
-  /* Content Column */
+  /* ── Content column ── */
   .iwt-section-{{ section.id }} .iwt-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: clamp(2.5rem, 6vw, 5rem) clamp(2rem, 5vw, 5rem);
     text-align: {{ section.settings.content_alignment | replace: 'text-', '' }};
+
+    {%- if section.settings.content_alignment == 'text-center' -%}
+      align-items: center;
+    {%- elsif section.settings.content_alignment == 'text-right' -%}
+      align-items: flex-end;
+    {%- else -%}
+      align-items: flex-start;
+    {%- endif -%}
+  }
+  @media screen and (max-width: 767px) {
+    .iwt-section-{{ section.id }} .iwt-content { padding: 2rem 1.5rem; }
+    .iwt-section-{{ section.id }} .iwt-text { max-width: 100%; }
   }
 
-  {%- if section.settings.content_alignment == 'text-center' -%}
-  .iwt-section-{{ section.id }} .iwt-content { align-items: center; }
-  {%- elsif section.settings.content_alignment == 'text-right' -%}
-  .iwt-section-{{ section.id }} .iwt-content { align-items: flex-end; }
-  {%- else -%}
-  .iwt-section-{{ section.id }} .iwt-content { align-items: flex-start; }
-  {%- endif -%}
-
+  /* ── Eyebrow ── */
   .iwt-section-{{ section.id }} .iwt-eyebrow {
     display: inline-block;
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    opacity: 0.55;
     margin-bottom: 1rem;
+    {%- if section.settings.use_gradient -%}
+      color: rgba(255,255,255,0.75);
+    {%- else -%}
+      color: {{ grad_col_2 }};
+    {%- endif -%}
   }
 
+  /* Gradient underline on eyebrow when on white bg */
+  {%- unless section.settings.use_gradient -%}
+  .iwt-section-{{ section.id }} .iwt-eyebrow::after {
+    content: '';
+    display: block;
+    height: 2px;
+    width: 2.5rem;
+    margin-top: 6px;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
+    {%- if section.settings.content_alignment == 'text-center' -%}
+      margin-left: auto; margin-right: auto;
+    {%- elsif section.settings.content_alignment == 'text-right' -%}
+      margin-left: auto;
+    {%- endif -%}
+  }
+  {%- endunless -%}
+
+  /* ── Heading ── */
   .iwt-section-{{ section.id }} .iwt-heading {
-    font-family: var(--font-heading);
+    font-family: var(--font-heading-family, sans-serif);
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 700;
     line-height: 1.1;
@@ -107,8 +143,9 @@
     {%- endif -%}
   }
 
+  /* ── Body text ── */
   .iwt-section-{{ section.id }} .iwt-text {
-    font-family: var(--font-body);
+    font-family: var(--font-body-family, sans-serif);
     font-size: clamp(0.95rem, 1.5vw, 1.05rem);
     line-height: 1.8;
     opacity: 0.75;
@@ -122,22 +159,26 @@
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    font-family: var(--font-heading);
+    font-family: var(--font-heading-family, sans-serif);
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     padding: 0.85rem 2rem;
     border-radius: var(--buttons-radius, 4px);
-    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+
     {%- if section.settings.use_gradient -%}
       background: rgba(255,255,255,0.15);
       color: #FFFFFF;
       border: 1.5px solid rgba(255,255,255,0.5);
     {%- elsif section.settings.btn_use_gradient -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      background: {{ brand_gradient }};
       color: #FFFFFF;
       border: none;
+      box-shadow: 0 4px 20px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.22);
     {%- else -%}
       background: transparent;
       color: {{ section.settings.text_color }};
@@ -145,27 +186,41 @@
     {%- endif -%}
   }
 
+  /* Gradient button hover overlay */
+  {%- if section.settings.btn_use_gradient and section.settings.use_gradient == false -%}
+  .iwt-section-{{ section.id }} .iwt-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: {{ brand_gradient }};
+    filter: brightness(0.88);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .iwt-section-{{ section.id }} .iwt-btn span,
+  .iwt-section-{{ section.id }} .iwt-btn svg { position: relative; z-index: 1; }
+  {%- endif -%}
+
   .iwt-section-{{ section.id }} .iwt-btn:hover {
     {%- if section.settings.use_gradient -%}
       background: rgba(255,255,255,0.28);
       border-color: #FFFFFF;
-      transform: translateX(2px);
+      transform: translateX(3px);
     {%- elsif section.settings.btn_use_gradient -%}
-      opacity: 0.85;
-      transform: translateX(2px);
+      transform: translateX(3px);
+      box-shadow: 0 8px 36px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.38);
     {%- else -%}
       background-color: {{ section.settings.text_color }};
       color: {{ section.settings.background_color }};
     {%- endif -%}
   }
 
+  {%- if section.settings.btn_use_gradient and section.settings.use_gradient == false -%}
+  .iwt-section-{{ section.id }} .iwt-btn:hover::after { opacity: 1; }
+  {%- endif -%}
+
   .iwt-section-{{ section.id }} .iwt-btn svg { transition: transform 0.25s ease; }
   .iwt-section-{{ section.id }} .iwt-btn:hover svg { transform: translateX(4px); }
-
-  @media screen and (max-width: 767px) {
-    .iwt-section-{{ section.id }} .iwt-media { min-height: 300px; }
-    .iwt-section-{{ section.id }} .iwt-text { max-width: 100%; }
-  }
 </style>
 
 <div class="iwt-outer-{{ section.id }}">
@@ -177,11 +232,12 @@
           {%- if section.settings.image != blank -%}
             <img
               src="{{ section.settings.image | image_url: width: 1200 }}"
-              srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
-                      {{ section.settings.image | image_url: width: 900 }} 900w,
-                      {{ section.settings.image | image_url: width: 1200 }} 1200w"
+              srcset="
+                {{ section.settings.image | image_url: width: 600 }}  600w,
+                {{ section.settings.image | image_url: width: 900 }}  900w,
+                {{ section.settings.image | image_url: width: 1200 }} 1200w"
               sizes="(max-width: 767px) 100vw, 50vw"
-              alt="{{ section.settings.image.alt | escape }}"
+              alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
               loading="lazy"
             >
           {%- else -%}
@@ -208,7 +264,11 @@
             {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
             class="iwt-btn"
           >
-            {{ section.settings.button_label }}
+            {%- if section.settings.btn_use_gradient and section.settings.use_gradient == false -%}
+              <span>{{ section.settings.button_label }}</span>
+            {%- else -%}
+              {{ section.settings.button_label }}
+            {%- endif -%}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -221,11 +281,12 @@
           {%- if section.settings.image != blank -%}
             <img
               src="{{ section.settings.image | image_url: width: 1200 }}"
-              srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
-                      {{ section.settings.image | image_url: width: 900 }} 900w,
-                      {{ section.settings.image | image_url: width: 1200 }} 1200w"
+              srcset="
+                {{ section.settings.image | image_url: width: 600 }}  600w,
+                {{ section.settings.image | image_url: width: 900 }}  900w,
+                {{ section.settings.image | image_url: width: 1200 }} 1200w"
               sizes="(max-width: 767px) 100vw, 50vw"
-              alt="{{ section.settings.image.alt | escape }}"
+              alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
               loading="lazy"
             >
           {%- else -%}
@@ -336,13 +397,13 @@
       "id": "use_gradient",
       "label": "Use brand gradient background",
       "default": false,
-      "info": "Spans full width. Text and button auto-switch to white."
+      "info": "Off = clean white (recommended). On = gradient bg with white text."
     },
     {
       "type": "color",
       "id": "background_color",
       "label": "Background Color (if not gradient)",
-      "default": "#F8F6F4"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
@@ -359,7 +420,7 @@
       "id": "btn_use_gradient",
       "label": "Use brand gradient on button",
       "default": true,
-      "info": "Ignored when section background is gradient — button auto-adapts."
+      "info": "Ignored when section background is gradient."
     }
   ],
   "presets": [{ "name": "Image with Text" }]
