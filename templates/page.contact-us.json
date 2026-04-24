@@ -90,7 +90,7 @@
       "type": "premium-waitlist-form",
       "name": "Premium Waitlist Form",
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#f9f9f9",
         "text_color": "#1a1a1a",
         "heading": "We have exciting news in March... but until then",
@@ -113,7 +113,7 @@
       "type": "premium-story-form",
       "name": "Story Submission Form",
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#f9f9f9",
         "text_color": "#1a1a1a",
         "heading": "Share your Cowgirl Story!",
@@ -139,7 +139,7 @@
       "type": "premium-contact-general",
       "name": "General Contact & Graphic",
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#ebebeb",
         "card_bg_color": "#ffffff",
         "text_color": "#1a1a1a",
