@@ -1,4 +1,12 @@
 {%- if section.settings.show_announcement -%}
+
+  {%- comment -%} Build gradient string directly in Liquid — no CSS variable needed {%- endcomment -%}
+  {%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+  {%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+  {%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+  {%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+  {%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
   <style>
     .announcement-bar {
       position: fixed;
@@ -7,11 +15,14 @@
       right: 0;
       width: 100%;
       z-index: 101;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 2rem;
       -webkit-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
-      /* Smooth hide/show */
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
@@ -21,16 +32,10 @@
       pointer-events: none;
     }
 
-    /* Gradient variant */
-    .announcement-bar[data-gradient="true"] {
-      background: var(--brand-gradient);
-      color: #FFFFFF;
-    }
-
-    /* Content layout */
     .announcement-bar__content {
       flex-grow: 1;
-      padding: 0 2.5rem; /* room for close btn */
+      text-align: center;
+      padding: 0 2rem;
     }
 
     .announcement-bar__message {
@@ -53,7 +58,6 @@
       text-underline-offset: 0.2em;
     }
 
-    /* Close button */
     .announcement-bar__close {
       position: absolute;
       right: 1rem;
@@ -67,7 +71,7 @@
       align-items: center;
       justify-content: center;
       opacity: 0.7;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
       color: inherit;
       border-radius: 50%;
       line-height: 0;
@@ -75,10 +79,6 @@
     .announcement-bar__close:hover {
       opacity: 1;
       transform: translateY(-50%) scale(1.15);
-    }
-
-    /* Gradient close btn hover — subtle white bg */
-    .announcement-bar[data-gradient="true"] .announcement-bar__close:hover {
       background: rgba(255, 255, 255, 0.18);
     }
   </style>
@@ -89,7 +89,7 @@
     role="region"
     aria-label="Announcement"
     {% if section.settings.use_gradient %}
-      data-gradient="true"
+      style="background: {{ brand_gradient }}; color: #FFFFFF;"
     {% else %}
       style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};"
     {% endif %}
@@ -125,49 +125,33 @@
       var btn    = document.getElementById('announcement-bar-close');
       var header = document.getElementById('site-header');
 
-      /* ── Sync header/body top offset whenever bar height changes ── */
       function syncOffsets() {
         var barH = (bar && !bar.classList.contains('announcement-bar--hidden'))
           ? bar.offsetHeight
           : 0;
         var headerH = header ? header.offsetHeight : 0;
-
         document.documentElement.style.setProperty('--announcement-height', barH + 'px');
         document.documentElement.style.setProperty('--nav-total-height', (barH + headerH) + 'px');
-
-        /* Push header below the bar */
-        if (header) {
-          header.style.top = barH + 'px';
-        }
+        if (header) header.style.top = barH + 'px';
       }
 
-      /* ── Hide bar ── */
       function hideBar() {
         if (!bar) return;
         bar.classList.add('announcement-bar--hidden');
         sessionStorage.setItem(SESSION_KEY, 'true');
-        /* Short delay so CSS transition plays before we recalc */
         setTimeout(syncOffsets, 320);
       }
 
-      /* ── Init ── */
       function init() {
         if (!bar) return;
-
-        /* Restore closed state across page loads within the session */
         if (sessionStorage.getItem(SESSION_KEY) === 'true') {
           bar.classList.add('announcement-bar--hidden');
         }
-
         syncOffsets();
         window.addEventListener('resize', syncOffsets, { passive: true });
-
-        if (btn) {
-          btn.addEventListener('click', hideBar);
-        }
+        if (btn) btn.addEventListener('click', hideBar);
       }
 
-      /* Run after DOM is ready */
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
@@ -175,6 +159,7 @@
       }
     })();
   </script>
+
 {%- endif -%}
 
 {% schema %}
