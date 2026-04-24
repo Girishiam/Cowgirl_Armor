@@ -157,26 +157,122 @@
 
         /* ── Prices ── */
         --price-sale-color:         {{ settings.price_sale_color }};
+
+        /* ── Premium White Surface System ── */
+        --color-surface-0:          #FFFFFF;
+        --color-surface-1:          #FAFAFA;
+        --color-surface-2:          #F5F5F7;
+        --color-surface-3:          #E8E8E8;
+        --color-text-muted:         rgba(26, 26, 26, 0.55);
+        --shadow-card:              0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+        --shadow-card-hover:        0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.08);
+        --shadow-brand:             0 4px 24px rgba(139, 82, 212, 0.22);
+        --shadow-brand-hover:       0 8px 40px rgba(139, 82, 212, 0.38);
       }
 
+      /* ── Button text transform & shadow from settings ── */
       {% if settings.buttons_uppercase %}.btn { text-transform: uppercase; }{% endif %}
       {% if settings.buttons_shadow %}.btn { box-shadow: 0 4px var(--shadow-blur) rgba(0,0,0,var(--shadow-opacity)); }{% endif %}
 
+      /* ── PRIMARY & BRAND buttons — full gradient ── */
+      .btn--primary,
+      .btn--brand,
+      .btn--accent {
+        background: var(--brand-gradient);
+        color: #FFFFFF;
+        border: none;
+        box-shadow: var(--shadow-brand);
+        position: relative;
+        overflow: hidden;
+      }
+      .btn--primary::after,
+      .btn--brand::after,
+      .btn--accent::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--brand-gradient-hover);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .btn--primary:hover::after,
+      .btn--brand:hover::after,
+      .btn--accent:hover::after { opacity: 1; }
+      .btn--primary:hover,
+      .btn--brand:hover,
+      .btn--accent:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-brand-hover);
+      }
+      .btn--primary span,
+      .btn--brand span,
+      .btn--accent span { position: relative; z-index: 1; }
+
+      /* ── SECONDARY button — gradient border, transparent fill ── */
+      .btn--secondary {
+        background-color: transparent;
+        color: {{ settings.gradient_color_2 }};
+        border: none;
+        position: relative;
+      }
+      .btn--secondary::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--buttons-radius);
+        padding: 1.5px;
+        background: var(--brand-gradient);
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+      .btn--secondary:hover {
+        background: var(--brand-gradient);
+        color: #FFFFFF;
+      }
+      .btn--secondary:hover::before { display: none; }
+
+      /* ── Native inputs: white bg + gradient focus ring ── */
       input, textarea, select {
         border-radius: var(--inputs-radius);
         border-width: var(--inputs-border-thickness);
-        background-color: var(--inputs-bg);
-        border-color: var(--inputs-border-color);
+        background-color: var(--inputs-bg, #FFFFFF);
+        border-color: var(--color-surface-3);
+        color: var(--color-text);
       }
       input:focus, textarea:focus, select:focus {
-        border-color: var(--inputs-focus-color);
+        border-color: {{ settings.gradient_color_2 }};
+        box-shadow: 0 0 0 3px rgba(139, 82, 212, 0.14);
         outline: none;
       }
 
+      /* ── Badges ── */
+      .badge,
+      .badge--new,
+      .badge--accent   { background: var(--brand-gradient); color: #FFFFFF; border-radius: var(--badge-corner-radius); }
       .badge--sale     { background-color: var(--badge-sale-bg);     color: var(--badge-sale-text);     border-radius: var(--badge-corner-radius); }
       .badge--sold-out { background-color: var(--badge-sold-out-bg); color: var(--badge-sold-out-text); border-radius: var(--badge-corner-radius); }
       .price--sale     { color: var(--price-sale-color); }
 
+      /* ── HR / dividers — gradient lines ── */
+      hr {
+        border: none;
+        height: 1.5px;
+        background: var(--brand-gradient);
+        border-radius: 99px;
+        margin: 1.5rem 0;
+        opacity: 0.6;
+      }
+
+      /* ── Card hover — gradient glow border ── */
+      .card:hover {
+        box-shadow: var(--shadow-card-hover), 0 0 0 1.5px rgba(139, 82, 212, 0.3);
+      }
+
+      /* ── Overlays ── */
       .modal-overlay, .drawer-overlay {
         background-color: var(--drawer-overlay-color);
         opacity: var(--drawer-overlay-opacity);
@@ -209,11 +305,15 @@
       .card__media:hover img, .product-card:hover img { transform: scale(1.05); }
       {% endif %}
 
+      /* ── Skip to content — gradient bg ── */
       .skip-to-content {
         position: absolute; left: -9999px; z-index: 9999;
-        padding: 10px 20px; background: var(--color-bg, #fff);
-        color: var(--color-text, #000); font-weight: 600;
-        text-decoration: none; border-radius: 4px;
+        padding: 10px 20px;
+        background: var(--brand-gradient);
+        color: #FFFFFF;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 4px;
       }
       .skip-to-content:focus { left: 10px; top: 10px; }
 
