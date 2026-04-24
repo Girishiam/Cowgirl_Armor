@@ -9,10 +9,31 @@
  */
 {
   "sections": {
-    "main": {
+    "main-blog": {
       "type": "main-blog",
-      "settings": {}
+      "settings": {
+        "show_header": true,
+        "eyebrow": "Stories & Faith",
+        "heading": "Cowgirl Conversations",
+        "articles_per_page": 6,
+        "alternate_layout": true,
+        "image_ratio": "4 / 3",
+        "image_radius": 8,
+        "show_date": true,
+        "date_format": "%m/%d/%y",
+        "show_author": false,
+        "show_tags": false,
+        "show_excerpt": true,
+        "excerpt_lines": 4,
+        "title_size": 36,
+        "title_weight": 700,
+        "btn_label": "Read More",
+        "btn_radius": 4,
+        "padding_top": 60,
+        "padding_bottom": 80,
+        "empty_text": "No posts yet — check back soon."
+      }
     }
   },
-  "order": ["main"]
+  "order": ["main-blog"]
 }
