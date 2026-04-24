@@ -311,7 +311,7 @@
     {%- endif -%}
 
     {%- comment -%} Article list {%- endcomment -%}
-    {%- if the_blog.articles_count > 0 -%}
+    {%- if the_blog.articles.size > 0 -%}
 
       {%- for article in the_blog.articles -%}
         <article class="pbl__article">
@@ -398,7 +398,7 @@
             {%- if part.is_link -%}
               <a href="{{ part.url }}">{{ part.title }}</a>
             {%- else -%}
-              <span class="{% if part.title == paginate.current_page %}pbl__page--current{% endif %}">
+              <span class="{% assign current = paginate.current_page | append: '' %}{% if part.title == current %}pbl__page--current{% endif %}">
                 {{ part.title }}
               </span>
             {%- endif -%}
