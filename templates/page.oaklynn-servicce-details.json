@@ -130,10 +130,10 @@
       ],
       "name": "Service Location",
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "gradient_color_1": "#ef1c7d",
         "gradient_color_2": "#ff6bae",
-        "bg_color": "#e2e2e2",
+        "bg_color": "#ffffff",
         "title_color": "#1a1a1a",
         "accent_color": "#8ba4ac",
         "intro_color": "#333333",
@@ -270,7 +270,7 @@
       ],
       "name": "Service Location & Nav",
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "gradient_color_1": "#ef1c7d",
         "gradient_color_2": "#ff6bae",
         "bg_color": "#ffffff",
@@ -331,7 +331,7 @@
       "type": "premium-memorial-form",
       "name": "Memorial Contact Form",
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#ffffff",
         "text_color": "#1a1a1a",
         "heading": "Share your love and prayers to the Domer Family:",

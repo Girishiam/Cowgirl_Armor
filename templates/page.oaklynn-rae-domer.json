@@ -95,7 +95,7 @@
         "focal_point": "center center",
         "height_desktop": 1000,
         "height_mobile": 500,
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#1a1a1a",
         "text_color": "#ffffff",
         "overlay_style": "gradient_bottom",
