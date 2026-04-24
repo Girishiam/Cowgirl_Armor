@@ -13,7 +13,7 @@
       "type": "cart-page",
       "settings": {
         "title": "Your Cart",
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#f8f6f4",
         "text_color": "#1a1a1a",
         "accent_color": "#8b52d4"
