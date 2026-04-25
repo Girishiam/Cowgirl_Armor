@@ -288,7 +288,7 @@
 
     {%- comment -%} Back link ── {%- endcomment -%}
     {%- if section.settings.show_back_link -%}
-      <a href="{{ blog.url }}" class="article__back">
+      <a href="{{ section.settings.back_url }}" class="article__back">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M13 7H1M6 2L1 7l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -363,7 +363,7 @@
 
     {%- comment -%} Footer ── {%- endcomment -%}
     <div class="article__footer">
-      <a href="{{ blog.url }}" class="article__back-btn">
+      <a href="{{ section.settings.back_url }}" class="article__back-btn">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M13 7H1M6 2L1 7l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -415,6 +415,12 @@
       "id": "back_label",
       "label": "Back link label",
       "default": "Back to Cowgirl Conversations"
+    },
+    {
+      "type": "url",
+      "id": "back_url",
+      "label": "Back link URL",
+      "info": "Set this to your Cowgirl Conversations page URL e.g. /pages/cowgirl-conversations"
     },
     {
       "type": "checkbox",
