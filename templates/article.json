@@ -11,8 +11,29 @@
   "sections": {
     "main-article": {
       "type": "main-article",
-      "settings": {}
+      "settings": {
+        "show_back_link": true,
+        "back_label": "Back to Cowgirl Conversations",
+        "back_url": "shopify://pages/cowgirl-conversations",
+        "show_blog_title": true,
+        "show_date": true,
+        "date_format": "%B %d, %Y",
+        "show_author": true,
+        "show_read_time": true,
+        "show_tags": false,
+        "show_image": true,
+        "image_ratio": "16 / 9",
+        "image_radius": 8,
+        "title_size": 48,
+        "body_size": 18,
+        "content_max_width": 740,
+        "show_share": true,
+        "padding_top": 60,
+        "padding_bottom": 80
+      }
     }
   },
-  "order": ["main-article"]
+  "order": [
+    "main-article"
+  ]
 }
