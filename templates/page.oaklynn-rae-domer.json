@@ -236,7 +236,7 @@
       ],
       "name": "Multi-Collection Stack",
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "show_section_header": false,
