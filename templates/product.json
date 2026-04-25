@@ -91,7 +91,7 @@
         "share"
       ],
       "settings": {
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#ffffff",
         "text_color": "#1a1a1a",
         "accent_color": "#8b52d4",
