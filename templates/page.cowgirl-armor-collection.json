@@ -98,7 +98,7 @@
         "columns_desktop": 4,
         "products_per_page": 16,
         "padding_bottom": 80,
-        "use_gradient": true,
+        "use_gradient": false,
         "bg_color": "#f8f6f4",
         "text_color": "#1a1a1a",
         "accent_color": "#8b52d4",
