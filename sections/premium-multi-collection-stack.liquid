@@ -46,16 +46,7 @@
     align-items: flex-end;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    /* Gradient bottom border */
-    border-bottom: 2px solid transparent;
-    {%- if section.settings.use_gradient -%}
-      border-bottom-color: rgba(255,255,255,0.25);
-    {%- else -%}
-      background-image: linear-gradient({{ section.settings.bg_color }}, {{ section.settings.bg_color }}),
-                        {{ brand_gradient }};
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-    {%- endif -%}
+    border-bottom: 1.5px solid var(--mcs-border);
   }
 
   .multi-coll-row__title {
