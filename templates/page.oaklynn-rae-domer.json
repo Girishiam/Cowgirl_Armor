@@ -224,7 +224,7 @@
           "settings": {
             "collection": "cowgirl-armor-og",
             "title_override": "",
-            "show_view_all": true,
+            "show_view_all": false,
             "shop_all_text": "Shop All",
             "columns_desktop": 4,
             "product_limit": 12
@@ -240,6 +240,7 @@
         "bg_color": "rgba(0,0,0,0)",
         "text_color": "#1a1a1a",
         "show_section_header": false,
+        "header_eyebrow": "",
         "header_title": "",
         "header_subtitle": "",
         "header_size": 48,
