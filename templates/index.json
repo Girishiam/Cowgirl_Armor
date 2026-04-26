@@ -62,43 +62,37 @@
         "item1": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2421.png",
-            "card_bg": "#8ba4ac"
+            "image": "shopify://shop_images/IMG_2421.png"
           }
         },
         "item2": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2424.png",
-            "card_bg": "#8ba4ac"
+            "image": "shopify://shop_images/IMG_2424.png"
           }
         },
         "item3": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2422.png",
-            "card_bg": "#8ba4ac"
+            "image": "shopify://shop_images/IMG_2422.png"
           }
         },
         "card_m6qKjm": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2420.png",
-            "card_bg": "#8ba4ac"
+            "image": "shopify://shop_images/IMG_2420.png"
           }
         },
         "card_hyj9Ni": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2419.png",
-            "card_bg": "#8ba4ac"
+            "image": "shopify://shop_images/IMG_2419.png"
           }
         },
         "card_PrbeEV": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2423.png",
-            "card_bg": "#8ba4ac"
+            "image": "shopify://shop_images/IMG_2423.png"
           }
         }
       },
@@ -111,12 +105,10 @@
         "card_PrbeEV"
       ],
       "settings": {
-        "use_gradient": false,
-        "bg_color": "rgba(0,0,0,0)",
-        "padding_top": 40,
-        "padding_bottom": 80,
+        "columns_desktop": 3,
         "grid_gap": 30,
-        "columns_desktop": 3
+        "padding_top": 40,
+        "padding_bottom": 80
       }
     },
     "newsletter": {
