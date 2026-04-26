@@ -62,37 +62,43 @@
         "item1": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2421.png"
+            "image": "shopify://shop_images/IMG_2421.png",
+            "label": ""
           }
         },
         "item2": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2424.png"
+            "image": "shopify://shop_images/IMG_2424.png",
+            "label": ""
           }
         },
         "item3": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2422.png"
+            "image": "shopify://shop_images/IMG_2422.png",
+            "label": ""
           }
         },
         "card_m6qKjm": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2420.png"
+            "image": "shopify://shop_images/IMG_2420.png",
+            "label": ""
           }
         },
         "card_hyj9Ni": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2419.png"
+            "image": "shopify://shop_images/IMG_2419.png",
+            "label": ""
           }
         },
         "card_PrbeEV": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/IMG_2423.png"
+            "image": "shopify://shop_images/IMG_2423.png",
+            "label": ""
           }
         }
       },
@@ -105,6 +111,8 @@
         "card_PrbeEV"
       ],
       "settings": {
+        "card_radius": 14,
+        "icon_size": 100,
         "columns_desktop": 3,
         "grid_gap": 30,
         "padding_top": 40,
