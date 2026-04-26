@@ -1,22 +1,29 @@
+{%- comment -%} Build gradient directly in Liquid {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
 <style>
-  /* ── Outer wrapper — full width, background goes here ── */
+  /* ── Section wrapper ── */
   .armor-section-{{ section.id }} {
     width: 100%;
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
     {%- if section.settings.use_gradient -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      background: {{ brand_gradient }};
     {%- else -%}
       background-color: {{ section.settings.bg_color }};
     {%- endif -%}
   }
 
-  /* ── Inner grid — constrained width, centred ── */
+  /* ── Inner grid ── */
   .armor-grid-{{ section.id }} {
     display: grid;
     grid-template-columns: 1fr;
     gap: {{ section.settings.grid_gap }}px;
-    max-width: 1400px;
+    max-width: {{ settings.page_width | default: 1400 }}px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
@@ -27,22 +34,50 @@
     .armor-grid-{{ section.id }} { grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr); }
   }
 
-  .armor-grid__item {
+  /* ── Grid card ── */
+  .armor-grid-{{ section.id }} .armor-grid__item {
     position: relative;
     aspect-ratio: 5 / 4;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    border-radius: {{ section.settings.card_radius }}px;
+    /* Gradient background on every card */
+    background: {{ brand_gradient }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.18);
   }
-  .armor-grid__item:hover { transform: translateY(-5px); }
+  .armor-grid-{{ section.id }} .armor-grid__item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.35);
+  }
 
-  .armor-grid__image {
+  /* ── Image inside card ── */
+  .armor-grid-{{ section.id }} .armor-grid__image {
     position: absolute;
     inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
     object-position: center;
-    transform: scale(1.75);
-    padding: 0;
+    {%- if section.settings.image_fit == 'contain' -%}
+      padding: {{ section.settings.image_padding }}px;
+    {%- endif -%}
+    {%- if section.settings.invert_icons -%}
+      filter: brightness(0) invert(1);
+    {%- endif -%}
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .armor-grid-{{ section.id }} .armor-grid__item:hover .armor-grid__image {
+    transform: scale(1.05);
+  }
+
+  /* ── Placeholder svg ── */
+  .armor-grid-{{ section.id }} .placeholder-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: rgba(255,255,255,0.25);
+    padding: 20%;
   }
 </style>
 
@@ -52,17 +87,20 @@
       <div
         class="armor-grid__item"
         {{ block.shopify_attributes }}
-        style="background-color: {{ block.settings.card_bg }};"
       >
         {%- if block.settings.image != blank -%}
           <img
             src="{{ block.settings.image | image_url: width: 600 }}"
-            alt="{{ block.settings.image.alt | escape }}"
+            srcset="
+              {{ block.settings.image | image_url: width: 300 }} 300w,
+              {{ block.settings.image | image_url: width: 600 }} 600w"
+            sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, {{ 100 | divided_by: section.settings.columns_desktop }}vw"
+            alt="{{ block.settings.image.alt | default: block.settings.label | escape }}"
             class="armor-grid__image"
             loading="lazy"
           >
         {%- else -%}
-          {{ 'image' | placeholder_svg_tag: 'placeholder-svg armor-grid__image' }}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
         {%- endif -%}
       </div>
     {%- endfor -%}
@@ -74,45 +112,110 @@
   "name": "Armor Category Grid",
   "settings": [
     {
+      "type": "header",
+      "content": "Background"
+    },
+    {
       "type": "checkbox",
       "id": "use_gradient",
-      "label": "Use brand gradient background",
+      "label": "Use brand gradient as section background",
       "default": false,
-      "info": "Applies the brand gradient to the full-width section background"
+      "info": "Off = white/custom bg. The cards always use the gradient."
     },
     {
       "type": "color",
       "id": "bg_color",
       "label": "Section Background (if not gradient)",
-      "default": "#F8F6F4"
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card Border Radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image Fit",
+      "options": [
+        { "value": "cover",   "label": "Cover (fill card)"   },
+        { "value": "contain", "label": "Contain (show full image)" }
+      ],
+      "default": "contain",
+      "info": "Use 'Contain' for logos/icons so they don't get cropped."
+    },
+    {
+      "type": "range",
+      "id": "image_padding",
+      "label": "Image Padding (Contain mode only)",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_icons",
+      "label": "Invert icons to white",
+      "default": true,
+      "info": "Turn on for dark/black icons — makes them white on the gradient background."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on Desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 16
     },
     {
       "type": "range",
       "id": "padding_top",
-      "min": 0, "max": 120, "step": 4, "unit": "px",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
       "label": "Top Padding",
       "default": 40
     },
     {
       "type": "range",
       "id": "padding_bottom",
-      "min": 0, "max": 120, "step": 4, "unit": "px",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
       "label": "Bottom Padding",
       "default": 80
-    },
-    {
-      "type": "range",
-      "id": "grid_gap",
-      "min": 0, "max": 40, "step": 2, "unit": "px",
-      "label": "Grid Gap",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "columns_desktop",
-      "min": 2, "max": 4, "step": 1,
-      "label": "Columns on Desktop",
-      "default": 3
     }
   ],
   "blocks": [
@@ -120,8 +223,17 @@
       "type": "card",
       "name": "Grid Item",
       "settings": [
-        { "type": "image_picker", "id": "image",   "label": "Image" },
-        { "type": "color",        "id": "card_bg", "label": "Card Background Color", "default": "#8B52D4" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon / Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Alt text / label",
+          "info": "Used as image alt text for accessibility"
+        }
       ]
     }
   ],
@@ -130,12 +242,12 @@
       "name": "Armor Category Grid",
       "category": "Grid",
       "blocks": [
-        { "type": "card", "settings": { "card_bg": "#3A6FE8" } },
-        { "type": "card", "settings": { "card_bg": "#8B52D4" } },
-        { "type": "card", "settings": { "card_bg": "#CC72E8" } },
-        { "type": "card", "settings": { "card_bg": "#3A6FE8" } },
-        { "type": "card", "settings": { "card_bg": "#8B52D4" } },
-        { "type": "card", "settings": { "card_bg": "#CC72E8" } }
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
       ]
     }
   ]
