@@ -1,30 +1,34 @@
+{%- comment -%} Build gradient directly in Liquid {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
 <style>
-  /* ── Outer wrapper — full width, background + CSS vars live here ── */
+  /* ── Outer wrapper ── */
   .mcs-outer-{{ section.id }} {
     width: 100%;
-    --mcs-text:           {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.text_color }} {%- endif -%};
-    --mcs-border:         {%- if section.settings.use_gradient -%} rgba(255,255,255,0.2) {%- else -%} rgba(0,0,0,0.1) {%- endif -%};
-    --mcs-card-bg:        {%- if section.settings.use_gradient -%} rgba(255,255,255,0.1) {%- else -%} rgba(0,0,0,0.02) {%- endif -%};
-    --mcs-qty-border:     {%- if section.settings.use_gradient -%} rgba(255,255,255,0.3) {%- else -%} rgba(0,0,0,0.2) {%- endif -%};
-    --mcs-btn-border:     {%- if section.settings.use_gradient -%} rgba(255,255,255,0.5) {%- else -%} {{ section.settings.text_color }} {%- endif -%};
-    --mcs-btn-hover-bg:   {%- if section.settings.use_gradient -%} rgba(255,255,255,0.2) {%- else -%} {{ section.settings.text_color }} {%- endif -%};
-    --mcs-btn-hover-text: {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.bg_color }} {%- endif -%};
+    --mcs-text:       {%- if section.settings.use_gradient -%} #FFFFFF {%- else -%} {{ section.settings.text_color }} {%- endif -%};
+    --mcs-border:     {%- if section.settings.use_gradient -%} rgba(255,255,255,0.2) {%- else -%} #E8E8E8 {%- endif -%};
+    --mcs-card-bg:    {%- if section.settings.use_gradient -%} rgba(255,255,255,0.1) {%- else -%} #F5F5F7 {%- endif -%};
+    --mcs-qty-border: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.3) {%- else -%} #E2E2E2 {%- endif -%};
     color: var(--mcs-text);
     {%- if section.settings.use_gradient -%}
-      background: var(--brand-gradient, linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%));
+      background: {{ brand_gradient }};
     {%- else -%}
       background-color: {{ section.settings.bg_color }};
     {%- endif -%}
   }
 
-  /* ── Inner stack — spacing only ── */
+  /* ── Inner stack ── */
   .multi-coll-stack-{{ section.id }} {
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 
   .multi-coll-stack__container {
-    max-width: 1400px;
+    max-width: {{ settings.page_width | default: 1400 }}px;
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
@@ -32,10 +36,7 @@
     gap: {{ section.settings.stack_gap }}px;
   }
 
-  .multi-coll-row {
-    display: flex;
-    flex-direction: column;
-  }
+  .multi-coll-row { display: flex; flex-direction: column; }
 
   /* ── Row Header ── */
   .multi-coll-row__header {
@@ -45,7 +46,16 @@
     align-items: flex-end;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--mcs-border);
+    /* Gradient bottom border */
+    border-bottom: 2px solid transparent;
+    {%- if section.settings.use_gradient -%}
+      border-bottom-color: rgba(255,255,255,0.25);
+    {%- else -%}
+      background-image: linear-gradient({{ section.settings.bg_color }}, {{ section.settings.bg_color }}),
+                        {{ brand_gradient }};
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+    {%- endif -%}
   }
 
   .multi-coll-row__title {
@@ -56,23 +66,50 @@
     margin: 0;
     line-height: 1.2;
     letter-spacing: -0.02em;
+    {%- unless section.settings.use_gradient -%}
+    /* Gradient text on white mode */
+    background: {{ brand_gradient }};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    {%- endunless -%}
   }
 
   .multi-coll-row__shop-all {
     font-family: var(--font-body-family, sans-serif);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--mcs-text);
     text-decoration: none;
-    opacity: 0.55;
-    padding-bottom: 2px;
-    border-bottom: 1px solid currentColor;
-    transition: opacity 0.2s ease;
     white-space: nowrap;
     margin-left: 1rem;
+    position: relative;
+    padding-bottom: 3px;
+    transition: opacity 0.2s ease;
+    {%- if section.settings.use_gradient -%}
+      color: rgba(255,255,255,0.7);
+    {%- else -%}
+      color: {{ grad_col_2 }};
+    {%- endif -%}
   }
+  /* Gradient underline on shop all */
+  .multi-coll-row__shop-all::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1.5px;
+    border-radius: 99px;
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.5);
+    {%- else -%}
+      background: {{ brand_gradient }};
+    {%- endif -%}
+    transform: scaleX(0.4);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .multi-coll-row__shop-all:hover::after { transform: scaleX(1); }
   .multi-coll-row__shop-all:hover { opacity: 1; }
 
   /* ── Product Grid ── */
@@ -81,11 +118,9 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-
   @media screen and (min-width: 768px) {
     .multi-coll-row__grid { grid-template-columns: repeat(2, 1fr); }
   }
-
   @media screen and (min-width: 1024px) {
     .multi-coll-row__grid {
       grid-template-columns: repeat(var(--desktop-cols), 1fr);
@@ -110,7 +145,7 @@
       background: transparent;
       border-radius: 0;
       padding: 0;
-      transition: none;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
     {%- endif -%}
   }
 
@@ -118,6 +153,11 @@
   .premium-stacked-card-{{ section.id }}:hover {
     background: rgba(255,255,255,0.13);
     box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+  }
+  {%- else -%}
+  .premium-stacked-card-{{ section.id }}:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.12);
   }
   {%- endif -%}
 
@@ -135,18 +175,27 @@
     overflow: hidden;
     background: var(--mcs-card-bg);
     margin-bottom: 1rem;
-    {%- if section.settings.use_gradient -%}
-      border-radius: 0;
-    {%- else -%}
-      border-radius: {{ section.settings.card_radius }}px;
-    {%- endif -%}
+    border-radius: {%- if section.settings.use_gradient -%} 0 {%- else -%} {{ section.settings.card_radius }}px {%- endif -%};
+    position: relative;
   }
 
+  /* Gradient shimmer overlay on image hover */
+  {%- unless section.settings.use_gradient -%}
+  .premium-stacked-card-{{ section.id }} .psc__img-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: {{ brand_gradient }};
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    mix-blend-mode: multiply;
+  }
+  .premium-stacked-card-{{ section.id }}:hover .psc__img-wrap::after { opacity: 0.08; }
+  {%- endunless -%}
+
   .premium-stacked-card-{{ section.id }} .psc__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
     transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
   }
   .premium-stacked-card-{{ section.id }}:hover .psc__img { transform: scale(1.04); }
@@ -156,9 +205,7 @@
     flex-direction: column;
     gap: 0.35rem;
     flex-grow: 1;
-    {%- if section.settings.use_gradient -%}
-      padding: 0 1rem;
-    {%- endif -%}
+    {%- if section.settings.use_gradient -%}padding: 0 1rem;{%- endif -%}
   }
 
   .premium-stacked-card-{{ section.id }} .psc__title {
@@ -168,15 +215,17 @@
     line-height: 1.35;
     margin: 0;
     color: var(--mcs-text);
+    transition: color 0.2s ease;
   }
+  {%- unless section.settings.use_gradient -%}
+  .premium-stacked-card-{{ section.id }}:hover .psc__title { color: {{ grad_col_2 }}; }
+  {%- endunless -%}
 
   .premium-stacked-card-{{ section.id }} .psc__price {
-    font-family: var(--font-body-family, sans-serif);
     font-size: 0.9rem;
     color: var(--mcs-text);
     opacity: 0.75;
   }
-
   .premium-stacked-card-{{ section.id }} .psc__compare {
     text-decoration: line-through;
     opacity: 0.4;
@@ -189,11 +238,10 @@
     gap: 0.5rem;
     margin-top: 1.25rem;
     width: 100%;
-    {%- if section.settings.use_gradient -%}
-      padding: 0 1rem;
-    {%- endif -%}
+    {%- if section.settings.use_gradient -%}padding: 0 1rem;{%- endif -%}
   }
 
+  /* ── Quantity ── */
   .premium-stacked-card-{{ section.id }} .psc__qty {
     display: flex;
     align-items: center;
@@ -204,7 +252,6 @@
     flex-shrink: 0;
     background: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.08) {%- else -%} transparent {%- endif -%};
   }
-
   .premium-stacked-card-{{ section.id }} .psc__qty-btn {
     background: transparent;
     border: none;
@@ -217,13 +264,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s;
+    transition: background 0.15s, color 0.15s;
     flex-shrink: 0;
   }
   .premium-stacked-card-{{ section.id }} .psc__qty-btn:hover {
-    background: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.12) {%- else -%} rgba(0,0,0,0.05) {%- endif -%};
+    background: {%- if section.settings.use_gradient -%} rgba(255,255,255,0.12) {%- else -%} rgba(0,0,0,0.04) {%- endif -%};
+    {%- unless section.settings.use_gradient -%}color: {{ grad_col_2 }};{%- endunless -%}
   }
-
   .premium-stacked-card-{{ section.id }} .psc__qty-input {
     width: 36%;
     border: none;
@@ -239,9 +286,9 @@
   .premium-stacked-card-{{ section.id }} .psc__qty-input::-webkit-outer-spin-button,
   .premium-stacked-card-{{ section.id }} .psc__qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
+  /* ── Add to Cart Button — FIXED HOVER ── */
   .premium-stacked-card-{{ section.id }} .psc__add-btn {
     flex-grow: 1;
-    border: 1.5px solid var(--mcs-btn-border);
     border-radius: {{ section.settings.btn_radius }}px;
     font-family: var(--font-body-family, sans-serif);
     font-size: 0.78rem;
@@ -250,36 +297,89 @@
     letter-spacing: 0.07em;
     cursor: pointer;
     padding: 0.65rem 0.5rem;
-    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
-    color: var(--mcs-text);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+
     {%- if section.settings.use_gradient -%}
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255,255,255,0.5);
     {%- else -%}
-      background: transparent;
+      /* Gradient button — same as rest of site */
+      background: {{ brand_gradient }};
+      color: #FFFFFF;
+      border: none;
+      box-shadow: 0 4px 16px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.2);
     {%- endif -%}
   }
-  .premium-stacked-card-{{ section.id }} .psc__add-btn:hover:not([disabled]) {
-    background: var(--mcs-btn-hover-bg);
-    color: var(--mcs-btn-hover-text);
-    transform: translateY(-1px);
+
+  /* Gradient hover overlay — for white mode */
+  {%- unless section.settings.use_gradient -%}
+  .premium-stacked-card-{{ section.id }} .psc__add-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: {{ brand_gradient }};
+    filter: brightness(0.88);
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
+  .premium-stacked-card-{{ section.id }} .psc__add-btn span { position: relative; z-index: 1; }
+  {%- endunless -%}
+
+  .premium-stacked-card-{{ section.id }} .psc__add-btn:hover:not([disabled]) {
+    {%- if section.settings.use_gradient -%}
+      background: rgba(255,255,255,0.28);
+      border-color: #FFFFFF;
+    {%- else -%}
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.38);
+    {%- endif -%}
+  }
+
+  {%- unless section.settings.use_gradient -%}
+  .premium-stacked-card-{{ section.id }} .psc__add-btn:hover:not([disabled])::after { opacity: 1; }
+  {%- endunless -%}
+
   .premium-stacked-card-{{ section.id }} .psc__add-btn[disabled] {
     opacity: 0.35;
     cursor: not-allowed;
+    box-shadow: none;
   }
 
-  /* ── Gradient section header (optional, replaces plain title) ── */
+  /* ── Section Header ── */
   {%- if section.settings.show_section_header -%}
   .mcs-header-{{ section.id }} {
     {%- if section.settings.use_gradient -%}
       text-align: center;
       padding: clamp(2.5rem, 6vw, 4rem) 2rem clamp(1.5rem, 3vw, 2.5rem);
-      position: relative;
     {%- else -%}
       padding: clamp(2rem, 5vw, 3.5rem) 2rem clamp(1rem, 2vw, 2rem);
       text-align: {{ section.settings.header_align }};
-      max-width: 1400px;
+      max-width: {{ settings.page_width | default: 1400 }}px;
       margin: 0 auto;
+    {%- endif -%}
+  }
+  .mcs-header__eyebrow-{{ section.id }} {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: {{ grad_col_2 }};
+    margin-bottom: 0.75rem;
+  }
+  .mcs-header__eyebrow-{{ section.id }}::after {
+    content: '';
+    display: block;
+    height: 2px;
+    width: 2.5rem;
+    margin-top: 6px;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
+    {%- if section.settings.header_align == 'center' -%}
+      margin-left: auto; margin-right: auto;
     {%- endif -%}
   }
   .mcs-header__title-{{ section.id }} {
@@ -289,7 +389,14 @@
     letter-spacing: -0.02em;
     line-height: 1.1;
     margin: 0 0 0.5rem;
-    color: var(--mcs-text);
+    {%- if section.settings.use_gradient -%}
+      color: #FFFFFF;
+    {%- else -%}
+      background: {{ brand_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {%- endif -%}
   }
   .mcs-header__sub-{{ section.id }} {
     font-size: clamp(0.9rem, 2vw, 1.05rem);
@@ -306,9 +413,7 @@
     transform: translateY(18px);
     animation: mcsFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  @keyframes mcsFadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes mcsFadeUp { to { opacity: 1; transform: translateY(0); } }
 
   @media (max-width: 599px) {
     .multi-coll-stack__container { padding: 0 1rem; }
@@ -320,6 +425,9 @@
 
   {%- if section.settings.show_section_header and section.settings.header_title != blank -%}
     <div class="mcs-header-{{ section.id }}">
+      {%- if section.settings.header_eyebrow != blank -%}
+        <span class="mcs-header__eyebrow-{{ section.id }}">{{ section.settings.header_eyebrow }}</span>
+      {%- endif -%}
       <h2 class="mcs-header__title-{{ section.id }}">{{ section.settings.header_title }}</h2>
       {%- if section.settings.header_subtitle != blank -%}
         <p class="mcs-header__sub-{{ section.id }}">{{ section.settings.header_subtitle }}</p>
@@ -339,14 +447,13 @@
           style="--desktop-cols: {{ block.settings.columns_desktop }}; animation-delay: {{ anim_delay }}ms;"
           {{ block.shopify_attributes }}
         >
-
           <div class="multi-coll-row__header">
             <h2 class="multi-coll-row__title">
               {{ block.settings.title_override | default: target_collection.title | default: 'Featured Collection' }}
             </h2>
             {%- if block.settings.show_view_all and target_collection != blank -%}
               <a href="{{ target_collection.url }}" class="multi-coll-row__shop-all">
-                {{ block.settings.shop_all_text | default: 'Shop All' | escape }}
+                {{ block.settings.shop_all_text | default: 'Shop All' | escape }} →
               </a>
             {%- endif -%}
           </div>
@@ -375,7 +482,6 @@
                       {{ 'product-1' | placeholder_svg_tag: 'psc__img placeholder-svg' }}
                     {%- endif -%}
                   </div>
-
                   <div class="psc__info">
                     <h3 class="psc__title">{{ product.title }}</h3>
                     <div class="psc__price">
@@ -391,9 +497,9 @@
                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
 
                   <div class="psc__qty">
-                    <button type="button" class="psc__qty-btn" onclick="this.nextElementSibling.stepDown()" aria-label="Decrease quantity">−</button>
+                    <button type="button" class="psc__qty-btn" onclick="this.nextElementSibling.stepDown()" aria-label="Decrease">−</button>
                     <input type="number" name="quantity" class="psc__qty-input" value="1" min="1" aria-label="Quantity">
-                    <button type="button" class="psc__qty-btn" onclick="this.previousElementSibling.stepUp()" aria-label="Increase quantity">+</button>
+                    <button type="button" class="psc__qty-btn" onclick="this.previousElementSibling.stepUp()" aria-label="Increase">+</button>
                   </div>
 
                   <button
@@ -402,10 +508,10 @@
                     class="psc__add-btn"
                     {% unless product.available %}disabled{% endunless %}
                   >
-                    {%- if product.available -%}
-                      {{ section.settings.button_add_to_cart | default: 'Add to cart' | escape }}
+                    {%- if section.settings.use_gradient -%}
+                      {%- if product.available -%}{{ section.settings.button_add_to_cart | default: 'Add to cart' }}{%- else -%}{{ section.settings.button_sold_out | default: 'Sold Out' }}{%- endif -%}
                     {%- else -%}
-                      {{ section.settings.button_sold_out | default: 'Sold Out' | escape }}
+                      <span>{%- if product.available -%}{{ section.settings.button_add_to_cart | default: 'Add to cart' }}{%- else -%}{{ section.settings.button_sold_out | default: 'Sold Out' }}{%- endif -%}</span>
                     {%- endif -%}
                   </button>
                 {%- endform -%}
@@ -417,11 +523,10 @@
                 <div class="premium-stacked-card-{{ section.id }}">
                   <div class="psc__link">
                     <div class="psc__img-wrap">
-                      {%- assign placeholder_index = i | modulo: 6 | plus: 1 -%}
-                      {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'psc__img placeholder-svg' }}
+                      {{ 'product-' | append: i | placeholder_svg_tag: 'psc__img placeholder-svg' }}
                     </div>
                     <div class="psc__info">
-                      <h3 class="psc__title">Memorial Collection Item</h3>
+                      <h3 class="psc__title">Sample Product</h3>
                       <div class="psc__price">$29.99</div>
                     </div>
                   </div>
@@ -431,7 +536,7 @@
                       <input type="number" class="psc__qty-input" value="1">
                       <button type="button" class="psc__qty-btn">+</button>
                     </div>
-                    <button class="psc__add-btn" disabled>Add to cart</button>
+                    <button class="psc__add-btn" disabled><span>Add to cart</span></button>
                   </div>
                 </div>
               {%- endfor -%}
@@ -457,8 +562,7 @@
       "type": "checkbox",
       "id": "use_gradient",
       "label": "Use brand gradient background",
-      "default": false,
-      "info": "Spans full width. Text, borders, cards, and buttons all auto-switch to white/frosted variants."
+      "default": false
     },
     {
       "type": "color",
@@ -484,6 +588,11 @@
     },
     {
       "type": "text",
+      "id": "header_eyebrow",
+      "label": "Eyebrow Label"
+    },
+    {
+      "type": "text",
       "id": "header_title",
       "label": "Header Title"
     },
@@ -505,7 +614,7 @@
     {
       "type": "select",
       "id": "header_align",
-      "label": "Header Alignment (solid mode)",
+      "label": "Header Alignment",
       "options": [
         { "value": "left",   "label": "Left"   },
         { "value": "center", "label": "Center" },
@@ -550,7 +659,7 @@
     {
       "type": "range",
       "id": "card_radius",
-      "label": "Card Image Radius (solid mode)",
+      "label": "Card Image Radius",
       "min": 0,
       "max": 16,
       "step": 2,
@@ -565,11 +674,11 @@
       "max": 40,
       "step": 2,
       "unit": "px",
-      "default": 6
+      "default": 4
     },
     {
       "type": "header",
-      "content": "Product Card Texts"
+      "content": "Button Text"
     },
     {
       "type": "text",
