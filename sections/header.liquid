@@ -1,3 +1,10 @@
+{%- comment -%} Build gradient directly in Liquid {%- endcomment -%}
+{%- assign grad_dir   = settings.gradient_direction | default: '135deg' -%}
+{%- assign grad_col_1 = settings.gradient_color_1   | default: '#3A6FE8' -%}
+{%- assign grad_col_2 = settings.gradient_color_2   | default: '#8B52D4' -%}
+{%- assign grad_col_3 = settings.gradient_color_3   | default: '#CC72E8' -%}
+{%- assign brand_gradient = 'linear-gradient(' | append: grad_dir | append: ', ' | append: grad_col_1 | append: ' 0%, ' | append: grad_col_2 | append: ' 55%, ' | append: grad_col_3 | append: ' 100%)' -%}
+
 <style>
   /* ─── Reset & Base ─────────────────────────────────────── */
   .site-header *,
@@ -23,9 +30,7 @@
     backface-visibility: hidden;
   }
 
-  body {
-    padding-top: var(--nav-total-height, 80px);
-  }
+  body { padding-top: var(--nav-total-height, 80px); }
 
   /* ─── Inner wrapper ─────────────────────────────────────── */
   .header__inner {
@@ -94,20 +99,38 @@
     position: relative;
     transition: opacity 0.2s ease;
   }
+
+  /* ── Gradient underline on hover and active ── */
   .site-nav__link::after {
     content: '';
     position: absolute;
-    bottom: 8px; left: 0; right: 0;
-    height: 1.5px;
-    background: currentColor;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: 99px;
+    background: {{ brand_gradient }};
     transform: scaleX(0);
     transition: transform 0.25s ease;
     transform-origin: left;
   }
-  .site-nav__item:not(.site-nav__item--has-dropdown) .site-nav__link:hover::after,
+  .site-nav__item:not(.site-nav__item--has-dropdown) .site-nav__link:hover::after { transform: scaleX(1); }
   .site-nav__item:not(.site-nav__item--has-dropdown) .site-nav__link--active::after { transform: scaleX(1); }
   .site-nav__item--has-dropdown .site-nav__link::after { display: none !important; }
-  .site-nav__link:hover { opacity: 0.75; }
+
+  /* ── Active link text gets gradient color ── */
+  .site-nav__link--active {
+    background: {{ brand_gradient }};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 1 !important;
+  }
+
+  /* ── Hover: subtle opacity ── */
+  .site-nav__link:hover { opacity: 0.7; }
+  /* Keep active at full opacity */
+  .site-nav__link--active:hover { opacity: 1; }
 
   /* ─── Dropdown ──────────────────────────────────────────── */
   .site-nav__dropdown {
@@ -128,6 +151,12 @@
     visibility: hidden;
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
     z-index: 300;
+    /* Gradient top border accent */
+    border-top: 2px solid transparent;
+    background-image: linear-gradient({{ section.settings.dropdown_bg }}, {{ section.settings.dropdown_bg }}),
+                      {{ brand_gradient }};
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
   }
   .site-nav__dropdown::before {
     content: '';
@@ -154,10 +183,21 @@
     color: {{ section.settings.header_text_color }};
     font-size: {{ section.settings.dropdown_font_size }}px;
     white-space: nowrap;
-    transition: background-color 0.15s ease, padding-left 0.15s ease;
+    transition: background-color 0.15s ease, padding-left 0.15s ease, color 0.15s ease;
+    position: relative;
   }
-  .site-nav__dropdown-link:hover { background-color: rgba(0,0,0,0.05); padding-left: 26px; }
-  .site-nav__dropdown-link--active { font-weight: 600; }
+  .site-nav__dropdown-link:hover {
+    background-color: rgba(0,0,0,0.04);
+    padding-left: 26px;
+    /* Gradient text on dropdown hover */
+    background-image: linear-gradient(rgba(0,0,0,0.04), rgba(0,0,0,0.04)),
+                      none;
+    color: {{ grad_col_2 }};
+  }
+  .site-nav__dropdown-link--active {
+    font-weight: 600;
+    color: {{ grad_col_2 }};
+  }
 
   /* ─── Right Controls ────────────────────────────────────── */
   .header__right {
@@ -191,7 +231,7 @@
     flex-shrink: 0;
   }
 
-  /* Cart badge */
+  /* Cart badge — gradient background */
   .header__cart { position: relative; }
   .cart-count {
     position: absolute;
@@ -201,13 +241,13 @@
     display: flex; align-items: center; justify-content: center;
     font-weight: 700; line-height: 1;
     padding: 2px 4px;
-    background-color: {{ section.settings.cart_badge_bg }};
-    color: {{ section.settings.cart_badge_text }};
+    background: {{ brand_gradient }};
+    color: #FFFFFF;
     font-size: {{ section.settings.cart_badge_size }}px;
     pointer-events: none;
   }
 
-  /* CTA Button */
+  /* CTA Button — outline by default, fills gradient on hover */
   .header__btn {
     display: inline-flex;
     align-items: center;
@@ -221,14 +261,28 @@
     padding: {{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
     font-size: clamp(11px, 1vw, {{ section.settings.button_font_size }}px);
     font-weight: {{ section.settings.button_font_weight }};
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     flex-shrink: 0;
   }
+  /* Gradient fill layer — slides in on hover */
+  .header__btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: {{ brand_gradient }};
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: 0;
+  }
+  .header__btn span { position: relative; z-index: 1; }
   .header__btn:hover {
-    background: linear-gradient(135deg, #3A6FE8 0%, #8B52D4 55%, #CC72E8 100%);
     color: #FFFFFF;
     border-color: transparent;
+    box-shadow: 0 4px 20px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.3);
   }
+  .header__btn:hover::before { opacity: 1; }
 
   /* Social icons */
   .header__socials {
@@ -287,6 +341,12 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 2px solid transparent;
+    background-image: linear-gradient({{ section.settings.drawer_bg }}, {{ section.settings.drawer_bg }}),
+                      {{ brand_gradient }};
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
   }
   .mobile-drawer__close {
     background: none; border: none; cursor: pointer;
@@ -296,7 +356,7 @@
   .mobile-drawer__close:hover { opacity: 1; }
 
   .mobile-drawer__nav ul { list-style: none; padding: 0; margin: 0; width: 100%; }
-  .mobile-drawer__nav > ul > li { border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .mobile-drawer__nav > ul > li { border-bottom: 1px solid rgba(0,0,0,0.06); }
   .mobile-drawer__nav > ul > li:last-child { border-bottom: none; }
 
   .drawer-link {
@@ -310,9 +370,10 @@
     font-size: clamp({{ section.settings.drawer_font_min }}px, 5vw, {{ section.settings.drawer_font_max }}px);
     font-weight: {{ section.settings.drawer_font_weight }};
     background: none; border: none; cursor: pointer; text-align: left;
-    transition: opacity 0.2s;
+    transition: color 0.2s ease;
   }
-  .drawer-link:hover { opacity: 0.65; }
+  .drawer-link:hover { color: {{ grad_col_2 }}; }
+  .drawer-link--active { color: {{ grad_col_2 }}; font-weight: 700; }
 
   .drawer-accordion__toggle {
     display: flex;
@@ -323,7 +384,9 @@
     font-size: clamp({{ section.settings.drawer_font_min }}px, 5vw, {{ section.settings.drawer_font_max }}px);
     font-weight: {{ section.settings.drawer_font_weight }};
     background: none; border: none; color: inherit; cursor: pointer; text-align: left;
+    transition: color 0.2s ease;
   }
+  .drawer-accordion__toggle:hover { color: {{ grad_col_2 }}; }
   .drawer-accordion__icon { transition: transform 0.25s ease; flex-shrink: 0; }
   .drawer-accordion__toggle[aria-expanded="true"] .drawer-accordion__icon { transform: rotate(180deg); }
   .drawer-accordion__body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
@@ -335,10 +398,10 @@
     text-decoration: none;
     color: inherit;
     font-size: {{ section.settings.drawer_subfont_size }}px;
-    opacity: 0.8;
-    transition: opacity 0.2s, padding-left 0.2s;
+    opacity: 0.75;
+    transition: opacity 0.2s, padding-left 0.2s, color 0.2s;
   }
-  .drawer-sublink:hover { opacity: 1; padding-left: 20px; }
+  .drawer-sublink:hover { opacity: 1; padding-left: 20px; color: {{ grad_col_2 }}; }
 
   .mobile-drawer__footer {
     margin-top: auto;
@@ -349,8 +412,12 @@
     align-items: center;
   }
   .drawer-socials { display: flex; gap: {{ section.settings.social_gap }}px; align-items: center; }
-  .drawer-socials a { color: inherit; opacity: 0.8; transition: opacity 0.2s; }
-  .drawer-socials a:hover { opacity: 1; }
+  .drawer-socials a {
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .drawer-socials a:hover { opacity: 1; color: {{ grad_col_2 }}; }
 
   /* ─── Search Overlay ────────────────────────────────────── */
   .search-overlay {
@@ -384,6 +451,11 @@
     background: {{ section.settings.search_input_bg }};
     color: {{ section.settings.search_input_text }};
     outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .search-input:focus {
+    border-color: {{ grad_col_2 }};
+    box-shadow: 0 0 0 3px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.14);
   }
   .search-submit {
     position: absolute; right: 12px;
@@ -485,7 +557,7 @@
         <button class="header__icon header__search-toggle"
                 aria-label="Search"
                 data-search-toggle>
-          <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
+          <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
           </svg>
         </button>
@@ -494,14 +566,14 @@
       <div class="header__socials">
         {%- if section.settings.social_facebook_link != blank -%}
           <a href="{{ section.settings.social_facebook_link }}" class="header__icon" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
             </svg>
           </a>
         {%- endif -%}
         {%- if section.settings.social_instagram_link != blank -%}
           <a href="{{ section.settings.social_instagram_link }}" class="header__icon" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.43.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.43.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.43-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.43-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07zm0-2.16C8.74 0 8.33.01 7.05.07 5.77.13 4.89.33 4.14.62c-.78.3-1.44.73-2 1.29-.56.56-.99 1.22-1.29 2-.29.75-.49 1.63-.55 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.16.55 2.91.3.78.73 1.44 1.29 2 .56.56 1.22.99 2 1.29.75.29 1.63.49 2.91.55 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.28-.06 2.16-.26 2.91-.55.78-.3 1.44-.73 2-1.29.56-.56.99-1.22 1.29-2 .29-.75.49-1.63.55-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.16-.55-2.91-.3-.78-.73-1.44-1.29-2-.56-.56-1.22-.99-2-1.29-.75-.29-1.63-.49-2.91-.55C15.67.01 15.26 0 12 0zm0 5.84c-3.4 0-6.16 2.76-6.16 6.16s2.76 6.16 6.16 6.16 6.16-2.76 6.16-6.16-2.76-6.16-6.16-6.16zm0 10.16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm3.97-10.45c-.53 0-.96.43-.96.96s.43.96.96.96.96-.43.96-.96-.43-.96-.96-.96z"/>
             </svg>
           </a>
@@ -511,7 +583,7 @@
       <a href="{{ routes.cart_url }}"
          class="header__icon header__cart"
          aria-label="Cart ({{ cart.item_count }} items)">
-        <svg viewBox="0 0 24 24" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" fill="currentColor">
+        <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
         </svg>
         <span class="cart-count"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
@@ -519,7 +591,7 @@
 
       {%- if section.settings.button_label != blank -%}
         <a href="{{ section.settings.button_link }}" class="header__btn">
-          {{ section.settings.button_label }}
+          <span>{{ section.settings.button_label }}</span>
         </a>
       {%- endif -%}
     </div>
@@ -585,12 +657,20 @@
               <div class="drawer-accordion__body">
                 <ul style="list-style:none;padding:0 0 0.5rem 1rem;margin:0;">
                   {%- for childlink in link.links -%}
-                    <li><a href="{{ childlink.url }}" class="drawer-sublink">{{ childlink.title }}</a></li>
+                    <li>
+                      <a href="{{ childlink.url }}"
+                         class="drawer-sublink{% if childlink.active %} drawer-sublink--active{% endif %}">
+                        {{ childlink.title }}
+                      </a>
+                    </li>
                   {%- endfor -%}
                 </ul>
               </div>
             {%- else -%}
-              <a href="{{ link.url }}" class="drawer-link">{{ link.title }}</a>
+              <a href="{{ link.url }}"
+                 class="drawer-link{% if link.active %} drawer-link--active{% endif %}">
+                {{ link.title }}
+              </a>
             {%- endif -%}
           </li>
         {%- endfor -%}
@@ -602,13 +682,14 @@
     {%- if section.settings.button_label != blank -%}
       <a href="{{ section.settings.button_link }}"
          style="display:inline-flex;align-items:center;text-decoration:none;
-                background:linear-gradient(135deg,#3A6FE8 0%,#8B52D4 55%,#CC72E8 100%);
+                background: {{ brand_gradient }};
                 color:#FFFFFF;
                 border:none;
                 border-radius:{{ section.settings.button_border_radius }}px;
                 padding:{{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
                 font-size:{{ section.settings.button_font_size }}px;
-                font-weight:{{ section.settings.button_font_weight }};">
+                font-weight:{{ section.settings.button_font_weight }};
+                box-shadow: 0 4px 20px rgba({{ grad_col_2 | color_extract: 'red' }}, {{ grad_col_2 | color_extract: 'green' }}, {{ grad_col_2 | color_extract: 'blue' }}, 0.28);">
         {{ section.settings.button_label }}
       </a>
     {%- endif -%}
@@ -798,21 +879,19 @@ document.addEventListener('DOMContentLoaded', function() {
   "name": "Header (Enhanced)",
   "settings": [
     { "type": "header", "content": "Header Appearance" },
-    { "type": "color",  "id": "header_bg",            "label": "Background Color",      "default": "#F8F6F4" },
+    { "type": "color",  "id": "header_bg",            "label": "Background Color",      "default": "#FFFFFF" },
     { "type": "color",  "id": "header_text_color",    "label": "Text Color",            "default": "#1A1A1A" },
-    { "type": "text",   "id": "header_shadow",         "label": "Header Shadow",         "default": "none" },
+    { "type": "text",   "id": "header_shadow",         "label": "Header Shadow",         "default": "0 1px 0 rgba(0,0,0,0.06)" },
     { "type": "range",  "id": "padding_top",           "label": "Top Padding",           "min": 8,  "max": 40, "step": 2,   "unit": "px",  "default": 16 },
     { "type": "range",  "id": "padding_bottom",        "label": "Bottom Padding",        "min": 8,  "max": 40, "step": 2,   "unit": "px",  "default": 16 },
     { "type": "range",  "id": "padding_h",             "label": "Side Padding",          "min": 0,  "max": 60, "step": 4,   "unit": "px",  "default": 12 },
-    { "type": "range",  "id": "border_bottom_width",   "label": "Border Bottom Width",   "min": 0,  "max": 5,  "step": 1,   "unit": "px",  "default": 0 },
-    { "type": "color",  "id": "border_bottom_color",   "label": "Border Bottom Color",   "default": "#0000001a" },
+    { "type": "range",  "id": "border_bottom_width",   "label": "Border Bottom Width",   "min": 0,  "max": 5,  "step": 1,   "unit": "px",  "default": 1 },
+    { "type": "color",  "id": "border_bottom_color",   "label": "Border Bottom Color",   "default": "#E2E2E2" },
 
     { "type": "header", "content": "Logo" },
     { "type": "image_picker", "id": "logo",            "label": "Logo Image" },
-    { "type": "checkbox", "id": "invert_logo",         "label": "Invert logo to white",
-      "default": false, "info": "Turn on when header background is dark or gradient — makes black logos white." },
-    { "type": "checkbox", "id": "invert_logo_sticky",  "label": "Keep inverted when sticky",
-      "default": false, "info": "If header background changes on scroll (e.g. from gradient to light), turn this OFF to revert logo back to original." },
+    { "type": "checkbox", "id": "invert_logo",         "label": "Invert logo to white", "default": false },
+    { "type": "checkbox", "id": "invert_logo_sticky",  "label": "Keep inverted when sticky", "default": false },
     { "type": "range",  "id": "logo_width",            "label": "Logo Max Width",        "min": 60, "max": 300, "step": 10, "unit": "px",  "default": 160 },
     { "type": "range",  "id": "logo_text_min",         "label": "Logo Text Min Size",    "min": 14, "max": 28,  "step": 1,  "unit": "px",  "default": 18 },
     { "type": "range",  "id": "logo_text_max",         "label": "Logo Text Max Size",    "min": 20, "max": 48,  "step": 2,  "unit": "px",  "default": 26 },
@@ -827,16 +906,17 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "range",  "id": "caret_size",             "label": "Dropdown Caret Size",   "min": 8,  "max": 14,  "step": 1,  "unit": "px",  "default": 10 },
 
     { "type": "header", "content": "Dropdown" },
-    { "type": "color",  "id": "dropdown_bg",            "label": "Dropdown Background",   "default": "#F8F6F4" },
+    { "type": "color",  "id": "dropdown_bg",            "label": "Dropdown Background",   "default": "#FFFFFF" },
     { "type": "range",  "id": "dropdown_font_size",     "label": "Dropdown Font Size",    "min": 12, "max": 18,  "step": 1,  "unit": "px",  "default": 14 },
     { "type": "range",  "id": "dropdown_radius",        "label": "Dropdown Border Radius","min": 0,  "max": 20,  "step": 2,  "unit": "px",  "default": 6 },
-    { "type": "text",   "id": "dropdown_shadow",        "label": "Dropdown Shadow",       "default": "0 8px 30px rgba(0,0,0,0.12)" },
+    { "type": "text",   "id": "dropdown_shadow",        "label": "Dropdown Shadow",       "default": "0 8px 30px rgba(0,0,0,0.10)" },
 
     { "type": "header", "content": "Icons & Cart" },
     { "type": "range",  "id": "icon_size",              "label": "Icon Size",             "min": 18, "max": 30,  "step": 2,  "unit": "px",  "default": 22 },
     { "type": "range",  "id": "icon_gap",               "label": "Header Icons Gap",      "min": 4,  "max": 32,  "step": 4,  "unit": "px",  "default": 8 },
     { "type": "range",  "id": "social_gap",             "label": "Social Icons Gap",      "min": 4,  "max": 24,  "step": 4,  "unit": "px",  "default": 8 },
-    { "type": "color",  "id": "cart_badge_bg",          "label": "Cart Badge Background", "default": "#3A6FE8" },
+    { "type": "color",  "id": "cart_badge_bg",          "label": "Cart Badge Background", "default": "#8B52D4",
+      "info": "Note: cart badge now uses the brand gradient by default. This setting is kept for reference." },
     { "type": "color",  "id": "cart_badge_text",        "label": "Cart Badge Text",       "default": "#FFFFFF" },
     { "type": "range",  "id": "cart_badge_size",        "label": "Cart Badge Font Size",  "min": 9,  "max": 14,  "step": 1,  "unit": "px",  "default": 10 },
 
@@ -856,24 +936,24 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "range",  "id": "search_input_padding",   "label": "Input Padding",         "min": 10, "max": 28,  "step": 2,  "unit": "px",  "default": 18 },
     { "type": "range",  "id": "search_input_size",      "label": "Input Font Size",       "min": 16, "max": 32,  "step": 2,  "unit": "px",  "default": 22 },
     { "type": "range",  "id": "search_input_border",    "label": "Input Border Width",    "min": 0,  "max": 3,   "step": 1,  "unit": "px",  "default": 1 },
-    { "type": "color",  "id": "search_input_border_color", "label": "Input Border Color", "default": "#CCCCCC" },
+    { "type": "color",  "id": "search_input_border_color", "label": "Input Border Color", "default": "#E2E2E2" },
     { "type": "range",  "id": "search_input_radius",    "label": "Input Border Radius",   "min": 0,  "max": 50,  "step": 2,  "unit": "px",  "default": 8 },
     { "type": "color",  "id": "search_input_bg",        "label": "Input Background",      "default": "#FFFFFF" },
     { "type": "color",  "id": "search_input_text",      "label": "Input Text Color",      "default": "#1A1A1A" },
-    { "type": "text",   "id": "search_transition",      "label": "Transition Speed (s)",  "default": "0.3", "info": "In seconds, e.g. 0.3" },
+    { "type": "text",   "id": "search_transition",      "label": "Transition Speed (s)",  "default": "0.3" },
 
     { "type": "header", "content": "Sticky Header" },
     { "type": "checkbox", "id": "enable_sticky",        "label": "Enable Sticky Header",  "default": true },
     { "type": "range",  "id": "sticky_threshold",       "label": "Scroll Threshold",      "min": 0,  "max": 200, "step": 10, "unit": "px",  "default": 50 },
-    { "type": "color",  "id": "sticky_bg",              "label": "Sticky Background",     "default": "#F8F6F4f2" },
-    { "type": "text",   "id": "sticky_shadow",          "label": "Sticky Shadow",         "default": "0 4px 20px rgba(58,111,232,0.10)" },
+    { "type": "color",  "id": "sticky_bg",              "label": "Sticky Background",     "default": "#FFFFFFF2" },
+    { "type": "text",   "id": "sticky_shadow",          "label": "Sticky Shadow",         "default": "0 2px 20px rgba(0,0,0,0.07)" },
     { "type": "range",  "id": "sticky_padding",         "label": "Sticky Padding",        "min": 6,  "max": 24,  "step": 1,  "unit": "px",  "default": 10 },
-    { "type": "text",   "id": "sticky_transition",      "label": "Sticky Transition (s)", "default": "0.3", "info": "In seconds, e.g. 0.3" },
+    { "type": "text",   "id": "sticky_transition",      "label": "Sticky Transition (s)", "default": "0.3" },
 
     { "type": "header", "content": "Mobile Menu" },
     { "type": "range",  "id": "hamburger_size",         "label": "Hamburger Size",        "min": 20, "max": 32,  "step": 2,  "unit": "px",  "default": 24 },
     { "type": "range",  "id": "hamburger_thickness",    "label": "Hamburger Thickness",   "min": 1,  "max": 3,   "step": 0.5, "default": 2 },
-    { "type": "color",  "id": "drawer_bg",              "label": "Drawer Background",     "default": "#F8F6F4" },
+    { "type": "color",  "id": "drawer_bg",              "label": "Drawer Background",     "default": "#FFFFFF" },
     { "type": "color",  "id": "drawer_text_color",      "label": "Drawer Text Color",     "default": "#1A1A1A" },
     { "type": "image_picker", "id": "drawer_logo",      "label": "Drawer Logo (optional)" },
     { "type": "range",  "id": "drawer_logo_width",      "label": "Drawer Logo Width",     "min": 60, "max": 220, "step": 10, "unit": "px",  "default": 120 },
@@ -894,7 +974,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { "type": "color",  "id": "button_bg_color",        "label": "Button Background",     "default": "#00000000" },
     { "type": "color",  "id": "button_text_color",      "label": "Button Text Color",     "default": "#1A1A1A" },
     { "type": "color",  "id": "button_border_color",    "label": "Button Border Color",   "default": "#1A1A1A" },
-    { "type": "range",  "id": "button_border_width",    "label": "Button Border Width",   "min": 0,  "max": 4,   "step": 0.5, "unit": "px", "default": 2 },
+    { "type": "range",  "id": "button_border_width",    "label": "Button Border Width",   "min": 0,  "max": 4,   "step": 0.5, "unit": "px", "default": 1.5 },
     { "type": "range",  "id": "button_border_radius",   "label": "Button Border Radius",  "min": 0,  "max": 30,  "step": 2,  "unit": "px",  "default": 4 },
     { "type": "range",  "id": "button_padding_v",       "label": "Button V Padding",      "min": 6,  "max": 18,  "step": 1,  "unit": "px",  "default": 9 },
     { "type": "range",  "id": "button_padding_h",       "label": "Button H Padding",      "min": 12, "max": 36,  "step": 2,  "unit": "px",  "default": 18 },
